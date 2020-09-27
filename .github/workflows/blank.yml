@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        path: main
+
+    - name: Checkout pages_contents
+      uses: actions/checkout@v2
+      with:
+        repository: cuboktahedron/pages_contents
+        path: pages_contents
+        token: ${{ secrets.MY_GITHUB_ACCESS_TOKEN }}
+
+    - name: Setup Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+
+    - name: npm install, build and test
+      run: |
+        cd $GITHUB_WORKSPACE/main
+        npm install
+        npm run build --if-present
+        npm test
+
+    - name: Deploy
+      run: |
+        cd $GITHUB_WORKSPACE/main
+        mkdir work
+        sed -i "s/\${COMMIT_ID}/$(git -C $GITHUB_WORKSPACE/main log --pretty=%H -n 1)/" www/index.html > work/index.html
+        cp -p www/index.html work/
+        cp -p dist/index.js work/
+        rm -rf $GITHUB_WORKSPACE/pages_contents/static/q/tetsimu2
+        cp -rp work $GITHUB_WORKSPACE/pages_contents/static/q/tetsimu2
+
+    - name: Commit files
+      run: |
+        cd $GITHUB_WORKSPACE/pages_contents
+        git config --local user.name "cuboktahedron"
+        git config --local user.email cuboktahedron@gmail.com
+        git add .
+        git commit -m "Deploy tetsimu2@$(git -C $GITHUB_WORKSPACE/main log --pretty=%H -n 1)"
+
+    - name: Push changes
+      run: |
+        cd $GITHUB_WORKSPACE/pages_contents
+        git push origin master
