@@ -15,7 +15,7 @@ import {
   TapControllerType,
   Tetromino,
 } from "types/core";
-import { SimuConfig, SimuRetryState } from "types/simu";
+import { PlayMode, SimuConfig, SimuRetryState } from "types/simu";
 import { reducerLogger } from "utils/reducerLogger";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
@@ -82,6 +82,11 @@ const initialSimuState: SimuState = ((): SimuState => {
   const isTouchDevice = "ontouchstart" in window;
   const config: SimuConfig = {
     nextNum: 5,
+    playMode: PlayMode.Normal,
+    riseUpRate: {
+      first: 10,
+      second: 70,
+    },
     showsGhost: true,
     showsPivot: true,
     tapControllerType: isTouchDevice

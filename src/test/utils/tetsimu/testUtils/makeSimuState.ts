@@ -6,9 +6,9 @@ import {
   HoldState,
   NextNote,
   TapControllerType,
-  Tetromino,
+  Tetromino
 } from "types/core";
-import { SimuRetryState } from "types/simu";
+import { PlayMode, SimuRetryState } from "types/simu";
 
 export const makeSimuState = (state: {
   config?: {
@@ -33,6 +33,11 @@ export const makeSimuState = (state: {
     {
       config: {
         nextNum: 5,
+        playMode: PlayMode.Normal,
+        riseUpRate: {
+          first: 10,
+          second: 70,
+        },
         showsGhost: true,
         showsPivot: true,
         tapControllerType: TapControllerType.None,

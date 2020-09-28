@@ -4,23 +4,33 @@ import {
   FormControl,
   FormControlLabel,
   FormGroup,
+  FormLabel,
+  InputAdornment,
   InputLabel,
   makeStyles,
   MenuItem,
+  Radio,
+  RadioGroup,
   Select,
   TextField,
+  Theme,
 } from "@material-ui/core";
 import { changeConfig } from "ducks/simu/actions";
 import React from "react";
 import { MAX_NEXTS_NUM, TapControllerType } from "types/core";
+import { PlayMode } from "types/simu";
 import { SimuContext } from "./Simu";
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       background: "white",
       flexGrow: 1,
       padding: 8,
+
+      "& > div": {
+        marginBottom: theme.spacing(1),
+      },
     },
 
     formControl: {
@@ -33,8 +43,16 @@ const Settings: React.FC = () => {
   const { state, dispatch } = React.useContext(SimuContext);
   const config = state.config;
   const [nextNum, setNextNum] = React.useState(config.nextNum + "");
+  const [riseUpRateFirst, setRiseUpRateFirst] = React.useState(
+    config.riseUpRate.first + ""
+  );
+  const [riseUpRateSecond, setRiseUpRateSecond] = React.useState(
+    config.riseUpRate.second + ""
+  );
   const [textKeys, setTextKeys] = React.useState({
     nextNums: new Date().getTime(),
+    riseUpRateFirst: new Date().getTime(),
+    riseUpRateSecond: new Date().getTime(),
   });
 
   const handleNextsNumChange = (
@@ -85,6 +103,114 @@ const Settings: React.FC = () => {
     }
   };
 
+  const handleRiseUpRateFirstChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    let value = +e.currentTarget.value;
+
+    if (isNaN(value)) {
+      return;
+    }
+
+    if (value < 0) {
+      value = 0;
+    } else if (value > 100) {
+      value = 100;
+    }
+
+    setRiseUpRateFirst(value + "");
+  };
+
+  const handleRiseUpRateFirstKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ): void => {
+    if (e.key !== "Enter") {
+      return;
+    }
+
+    if (+riseUpRateFirst !== config.riseUpRate.first) {
+      dispatch(
+        changeConfig({
+          ...config,
+          riseUpRate: {
+            ...config.riseUpRate,
+            first: +riseUpRateFirst,
+          },
+        })
+      );
+    }
+  };
+
+  const handleRiseUpRateFirstBlur = (): void => {
+    if (+riseUpRateFirst !== config.riseUpRate.first) {
+      dispatch(
+        changeConfig({
+          ...config,
+          riseUpRate: {
+            ...config.riseUpRate,
+            first: +riseUpRateFirst,
+          },
+        })
+      );
+
+      setTextKeys({ ...textKeys, riseUpRateFirst: new Date().getTime() });
+    }
+  };
+
+  const handleRiseUpRateSecondChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    let value = +e.currentTarget.value;
+
+    if (isNaN(value)) {
+      return;
+    }
+
+    if (value < 0) {
+      value = 0;
+    } else if (value > 100) {
+      value = 100;
+    }
+
+    setRiseUpRateSecond(value + "");
+  };
+
+  const handleRiseUpRateSecondKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ): void => {
+    if (e.key !== "Enter") {
+      return;
+    }
+
+    if (+riseUpRateSecond !== config.riseUpRate.second) {
+      dispatch(
+        changeConfig({
+          ...config,
+          riseUpRate: {
+            ...config.riseUpRate,
+            second: +riseUpRateSecond,
+          },
+        })
+      );
+    }
+  };
+
+  const handleRiseUpRateSecondBlur = (): void => {
+    if (+riseUpRateSecond !== config.riseUpRate.second) {
+      dispatch(
+        changeConfig({
+          ...config,
+          riseUpRate: {
+            ...config.riseUpRate,
+            second: +riseUpRateSecond,
+          },
+        })
+      );
+
+      setTextKeys({ ...textKeys, riseUpRateSecond: new Date().getTime() });
+    }
+  };
+
   const handleShowPivotChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(
       changeConfig({
@@ -110,6 +236,15 @@ const Settings: React.FC = () => {
       changeConfig({
         ...config,
         tapControllerType: e.target.value as TapControllerType,
+      })
+    );
+  };
+
+  const handlePlayModeChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    dispatch(
+      changeConfig({
+        ...config,
+        playMode: e.target.value as PlayMode,
       })
     );
   };
@@ -151,21 +286,25 @@ const Settings: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      <TextField
-        key={textKeys.nextNums}
-        type="number"
-        label="Nexts"
-        InputProps={{ inputProps: { min: 1, max: MAX_NEXTS_NUM } }}
-        InputLabelProps={{
-          shrink: true,
-        }}
-        value={nextNum}
-        variant="outlined"
-        onBlur={handleNextsNumBlur}
-        onChange={handleNextsNumChange}
-        onKeyDown={handleNextsNumKeyDown}
-      />
-      <FormGroup>
+      <div>
+        <FormControl>
+          <TextField
+            key={textKeys.nextNums}
+            type="number"
+            label="Nexts"
+            InputProps={{ inputProps: { min: 1, max: MAX_NEXTS_NUM } }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            value={nextNum}
+            variant="outlined"
+            onBlur={handleNextsNumBlur}
+            onChange={handleNextsNumChange}
+            onKeyDown={handleNextsNumKeyDown}
+          />
+        </FormControl>
+      </div>
+      <div>
         <FormControlLabel
           control={
             <Checkbox
@@ -175,6 +314,8 @@ const Settings: React.FC = () => {
           }
           label="Show pivot"
         />
+      </div>
+      <div>
         <FormControlLabel
           control={
             <Checkbox
@@ -184,8 +325,76 @@ const Settings: React.FC = () => {
           }
           label="Show ghost"
         />
-      </FormGroup>
-      {tapController}
+      </div>
+      <div>{tapController}</div>
+
+      <div>
+        <FormGroup>
+          <FormLabel component="legend">Play Mode</FormLabel>
+          <RadioGroup
+            value={config.playMode}
+            onChange={handlePlayModeChange}
+          >
+            <FormControlLabel
+              value={PlayMode.Normal}
+              control={<Radio />}
+              label="Normal"
+            />
+            <FormControlLabel
+              value={PlayMode.Dig}
+              control={<Radio />}
+              label="Dig"
+            />
+            <div>
+              <div>Rise up rate</div>
+              <FormControl style={{ marginRight: 4 }}>
+                <TextField
+                  key={textKeys.riseUpRateFirst}
+                  type="number"
+                  label="first"
+                  InputProps={{
+                    inputProps: { min: 0, max: 100 },
+                    endAdornment: (
+                      <InputAdornment position="end">%</InputAdornment>
+                    ),
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={riseUpRateFirst}
+                  variant="outlined"
+                  disabled={config.playMode !== PlayMode.Dig}
+                  onBlur={handleRiseUpRateFirstBlur}
+                  onChange={handleRiseUpRateFirstChange}
+                  onKeyDown={handleRiseUpRateFirstKeyDown}
+                />
+              </FormControl>
+              <FormControl>
+                <TextField
+                  key={textKeys.riseUpRateSecond}
+                  type="number"
+                  label="second"
+                  InputProps={{
+                    inputProps: { min: 0, max: 100 },
+                    endAdornment: (
+                      <InputAdornment position="end">%</InputAdornment>
+                    ),
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={riseUpRateSecond}
+                  variant="outlined"
+                  disabled={config.playMode !== PlayMode.Dig}
+                  onBlur={handleRiseUpRateSecondBlur}
+                  onChange={handleRiseUpRateSecondChange}
+                  onKeyDown={handleRiseUpRateSecondKeyDown}
+                />
+              </FormControl>
+            </div>
+          </RadioGroup>
+        </FormGroup>
+      </div>
     </div>
   );
 };
