@@ -6,30 +6,36 @@ import {
   HoldState,
   NextNote,
   TapControllerType,
-  Tetromino
+  Tetromino,
 } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
+import merge from "deepmerge";
 
 export const makeSimuState = (state: {
   config?: {
-    nextNum: number;
+    nextNum?: number;
+    playMode?: PlayMode;
+    riseUpRate?: {
+      first: number;
+      second: number;
+    };
   };
   current?: ActiveTetromino;
   field?: FieldState;
   histories?: SimuStateHistory[];
   hold?: HoldState;
   isDead?: boolean;
+  lastRoseUpColumn?: number;
   nexts?: {
-    settled: Tetromino[];
-    unsettled: NextNote[];
+    settled?: Tetromino[];
+    unsettled?: NextNote[];
   };
   retryState?: SimuRetryState;
   seed?: number;
   step?: number;
   zoom?: number;
 }): SimuState => {
-  return Object.assign(
-    {},
+  return merge(
     {
       config: {
         nextNum: 5,
@@ -57,6 +63,7 @@ export const makeSimuState = (state: {
         type: Tetromino.NONE,
       },
       isDead: false,
+      lastRoseUpColumn: -1,
       nexts: {
         settled: [],
         unsettled: [],
@@ -67,6 +74,7 @@ export const makeSimuState = (state: {
           canHold: false,
           type: Tetromino.NONE,
         },
+        lastRoseUpColumn: -1,
         nexts: {
           unsettled: [],
         },

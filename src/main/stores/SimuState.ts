@@ -12,6 +12,7 @@ export type SimuStateHistory = {
   field: FieldState;
   hold: HoldState;
   isDead: boolean;
+  lastRoseUpColumn: number;
   nexts: {
     settled: Tetromino[];
     unsettled: NextNote[];
@@ -29,6 +30,7 @@ export type SimuState = {
   histories: SimuStateHistory[];
   hold: HoldState;
   isDead: boolean;
+  lastRoseUpColumn: number;
   nexts: {
     settled: Tetromino[];
     unsettled: NextNote[];

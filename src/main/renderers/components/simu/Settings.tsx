@@ -15,8 +15,9 @@ import {
   TextField,
   Theme,
 } from "@material-ui/core";
-import { changeConfig } from "ducks/simu/actions";
-import React from "react";
+import { changeConfig, clearSimu } from "ducks/simu/actions";
+import { getSimuConductor } from "ducks/simu/selectors";
+import React, { useEffect } from "react";
 import { MAX_NEXTS_NUM, TapControllerType } from "types/core";
 import { PlayMode } from "types/simu";
 import { SimuContext } from "./Simu";
@@ -249,6 +250,10 @@ const Settings: React.FC = () => {
     );
   };
 
+  useEffect(() => {
+    dispatch(clearSimu(getSimuConductor(state)));
+  }, [state.config.playMode]);
+
   const classes = useStyles();
   const tapController = (() => {
     if (state.env.isTouchDevice) {
@@ -331,10 +336,7 @@ const Settings: React.FC = () => {
       <div>
         <FormGroup>
           <FormLabel component="legend">Play Mode</FormLabel>
-          <RadioGroup
-            value={config.playMode}
-            onChange={handlePlayModeChange}
-          >
+          <RadioGroup value={config.playMode} onChange={handlePlayModeChange}>
             <FormControlLabel
               value={PlayMode.Normal}
               control={<Radio />}

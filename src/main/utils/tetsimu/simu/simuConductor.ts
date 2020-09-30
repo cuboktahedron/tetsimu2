@@ -2,11 +2,13 @@ import { SimuState } from "stores/SimuState";
 import {
   ActiveTetromino,
   Direction,
+  FieldState,
+  MAX_FIELD_HEIGHT,
   MAX_NEXTS_NUM,
   NextNote,
   Tetromino,
 } from "types/core";
-import { SimuRetryState } from "types/simu";
+import { PlayMode, SimuRetryState } from "types/simu";
 import { FieldHelper } from "../fieldHelper";
 import NextGenerator from "../nextGenerator";
 import { RandomNumberGenerator } from "../randomNumberGenerator";
@@ -14,11 +16,13 @@ import { RandomNumberGenerator } from "../randomNumberGenerator";
 export class SimuConductor {
   private _state: SimuState;
   private fieldHelper: FieldHelper;
+  private rng: RandomNumberGenerator;
 
   constructor(_state: SimuState) {
     this._state = { ..._state };
 
     this.fieldHelper = new FieldHelper(this.state.field);
+    this.rng = new RandomNumberGenerator(this.state.seed);
   }
 
   get state(): SimuState {
@@ -47,8 +51,7 @@ export class SimuConductor {
     }
 
     const newCurrentType = this.state.nexts.settled[0];
-    const rgn = new RandomNumberGenerator(this.state.seed);
-    const nextGen = new NextGenerator(rgn, this.state.nexts.unsettled);
+    const nextGen = new NextGenerator(this.rng, this.state.nexts.unsettled);
     const genNext = nextGen.next();
     const newNexts = {
       settled: this.state.nexts.settled.slice(1).concat(genNext.type),
@@ -84,7 +87,7 @@ export class SimuConductor {
     this.state.isDead = isDead;
     this.state.current = newCurrent;
     this.state.field = this.fieldHelper.field;
-    this.state.seed = rgn.seed;
+    this.state.seed = this.rng.seed;
   };
 
   holdTetromino = (): boolean => {
@@ -98,8 +101,7 @@ export class SimuConductor {
       unsettled: NextNote[];
     };
 
-    const rgn = new RandomNumberGenerator(this.state.seed);
-    const nextGen = new NextGenerator(rgn, this.state.nexts.unsettled);
+    const nextGen = new NextGenerator(this.rng, this.state.nexts.unsettled);
     if (this.state.hold.type === Tetromino.NONE) {
       const genNext = nextGen.next({ endless: true });
 
@@ -124,7 +126,7 @@ export class SimuConductor {
     this.state.hold = newHold;
     this.state.isDead = isDead;
     this.state.nexts = newNexts;
-    this.state.seed = rgn.seed;
+    this.state.seed = this.rng.seed;
 
     return true;
   };
@@ -192,6 +194,7 @@ export class SimuConductor {
     };
     const newField = this.state.retryState.field;
     const newHold = this.state.retryState.hold;
+    const lastRoseUpColumn = this.state.retryState.lastRoseUpColumn;
     const newNexts = {
       settled: newNextSettles,
       unsettled: lastGenNext.nextNotes,
@@ -200,6 +203,7 @@ export class SimuConductor {
     this.state.current = newCurrent;
     this.state.field = newField;
     this.state.hold = newHold;
+    this.state.lastRoseUpColumn = lastRoseUpColumn;
     this.state.nexts = newNexts;
     this.state.seed = rgn.seed;
   }
@@ -245,7 +249,19 @@ export class SimuConductor {
       },
       type: currentGenNext.type,
     };
-    const newField = this.state.retryState.field;
+
+    const playMode = this.state.config.playMode;
+    let newField: FieldState;
+    let newLastRoseUpColumn: number;
+    if (playMode === PlayMode.Normal) {
+      newField = this.state.retryState.field;
+      newLastRoseUpColumn = this.state.retryState.lastRoseUpColumn;
+    } else if (playMode === PlayMode.Dig) {
+      [newField, newLastRoseUpColumn] = this.resetFieldWithDigModeSuperRetry();
+    } else {
+      throw new Error(`PlayMode is invalid(${playMode})`);
+    }
+
     const newHold = this.state.retryState.hold;
     const newNexts = {
       settled: newNextSettles,
@@ -254,6 +270,7 @@ export class SimuConductor {
     const newRetryState: SimuRetryState = {
       field: newField,
       hold: newHold,
+      lastRoseUpColumn: this.state.retryState.lastRoseUpColumn,
       unsettledNexts: this.state.retryState.unsettledNexts,
       seed: initialSeed,
     };
@@ -261,8 +278,44 @@ export class SimuConductor {
     this.state.current = newCurrent;
     this.state.field = newField;
     this.state.hold = newHold;
+    this.state.lastRoseUpColumn = newLastRoseUpColumn;
     this.state.nexts = newNexts;
     this.state.retryState = newRetryState;
     this.state.seed = rgn.seed;
+  }
+
+  private resetFieldWithDigModeSuperRetry(): [FieldState, number] {
+    this.fieldHelper.clear();
+    let lastRoseUpColumn = this.state.retryState.lastRoseUpColumn;
+
+    for (let i = 0; i < 4; i++) {
+      lastRoseUpColumn = this.fieldHelper.riseUpLines(
+        this.rng,
+        4,
+        lastRoseUpColumn,
+        this.state.config.riseUpRate
+      );
+    }
+
+    return [this.fieldHelper.field, lastRoseUpColumn];
+  }
+
+  clear() {
+    const field = new Array(MAX_FIELD_HEIGHT).fill(
+      new Array(10).fill(Tetromino.NONE)
+    );
+
+    this.state.retryState = {
+      field,
+      hold: {
+        canHold: true,
+        type: Tetromino.NONE,
+      },
+      lastRoseUpColumn: -1,
+      seed: this.rng.seed,
+      unsettledNexts: [],
+    };
+
+    this.superRetry();
   }
 }

@@ -6,6 +6,7 @@ import {
   Tetromino,
   Vector2,
 } from "types/core";
+import { RandomNumberGenerator } from "./randomNumberGenerator";
 
 export class FieldHelper {
   private orgField: FieldCellValue[][];
@@ -36,6 +37,10 @@ export class FieldHelper {
           tetromino.type;
       }
     });
+  }
+
+  clear() {
+    this.field.fill(new Array(10).fill(FieldCellValue.NONE));
   }
 
   eraseLine() {
@@ -195,6 +200,48 @@ export class FieldHelper {
 
     const blocks = [...TetrominoShape[tetromino.type][tetromino.direction]];
     return blocks.every((block: Vector2) => block.y + tetromino.pos.y >= 20);
+  }
+
+  riseUpLines(
+    rgn: RandomNumberGenerator,
+    lineNum: number,
+    lastRoseUpColumn: number,
+    riseUpRate: { first: number; second: number }
+  ): number {
+    if (lineNum <= 0) {
+      return 0;
+    }
+
+    for (let i = 0; i < lineNum; i++) {
+      if (lastRoseUpColumn < 0 || lastRoseUpColumn >= 10) {
+        lastRoseUpColumn = Math.trunc(rgn.random() * 10);
+        this.riseUpLine(lastRoseUpColumn);
+
+        continue;
+      }
+
+      const rate = i === 0 ? riseUpRate.first : riseUpRate.second;
+      if (rgn.random() * 100 < rate) {
+        this.riseUpLine(lastRoseUpColumn);
+      } else {
+        let riseUpColumn;
+        do {
+          riseUpColumn = Math.trunc(rgn.random() * 10);
+        } while (lastRoseUpColumn === riseUpColumn);
+
+        lastRoseUpColumn = riseUpColumn;
+        this.riseUpLine(lastRoseUpColumn);
+      }
+    }
+
+    return lastRoseUpColumn;
+  }
+
+  riseUpLine(lastRoseUpColumn: number) {
+    this.field.pop();
+    const row = new Array(10).fill(FieldCellValue.GARBAGE);
+    row[lastRoseUpColumn] = FieldCellValue.NONE;
+    this.field.unshift(row);
   }
 
   get state(): FieldCellValue[][] {

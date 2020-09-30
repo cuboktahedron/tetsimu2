@@ -76,6 +76,7 @@ const initialSimuState: SimuState = ((): SimuState => {
     field,
     hold,
     unsettledNexts: [],
+    lastRoseUpColumn: -1,
     seed: initialSeed,
   };
 
@@ -106,12 +107,14 @@ const initialSimuState: SimuState = ((): SimuState => {
         field,
         hold,
         isDead: false,
+        lastRoseUpColumn: -1,
         nexts: nextsInfo,
         seed: rng.seed,
       },
     ],
     hold,
     isDead: false,
+    lastRoseUpColumn: -1,
     nexts: nextsInfo,
     retryState: retryState,
     seed: rng.seed,

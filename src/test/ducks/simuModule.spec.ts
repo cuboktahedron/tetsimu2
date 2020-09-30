@@ -14,8 +14,8 @@ import {
   RotateTetrominoAction,
   SimuActionsType,
 } from "ducks/simu/types";
-import { Direction, Tetromino } from "types/core";
-import { SimuRetryState } from "types/simu";
+import { Direction, FieldCellValue, Tetromino } from "types/core";
+import { PlayMode, SimuRetryState } from "types/simu";
 import { sleep } from "utils/function";
 import { makeCurrent } from "../utils/tetsimu/testUtils/makeCurrent";
 import { makeField } from "../utils/tetsimu/testUtils/makeField";
@@ -458,6 +458,7 @@ describe("simuModule", () => {
           canHold: false,
           type: Tetromino.T,
         },
+        lastRoseUpColumn: -1,
         unsettledNexts: [
           {
             candidates: [Tetromino.I],
@@ -501,6 +502,7 @@ describe("simuModule", () => {
           canHold: false,
           type: Tetromino.T,
         },
+        lastRoseUpColumn: -1,
         unsettledNexts: [
           {
             candidates: [Tetromino.I, Tetromino.J, Tetromino.L],
@@ -532,6 +534,9 @@ describe("simuModule", () => {
       expect(actual1.type).toBe(SimuActionsType.SuperRetry);
       expect(actual1.payload.field).toEqual(actual2.payload.field);
       expect(actual1.payload.hold).toEqual(actual2.payload.hold);
+      expect(actual1.payload.lastRoseUpColumn).toEqual(
+        actual2.payload.lastRoseUpColumn
+      );
       expect(actual1.payload.retryState.field).toEqual(
         actual2.payload.retryState.field
       );
@@ -540,6 +545,98 @@ describe("simuModule", () => {
       );
       expect(actual1.payload.retryState.unsettledNexts).toEqual(
         actual2.payload.retryState.unsettledNexts
+      );
+    });
+
+    it("should retry with dig mode(rose up rate 100%)", async () => {
+      const config = {
+        playMode: PlayMode.Dig,
+        riseUpRate: { first: 100, second: 100 },
+      };
+      const retryState: SimuRetryState = {
+        field: makeField("IJLOSTZNNN"),
+        hold: {
+          canHold: false,
+          type: Tetromino.T,
+        },
+        lastRoseUpColumn: 1,
+        unsettledNexts: [],
+        seed: makeSeed(1),
+      };
+
+      const actual = superRetry(
+        getSimuConductor(
+          makeSimuState({
+            config,
+            field: makeField(),
+            retryState,
+          })
+        )
+      );
+
+      // Lines(< 16) are buried garbages and all lines are same pattern.
+      expect(actual.payload.lastRoseUpColumn).toBe(1);
+      expect(actual.payload.field).toEqual(
+        // prettier-ignore
+        makeField(
+          "GNGGGGGGGG",
+          "GNGGGGGGGG",
+          "GNGGGGGGGG",
+          "GNGGGGGGGG",
+          "GNGGGGGGGG",
+          "GNGGGGGGGG",
+          "GNGGGGGGGG",
+          "GNGGGGGGGG",
+          "GNGGGGGGGG",
+          "GNGGGGGGGG",
+          "GNGGGGGGGG",
+          "GNGGGGGGGG",
+          "GNGGGGGGGG",
+          "GNGGGGGGGG",
+          "GNGGGGGGGG",
+          "GNGGGGGGGG"
+        )
+      );
+    });
+
+    it("should retry with dig mode(rose up rate 0%)", async () => {
+      const config = {
+        playMode: PlayMode.Dig,
+        riseUpRate: { first: 0, second: 0 },
+      };
+      const retryState: SimuRetryState = {
+        field: makeField("IJLOSTZNNN"),
+        hold: {
+          canHold: false,
+          type: Tetromino.T,
+        },
+        lastRoseUpColumn: 1,
+        unsettledNexts: [],
+        seed: makeSeed(1),
+      };
+
+      const actual = superRetry(
+        getSimuConductor(
+          makeSimuState({
+            config,
+            field: makeField(),
+            retryState,
+          })
+        )
+      );
+
+      // Lines(< 16) are buried garbages and each line is different pattern.
+      const garbegeHeight = 16;
+      const noneCols = actual.payload.field
+        .slice(0, garbegeHeight)
+        .map((row) => row.findIndex((cell) => cell === FieldCellValue.NONE));
+      for (let i = 0; i < garbegeHeight - 1; i++) {
+        expect(noneCols[i]).not.toBe(noneCols[i + 1]);
+      }
+
+      // Lines(<= 16) are not buried garbage
+      expect(actual.payload.field[garbegeHeight]).toEqual(
+        new Array(10).fill(FieldCellValue.NONE)
       );
     });
   });

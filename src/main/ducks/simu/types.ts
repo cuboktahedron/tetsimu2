@@ -11,6 +11,7 @@ import { SimuConfig, SimuRetryState } from "types/simu";
 export const SimuActionsType = {
   ChangeConfig: "simu/changeConfig",
   ChangeZoom: "simu/changeZoom",
+  Clear: "simu/clear",
   HardDropTetromino: "simu/hardDropTetromino",
   HoldTetromino: "simu/holdTetromino",
   MoveTetromino: "simu/moveTetromino",
@@ -24,6 +25,7 @@ export const SimuActionsType = {
 export type SimuActions =
   | ChangeConfigAction
   | ChangeZoomAction
+  | ClearSimuAction
   | HardDropTetrominoAction
   | HoldTetrominoAction
   | MoveTetrominoAction
@@ -44,6 +46,22 @@ export type ChangeZoomAction = {
   type: typeof SimuActionsType.ChangeZoom;
   payload: {
     zoom: number;
+  };
+} & Action;
+
+export type ClearSimuAction = {
+  type: typeof SimuActionsType.Clear;
+  payload: {
+    field: FieldState;
+    hold: HoldState;
+    current: ActiveTetromino;
+    lastRoseUpColumn: number;
+    nexts: {
+      settled: Tetromino[];
+      unsettled: NextNote[];
+    };
+    retryState: SimuRetryState;
+    seed: number;
   };
 } & Action;
 
@@ -100,6 +118,7 @@ export type RedoAction = {
     field: FieldState;
     hold: HoldState;
     isDead: boolean;
+    lastRoseUpColumn: number;
     nexts: {
       settled: Tetromino[];
       unsettled: NextNote[];
@@ -115,6 +134,7 @@ export type RetryAction = {
     field: FieldState;
     hold: HoldState;
     current: ActiveTetromino;
+    lastRoseUpColumn: number;
     nexts: {
       settled: Tetromino[];
       unsettled: NextNote[];
@@ -141,6 +161,7 @@ export type SuperRetryAction = {
     field: FieldState;
     hold: HoldState;
     current: ActiveTetromino;
+    lastRoseUpColumn: number;
     nexts: {
       settled: Tetromino[];
       unsettled: NextNote[];
@@ -157,6 +178,7 @@ export type UndoAction = {
     field: FieldState;
     hold: HoldState;
     isDead: boolean;
+    lastRoseUpColumn: number;
     nexts: {
       settled: Tetromino[];
       unsettled: NextNote[];

@@ -6,6 +6,7 @@ import { SimuConductor } from "utils/tetsimu/simu/simuConductor";
 import {
   ChangeConfigAction,
   ChangeZoomAction,
+  ClearSimuAction,
   HardDropTetrominoAction,
   HoldTetrominoAction,
   MoveTetrominoAction,
@@ -14,7 +15,7 @@ import {
   RotateTetrominoAction,
   SimuActionsType,
   SuperRetryAction,
-  UndoAction
+  UndoAction,
 } from "./types";
 
 export const changeConfig = (config: SimuConfig): ChangeConfigAction => {
@@ -31,6 +32,24 @@ export const changeZoom = (zoom: number): ChangeZoomAction => {
     type: SimuActionsType.ChangeZoom,
     payload: {
       zoom,
+    },
+  };
+};
+
+export const clearSimu = (conductor: SimuConductor): ClearSimuAction => {
+  conductor.clear();
+
+  const newState = conductor.state;
+  return {
+    type: SimuActionsType.Clear,
+    payload: {
+      current: newState.current,
+      field: newState.field,
+      hold: newState.hold,
+      nexts: newState.nexts,
+      lastRoseUpColumn: newState.lastRoseUpColumn,
+      retryState: newState.retryState,
+      seed: newState.seed,
     },
   };
 };
@@ -124,6 +143,7 @@ export const redo = (
       field: history.field,
       hold: history.hold,
       isDead: history.isDead,
+      lastRoseUpColumn: history.lastRoseUpColumn,
       nexts: history.nexts,
       seed: history.seed,
       step: newStep,
@@ -167,6 +187,7 @@ export const retry = (conductor: SimuConductor): RetryAction => {
       current: newState.current,
       field: newState.field,
       hold: newState.hold,
+      lastRoseUpColumn: newState.lastRoseUpColumn,
       nexts: newState.nexts,
       seed: newState.seed,
     },
@@ -184,6 +205,7 @@ export const superRetry = (conductor: SimuConductor): SuperRetryAction => {
       field: newState.field,
       hold: newState.hold,
       nexts: newState.nexts,
+      lastRoseUpColumn: newState.lastRoseUpColumn,
       retryState: newState.retryState,
       seed: newState.seed,
     },
@@ -207,6 +229,7 @@ export const undo = (
       field: history.field,
       hold: history.hold,
       isDead: history.isDead,
+      lastRoseUpColumn: history.lastRoseUpColumn,
       nexts: history.nexts,
       seed: history.seed,
       step: newStep,

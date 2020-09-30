@@ -13,6 +13,30 @@ const reducer = (state: SimuState, action: SimuActions): SimuState => {
         ...state,
         zoom: action.payload.zoom,
       };
+    case SimuActionsType.Clear:
+      return {
+        ...state,
+        current: action.payload.current,
+        field: action.payload.field,
+        hold: action.payload.hold,
+        nexts: action.payload.nexts,
+        histories: [
+          {
+            currentType: action.payload.current.type,
+            field: action.payload.field,
+            hold: action.payload.hold,
+            isDead: false,
+            lastRoseUpColumn: action.payload.lastRoseUpColumn,
+            nexts: action.payload.nexts,
+            seed: action.payload.seed,
+          },
+        ],
+        isDead: false,
+        retryState: action.payload.retryState,
+        seed: action.payload.seed,
+        step: 0,
+      };
+
     case SimuActionsType.HardDropTetromino: {
       const newHistories = state.histories.slice(0, state.step + 1);
       newHistories.push({
@@ -20,6 +44,7 @@ const reducer = (state: SimuState, action: SimuActions): SimuState => {
         field: action.payload.field,
         hold: action.payload.hold,
         isDead: action.payload.isDead,
+        lastRoseUpColumn: state.lastRoseUpColumn,
         nexts: action.payload.nexts,
         seed: action.payload.seed,
       });
@@ -47,6 +72,7 @@ const reducer = (state: SimuState, action: SimuActions): SimuState => {
         field: state.field,
         hold: action.payload.hold,
         isDead: action.payload.isDead,
+        lastRoseUpColumn: state.lastRoseUpColumn,
         nexts: action.payload.nexts,
         seed: action.payload.seed,
       });
@@ -78,6 +104,7 @@ const reducer = (state: SimuState, action: SimuActions): SimuState => {
         field: action.payload.field,
         hold: action.payload.hold,
         isDead: action.payload.isDead,
+        lastRoseUpColumn: action.payload.lastRoseUpColumn,
         nexts: action.payload.nexts,
         seed: action.payload.seed,
         step: action.payload.step,
@@ -96,6 +123,7 @@ const reducer = (state: SimuState, action: SimuActions): SimuState => {
             field: action.payload.field,
             hold: action.payload.hold,
             isDead: false,
+            lastRoseUpColumn: action.payload.lastRoseUpColumn,
             nexts: action.payload.nexts,
             seed: action.payload.seed,
           },
@@ -117,6 +145,7 @@ const reducer = (state: SimuState, action: SimuActions): SimuState => {
             field: action.payload.field,
             hold: action.payload.hold,
             isDead: false,
+            lastRoseUpColumn: action.payload.lastRoseUpColumn,
             nexts: action.payload.nexts,
             seed: action.payload.seed,
           },
@@ -142,6 +171,7 @@ const reducer = (state: SimuState, action: SimuActions): SimuState => {
         field: action.payload.field,
         hold: action.payload.hold,
         isDead: action.payload.isDead,
+        lastRoseUpColumn: action.payload.lastRoseUpColumn,
         nexts: action.payload.nexts,
         seed: action.payload.seed,
         step: action.payload.step,
