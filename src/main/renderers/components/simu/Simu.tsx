@@ -131,7 +131,7 @@ export const SimuContext = React.createContext({
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      background: blueGrey[800],
+      background: blueGrey[700],
       padding: 8,
       touchAction: "manipulation",
       userSelect: "none",
