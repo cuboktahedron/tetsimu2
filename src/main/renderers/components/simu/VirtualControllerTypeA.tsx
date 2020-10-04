@@ -22,13 +22,13 @@ const useStyles = makeStyles(() =>
 
     key: {
       background: "white",
-      border: "solid 4px white",
+      border: "double 6px black",
       boxSizing: "border-box",
       borderRadius: 8,
       color: "black",
       fontWeight: "bold",
       lineHeight: "44px",
-      margin: 2,
+      margin: 1,
       textAlign: "center",
     },
 
@@ -121,7 +121,7 @@ const VirtualControllerTypeA: React.FC = () => {
   const activeKeyBorder = (keyName: InputKey) => {
     const key = keys[keyName];
     if (key.pressed) {
-      return "solid 4px red";
+      return "solid 6px red";
     } else {
       return "";
     }
@@ -134,7 +134,7 @@ const VirtualControllerTypeA: React.FC = () => {
     ArrowDown: { label: "D", pos: { x: 2, y: 3 } },
     z: { label: "RotX", pos: { x: 1, y: 3 } },
     x: { label: "RotR", pos: { x: 3, y: 3 } },
-    c: { label: "HOLD", pos: { x: 1, y: 1 } },
+    c: { label: "Hold", pos: { x: 1, y: 1 } },
   };
 
   const keyDivs = Object.entries(virtualKeys).map(([key, value]) => {
