@@ -11,8 +11,8 @@ const useStyles = makeStyles(() =>
       alignItems: "center",
       display: "flex",
       opacity: 0.3,
-      padding: 2,
       position: "absolute",
+      left: 0,
       userSelect: "none",
       width: "100%",
       zIndex: 20,
@@ -94,7 +94,7 @@ const VirtualControllerTypeB: React.FC = () => {
 
   useEffect(() => {
     const y = window.innerHeight - 164;
-    setPosition({ x: 0, y });
+    setPosition({ x: 8, y });
   }, []);
 
   const classes = useStyles();
