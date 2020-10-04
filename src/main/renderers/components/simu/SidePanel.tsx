@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
     main: {
       flexGrow: 1,
+      overflowY: "auto",
     },
 
     iconBar: {

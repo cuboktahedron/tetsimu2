@@ -1,6 +1,7 @@
 import {
   Checkbox,
   createStyles,
+  Divider,
   FormControl,
   FormControlLabel,
   FormGroup,
@@ -29,13 +30,20 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
       padding: 8,
 
-      "& > div": {
+      "& > hr": {
         marginBottom: theme.spacing(1),
+        marginTop: theme.spacing(1),
       },
     },
 
     formControl: {
       minWidth: 120,
+    },
+
+    settingGroupTitle: {
+      fontWeight: "bold",
+      marginTop: "0.5rem",
+      marginBottom: "0.5rem",
     },
   })
 );
@@ -292,6 +300,9 @@ const Settings: React.FC = () => {
   return (
     <div className={classes.root}>
       <div>
+        <FormLabel component="legend" className={classes.settingGroupTitle}>
+          Display
+        </FormLabel>
         <FormControl>
           <TextField
             key={textKeys.nextNums}
@@ -331,11 +342,14 @@ const Settings: React.FC = () => {
           label="Show ghost"
         />
       </div>
-      <div>{tapController}</div>
+
+      <Divider />
 
       <div>
         <FormGroup>
-          <FormLabel component="legend">Play Mode</FormLabel>
+          <FormLabel component="legend" className={classes.settingGroupTitle}>
+            Play Mode
+          </FormLabel>
           <RadioGroup value={config.playMode} onChange={handlePlayModeChange}>
             <FormControlLabel
               value={PlayMode.Normal}
@@ -396,6 +410,15 @@ const Settings: React.FC = () => {
             </div>
           </RadioGroup>
         </FormGroup>
+      </div>
+
+      <Divider />
+
+      <div>
+        <FormLabel component="legend" className={classes.settingGroupTitle}>
+          Input
+        </FormLabel>
+        <div>{tapController}</div>
       </div>
     </div>
   );
