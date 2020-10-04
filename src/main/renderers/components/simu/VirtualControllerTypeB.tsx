@@ -75,6 +75,7 @@ const VirtualControllerTypeB: React.FC = () => {
     z: new OperationKey({}),
     x: new OperationKey({}),
     c: new OperationKey({}),
+    b: new OperationKey({}),
   };
 
   const [keys, setKeys] = React.useState(initialKeys);
@@ -248,6 +249,18 @@ const VirtualControllerTypeB: React.FC = () => {
         <div
           className={`${classes.key} ${classes.keyButton}`}
           style={{
+            border: activeKeyBorder("b"),
+            left: 0,
+            top: 44,
+          }}
+          onTouchStart={(e) => handleTouchStart(e, "b")}
+          onTouchEnd={(e) => handleTouchEnd(e, "b")}
+        >
+          Y
+        </div>
+        <div
+          className={`${classes.key} ${classes.keyButton}`}
+          style={{
             border: activeKeyBorder("c"),
             left: 44,
             top: 0,
@@ -255,7 +268,7 @@ const VirtualControllerTypeB: React.FC = () => {
           onTouchStart={(e) => handleTouchStart(e, "c")}
           onTouchEnd={(e) => handleTouchEnd(e, "c")}
         >
-          C
+          X
         </div>
         <div
           className={`${classes.key} ${classes.keyButton}`}

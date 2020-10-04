@@ -11,6 +11,7 @@ export const useKey = (): ControllerKeys => {
     z: new OperationKey({}),
     x: new OperationKey({}),
     c: new OperationKey({}),
+    b: new OperationKey({}),
   };
 
   const [keys, setKeys] = React.useState(initialKeys);
@@ -37,6 +38,9 @@ export const useKey = (): ControllerKeys => {
           keys[e.key].down();
           break;
         case "c":
+          keys[e.key].down();
+          break;
+        case "b":
           keys[e.key].down();
           break;
       }
@@ -71,6 +75,9 @@ export const useKey = (): ControllerKeys => {
           keys[e.key].up();
           break;
         case "c":
+          keys[e.key].up();
+          break;
+        case "b":
           keys[e.key].up();
           break;
       }

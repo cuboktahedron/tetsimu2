@@ -50,6 +50,7 @@ const VirtualControllerTypeA: React.FC = () => {
     z: new OperationKey({}),
     x: new OperationKey({}),
     c: new OperationKey({}),
+    b: new OperationKey({}),
   };
 
   const [keys, setKeys] = React.useState(initialKeys);
@@ -135,6 +136,7 @@ const VirtualControllerTypeA: React.FC = () => {
     z: { label: "RotX", pos: { x: 1, y: 3 } },
     x: { label: "RotR", pos: { x: 3, y: 3 } },
     c: { label: "Hold", pos: { x: 1, y: 1 } },
+    b: { label: "Undo", pos: { x: 2, y: 1 } },
   };
 
   const keyDivs = Object.entries(virtualKeys).map(([key, value]) => {

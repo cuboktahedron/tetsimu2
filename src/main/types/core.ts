@@ -76,6 +76,7 @@ export type ControllerKeys = {
   z: OperationKey;
   x: OperationKey;
   c: OperationKey;
+  b: OperationKey;
 };
 
 export type InputKey = keyof ControllerKeys;

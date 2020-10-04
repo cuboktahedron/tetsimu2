@@ -3,6 +3,7 @@ import {
   holdTetromino,
   moveTetromino,
   rotateTetromino,
+  undo,
 } from "ducks/simu/actions";
 import { getSimuConductor } from "ducks/simu/selectors";
 import React, { useEffect } from "react";
@@ -13,6 +14,10 @@ export const useControl = (keys: ControllerKeys) => {
   const { state, dispatch } = React.useContext(SimuContext);
 
   useEffect(() => {
+    if (keys.b.active) {
+      dispatch(undo(state.step, state.histories));
+    }
+
     if (state.isDead) {
       return;
     }

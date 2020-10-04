@@ -1,4 +1,4 @@
-import { redo, retry, superRetry, undo } from "ducks/simu/actions";
+import { redo, retry, superRetry } from "ducks/simu/actions";
 import { getSimuConductor } from "ducks/simu/selectors";
 import React from "react";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -16,7 +16,6 @@ const HotKey: React.FC = () => {
   useHotkeys("shift + r", () => dispatch(superRetry(getSimuConductor(state))), [
     state,
   ]);
-  useHotkeys("b", () => dispatch(undo(state.step, state.histories)), [state]);
   useHotkeys("shift + b", () => dispatch(redo(state.step, state.histories)), [
     state,
   ]);
