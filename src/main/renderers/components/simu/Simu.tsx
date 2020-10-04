@@ -91,7 +91,7 @@ const initialSimuState: SimuState = ((): SimuState => {
     showsGhost: true,
     showsPivot: true,
     tapControllerType: isTouchDevice
-      ? TapControllerType.TypeA
+      ? TapControllerType.TypeB
       : TapControllerType.None,
   };
   return {
