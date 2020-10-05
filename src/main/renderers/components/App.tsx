@@ -1,6 +1,6 @@
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
 import React from "react";
-import Simu from "./simu/Simu";
+import Edit from "./edit/Edit";
 
 const theme = createMuiTheme({
   typography: {
@@ -11,7 +11,7 @@ const theme = createMuiTheme({
 const App: React.FC = () => {
   return (
     <MuiThemeProvider theme={theme}>
-      <Simu />
+      <Edit />
     </MuiThemeProvider>
   );
 };
