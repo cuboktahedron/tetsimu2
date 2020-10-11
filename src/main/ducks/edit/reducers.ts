@@ -1,7 +1,10 @@
 import { EditState } from "stores/EditState";
+import { Action } from "types/core";
 import { EditActions, EditActionsType } from "./types";
 
-const reducer = (state: EditState, action: EditActions): EditState => {
+const reducer = (state: EditState, anyAction: Action): EditState => {
+  const action = anyAction as EditActions;
+
   switch (action.type) {
     case EditActionsType.ChangeNextsPattern:
       return {

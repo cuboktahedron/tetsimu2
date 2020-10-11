@@ -1,7 +1,10 @@
 import { SimuState } from "stores/SimuState";
+import { Action } from "types/core";
 import { SimuActions, SimuActionsType } from "./types";
 
-const reducer = (state: SimuState, action: SimuActions): SimuState => {
+const reducer = (state: SimuState, anyAction: Action): SimuState => {
+  const action = anyAction as SimuActions;
+
   switch (action.type) {
     case SimuActionsType.ChangeConfig:
       return {

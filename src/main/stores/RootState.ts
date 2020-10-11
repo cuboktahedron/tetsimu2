@@ -1,9 +1,15 @@
 import { TetsimuMode } from "types/core";
-import { EditState } from "./EditState";
-import { SimuState } from "./SimuState";
+import { EditState, initialEditState } from "./EditState";
+import { initialSimuState, SimuState } from "./SimuState";
 
 export type RootState = {
   mode: TetsimuMode;
-  simu?: SimuState;
-  edit?: EditState;
+  simu: SimuState;
+  edit: EditState;
+};
+
+export const initialRootState: RootState = {
+  mode: TetsimuMode.Simu,
+  simu: initialSimuState,
+  edit: initialEditState,
 };

@@ -1,22 +1,12 @@
 import { createStyles, makeStyles, Theme, useTheme } from "@material-ui/core";
 import { blueGrey } from "@material-ui/core/colors";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import reducer from "ducks/edit";
 import { changeZoom } from "ducks/edit/actions";
-import { EditActions } from "ducks/edit/types";
 import React from "react";
 import useSimutatorZoom from "renderers/hooks/useSimutatorZoom";
-import { EditState } from "stores/EditState";
-import {
-  FieldCellValue,
-  FieldState,
-  MAX_FIELD_HEIGHT,
-  MAX_NEXTS_NUM,
-  Tetromino,
-} from "types/core";
-import { reducerLogger } from "utils/reducerLogger";
-import NextGenerator from "utils/tetsimu/nextGenerator";
-import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
+import { initialEditState } from "stores/EditState";
+import { Action } from "types/core";
+import { RootContext } from "../App";
 import FieldLeft from "./FieldLeft";
 import FieldWrapper from "./FieldWrapper";
 import HoldNexts from "./HoldNexts";
@@ -24,57 +14,9 @@ import HotKey from "./Hotkey";
 import NextsOnly from "./NextsOnly";
 import SidePanel from "./SidePanel";
 
-const initialEdittate: EditState = ((): EditState => {
-  const rng = new RandomNumberGenerator();
-  const nexts: Tetromino[] = [];
-  const nextGen = new NextGenerator(rng, []);
-  const currentGenNext = nextGen.next();
-  let lastGenNext = currentGenNext;
-
-  for (let i = 0; i < MAX_NEXTS_NUM; i++) {
-    lastGenNext = nextGen.next();
-    nexts.push(lastGenNext.type);
-  }
-
-  const field = ((): FieldState => {
-    const field = [];
-    for (let y = 0; y < MAX_FIELD_HEIGHT; y++) {
-      const row = new Array<Tetromino>(10);
-      row.fill(Tetromino.NONE);
-      field.push(row);
-    }
-
-    return field;
-  })();
-
-  const hold = {
-    type: Tetromino.NONE,
-    canHold: true,
-  };
-
-  const nextsInfo = {
-    nextNotes: [],
-  };
-
-  const isTouchDevice = "ontouchstart" in window;
-  return {
-    env: {
-      isTouchDevice,
-    },
-    field,
-    hold,
-    nexts: nextsInfo,
-    tools: {
-      selectedCellType: FieldCellValue.I,
-      nextsPattern: "[IJLOST]p6",
-    },
-    zoom: 1,
-  };
-})();
-
 export const EditContext = React.createContext({
-  state: initialEdittate,
-  dispatch: (_: EditActions) => {},
+  state: initialEditState,
+  dispatch: (_: Action) => {},
 });
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -108,9 +50,9 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const wrappedReducer = reducerLogger(reducer);
 const Simu: React.FC = () => {
-  const [state, dispatch] = React.useReducer(wrappedReducer, initialEdittate);
+  const { state: rootState, dispatch } = React.useContext(RootContext);
+  const state = rootState.edit;
 
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("xs"));
