@@ -1,5 +1,6 @@
 import {
   createStyles,
+  Divider,
   Drawer,
   List,
   ListItem,
@@ -7,13 +8,17 @@ import {
   makeStyles,
   Theme,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
+import CallToActionIcon from "@material-ui/icons/CallToAction";
 import SettingsIcon from "@material-ui/icons/Settings";
+import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import clsx from "clsx";
 import React from "react";
+import { SidePanelContext } from "../App";
 import Settings from "./Settings";
+import Tools from "./Tools";
 
 type SidePanelStyleProps = {
   drawerWidth: number;
@@ -67,8 +72,18 @@ const useStyles = makeStyles((theme: Theme) =>
       minWidth: "unset",
     },
 
-    icon: {
+    modeIcon: {
+      color: grey[900],
       fontSize: "48px",
+    },
+
+    icon: {
+      color: theme.palette.primary.dark,
+      fontSize: "48px",
+
+      "&.selected": {
+        color: theme.palette.secondary.dark,
+      },
     },
 
     content: {
@@ -78,13 +93,22 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const mains = {
+  tools: <Tools />,
+  settings: <Settings />,
+};
+
 const SidePanel: React.FC = () => {
-  const [drawerWidth, setDrawerWidth] = React.useState(
-    Math.min(480, window.innerWidth)
-  );
+  const [drawerWidth, setDrawerWidth] = React.useContext(
+    SidePanelContext
+  ).drawerWidth;
+  const [open, setOpen] = React.useContext(SidePanelContext).open;
+
+  const [selectedIconName, setSelectedIconName] = React.useState<
+    "tools" | "settings"
+  >("tools");
   const [prevDragX, setPrevDragX] = React.useState<number | null>(null);
-  const [open, setOpen] = React.useState(false);
-  const [main, setMain] = React.useState(<Settings />);
+  const [main, setMain] = React.useState(<Tools />);
 
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("xs"));
@@ -93,17 +117,29 @@ const SidePanel: React.FC = () => {
     maxDrawerWidth: window.innerWidth,
   });
 
-  const handleSettingsClick = () => {
-    if (!open) {
+  const handleMenuIconClick = (iconName: "tools" | "settings") => {
+    if (iconName === selectedIconName) {
+      if (!open) {
+        if (small) {
+          setDrawerWidth(window.innerWidth);
+        } else {
+          setDrawerWidth(Math.min(drawerWidth, window.innerWidth));
+        }
+        setMain(mains[iconName]);
+      }
+
+      setSelectedIconName(iconName);
+      setOpen(!open);
+    } else {
       if (small) {
         setDrawerWidth(window.innerWidth);
       } else {
         setDrawerWidth(Math.min(drawerWidth, window.innerWidth));
       }
+      setSelectedIconName(iconName);
+      setMain(mains[iconName]);
+      setOpen(true);
     }
-
-    setOpen(!open);
-    setMain(<Settings />);
   };
 
   const handleResizeHandleMouseDown = (e: React.MouseEvent) => {
@@ -214,9 +250,36 @@ const SidePanel: React.FC = () => {
         </div>
         <div className={classes.iconBar}>
           <List>
-            <ListItem button disableGutters onClick={handleSettingsClick}>
+            <ListItem disableGutters>
               <ListItemIcon className={classes.listIcon}>
-                <SettingsIcon className={classes.icon} />
+                <SportsEsportsIcon className={classes.modeIcon} />
+              </ListItemIcon>
+            </ListItem>
+            <Divider />
+            <ListItem
+              button
+              disableGutters
+              onClick={() => handleMenuIconClick("tools")}
+            >
+              <ListItemIcon className={classes.listIcon}>
+                <CallToActionIcon
+                  className={clsx(classes.icon, {
+                    selected: selectedIconName === "tools" && open,
+                  })}
+                />
+              </ListItemIcon>
+            </ListItem>
+            <ListItem
+              button
+              disableGutters
+              onClick={() => handleMenuIconClick("settings")}
+            >
+              <ListItemIcon className={classes.listIcon}>
+                <SettingsIcon
+                  className={clsx(classes.icon, {
+                    selected: selectedIconName === "settings" && open,
+                  })}
+                />
               </ListItemIcon>
             </ListItem>
           </List>

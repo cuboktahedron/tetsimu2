@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Simu: React.FC = () => {
+const Edit: React.FC = () => {
   const { state: rootState, dispatch } = React.useContext(RootContext);
   const state = rootState.edit;
 
@@ -102,4 +102,4 @@ const Simu: React.FC = () => {
   }
 };
 
-export default Simu;
+export default Edit;

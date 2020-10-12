@@ -22,8 +22,9 @@ import {
   changeToolCellValue,
   clearEdit,
 } from "ducks/edit/actions";
+import { changeTetsimuMode, editToSimuMode } from "ducks/root/actions";
 import React, { useEffect } from "react";
-import { FieldCellValue } from "types/core";
+import { FieldCellValue, TetsimuMode } from "types/core";
 import NextNotesParser from "utils/tetsimu/nextNoteParser";
 import { EditContext } from "./Edit";
 
@@ -49,6 +50,12 @@ const useStyles = makeStyles((theme: Theme) =>
       "& > hr": {
         marginBottom: theme.spacing(1),
         marginTop: theme.spacing(1),
+      },
+    },
+
+    buttons: {
+      "& > button": {
+        margin: theme.spacing(1),
       },
     },
 
@@ -114,6 +121,14 @@ const Tools: React.FC = () => {
 
   const handleClearClick = () => {
     dispatch(clearEdit());
+  };
+
+  const handleSimuClick = () => {
+    dispatch(editToSimuMode(state));
+  };
+
+  const handleBackClick = () => {
+    dispatch(changeTetsimuMode(TetsimuMode.Simu));
   };
 
   const handleNextsPatternChange = (
@@ -189,6 +204,15 @@ const Tools: React.FC = () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
+      <div className={classes.buttons}>
+        <Button variant="contained" color="secondary" onClick={handleSimuClick}>
+          SIMU
+        </Button>
+        <Button variant="contained" color="primary" onClick={handleBackClick}>
+          BACK
+        </Button>
+      </div>
+      <Divider />
       <div className={classes.cellTypes}>{cellTypes}</div>
       <Divider />
       <TextField

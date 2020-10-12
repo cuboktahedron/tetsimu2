@@ -1,5 +1,6 @@
 import {
   createStyles,
+  Divider,
   Drawer,
   List,
   ListItem,
@@ -10,9 +11,11 @@ import {
   useTheme,
 } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
-import EditIcon from '@material-ui/icons/Edit';
+import BuildIcon from "@material-ui/icons/Build";
+import EditIcon from "@material-ui/icons/Edit";
 import clsx from "clsx";
 import React from "react";
+import { SidePanelContext } from "../App";
 import Tools from "./Tools";
 
 type SidePanelStyleProps = {
@@ -67,8 +70,18 @@ const useStyles = makeStyles((theme: Theme) =>
       minWidth: "unset",
     },
 
-    icon: {
+    modeIcon: {
+      color: grey[900],
       fontSize: "48px",
+    },
+
+    icon: {
+      color: theme.palette.primary.dark,
+      fontSize: "48px",
+
+      "&.selected": {
+        color: theme.palette.secondary.dark,
+      },
     },
 
     content: {
@@ -78,12 +91,20 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const mains = {
+  tools: <Tools />,
+};
+
 const SidePanel: React.FC = () => {
-  const [drawerWidth, setDrawerWidth] = React.useState(
-    Math.min(480, window.innerWidth)
+  const [drawerWidth, setDrawerWidth] = React.useContext(
+    SidePanelContext
+  ).drawerWidth;
+  const [open, setOpen] = React.useContext(SidePanelContext).open;
+
+  const [selectedIconName, setSelectedIconName] = React.useState<"tools">(
+    "tools"
   );
   const [prevDragX, setPrevDragX] = React.useState<number | null>(null);
-  const [open, setOpen] = React.useState(false);
   const [main, setMain] = React.useState(<Tools />);
 
   const theme = useTheme();
@@ -93,17 +114,29 @@ const SidePanel: React.FC = () => {
     maxDrawerWidth: window.innerWidth,
   });
 
-  const handleToolsClick = () => {
-    if (!open) {
+  const handleMenuIconClick = (iconName: "tools") => {
+    if (iconName === selectedIconName) {
+      if (!open) {
+        if (small) {
+          setDrawerWidth(window.innerWidth);
+        } else {
+          setDrawerWidth(Math.min(drawerWidth, window.innerWidth));
+        }
+        setMain(mains[iconName]);
+      }
+
+      setSelectedIconName(iconName);
+      setOpen(!open);
+    } else {
       if (small) {
         setDrawerWidth(window.innerWidth);
       } else {
         setDrawerWidth(Math.min(drawerWidth, window.innerWidth));
       }
+      setSelectedIconName(iconName);
+      setMain(mains[iconName]);
+      setOpen(true);
     }
-
-    setOpen(!open);
-    setMain(<Tools />);
   };
 
   const handleResizeHandleMouseDown = (e: React.MouseEvent) => {
@@ -214,9 +247,23 @@ const SidePanel: React.FC = () => {
         </div>
         <div className={classes.iconBar}>
           <List>
-            <ListItem button disableGutters onClick={handleToolsClick}>
+            <ListItem disableGutters>
               <ListItemIcon className={classes.listIcon}>
-                <EditIcon className={classes.icon} />
+                <EditIcon className={classes.modeIcon} />
+              </ListItemIcon>
+            </ListItem>
+            <Divider />
+            <ListItem
+              button
+              disableGutters
+              onClick={() => handleMenuIconClick("tools")}
+            >
+              <ListItemIcon className={classes.listIcon}>
+                <BuildIcon
+                  className={clsx(classes.icon, {
+                    selected: selectedIconName === "tools" && open,
+                  })}
+                />
               </ListItemIcon>
             </ListItem>
           </List>

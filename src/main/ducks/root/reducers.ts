@@ -1,7 +1,7 @@
 import editReducer from "ducks/edit";
 import simuReducer from "ducks/simu";
 import { RootState } from "stores/RootState";
-import { Action } from "types/core";
+import { Action, TetsimuMode } from "types/core";
 import { RootActions, RootActionsType } from "./types";
 
 const reducers = {
@@ -20,6 +20,49 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
           ...state,
           mode: action.payload.mode,
         };
+      case RootActionsType.EditToSimuMode:
+        return {
+          ...state,
+          mode: TetsimuMode.Simu,
+          simu: {
+            ...state.simu,
+            current: action.payload.current,
+            field: action.payload.field,
+            hold: action.payload.hold,
+            nexts: action.payload.nexts,
+            histories: [
+              {
+                currentType: action.payload.current.type,
+                field: action.payload.field,
+                hold: action.payload.hold,
+                isDead: false,
+                lastRoseUpColumn: action.payload.lastRoseUpColumn,
+                nexts: action.payload.nexts,
+                seed: action.payload.seed,
+              },
+            ],
+            isDead: false,
+            retryState: action.payload.retryState,
+            seed: action.payload.seed,
+            step: 0,
+          },
+        };
+      case RootActionsType.SimuToEditMode: {
+        return {
+          ...state,
+          edit: {
+            ...state.edit,
+            field: action.payload.field,
+            hold: action.payload.hold,
+            nexts: action.payload.nexts,
+            tools: {
+              ...state.edit.tools,
+              nextsPattern: action.payload.tools.nextsPattern,
+            },
+          },
+          mode: TetsimuMode.Edit,
+        };
+      }
       default:
         return state;
     }
