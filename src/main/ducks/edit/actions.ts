@@ -1,11 +1,15 @@
 import {
   FieldCellValue,
+  FieldState,
   HoldState,
   MAX_FIELD_HEIGHT,
   Tetromino,
+  Vector2,
 } from "types/core";
+import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import NextNotesParser from "utils/tetsimu/nextNoteParser";
 import {
+  ChangeFieldAction,
   ChangeHoldAction,
   ChangeNextsPatternAction,
   ChangeToolCellValueAction,
@@ -13,6 +17,30 @@ import {
   ClearEditAction,
   EditActionsType,
 } from "./types";
+
+export const changeField = (
+  prevField: FieldState,
+  cellType: FieldCellValue,
+  pos: Vector2
+): ChangeFieldAction => {
+  const fieldHelper = new FieldHelper(prevField);
+  if (fieldHelper.putCell(pos, cellType)) {
+    return {
+      type: EditActionsType.ChangeField,
+      payload: {
+        field: fieldHelper.state,
+        succeeded: true,
+      },
+    };
+  } else {
+    return {
+      type: EditActionsType.ChangeField,
+      payload: {
+        succeeded: false,
+      },
+    };
+  }
+};
 
 export const changeHold = (
   prevHold: HoldState,

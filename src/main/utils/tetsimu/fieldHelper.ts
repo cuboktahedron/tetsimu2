@@ -3,6 +3,7 @@ import {
   ActiveTetromino,
   Direction,
   FieldCellValue,
+  MAX_FIELD_HEIGHT,
   Tetromino,
   Vector2,
 } from "types/core";
@@ -242,6 +243,19 @@ export class FieldHelper {
     const row = new Array(10).fill(FieldCellValue.GARBAGE);
     row[lastRoseUpColumn] = FieldCellValue.NONE;
     this.field.unshift(row);
+  }
+
+  putCell(pos: Vector2, cellType: FieldCellValue) {
+    if (pos.x < 0 || pos.x >= 10 || pos.y < 0 || pos.y >= MAX_FIELD_HEIGHT) {
+      return false;
+    }
+
+    if (this.field[pos.y][pos.x] === cellType) {
+      return false;
+    } else {
+      this.field[pos.y][pos.x] = cellType;
+      return true;
+    }
   }
 
   get state(): FieldCellValue[][] {

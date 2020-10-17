@@ -6,6 +6,15 @@ const reducer = (state: EditState, anyAction: Action): EditState => {
   const action = anyAction as EditActions;
 
   switch (action.type) {
+    case EditActionsType.ChangeField:
+      if (!action.payload.succeeded) {
+        return state;
+      }
+
+      return {
+        ...state,
+        field: action.payload.field,
+      };
     case EditActionsType.ChangeHold:
       if (!action.payload.succeeded) {
         return state;

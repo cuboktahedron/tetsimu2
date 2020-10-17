@@ -8,6 +8,7 @@ import {
 } from "types/core";
 
 export const EditActionsType = {
+  ChangeField: "edit/changeField",
   ChangeHold: "edit/changeHold",
   ChangeNextsPattern: "edit/changeNextsPattern",
   ChangeToolCellValue: "edit/changeToolCellValue",
@@ -16,11 +17,24 @@ export const EditActionsType = {
 } as const;
 
 export type EditActions =
+  | ChangeFieldAction
   | ChangeHoldAction
   | ChangeNextsPatternAction
   | ChangeToolCellValueAction
   | ChangeZoomAction
   | ClearEditAction;
+
+export type ChangeFieldAction = {
+  type: typeof EditActionsType.ChangeField;
+  payload:
+    | {
+        field: FieldState;
+        succeeded: true;
+      }
+    | {
+        succeeded: false;
+      };
+} & Action;
 
 export type ChangeHoldAction = {
   type: typeof EditActionsType.ChangeHold;
