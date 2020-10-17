@@ -37,7 +37,6 @@ export const FieldCellValue = {
   S: Tetromino.S,
   T: Tetromino.T,
   Z: Tetromino.Z,
-  WALL: 8,
   GARBAGE: 9,
 } as const;
 

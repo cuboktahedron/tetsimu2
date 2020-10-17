@@ -1,12 +1,80 @@
-import { FieldCellValue, MAX_FIELD_HEIGHT, Tetromino } from "types/core";
+import {
+  FieldCellValue,
+  HoldState,
+  MAX_FIELD_HEIGHT,
+  Tetromino,
+} from "types/core";
 import NextNotesParser from "utils/tetsimu/nextNoteParser";
 import {
+  ChangeHoldAction,
   ChangeNextsPatternAction,
   ChangeToolCellValueAction,
   ChangeZoomAction,
   ClearEditAction,
   EditActionsType,
 } from "./types";
+
+export const changeHold = (
+  prevHold: HoldState,
+  type: Tetromino
+): ChangeHoldAction => {
+  if (type === FieldCellValue.NONE) {
+    if (prevHold.type === Tetromino.NONE) {
+      return {
+        type: EditActionsType.ChangeHold,
+        payload: {
+          succeeded: false,
+        },
+      };
+    } else {
+      return {
+        type: EditActionsType.ChangeHold,
+        payload: {
+          hold: {
+            canHold: true,
+            type,
+          },
+          succeeded: true,
+        },
+      };
+    }
+  } else if (prevHold.type === type) {
+    if (prevHold.canHold) {
+      return {
+        type: EditActionsType.ChangeHold,
+        payload: {
+          hold: {
+            canHold: false,
+            type,
+          },
+          succeeded: true,
+        },
+      };
+    } else {
+      return {
+        type: EditActionsType.ChangeHold,
+        payload: {
+          hold: {
+            canHold: true,
+            type: Tetromino.NONE,
+          },
+          succeeded: true,
+        },
+      };
+    }
+  } else {
+    return {
+      type: EditActionsType.ChangeHold,
+      payload: {
+        hold: {
+          canHold: true,
+          type,
+        },
+        succeeded: true,
+      },
+    };
+  }
+};
 
 export const changeNextsPattern = (
   nextsPattern: string
@@ -59,7 +127,7 @@ export const clearEdit = (): ClearEditAction => {
       },
       tools: {
         nextsPattern: "",
-      }
+      },
     },
   };
 };

@@ -1,6 +1,7 @@
 import { createStyles, makeStyles } from "@material-ui/core";
+import { changeHold } from "ducks/edit/actions";
 import React from "react";
-import { Tetromino } from "types/core";
+import { FieldCellValue, Tetromino } from "types/core";
 import TetrominoBlocks from "../core/TetrominoBlocks";
 import { EditContext } from "./Edit";
 
@@ -14,6 +15,7 @@ type StyleProps = {
 const useStyles = makeStyles(() =>
   createStyles({
     root: {
+      cursor: "crosshair",
       height: "100%",
       width: "100%",
     },
@@ -27,12 +29,24 @@ const useStyles = makeStyles(() =>
 );
 
 const Hold: React.FC<HoldProps> = () => {
-  const { state } = React.useContext(EditContext);
+  const { state, dispatch } = React.useContext(EditContext);
   const hold = state.hold;
+
+  const selectedType = state.tools.selectedCellType;
+  const handleClick = () => {
+    if (
+      selectedType === FieldCellValue.NONE ||
+      selectedType === FieldCellValue.GARBAGE
+    ) {
+      dispatch(changeHold(state.hold, Tetromino.NONE));
+    } else {
+      dispatch(changeHold(state.hold, selectedType));
+    }
+  };
 
   const classes = useStyles(hold);
   return (
-    <div className={classes.root}>
+    <div className={classes.root} onClick={handleClick}>
       <div className={classes.blocks}>
         <TetrominoBlocks type={hold.type}></TetrominoBlocks>
       </div>

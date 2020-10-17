@@ -3,7 +3,10 @@ import { FieldState, FieldCellValue, MAX_FIELD_HEIGHT } from "types/core";
 const emptyField = new Array(MAX_FIELD_HEIGHT).fill("NNNNNNNNNN");
 
 export const makeField = (...field: string[]): FieldState => {
-  const fullField: string[] = emptyField.concat(field).slice(field.length).reverse();
+  const fullField: string[] = emptyField
+    .concat(field)
+    .slice(field.length)
+    .reverse();
 
   return fullField.map((row) => {
     return row.split("").map((col) => {
@@ -26,8 +29,6 @@ export const makeField = (...field: string[]): FieldState => {
           return FieldCellValue.GARBAGE;
         case "N":
           return FieldCellValue.NONE;
-        case "W":
-          return FieldCellValue.WALL;
         default:
           throw new Error(`Specified invalid letter of field cell(${col})`);
       }

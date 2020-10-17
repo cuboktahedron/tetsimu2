@@ -49,7 +49,6 @@ const cellBackground = {
   [FieldCellValue.T]: purple.A100,
   [FieldCellValue.Z]: red.A100,
   [FieldCellValue.GARBAGE]: grey.A100,
-  [FieldCellValue.WALL]: "transparent",
 };
 
 type FieldProps = {};

@@ -7,7 +7,7 @@ import {
   orange,
   purple,
   red,
-  yellow,
+  yellow
 } from "@material-ui/core/colors";
 import React from "react";
 import { FieldCellValue, MAX_VISIBLE_FIELD_HEIGHT } from "types/core";
@@ -49,7 +49,6 @@ const cellBackground = {
   [FieldCellValue.T]: purple.A100,
   [FieldCellValue.Z]: red.A100,
   [FieldCellValue.GARBAGE]: grey.A100,
-  [FieldCellValue.WALL]: "transparent",
 };
 
 type FieldProps = {};

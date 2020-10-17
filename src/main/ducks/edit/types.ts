@@ -4,9 +4,11 @@ import {
   FieldState,
   HoldState,
   NextNote,
+  Tetromino,
 } from "types/core";
 
 export const EditActionsType = {
+  ChangeHold: "edit/changeHold",
   ChangeNextsPattern: "edit/changeNextsPattern",
   ChangeToolCellValue: "edit/changeToolCellValue",
   ChangeZoom: "edit/changeZoom",
@@ -14,10 +16,26 @@ export const EditActionsType = {
 } as const;
 
 export type EditActions =
+  | ChangeHoldAction
   | ChangeNextsPatternAction
   | ChangeToolCellValueAction
   | ChangeZoomAction
   | ClearEditAction;
+
+export type ChangeHoldAction = {
+  type: typeof EditActionsType.ChangeHold;
+  payload:
+    | {
+        hold: {
+          canHold: boolean;
+          type: Tetromino;
+        };
+        succeeded: true;
+      }
+    | {
+        succeeded: false;
+      };
+} & Action;
 
 export type ChangeNextsPatternAction = {
   type: typeof EditActionsType.ChangeNextsPattern;
@@ -51,6 +69,6 @@ export type ClearEditAction = {
     };
     tools: {
       nextsPattern: string;
-    }
+    };
   };
 } & Action;
