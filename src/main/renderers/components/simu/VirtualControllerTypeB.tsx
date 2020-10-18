@@ -75,7 +75,7 @@ const VirtualControllerTypeB: React.FC = () => {
     z: new OperationKey({}),
     x: new OperationKey({}),
     c: new OperationKey({}),
-    b: new OperationKey({}),
+    b: new OperationKey({ interval1: 200, interval2: 100 }),
   };
 
   const [keys, setKeys] = React.useState(initialKeys);
