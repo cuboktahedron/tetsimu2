@@ -52,6 +52,7 @@ const Settings: React.FC = () => {
   const { state, dispatch } = React.useContext(SimuContext);
   const config = state.config;
   const [nextNum, setNextNum] = React.useState(config.nextNum + "");
+  const [playMode, setPlayMode] = React.useState(config.playMode);
   const [riseUpRateFirst, setRiseUpRateFirst] = React.useState(
     config.riseUpRate.first + ""
   );
@@ -259,7 +260,10 @@ const Settings: React.FC = () => {
   };
 
   useEffect(() => {
-    dispatch(clearSimu(getSimuConductor(state)));
+    if (playMode !== state.config.playMode) {
+      dispatch(clearSimu(getSimuConductor(state)));
+      setPlayMode(state.config.playMode);
+    }
   }, [state.config.playMode]);
 
   const classes = useStyles();
