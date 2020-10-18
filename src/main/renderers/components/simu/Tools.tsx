@@ -3,10 +3,12 @@ import {
   createStyles,
   Divider,
   makeStyles,
-  Theme,
+  Theme
 } from "@material-ui/core";
 import { simuToEditMode } from "ducks/root/actions";
+import { clearSimu } from "ducks/simu/actions";
 import React from "react";
+import { SimuConductor } from "utils/tetsimu/simu/simuConductor";
 import { SimuContext } from "./Simu";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -72,6 +74,10 @@ const Tools: React.FC = () => {
     dispatch(simuToEditMode(state));
   };
 
+  const handleClearClick = () => {
+    dispatch(clearSimu(new SimuConductor(state)));
+  };
+
   const classes = useStyles();
   return (
     <div className={classes.root}>
@@ -80,6 +86,13 @@ const Tools: React.FC = () => {
           EDIT
         </Button>
         <Divider />
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleClearClick}
+        >
+          CLEAR
+        </Button>
       </div>
     </div>
   );
