@@ -18,30 +18,34 @@ export const useKey = (): ControllerKeys => {
 
   React.useEffect(() => {
     const callback = (e: KeyboardEvent) => {
-      switch (e.key) {
-        case "ArrowUp":
-          keys[e.key].down();
+      if (e.shiftKey || e.altKey || e.ctrlKey) {
+        return;
+      }
+
+      switch (e.key.toLowerCase()) {
+        case "arrowup":
+          keys["ArrowUp"].down();
           break;
-        case "ArrowLeft":
-          keys[e.key].down();
+        case "arrowleft":
+          keys["ArrowLeft"].down();
           break;
-        case "ArrowRight":
-          keys[e.key].down();
+        case "arrowright":
+          keys["ArrowRight"].down();
           break;
-        case "ArrowDown":
-          keys[e.key].down();
+        case "arrowdown":
+          keys["ArrowDown"].down();
           break;
         case "z":
-          keys[e.key].down();
+          keys["z"].down();
           break;
         case "x":
-          keys[e.key].down();
+          keys["x"].down();
           break;
         case "c":
-          keys[e.key].down();
+          keys["c"].down();
           break;
         case "b":
-          keys[e.key].down();
+          keys["b"].down();
           break;
       }
     };
@@ -55,30 +59,30 @@ export const useKey = (): ControllerKeys => {
 
   React.useEffect(() => {
     const callback = (e: KeyboardEvent) => {
-      switch (e.key) {
-        case "ArrowUp":
-          keys[e.key].up();
+      switch (e.key.toLowerCase()) {
+        case "arrowup":
+          keys["ArrowUp"].up();
           break;
-        case "ArrowLeft":
-          keys[e.key].up();
+        case "arrowleft":
+          keys["ArrowLeft"].up();
           break;
-        case "ArrowRight":
-          keys[e.key].up();
+        case "arrowright":
+          keys["ArrowRight"].up();
           break;
-        case "ArrowDown":
-          keys[e.key].up();
+        case "arrowdown":
+          keys["ArrowDown"].up();
           break;
         case "z":
-          keys[e.key].up();
+          keys["z"].up();
           break;
         case "x":
-          keys[e.key].up();
+          keys["x"].up();
           break;
         case "c":
-          keys[e.key].up();
+          keys["c"].up();
           break;
         case "b":
-          keys[e.key].up();
+          keys["b"].up();
           break;
       }
     };
