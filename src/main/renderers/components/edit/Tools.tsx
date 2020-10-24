@@ -2,6 +2,7 @@ import {
   Button,
   createStyles,
   Divider,
+  FormControl,
   makeStyles,
   TextField,
   Theme,
@@ -18,6 +19,7 @@ import {
 } from "@material-ui/core/colors";
 import clsx from "clsx";
 import {
+  changeNextBaseNo,
   changeNextsPattern,
   changeToolCellValue,
   clearEdit,
@@ -50,6 +52,10 @@ const useStyles = makeStyles((theme: Theme) =>
       "& > hr": {
         marginBottom: theme.spacing(1),
         marginTop: theme.spacing(1),
+      },
+
+      "& > div": {
+        marginBottom: theme.spacing(1),
       },
     },
 
@@ -96,6 +102,8 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const MAX_NEXT_BASE_NO = 1000 - 7;
+
 const Tools: React.FC = () => {
   const { state, dispatch } = React.useContext(EditContext);
   const [nextsPattern, setNextsPattern] = React.useState({
@@ -104,6 +112,7 @@ const Tools: React.FC = () => {
   });
 
   const [textKeys, setTextKeys] = React.useState({
+    nextBaseNo: new Date().getTime(),
     nextsPattern: new Date().getTime(),
   });
 
@@ -152,28 +161,32 @@ const Tools: React.FC = () => {
     }
   };
 
-  const handleNextsPatternKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>
-  ): void => {
-    if (e.key !== "Enter") {
-      return;
-    }
-
-    if (!!nextsPattern.errorText) {
-      return;
-    }
-
-    if (nextsPattern.value !== state.tools.nextsPattern) {
-      dispatch(changeNextsPattern(nextsPattern.value));
-    }
-  };
-
   const handleNextsPatternBlur = (): void => {
     if (nextsPattern.value !== state.tools.nextsPattern) {
       dispatch(changeNextsPattern(nextsPattern.value));
 
       setTextKeys({ ...textKeys, nextsPattern: new Date().getTime() });
     }
+  };
+
+  const handleNextBaseNoChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    let value = +e.currentTarget.value;
+
+    if (isNaN(value)) {
+      value = 1;
+    } else if (value < 1) {
+      value = 1;
+    } else if (value > MAX_NEXT_BASE_NO) {
+      value = MAX_NEXT_BASE_NO;
+    }
+
+    dispatch(changeNextBaseNo(value));
+  };
+
+  const handleNextBaseNoBlur = (): void => {
+    setTextKeys({ ...textKeys, nextBaseNo: new Date().getTime() });
   };
 
   const cellTypes = [
@@ -215,22 +228,40 @@ const Tools: React.FC = () => {
       <Divider />
       <div className={classes.cellTypes}>{cellTypes}</div>
       <Divider />
-      <TextField
-        key={textKeys.nextsPattern}
-        error={!!nextsPattern.errorText}
-        fullWidth
-        label="Nexts pattern"
-        InputLabelProps={{
-          shrink: true,
-        }}
-        value={nextsPattern.value}
-        helperText={nextsPattern.errorText}
-        variant="outlined"
-        onBlur={handleNextsPatternBlur}
-        onChange={handleNextsPatternChange}
-        onKeyDown={handleNextsPatternKeyDown}
-      />
-      <Divider />
+      <div>
+        <TextField
+          key={textKeys.nextsPattern}
+          error={!!nextsPattern.errorText}
+          fullWidth
+          label="Nexts pattern"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          value={nextsPattern.value}
+          helperText={nextsPattern.errorText}
+          variant="outlined"
+          onBlur={handleNextsPatternBlur}
+          onChange={handleNextsPatternChange}
+        />
+      </div>
+      <div>
+        <FormControl>
+          <TextField
+            key={textKeys.nextBaseNo}
+            type="number"
+            label="Next"
+            InputProps={{ inputProps: { min: 1, max: MAX_NEXT_BASE_NO } }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            value={state.tools.nextBaseNo}
+            variant="outlined"
+            onBlur={handleNextBaseNoBlur}
+            onChange={handleNextBaseNoChange}
+          />
+        </FormControl>
+      </div>
+
       <Button variant="contained" color="secondary" onClick={handleClearClick}>
         CLEAR
       </Button>

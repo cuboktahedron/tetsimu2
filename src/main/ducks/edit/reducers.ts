@@ -24,6 +24,14 @@ const reducer = (state: EditState, anyAction: Action): EditState => {
         ...state,
         hold: action.payload.hold,
       };
+    case EditActionsType.ChangeNextBaseNo:
+      return {
+        ...state,
+        tools: {
+          ...state.tools,
+          nextBaseNo: action.payload.nextBaseNo,
+        },
+      };
     case EditActionsType.ChangeNextsPattern:
       return {
         ...state,

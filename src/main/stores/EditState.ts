@@ -5,7 +5,7 @@ import {
   MAX_FIELD_HEIGHT,
   MAX_NEXTS_NUM,
   NextNote,
-  Tetromino
+  Tetromino,
 } from "types/core";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
@@ -20,6 +20,7 @@ export type EditState = {
     nextNotes: NextNote[];
   };
   tools: {
+    nextBaseNo: number;
     selectedCellType: FieldCellValue;
     nextsPattern: string;
   };
@@ -67,6 +68,7 @@ export const initialEditState: EditState = ((): EditState => {
     hold,
     nexts: nextsInfo,
     tools: {
+      nextBaseNo: 1,
       selectedCellType: FieldCellValue.I,
       nextsPattern: "[IJLOST]p6",
     },

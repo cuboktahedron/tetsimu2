@@ -4,18 +4,19 @@ import {
   HoldState,
   MAX_FIELD_HEIGHT,
   Tetromino,
-  Vector2,
+  Vector2
 } from "types/core";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import NextNotesParser from "utils/tetsimu/nextNoteParser";
 import {
   ChangeFieldAction,
   ChangeHoldAction,
+  ChangeNextBaseNoAction,
   ChangeNextsPatternAction,
   ChangeToolCellValueAction,
   ChangeZoomAction,
   ClearEditAction,
-  EditActionsType,
+  EditActionsType
 } from "./types";
 
 export const changeField = (
@@ -102,6 +103,17 @@ export const changeHold = (
       },
     };
   }
+};
+
+export const changeNextBaseNo = (
+  nextBaseNo: number
+): ChangeNextBaseNoAction => {
+  return {
+    type: EditActionsType.ChangeNextBaseNo,
+    payload: {
+      nextBaseNo,
+    },
+  };
 };
 
 export const changeNextsPattern = (
