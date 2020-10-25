@@ -1,13 +1,13 @@
 import { NextNote, Tetromino } from "types/core";
 import NextGenerator from "utils/tetsimu/nextGenerator";
-import NextNotesParser from "utils/tetsimu/nextNoteParser";
+import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 
 describe("nextGenerator", () => {
   it("should generate 7 types per cycle", () => {
     const gen = new NextGenerator(
       new RandomNumberGenerator(),
-      new NextNotesParser().parse("[IJLOSTZ]p7,[IJLOSTZ]p7")
+      new NextNotesInterpreter().interpret("[IJLOSTZ]p7,[IJLOSTZ]p7")
     );
     const types1: Tetromino[] = [];
     const types2: Tetromino[] = [];
@@ -40,7 +40,7 @@ describe("nextGenerator", () => {
   it("should generate types ", () => {
     const gen = new NextGenerator(
       new RandomNumberGenerator(),
-      new NextNotesParser().parse("IJLOSTZ")
+      new NextNotesInterpreter().interpret("IJLOSTZ")
     );
 
     expect(gen.next().type).toBe(Tetromino.I);
@@ -55,7 +55,7 @@ describe("nextGenerator", () => {
   it("should comsump head notes", () => {
     const gen = new NextGenerator(
       new RandomNumberGenerator(),
-      new NextNotesParser().parse("[IJ]p2[OS]")
+      new NextNotesInterpreter().interpret("[IJ]p2[OS]")
     );
 
     const expectedBase: NextNote[] = [

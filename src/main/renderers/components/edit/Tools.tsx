@@ -27,7 +27,7 @@ import {
 import { changeTetsimuMode, editToSimuMode } from "ducks/root/actions";
 import React, { useEffect } from "react";
 import { FieldCellValue, TetsimuMode } from "types/core";
-import NextNotesParser from "utils/tetsimu/nextNoteParser";
+import NextNotesInterpreter from 'utils/tetsimu/nextNotesInterpreter';
 import { EditContext } from "./Edit";
 
 const fieldCellColors = {
@@ -144,9 +144,9 @@ const Tools: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
     const value = e.currentTarget.value;
-    const parser = new NextNotesParser();
+    const interpreter = new NextNotesInterpreter();
     try {
-      parser.parse(value);
+      interpreter.interpret(value);
       setNextsPattern({
         errorText: "",
         value,
@@ -154,8 +154,9 @@ const Tools: React.FC = () => {
 
       dispatch(changeNextsPattern(value));
     } catch (error) {
+      const errorText = error.message ?? "ParseError";
       setNextsPattern({
-        errorText: "Incorrect pattern",
+        errorText,
         value,
       });
     }

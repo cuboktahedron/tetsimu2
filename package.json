@@ -50,6 +50,7 @@
     "deep-object-diff": "^1.1.0",
     "mersenne-twister": "^1.1.0",
     "react-hotkeys-hook": "^2.2.2",
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.0",
+    "typed-loquat": "https://github.com/susisu/typed-loquat"
   }
 }

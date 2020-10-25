@@ -7,7 +7,7 @@ import {
   Vector2
 } from "types/core";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
-import NextNotesParser from "utils/tetsimu/nextNoteParser";
+import NextNotesInterpreter from 'utils/tetsimu/nextNotesInterpreter';
 import {
   ChangeFieldAction,
   ChangeHoldAction,
@@ -119,8 +119,8 @@ export const changeNextBaseNo = (
 export const changeNextsPattern = (
   nextsPattern: string
 ): ChangeNextsPatternAction => {
-  const parser = new NextNotesParser();
-  const nextNotes = parser.parse(nextsPattern);
+  const interpreter = new NextNotesInterpreter();
+  const nextNotes = interpreter.interpret(nextsPattern);
 
   return {
     type: EditActionsType.ChangeNextsPattern,

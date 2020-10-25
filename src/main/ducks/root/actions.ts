@@ -2,7 +2,7 @@ import { EditState } from "stores/EditState";
 import { SimuState } from "stores/SimuState";
 import { Direction, MAX_NEXTS_NUM, Tetromino, TetsimuMode } from "types/core";
 import NextGenerator from "utils/tetsimu/nextGenerator";
-import NextNotesParser from "utils/tetsimu/nextNoteParser";
+import NextNotesInterpreter from 'utils/tetsimu/nextNotesInterpreter';
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 import {
   ChangeTetsimuModeAction,
@@ -23,8 +23,8 @@ export const changeTetsimuMode = (
 };
 
 export const editToSimuMode = (state: EditState): EditToSimuModeAction => {
-  const parser = new NextNotesParser();
-  const nextNotes = parser.parse(state.tools.nextsPattern);
+  const interpreter = new NextNotesInterpreter();
+  const nextNotes = interpreter.interpret(state.tools.nextsPattern);
 
   const rgn = new RandomNumberGenerator();
   const initialSeed = rgn.seed;

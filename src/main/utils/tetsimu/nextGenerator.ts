@@ -1,5 +1,5 @@
 import { NextNote, Tetromino } from "types/core";
-import NextNotesParser from "./nextNoteParser";
+import NextNotesInterpreter from './nextNotesInterpreter';
 import { RandomNumberGenerator } from "./randomNumberGenerator";
 
 export default class NextGenerator {
@@ -30,7 +30,7 @@ export default class NextGenerator {
 
     if (this.nextNotes.length === 0) {
       if (options.endless) {
-        this.nextNotes = new NextNotesParser().parse("[IJLOSTZ]p7");
+        this.nextNotes = new NextNotesInterpreter().interpret("[IJLOSTZ]p7");
       } else {
         return {
           type: Tetromino.NONE,
