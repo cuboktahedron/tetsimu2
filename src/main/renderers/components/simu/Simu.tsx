@@ -61,9 +61,11 @@ const Simu: React.FC = () => {
   const small = useMediaQuery(theme.breakpoints.down("xs"));
 
   const zoom = useSimutatorZoom(small);
-  if (state.zoom !== zoom) {
-    dispatch(changeZoom(zoom));
-  }
+  React.useEffect(() => {
+    if (state.zoom !== zoom) {
+      dispatch(changeZoom(zoom));
+    }
+  }, [zoom])
 
   const virtualController = (() => {
     if (!state.env.isTouchDevice) {
