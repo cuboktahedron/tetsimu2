@@ -120,7 +120,7 @@ const SidePanel: React.FC = () => {
         if (small) {
           setDrawerWidth(window.innerWidth);
         } else {
-          setDrawerWidth(Math.min(drawerWidth, window.innerWidth));
+          setDrawerWidth(Math.max(drawerWidth, 240));
         }
         setMain(mains[iconName]);
       }
@@ -131,7 +131,7 @@ const SidePanel: React.FC = () => {
       if (small) {
         setDrawerWidth(window.innerWidth);
       } else {
-        setDrawerWidth(Math.min(drawerWidth, window.innerWidth));
+        setDrawerWidth(Math.max(drawerWidth, 240));
       }
       setSelectedIconName(iconName);
       setMain(mains[iconName]);
@@ -153,22 +153,12 @@ const SidePanel: React.FC = () => {
       window.innerWidth
     );
 
-    if (nextDrawWidth < 200) {
-      setDrawerWidth(200);
-      setOpen(false);
-    } else {
-      setDrawerWidth(nextDrawWidth);
-      setOpen(true);
-    }
-
+    setDrawerWidth(nextDrawWidth);
+    setOpen(nextDrawWidth > 240);
     setPrevDragX(e.pageX);
   };
 
   const handleMouseUp = () => {
-    if (prevDragX === null) {
-      return;
-    }
-
     setPrevDragX(null);
   };
 
@@ -188,14 +178,8 @@ const SidePanel: React.FC = () => {
       window.innerWidth
     );
 
-    if (nextDrawWidth < 200) {
-      setDrawerWidth(200);
-      setOpen(false);
-    } else {
-      setDrawerWidth(nextDrawWidth);
-      setOpen(true);
-    }
-
+    setDrawerWidth(nextDrawWidth);
+    setOpen(nextDrawWidth > 240);
     setPrevDragX(touch.pageX);
   };
 
