@@ -51,7 +51,6 @@ const useStyles = makeStyles((theme: Theme) =>
 const Settings: React.FC = () => {
   const { state, dispatch } = React.useContext(SimuContext);
   const config = state.config;
-  const [nextNum, setNextNum] = React.useState(config.nextNum + "");
   const [playMode, setPlayMode] = React.useState(config.playMode);
   const [riseUpRateFirst, setRiseUpRateFirst] = React.useState(
     config.riseUpRate.first + ""
@@ -80,37 +79,18 @@ const Settings: React.FC = () => {
       value = MAX_NEXTS_NUM;
     }
 
-    setNextNum(value + "");
-  };
-
-  const handleNextsNumKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>
-  ): void => {
-    if (e.key !== "Enter") {
-      return;
-    }
-
-    if (+nextNum !== config.nextNum) {
+    if (value !== state.config.nextNum) {
       dispatch(
         changeConfig({
           ...config,
-          nextNum: +nextNum,
+          nextNum: value,
         })
       );
     }
   };
 
   const handleNextsNumBlur = (): void => {
-    if (+nextNum !== config.nextNum) {
-      dispatch(
-        changeConfig({
-          ...config,
-          nextNum: +nextNum,
-        })
-      );
-
-      setTextKeys({ ...textKeys, nextNums: new Date().getTime() });
-    }
+    setTextKeys({ ...textKeys, nextNums: new Date().getTime() });
   };
 
   const handleRiseUpRateFirstChange = (
@@ -316,11 +296,10 @@ const Settings: React.FC = () => {
             InputLabelProps={{
               shrink: true,
             }}
-            value={nextNum}
+            value={state.config.nextNum}
             variant="outlined"
             onBlur={handleNextsNumBlur}
             onChange={handleNextsNumChange}
-            onKeyDown={handleNextsNumKeyDown}
           />
         </FormControl>
       </div>
