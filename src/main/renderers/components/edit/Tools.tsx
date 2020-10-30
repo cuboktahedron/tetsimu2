@@ -27,7 +27,7 @@ import {
 import { changeTetsimuMode, editToSimuMode } from "ducks/root/actions";
 import React, { useEffect } from "react";
 import { FieldCellValue, TetsimuMode } from "types/core";
-import NextNotesInterpreter from 'utils/tetsimu/nextNotesInterpreter';
+import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { EditContext } from "./Edit";
 
 const fieldCellColors = {
@@ -60,9 +60,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
 
     buttons: {
-      "& > button": {
-        margin: theme.spacing(1),
-      },
+      display: "flex",
     },
 
     cellTypes: {
@@ -136,7 +134,7 @@ const Tools: React.FC = () => {
     dispatch(editToSimuMode(state));
   };
 
-  const handleBackClick = () => {
+  const handleEditNoResetClick = () => {
     dispatch(changeTetsimuMode(TetsimuMode.Simu));
   };
 
@@ -219,12 +217,26 @@ const Tools: React.FC = () => {
   return (
     <div className={classes.root}>
       <div className={classes.buttons}>
-        <Button variant="contained" color="secondary" onClick={handleSimuClick}>
-          SIMU
-        </Button>
-        <Button variant="contained" color="primary" onClick={handleBackClick}>
-          BACK
-        </Button>
+        <div>
+          <Button
+            variant="contained"
+            color="secondary"
+            title="Switch to simu mode and reset"
+            onClick={handleSimuClick}
+          >
+            SIMU
+          </Button>
+        </div>
+        <div style={{ marginLeft: "auto" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            title="Switch to simu mode and no reset"
+            onClick={handleEditNoResetClick}
+          >
+            SIMU
+          </Button>
+        </div>
       </div>
       <Divider />
       <div className={classes.cellTypes}>{cellTypes}</div>

@@ -3,11 +3,12 @@ import {
   createStyles,
   Divider,
   makeStyles,
-  Theme
+  Theme,
 } from "@material-ui/core";
-import { simuToEditMode } from "ducks/root/actions";
+import { changeTetsimuMode, simuToEditMode } from "ducks/root/actions";
 import { clearSimu } from "ducks/simu/actions";
 import React from "react";
+import { TetsimuMode } from "types/core";
 import { SimuConductor } from "utils/tetsimu/simu/simuConductor";
 import { SimuContext } from "./Simu";
 
@@ -25,9 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
 
     buttons: {
-      "& > button": {
-        margin: theme.spacing(1),
-      },
+      display: "flex",
     },
 
     cellTypes: {
@@ -74,6 +73,10 @@ const Tools: React.FC = () => {
     dispatch(simuToEditMode(state));
   };
 
+  const handleEditNoResetClick = () => {
+    dispatch(changeTetsimuMode(TetsimuMode.Edit));
+  };
+
   const handleClearClick = () => {
     dispatch(clearSimu(new SimuConductor(state)));
   };
@@ -82,18 +85,35 @@ const Tools: React.FC = () => {
   return (
     <div className={classes.root}>
       <div className={classes.buttons}>
-        <Button variant="contained" color="secondary" onClick={handleEditClick}>
-          EDIT
-        </Button>
-        <Divider />
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleClearClick}
-        >
-          CLEAR
-        </Button>
+        <div>
+          <Button
+            variant="contained"
+            color="secondary"
+            title="Switch to edit mode and reset"
+            onClick={handleEditClick}
+          >
+            EDIT
+          </Button>
+        </div>
+        <div style={{ marginLeft: "auto" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            title="Switch to edit mode and no reset"
+            onClick={handleEditNoResetClick}
+          >
+            EDIT
+          </Button>
+        </div>
       </div>
+      <Divider />
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={handleClearClick}
+      >
+        CLEAR
+      </Button>
     </div>
   );
 };
