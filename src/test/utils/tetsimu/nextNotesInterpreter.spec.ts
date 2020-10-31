@@ -1,5 +1,7 @@
 import { NextNote } from "types/core";
-import NextNotesInterpreter from 'utils/tetsimu/nextNotesInterpreter';
+import NextNotesInterpreter, {
+  NextNotesSyntaxError
+} from "utils/tetsimu/nextNotesInterpreter";
 import { makeNextNote } from "./testUtils/makeNextNote";
 
 describe("NextNotesInterpreter", () => {
@@ -78,6 +80,27 @@ describe("NextNotesInterpreter", () => {
       ];
 
       expect(actual).toEqual(expected);
+    });
+
+    it("q20", () => {
+      const interpreter = new NextNotesInterpreter();
+      const actual = interpreter.interpret("q20");
+      const expected: NextNote[] = [makeNextNote("", 20)];
+
+      expect(actual).toEqual(expected);
+    });
+  });
+
+  describe("should not interpret", () => {
+    it("[IJL]p4", () => {
+      expect(() => {
+        const interpreter = new NextNotesInterpreter();
+        interpreter.interpret("[IJL]p4");
+      }).toThrow(
+        new NextNotesSyntaxError(
+          "Number of selection must be less or equal number of options"
+        )
+      );
     });
   });
 });

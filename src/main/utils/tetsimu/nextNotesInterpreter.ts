@@ -76,7 +76,7 @@ const patternP = lexeme(
             yield p.char("q");
 
             const _take = yield p.digit.many1();
-            const take = parseInt((_take as unknown) as string);
+            const take = parseInt(((_take as unknown) as string[]).join(""));
 
             return new PTNones(take);
           })
@@ -126,6 +126,9 @@ export default class NextNotesInterpreter {
           take: 1,
         };
       } else if (pattern instanceof PTCandidates) {
+        if (pattern.candidates.length < pattern.take) {
+          throw new NextNotesSyntaxError("Number of selection must be less or equal number of options");
+        }
         return {
           candidates: pattern.candidates,
           take: pattern.take,
@@ -146,7 +149,7 @@ export default class NextNotesInterpreter {
     if (result.success) {
       return result.value;
     } else {
-      throw new NextNotesParseError(result.error.toString());
+      throw new NextNotesSyntaxError(result.error.toString());
     }
   }
 }
@@ -168,10 +171,10 @@ const typeToTetromino = (type: string): Tetromino => {
     case "Z":
       return Tetromino.Z;
     default:
-      throw new NextNotesParseError(
+      throw new NextNotesSyntaxError(
         `'${type}' is not valid tetromino character`
       );
   }
 };
 
-export class NextNotesParseError extends Error {}
+export class NextNotesSyntaxError extends Error {}

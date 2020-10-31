@@ -25,7 +25,6 @@ export const changeTetsimuMode = (
 export const editToSimuMode = (state: EditState): EditToSimuModeAction => {
   const interpreter = new NextNotesInterpreter();
   const nextNotes = interpreter.interpret(state.tools.nextsPattern);
-
   const rgn = new RandomNumberGenerator();
   const initialSeed = rgn.seed;
   const gen = new NextGenerator(rgn, nextNotes);
