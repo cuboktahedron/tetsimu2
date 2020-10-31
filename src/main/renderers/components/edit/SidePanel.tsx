@@ -1,6 +1,5 @@
 import {
   createStyles,
-  Divider,
   Drawer,
   List,
   ListItem,
@@ -10,8 +9,8 @@ import {
   useMediaQuery,
   useTheme,
 } from "@material-ui/core";
-import { grey } from "@material-ui/core/colors";
-import BuildIcon from "@material-ui/icons/Build";
+import { blueGrey, grey } from "@material-ui/core/colors";
+import CallToActionIcon from "@material-ui/icons/CallToAction";
 import EditIcon from "@material-ui/icons/Edit";
 import clsx from "clsx";
 import React from "react";
@@ -41,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
 
     drawerPaper: {
+      border: "none",
       flexDirection: "row",
     },
 
@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
 
     modeIcon: {
-      color: grey[900],
+      color: "white",
       fontSize: "48px",
     },
 
@@ -230,20 +230,19 @@ const SidePanel: React.FC = () => {
           {open ? main : <div />}
         </div>
         <div className={classes.iconBar}>
-          <List>
-            <ListItem disableGutters>
+          <List disablePadding>
+            <ListItem disableGutters style={{ background: blueGrey[800] }}>
               <ListItemIcon className={classes.listIcon}>
                 <EditIcon className={classes.modeIcon} />
               </ListItemIcon>
             </ListItem>
-            <Divider />
             <ListItem
               button
               disableGutters
               onClick={() => handleMenuIconClick("tools")}
             >
               <ListItemIcon className={classes.listIcon}>
-                <BuildIcon
+                <CallToActionIcon
                   className={clsx(classes.icon, {
                     selected: selectedIconName === "tools" && open,
                   })}
