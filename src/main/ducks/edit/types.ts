@@ -91,6 +91,7 @@ export type ClearEditAction = {
       nextNotes: NextNote[];
     };
     tools: {
+      nextBaseNo: number,
       nextsPattern: string;
     };
   };

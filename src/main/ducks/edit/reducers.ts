@@ -66,6 +66,7 @@ const reducer = (state: EditState, anyAction: Action): EditState => {
         },
         tools: {
           ...state.tools,
+          nextBaseNo: action.payload.tools.nextBaseNo,
           nextsPattern: action.payload.tools.nextsPattern,
         },
       };

@@ -4,10 +4,10 @@ import {
   HoldState,
   MAX_FIELD_HEIGHT,
   Tetromino,
-  Vector2
+  Vector2,
 } from "types/core";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
-import NextNotesInterpreter from 'utils/tetsimu/nextNotesInterpreter';
+import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import {
   ChangeFieldAction,
   ChangeHoldAction,
@@ -16,7 +16,7 @@ import {
   ChangeToolCellValueAction,
   ChangeZoomAction,
   ClearEditAction,
-  EditActionsType
+  EditActionsType,
 } from "./types";
 
 export const changeField = (
@@ -166,6 +166,7 @@ export const clearEdit = (): ClearEditAction => {
         nextNotes: [],
       },
       tools: {
+        nextBaseNo: 1,
         nextsPattern: "",
       },
     },
