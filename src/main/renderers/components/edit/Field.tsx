@@ -7,11 +7,16 @@ import {
   orange,
   purple,
   red,
-  yellow
+  yellow,
 } from "@material-ui/core/colors";
 import { changeField } from "ducks/edit/actions";
 import React from "react";
-import { FieldCellValue, MAX_VISIBLE_FIELD_HEIGHT, MouseButton, Vector2 } from "types/core";
+import {
+  FieldCellValue,
+  MAX_VISIBLE_FIELD_HEIGHT,
+  MouseButton,
+  Vector2,
+} from "types/core";
 import { EditContext } from "./Edit";
 
 const useStyles = makeStyles(() =>
@@ -60,7 +65,7 @@ type StyleProps = {
 
 const Field: React.FC<FieldProps> = () => {
   const { state, dispatch } = React.useContext(EditContext);
-  const [mouseState, setMouseState] = React.useState({
+  const [editPointerState, setEditPointerState] = React.useState({
     downed: false,
     isLeft: false,
   });
@@ -93,7 +98,7 @@ const Field: React.FC<FieldProps> = () => {
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (mouseState.downed) {
+    if (state.env.isTouchDevice || editPointerState.downed) {
       return;
     }
 
@@ -102,7 +107,7 @@ const Field: React.FC<FieldProps> = () => {
     }
 
     const isLeft = e.button === MouseButton.Left;
-    setMouseState({
+    setEditPointerState({
       downed: true,
       isLeft,
     });
@@ -116,12 +121,12 @@ const Field: React.FC<FieldProps> = () => {
   };
 
   const handleMouseMove = (e: MouseEvent) => {
-    if (!mouseState.downed) {
+    if (!editPointerState.downed) {
       return;
     }
 
     const pos = calculatePos(e.pageX, e.pageY);
-    if (mouseState.isLeft) {
+    if (editPointerState.isLeft) {
       dispatch(changeField(field, selectedType, pos));
     } else {
       dispatch(changeField(field, FieldCellValue.NONE, pos));
@@ -129,15 +134,15 @@ const Field: React.FC<FieldProps> = () => {
   };
 
   const handleMouseUp = (e: MouseEvent) => {
-    if (!mouseState.downed) {
+    if (!editPointerState.downed) {
       return;
     }
 
     if (
-      (mouseState.isLeft && e.button === MouseButton.Left) ||
-      (!mouseState.isLeft && e.button === MouseButton.Right)
+      (editPointerState.isLeft && e.button === MouseButton.Left) ||
+      (!editPointerState.isLeft && e.button === MouseButton.Right)
     ) {
-      setMouseState({
+      setEditPointerState({
         downed: false,
         isLeft: false,
       });
@@ -157,6 +162,35 @@ const Field: React.FC<FieldProps> = () => {
       window.removeEventListener("mouseup", handleMouseUp);
     };
   });
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+
+    setEditPointerState({
+      downed: true,
+      isLeft: true,
+    });
+
+    const pos = calculatePos(touch.pageX, touch.pageY);
+    dispatch(changeField(field, selectedType, pos));
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!editPointerState.downed) {
+      return;
+    }
+
+    const touch = e.touches[0];
+    const pos = calculatePos(touch.pageX, touch.pageY);
+    dispatch(changeField(field, selectedType, pos));
+  };
+
+  const handleTouchEnd = () => {
+    setEditPointerState({
+      downed: false,
+      isLeft: false,
+    });
+  };
 
   const rows = field.slice(0, MAX_VISIBLE_FIELD_HEIGHT).map((row, rowIndex) => {
     const cols = row.map((cell, colIndex) => {
@@ -181,7 +215,14 @@ const Field: React.FC<FieldProps> = () => {
   });
 
   return (
-    <div ref={fieldRef} className={classes.root} onMouseDown={handleMouseDown}>
+    <div
+      ref={fieldRef}
+      className={classes.root}
+      onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <div className={classes.topRow} />
       <div>{rows.reverse()}</div>
     </div>
