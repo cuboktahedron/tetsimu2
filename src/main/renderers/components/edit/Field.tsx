@@ -75,7 +75,6 @@ const Field: React.FC<FieldProps> = () => {
   const styleProps = { zoom: state.zoom };
   const classes = useStyles(styleProps);
 
-  const selectedType = state.tools.selectedCellType;
   const calculatePos = (absX: number, absY: number): Vector2 => {
     if (!fieldRef.current) {
       return {
@@ -97,6 +96,8 @@ const Field: React.FC<FieldProps> = () => {
     };
   };
 
+  const cellValueToSet = state.tools.selectedCellValues[0];
+
   const handleMouseDown = (e: React.MouseEvent) => {
     if (state.env.isTouchDevice || editPointerState.downed) {
       return;
@@ -114,7 +115,7 @@ const Field: React.FC<FieldProps> = () => {
 
     const pos = calculatePos(e.pageX, e.pageY);
     if (isLeft) {
-      dispatch(changeField(field, selectedType, pos));
+      dispatch(changeField(field, cellValueToSet, pos));
     } else {
       dispatch(changeField(field, FieldCellValue.NONE, pos));
     }
@@ -127,7 +128,7 @@ const Field: React.FC<FieldProps> = () => {
 
     const pos = calculatePos(e.pageX, e.pageY);
     if (editPointerState.isLeft) {
-      dispatch(changeField(field, selectedType, pos));
+      dispatch(changeField(field, cellValueToSet, pos));
     } else {
       dispatch(changeField(field, FieldCellValue.NONE, pos));
     }
@@ -172,7 +173,7 @@ const Field: React.FC<FieldProps> = () => {
     });
 
     const pos = calculatePos(touch.pageX, touch.pageY);
-    dispatch(changeField(field, selectedType, pos));
+    dispatch(changeField(field, cellValueToSet, pos));
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -182,7 +183,7 @@ const Field: React.FC<FieldProps> = () => {
 
     const touch = e.touches[0];
     const pos = calculatePos(touch.pageX, touch.pageY);
-    dispatch(changeField(field, selectedType, pos));
+    dispatch(changeField(field, cellValueToSet, pos));
   };
 
   const handleTouchEnd = () => {

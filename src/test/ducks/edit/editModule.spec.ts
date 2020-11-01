@@ -1,11 +1,13 @@
-import { buildUpField, clearEdit } from "ducks/edit/actions";
+import { buildUpField, changeNext, clearEdit } from "ducks/edit/actions";
 import {
   BuildUpFieldAction,
+  ChangeNextAction,
   ClearEditAction,
   EditActionsType,
 } from "ducks/edit/types";
 import { Tetromino } from "types/core";
 import { makeField } from "../../utils/tetsimu/testUtils/makeField";
+import { makeNextNote } from "../../utils/tetsimu/testUtils/makeNextNote";
 
 describe("editModule", () => {
   describe("buildUpField", () => {
@@ -45,7 +47,149 @@ describe("editModule", () => {
 
       expect(actual).toEqual(expected);
     });
+  });
 
+  describe("changeNext", () => {
+    it("should change next '' -> 'I'", () => {
+      const actual = changeNext([], 1, [Tetromino.I]);
+
+      const expected: ChangeNextAction = {
+        type: EditActionsType.ChangeNext,
+        payload: {
+          nextNotes: [makeNextNote("I", 1)],
+          nextsPattern: "I",
+          succeeded: true,
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should change next to 'I' -> 'J'", () => {
+      const actual = changeNext([makeNextNote("I", 1)], 1, [Tetromino.J]);
+
+      const expected: ChangeNextAction = {
+        type: EditActionsType.ChangeNext,
+        payload: {
+          nextNotes: [makeNextNote("J", 1)],
+          nextsPattern: "J",
+          succeeded: true,
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should change next to 'I' -> 'I q2 J'", () => {
+      const actual = changeNext([makeNextNote("I", 1)], 4, [Tetromino.J]);
+
+      const expected: ChangeNextAction = {
+        type: EditActionsType.ChangeNext,
+        payload: {
+          nextNotes: [
+            makeNextNote("I", 1),
+            makeNextNote("", 2),
+            makeNextNote("J", 1),
+          ],
+          nextsPattern: "I q2 J",
+          succeeded: true,
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should change next to 'I' -> 'II'", () => {
+      const actual = changeNext([makeNextNote("I", 1)], 2, [Tetromino.I]);
+
+      const expected: ChangeNextAction = {
+        type: EditActionsType.ChangeNext,
+        payload: {
+          nextNotes: [makeNextNote("I", 1), makeNextNote("I", 1)],
+          nextsPattern: "I I",
+          succeeded: true,
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should change next to 'III' -> 'I q1 I'", () => {
+      const actual = changeNext(
+        [makeNextNote("I", 1), makeNextNote("I", 1), makeNextNote("I", 1)],
+        2,
+        []
+      );
+
+      const expected: ChangeNextAction = {
+        type: EditActionsType.ChangeNext,
+        payload: {
+          nextNotes: [
+            makeNextNote("I", 1),
+            makeNextNote("", 1),
+            makeNextNote("I", 1),
+          ],
+          nextsPattern: "I q1 I",
+          succeeded: true,
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should change next to '[IJ]' -> '[IJ]p2'", () => {
+      const actual = changeNext([makeNextNote("IJ", 1)], 2, [
+        Tetromino.J,
+        Tetromino.I,
+      ]);
+
+      const expected: ChangeNextAction = {
+        type: EditActionsType.ChangeNext,
+        payload: {
+          nextNotes: [makeNextNote("IJ", 2)],
+          nextsPattern: "[IJ]p2",
+          succeeded: true,
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should change next to '[IJ]p2' -> '[IJ]p2 [IJ]'", () => {
+      const actual = changeNext([makeNextNote("IJ", 2)], 3, [
+        Tetromino.I,
+        Tetromino.J,
+      ]);
+
+      const expected: ChangeNextAction = {
+        type: EditActionsType.ChangeNext,
+        payload: {
+          nextNotes: [makeNextNote("IJ", 2), makeNextNote("IJ", 1)],
+          nextsPattern: "[IJ]p2 [IJ]",
+          succeeded: true,
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should change next to 'p2 I' -> ''", () => {
+      const actual = changeNext([makeNextNote("", 2)], 3, []);
+
+      const expected: ChangeNextAction = {
+        type: EditActionsType.ChangeNext,
+        payload: {
+          nextNotes: [],
+          nextsPattern: "",
+          succeeded: true,
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+  });
+
+  describe("clearEdit", () => {
     it("should clear", () => {
       const actual = clearEdit();
 

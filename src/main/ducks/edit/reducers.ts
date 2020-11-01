@@ -29,6 +29,21 @@ const reducer = (state: EditState, anyAction: Action): EditState => {
         ...state,
         hold: action.payload.hold,
       };
+    case EditActionsType.ChangeNext:
+      if (!action.payload.succeeded) {
+        return state;
+      }
+
+      return {
+        ...state,
+        nexts: {
+          nextNotes: action.payload.nextNotes,
+        },
+        tools: {
+          ...state.tools,
+          nextsPattern: action.payload.nextsPattern,
+        },
+      };
     case EditActionsType.ChangeNextBaseNo:
       return {
         ...state,
@@ -48,12 +63,12 @@ const reducer = (state: EditState, anyAction: Action): EditState => {
           nextsPattern: action.payload.nextsPattern,
         },
       };
-    case EditActionsType.ChangeToolCellValue:
+    case EditActionsType.ChangeToolCellValues:
       return {
         ...state,
         tools: {
           ...state.tools,
-          selectedCellType: action.payload.cellValue,
+          selectedCellValues: action.payload.cellValues,
         },
       };
     case EditActionsType.ChangeZoom:

@@ -21,7 +21,7 @@ export type EditState = {
   };
   tools: {
     nextBaseNo: number;
-    selectedCellType: FieldCellValue;
+    selectedCellValues: FieldCellValue[];
     nextsPattern: string;
   };
   zoom: number;
@@ -69,7 +69,7 @@ export const initialEditState: EditState = ((): EditState => {
     nexts: nextsInfo,
     tools: {
       nextBaseNo: 1,
-      selectedCellType: FieldCellValue.I,
+      selectedCellValues: [FieldCellValue.I],
       nextsPattern: "[IJLOST]p6",
     },
     zoom: 1,

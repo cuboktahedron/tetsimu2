@@ -5,7 +5,7 @@ import {
   FormControl,
   makeStyles,
   TextField,
-  Theme,
+  Theme
 } from "@material-ui/core";
 import {
   blue,
@@ -15,14 +15,14 @@ import {
   orange,
   purple,
   red,
-  yellow,
+  yellow
 } from "@material-ui/core/colors";
 import clsx from "clsx";
 import {
   changeNextBaseNo,
   changeNextsPattern,
   changeToolCellValue,
-  clearEdit,
+  clearEdit
 } from "ducks/edit/actions";
 import { changeTetsimuMode, editToSimuMode } from "ducks/root/actions";
 import React, { useEffect } from "react";
@@ -108,7 +108,6 @@ const Tools: React.FC = () => {
     errorText: "",
     value: state.tools.nextsPattern,
   });
-
   const [textKeys, setTextKeys] = React.useState({
     nextBaseNo: new Date().getTime(),
     nextsPattern: new Date().getTime(),
@@ -120,9 +119,34 @@ const Tools: React.FC = () => {
       value: state.tools.nextsPattern,
     });
   }, [state.tools.nextsPattern]);
-  const handleToolCellClick = (cellValue: FieldCellValue) => {
-    if (state.tools.selectedCellType !== cellValue) {
-      dispatch(changeToolCellValue(cellValue));
+  const handleToolCellClick = (
+    e: React.MouseEvent,
+    cellValue: FieldCellValue
+  ) => {
+    const selectedCellValues = state.tools.selectedCellValues;
+    if (e.ctrlKey || e.metaKey) {
+      if (selectedCellValues.some((selected) => selected === cellValue)) {
+        if (selectedCellValues.length === 1) {
+          return;
+        }
+
+        const newSelectedCellValues = selectedCellValues.filter(
+          (selected) => selected !== cellValue
+        );
+        dispatch(changeToolCellValue(newSelectedCellValues));
+      } else {
+        const newSelectedCellValues = [...selectedCellValues, cellValue];
+        dispatch(changeToolCellValue(newSelectedCellValues));
+      }
+    } else {
+      if (selectedCellValues.length > 1) {
+        dispatch(changeToolCellValue([cellValue]));
+      } else {
+        const selectedCellValue = selectedCellValues[0];
+        if (selectedCellValue !== cellValue) {
+          dispatch(changeToolCellValue([cellValue]));
+        }
+      }
     }
   };
 
@@ -203,10 +227,12 @@ const Tools: React.FC = () => {
       <div
         key={cellType.type}
         className={clsx({
-          selected: state.tools.selectedCellType === cellType.type,
+          selected: state.tools.selectedCellValues.some(
+            (type) => type === cellType.type
+          ),
         })}
         style={{ background: fieldCellColors[cellType.type] }}
-        onClick={() => handleToolCellClick(cellType.type)}
+        onClick={(e) => handleToolCellClick(e, cellType.type)}
       >
         {cellType.letter}
       </div>

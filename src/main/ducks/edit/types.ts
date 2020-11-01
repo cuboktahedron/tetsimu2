@@ -11,9 +11,10 @@ export const EditActionsType = {
   BuildUpField: "edit/buildUpField",
   ChangeField: "edit/changeField",
   ChangeHold: "edit/changeHold",
+  ChangeNext: "edit/changeNext",
   ChangeNextBaseNo: "edit/changeNextBaseNo",
   ChangeNextsPattern: "edit/changeNextsPattern",
-  ChangeToolCellValue: "edit/changeToolCellValue",
+  ChangeToolCellValues: "edit/changeToolCellValues",
   ChangeZoom: "edit/changeZoom",
   Clear: "edit/clear",
 } as const;
@@ -21,6 +22,7 @@ export const EditActionsType = {
 export type EditActions =
   | ChangeFieldAction
   | ChangeHoldAction
+  | ChangeNextAction
   | ChangeNextBaseNoAction
   | ChangeNextsPatternAction
   | ChangeToolCellValueAction
@@ -55,6 +57,19 @@ export type ChangeHoldAction = {
       };
 } & Action;
 
+export type ChangeNextAction = {
+  type: typeof EditActionsType.ChangeNext;
+  payload:
+    | {
+        nextNotes: NextNote[];
+        nextsPattern: string;
+        succeeded: true;
+      }
+    | {
+        succeeded: false;
+      };
+} & Action;
+
 export type ChangeNextBaseNoAction = {
   type: typeof EditActionsType.ChangeNextBaseNo;
   payload: {
@@ -71,9 +86,9 @@ export type ChangeNextsPatternAction = {
 } & Action;
 
 export type ChangeToolCellValueAction = {
-  type: typeof EditActionsType.ChangeToolCellValue;
+  type: typeof EditActionsType.ChangeToolCellValues;
   payload: {
-    cellValue: FieldCellValue;
+    cellValues: FieldCellValue[];
   };
 } & Action;
 
