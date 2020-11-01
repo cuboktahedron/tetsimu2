@@ -7,11 +7,11 @@ import {
   orange,
   purple,
   red,
-  yellow,
+  yellow
 } from "@material-ui/core/colors";
 import { changeField } from "ducks/edit/actions";
 import React from "react";
-import { FieldCellValue, MAX_VISIBLE_FIELD_HEIGHT, Vector2 } from "types/core";
+import { FieldCellValue, MAX_VISIBLE_FIELD_HEIGHT, MouseButton, Vector2 } from "types/core";
 import { EditContext } from "./Edit";
 
 const useStyles = makeStyles(() =>
@@ -60,7 +60,10 @@ type StyleProps = {
 
 const Field: React.FC<FieldProps> = () => {
   const { state, dispatch } = React.useContext(EditContext);
-  const [cellPutStarted, setCellPutStarted] = React.useState(false);
+  const [mouseState, setMouseState] = React.useState({
+    downed: false,
+    isLeft: false,
+  });
   const fieldRef = React.createRef<HTMLDivElement>();
 
   const field = state.field;
@@ -90,23 +93,55 @@ const Field: React.FC<FieldProps> = () => {
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    setCellPutStarted(true);
+    if (mouseState.downed) {
+      return;
+    }
+
+    if (e.button !== MouseButton.Left && e.button !== MouseButton.Right) {
+      return;
+    }
+
+    const isLeft = e.button === MouseButton.Left;
+    setMouseState({
+      downed: true,
+      isLeft,
+    });
 
     const pos = calculatePos(e.pageX, e.pageY);
-    dispatch(changeField(field, selectedType, pos));
+    if (isLeft) {
+      dispatch(changeField(field, selectedType, pos));
+    } else {
+      dispatch(changeField(field, FieldCellValue.NONE, pos));
+    }
   };
 
   const handleMouseMove = (e: MouseEvent) => {
-    if (!cellPutStarted) {
+    if (!mouseState.downed) {
       return;
     }
 
     const pos = calculatePos(e.pageX, e.pageY);
-    dispatch(changeField(field, selectedType, pos));
+    if (mouseState.isLeft) {
+      dispatch(changeField(field, selectedType, pos));
+    } else {
+      dispatch(changeField(field, FieldCellValue.NONE, pos));
+    }
   };
 
-  const handleMouseUp = () => {
-    setCellPutStarted(false);
+  const handleMouseUp = (e: MouseEvent) => {
+    if (!mouseState.downed) {
+      return;
+    }
+
+    if (
+      (mouseState.isLeft && e.button === MouseButton.Left) ||
+      (!mouseState.isLeft && e.button === MouseButton.Right)
+    ) {
+      setMouseState({
+        downed: false,
+        isLeft: false,
+      });
+    }
   };
 
   React.useEffect(() => {

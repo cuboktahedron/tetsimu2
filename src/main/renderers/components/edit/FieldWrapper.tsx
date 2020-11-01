@@ -27,7 +27,12 @@ const FieldWrapper: React.FC = () => {
   const classes = useStyles(styleProps);
 
   return (
-    <div className={classes.root}>
+    <div
+      className={classes.root}
+      onContextMenu={(e: React.MouseEvent) => {
+        e.preventDefault();
+      }}
+    >
       <Field />
     </div>
   );

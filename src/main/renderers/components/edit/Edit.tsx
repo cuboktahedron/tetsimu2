@@ -62,7 +62,7 @@ const Edit: React.FC = () => {
     if (state.zoom !== zoom) {
       dispatch(changeZoom(zoom));
     }
-  }, [zoom])
+  }, [zoom]);
 
   const classes = useStyles();
 
@@ -88,7 +88,9 @@ const Edit: React.FC = () => {
               <div className={classes.fieldLeft}>
                 <FieldLeft />
               </div>
-              <div className={classes.field}>
+              <div
+                className={classes.field}
+              >
                 <FieldWrapper />
               </div>
               <div className={classes.nextsOnly}>
