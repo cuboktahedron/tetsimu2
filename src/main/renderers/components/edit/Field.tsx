@@ -9,7 +9,7 @@ import {
   red,
   yellow,
 } from "@material-ui/core/colors";
-import { changeField } from "ducks/edit/actions";
+import { buildUpField, changeField } from "ducks/edit/actions";
 import React from "react";
 import {
   FieldCellValue,
@@ -192,6 +192,14 @@ const Field: React.FC<FieldProps> = () => {
     });
   };
 
+  const handleWheel = (e: React.WheelEvent) => {
+    if (e.deltaY < 0) {
+      dispatch(buildUpField(state.field, 1));
+    } else {
+      dispatch(buildUpField(state.field, -1));
+    }
+  };
+
   const rows = field.slice(0, MAX_VISIBLE_FIELD_HEIGHT).map((row, rowIndex) => {
     const cols = row.map((cell, colIndex) => {
       const background = cellBackground[cell];
@@ -222,6 +230,7 @@ const Field: React.FC<FieldProps> = () => {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
+      onWheel={handleWheel}
     >
       <div className={classes.topRow} />
       <div>{rows.reverse()}</div>

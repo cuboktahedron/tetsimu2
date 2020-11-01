@@ -4,10 +4,11 @@ import {
   FieldState,
   HoldState,
   NextNote,
-  Tetromino
+  Tetromino,
 } from "types/core";
 
 export const EditActionsType = {
+  BuildUpField: "edit/buildUpField",
   ChangeField: "edit/changeField",
   ChangeHold: "edit/changeHold",
   ChangeNextBaseNo: "edit/changeNextBaseNo",
@@ -24,7 +25,8 @@ export type EditActions =
   | ChangeNextsPatternAction
   | ChangeToolCellValueAction
   | ChangeZoomAction
-  | ClearEditAction;
+  | ClearEditAction
+  | BuildUpFieldAction;
 
 export type ChangeFieldAction = {
   type: typeof EditActionsType.ChangeField;
@@ -91,8 +93,15 @@ export type ClearEditAction = {
       nextNotes: NextNote[];
     };
     tools: {
-      nextBaseNo: number,
+      nextBaseNo: number;
       nextsPattern: string;
     };
+  };
+} & Action;
+
+export type BuildUpFieldAction = {
+  type: typeof EditActionsType.BuildUpField;
+  payload: {
+    field: FieldState;
   };
 } & Action;

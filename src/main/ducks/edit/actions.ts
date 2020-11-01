@@ -9,6 +9,7 @@ import {
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import {
+  BuildUpFieldAction,
   ChangeFieldAction,
   ChangeHoldAction,
   ChangeNextBaseNoAction,
@@ -18,6 +19,21 @@ import {
   ClearEditAction,
   EditActionsType,
 } from "./types";
+
+export const buildUpField = (
+  field: FieldState,
+  upNum: number
+): BuildUpFieldAction => {
+  const fieldHelper = new FieldHelper(field);
+  fieldHelper.buildUpLine(upNum);
+
+  return {
+    type: EditActionsType.BuildUpField,
+    payload: {
+      field: fieldHelper.state,
+    },
+  };
+};
 
 export const changeField = (
   prevField: FieldState,

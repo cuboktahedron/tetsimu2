@@ -258,6 +258,19 @@ export class FieldHelper {
     }
   }
 
+  buildUpLine(upNum: number) {
+    if (upNum < 0) {
+      this.field.shift();
+      const row = new Array(10).fill(FieldCellValue.NONE);
+      this.field.push(row);
+      return;
+    } else if (upNum > 0) {
+      this.field.pop();
+      const row = new Array(10).fill(FieldCellValue.GARBAGE);
+      this.field.unshift(row);
+    }
+  }
+
   get state(): FieldCellValue[][] {
     return this.field;
   }
