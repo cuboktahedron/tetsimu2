@@ -1,5 +1,10 @@
-import { buildUpField } from "ducks/edit/actions";
-import { BuildUpFieldAction, EditActionsType } from "ducks/edit/types";
+import { buildUpField, clearEdit } from "ducks/edit/actions";
+import {
+  BuildUpFieldAction,
+  ClearEditAction,
+  EditActionsType,
+} from "ducks/edit/types";
+import { Tetromino } from "types/core";
 import { makeField } from "../../utils/tetsimu/testUtils/makeField";
 
 describe("editModule", () => {
@@ -13,7 +18,8 @@ describe("editModule", () => {
           // prettier-ignore
           field: makeField(
             "IJLOSTZNNN",
-            "GGGGGGGGGG"),
+            "GGGGGGGGGG"
+          ),
         },
       };
 
@@ -25,7 +31,8 @@ describe("editModule", () => {
         // prettier-ignore
         makeField(
           "IJLOSTZNNN",
-          "TTTTTTTTTT"),
+          "TTTTTTTTTT"
+        ),
         -1
       );
 
@@ -33,6 +40,30 @@ describe("editModule", () => {
         type: EditActionsType.BuildUpField,
         payload: {
           field: makeField("IJLOSTZNNN"),
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should clear", () => {
+      const actual = clearEdit();
+
+      const expected: ClearEditAction = {
+        type: EditActionsType.Clear,
+        payload: {
+          field: makeField(),
+          hold: {
+            canHold: true,
+            type: Tetromino.NONE,
+          },
+          nexts: {
+            nextNotes: [],
+          },
+          tools: {
+            nextBaseNo: 1,
+            nextsPattern: "",
+          },
         },
       };
 

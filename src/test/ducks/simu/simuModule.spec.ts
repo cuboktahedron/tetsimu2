@@ -4,7 +4,7 @@ import {
   moveTetromino,
   retry,
   rotateTetromino,
-  superRetry,
+  superRetry
 } from "ducks/simu/actions";
 import { getSimuConductor } from "ducks/simu/selectors";
 import {
@@ -12,16 +12,16 @@ import {
   HoldTetrominoAction,
   MoveTetrominoAction,
   RotateTetrominoAction,
-  SimuActionsType,
+  SimuActionsType
 } from "ducks/simu/types";
 import { Direction, FieldCellValue, Tetromino } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
 import { sleep } from "utils/function";
-import { makeCurrent } from "../utils/tetsimu/testUtils/makeCurrent";
-import { makeField } from "../utils/tetsimu/testUtils/makeField";
-import { makeHold } from "../utils/tetsimu/testUtils/makeHold";
-import { makeSeed } from "../utils/tetsimu/testUtils/makeSeed";
-import { makeSimuState } from "../utils/tetsimu/testUtils/makeSimuState";
+import { makeCurrent } from "../../utils/tetsimu/testUtils/makeCurrent";
+import { makeField } from "../../utils/tetsimu/testUtils/makeField";
+import { makeHold } from "../../utils/tetsimu/testUtils/makeHold";
+import { makeSeed } from "../../utils/tetsimu/testUtils/makeSeed";
+import { makeSimuState } from "../../utils/tetsimu/testUtils/makeSimuState";
 
 describe("simuModule", () => {
   describe("holdTetrimino", () => {
@@ -169,10 +169,10 @@ describe("simuModule", () => {
             current: makeCurrent(Direction.UP, 1, 3, Tetromino.I),
             // prettier-ignore
             field: makeField(
-            "NNNNNNNNNN",
-            "NNNNNNNNNN",
-            "IJLOSTZNNN"
-          ),
+              "NNNNNNNNNN",
+              "NNNNNNNNNN",
+              "IJLOSTZNNN"
+            ),
             hold: makeHold(Tetromino.I, false),
             nexts: {
               settled: [Tetromino.S, Tetromino.Z],
@@ -199,9 +199,10 @@ describe("simuModule", () => {
 
           // prettier-ignore
           field: makeField(
-              "NNNNNNNNNN",
-              "IIIINNNNNN",
-              "IJLOSTZNNN"),
+            "NNNNNNNNNN",
+            "IIIINNNNNN",
+            "IJLOSTZNNN"
+          ),
           hold: makeHold(Tetromino.I, true),
           isDead: false,
           nexts: {
