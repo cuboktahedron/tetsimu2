@@ -54,7 +54,7 @@ export const editToSimuMode = (state: EditState): EditToSimuModeAction => {
       hold: state.hold,
       nexts: {
         settled: newNextSettles,
-        unsettled: [], // TODO: Keep 7 kind of pieces per cycle
+        unsettled: [],
       },
       lastRoseUpColumn: -1,
       retryState: {

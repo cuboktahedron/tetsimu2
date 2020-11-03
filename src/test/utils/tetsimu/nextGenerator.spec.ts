@@ -2,26 +2,24 @@ import { NextNote, Tetromino } from "types/core";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
+import { makeNextNote } from "./testUtils/makeNextNote";
 
 describe("nextGenerator", () => {
   it("should generate 7 types per cycle", () => {
     const gen = new NextGenerator(
       new RandomNumberGenerator(),
-      new NextNotesInterpreter().interpret("[IJLOSTZ]p7,[IJLOSTZ]p7")
+      [],
+      makeNextNote("IZ", 2)
     );
     const types1: Tetromino[] = [];
     const types2: Tetromino[] = [];
+    const types3: Tetromino[] = [];
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 2; i++) {
       types1.push(gen.next().type);
     }
 
     expect(types1.filter((type) => type === Tetromino.I).length).toBe(1);
-    expect(types1.filter((type) => type === Tetromino.J).length).toBe(1);
-    expect(types1.filter((type) => type === Tetromino.L).length).toBe(1);
-    expect(types1.filter((type) => type === Tetromino.O).length).toBe(1);
-    expect(types1.filter((type) => type === Tetromino.S).length).toBe(1);
-    expect(types1.filter((type) => type === Tetromino.T).length).toBe(1);
     expect(types1.filter((type) => type === Tetromino.Z).length).toBe(1);
 
     for (let i = 0; i < 7; i++) {
@@ -35,9 +33,21 @@ describe("nextGenerator", () => {
     expect(types2.filter((type) => type === Tetromino.S).length).toBe(1);
     expect(types2.filter((type) => type === Tetromino.T).length).toBe(1);
     expect(types2.filter((type) => type === Tetromino.Z).length).toBe(1);
+
+    for (let i = 0; i < 7; i++) {
+      types3.push(gen.next().type);
+    }
+
+    expect(types3.filter((type) => type === Tetromino.I).length).toBe(1);
+    expect(types3.filter((type) => type === Tetromino.J).length).toBe(1);
+    expect(types3.filter((type) => type === Tetromino.L).length).toBe(1);
+    expect(types3.filter((type) => type === Tetromino.O).length).toBe(1);
+    expect(types3.filter((type) => type === Tetromino.S).length).toBe(1);
+    expect(types3.filter((type) => type === Tetromino.T).length).toBe(1);
+    expect(types3.filter((type) => type === Tetromino.Z).length).toBe(1);
   });
 
-  it("should generate types ", () => {
+  it("should generate types with specified order", () => {
     const gen = new NextGenerator(
       new RandomNumberGenerator(),
       new NextNotesInterpreter().interpret("IJLOSTZ")
@@ -59,14 +69,8 @@ describe("nextGenerator", () => {
     );
 
     const expectedBase: NextNote[] = [
-      {
-        candidates: [Tetromino.I, Tetromino.J],
-        take: 2,
-      },
-      {
-        candidates: [Tetromino.O, Tetromino.S],
-        take: 1,
-      },
+      makeNextNote("IJ", 2),
+      makeNextNote("OS", 1),
     ];
 
     // generate 1st time
@@ -74,6 +78,7 @@ describe("nextGenerator", () => {
     const expected1Candidates = [...expectedBase[0].candidates].filter(
       (candidate) => candidate !== genNext1.type
     );
+
     expect(genNext1.nextNotes).toEqual([
       {
         candidates: expected1Candidates,
@@ -89,23 +94,111 @@ describe("nextGenerator", () => {
     // generate 3rd time
     const genNext3 = gen.next();
     expect(genNext3.nextNotes).toEqual([]);
+  });
 
-    // generate 4th time
-    const genNext4 = gen.next();
-    const expected4CandiDates = [
-      Tetromino.I,
-      Tetromino.J,
-      Tetromino.L,
-      Tetromino.O,
-      Tetromino.S,
-      Tetromino.T,
-      Tetromino.Z,
-    ].filter((candidate) => candidate !== genNext4.type);
-    expect(genNext4.nextNotes).toEqual([
-      {
-        candidates: expected4CandiDates,
-        take: 6,
-      },
-    ]);
+  it("should generate with keeping 7types per cycle (I q5 Z)", () => {
+    const gen = new NextGenerator(
+      new RandomNumberGenerator(),
+      new NextNotesInterpreter().interpret("I q5 Z")
+    );
+    const types1: Tetromino[] = [];
+
+    for (let i = 0; i < 7; i++) {
+      types1.push(gen.next().type);
+    }
+
+    expect(types1[0]).toBe(Tetromino.I);
+    expect(types1.filter((type) => type === Tetromino.J).length).toBe(1);
+    expect(types1.filter((type) => type === Tetromino.L).length).toBe(1);
+    expect(types1.filter((type) => type === Tetromino.O).length).toBe(1);
+    expect(types1.filter((type) => type === Tetromino.S).length).toBe(1);
+    expect(types1.filter((type) => type === Tetromino.T).length).toBe(1);
+    expect(types1[6]).toBe(Tetromino.Z);
+  });
+
+  it("should generate with keeping 7types per cycle ([IJ]p2 q3 [TZ]p2)", () => {
+    const gen = new NextGenerator(
+      new RandomNumberGenerator(),
+      new NextNotesInterpreter().interpret("[IJ]p2 q3 [TZ]p2")
+    );
+    const types1: Tetromino[] = [];
+
+    for (let i = 0; i < 7; i++) {
+      types1.push(gen.next().type);
+    }
+
+    expect(types1.filter((type) => type === Tetromino.I).length).toBe(1);
+    expect(types1.filter((type) => type === Tetromino.J).length).toBe(1);
+    expect(types1.filter((type) => type === Tetromino.L).length).toBe(1);
+    expect(types1.filter((type) => type === Tetromino.O).length).toBe(1);
+    expect(types1.filter((type) => type === Tetromino.S).length).toBe(1);
+    expect(types1.filter((type) => type === Tetromino.T).length).toBe(1);
+    expect(types1.filter((type) => type === Tetromino.Z).length).toBe(1);
+  });
+
+  it("should generate with keeping 7types per cycle ([IJL]p2 q5 [IJL]p1)", () => {
+    const gen = new NextGenerator(
+      new RandomNumberGenerator(),
+      new NextNotesInterpreter().interpret("[IJL]p1 q5 [IJL]p1")
+    );
+    const types1: Tetromino[] = [];
+
+    for (let i = 0; i < 7; i++) {
+      types1.push(gen.next().type);
+    }
+
+    expect(types1.filter((type) => type === Tetromino.I).length).toBe(1);
+    expect(types1.filter((type) => type === Tetromino.J).length).toBe(1);
+    expect(types1.filter((type) => type === Tetromino.L).length).toBe(1);
+    expect(types1.filter((type) => type === Tetromino.O).length).toBe(1);
+    expect(types1.filter((type) => type === Tetromino.S).length).toBe(1);
+    expect(types1.filter((type) => type === Tetromino.T).length).toBe(1);
+    expect(types1.filter((type) => type === Tetromino.Z).length).toBe(1);
+  });
+
+  it("should generate with keeping 7types per cycle as long as possible (IJ q3 [IJ]p2)", () => {
+    const gen = new NextGenerator(
+      new RandomNumberGenerator(),
+      new NextNotesInterpreter().interpret("IJ q3 [IJ]p2")
+    );
+    const types1: Tetromino[] = [];
+
+    for (let i = 0; i < 7; i++) {
+      types1.push(gen.next().type);
+    }
+
+    expect(types1[0]).toBe(Tetromino.I);
+    expect(types1[1]).toBe(Tetromino.J);
+    expect(types1.filter((type) => type === Tetromino.I).length).toBe(2);
+    expect(types1.filter((type) => type === Tetromino.J).length).toBe(2);
+    expect(
+      types1.filter((type) => type === Tetromino.L).length < 2
+    ).toBeTruthy();
+    expect(
+      types1.filter((type) => type === Tetromino.O).length < 2
+    ).toBeTruthy();
+    expect(
+      types1.filter((type) => type === Tetromino.S).length < 2
+    ).toBeTruthy();
+    expect(
+      types1.filter((type) => type === Tetromino.T).length < 2
+    ).toBeTruthy();
+    expect(
+      types1.filter((type) => type === Tetromino.Z).length < 2
+    ).toBeTruthy();
+  });
+
+  it("should generate next from note candites ([IJL]p1)", () => {
+    const gen = new NextGenerator(
+      new RandomNumberGenerator(),
+      new NextNotesInterpreter().interpret("[IJL]p1"),
+      makeNextNote("OSTZ", 4)
+    );
+
+    const actual = gen.next();
+    const expectTypes: Tetromino[] = [Tetromino.I, Tetromino.J, Tetromino.L];
+
+    expect(expectTypes.includes(actual.type)).toBeTruthy();
+    expect(actual.bag).toEqual(makeNextNote("OSTZ", 3));
   });
 });
