@@ -16,9 +16,7 @@ const useStyles = makeStyles(() =>
     root: {
       background: "black",
       cursor: "crosshair",
-      divShadow: "0 0 0 1px grey",
       height: "100%",
-      position: "relative",
       width: "100%",
     },
 
@@ -26,7 +24,6 @@ const useStyles = makeStyles(() =>
       alignItems: "center",
       background: "black",
       display: "flex",
-      boxShadow: "0 0 0 1px grey",
       flexWrap: "wrap",
       height: "80%",
       padding: "10%",

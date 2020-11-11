@@ -51,11 +51,16 @@ export class SimuConductor {
     }
 
     const newCurrentType = this.state.nexts.settled[0];
-    const nextGen = new NextGenerator(this.rng, this.state.nexts.unsettled);
+    const nextGen = new NextGenerator(
+      this.rng,
+      this.state.nexts.unsettled,
+      this.state.nexts.bag
+    );
     const genNext = nextGen.next();
     const newNexts = {
       settled: this.state.nexts.settled.slice(1).concat(genNext.type),
       unsettled: genNext.nextNotes,
+      bag: genNext.bag,
     };
     this.state.nexts = newNexts;
 
@@ -99,9 +104,14 @@ export class SimuConductor {
     let newNexts: {
       settled: Tetromino[];
       unsettled: NextNote[];
+      bag: NextNote;
     };
 
-    const nextGen = new NextGenerator(this.rng, this.state.nexts.unsettled);
+    const nextGen = new NextGenerator(
+      this.rng,
+      this.state.nexts.unsettled,
+      this.state.nexts.bag
+    );
     if (this.state.hold.type === Tetromino.NONE) {
       const genNext = nextGen.next({ endless: true });
 
@@ -109,6 +119,7 @@ export class SimuConductor {
       newNexts = {
         settled: this.state.nexts.settled.slice(1).concat(genNext.type),
         unsettled: genNext.nextNotes,
+        bag: genNext.bag,
       };
     } else {
       newCurrentType = this.state.hold.type;
@@ -198,6 +209,7 @@ export class SimuConductor {
     const newNexts = {
       settled: newNextSettles,
       unsettled: lastGenNext.nextNotes,
+      bag: lastGenNext.bag,
     };
 
     this.state.current = newCurrent;
@@ -266,8 +278,10 @@ export class SimuConductor {
     const newNexts = {
       settled: newNextSettles,
       unsettled: lastGenNext.nextNotes,
+      bag: lastGenNext.bag,
     };
     const newRetryState: SimuRetryState = {
+      bag: this.state.retryState.bag,
       field: newField,
       hold: newHold,
       lastRoseUpColumn: this.state.retryState.lastRoseUpColumn,
@@ -306,6 +320,7 @@ export class SimuConductor {
     );
 
     this.state.retryState = {
+      bag: { candidates: [], take: 0 },
       field,
       hold: {
         canHold: true,

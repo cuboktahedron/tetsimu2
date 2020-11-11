@@ -22,6 +22,7 @@ export type SimuStateHistory = {
   nexts: {
     settled: Tetromino[];
     unsettled: NextNote[];
+    bag: NextNote;
   };
   seed: number;
 };
@@ -40,6 +41,7 @@ export type SimuState = {
   nexts: {
     settled: Tetromino[];
     unsettled: NextNote[];
+    bag: NextNote;
   };
   retryState: SimuRetryState;
   seed: number;
@@ -88,9 +90,11 @@ export const initialSimuState: SimuState = ((): SimuState => {
   const nextsInfo = {
     settled: nexts,
     unsettled: lastGenNext.nextNotes,
+    bag: lastGenNext.bag,
   };
 
   const retryState: SimuRetryState = {
+    bag: { candidates: [], take: 0 },
     field,
     hold,
     unsettledNexts: [],

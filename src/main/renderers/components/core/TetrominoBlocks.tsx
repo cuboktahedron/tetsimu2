@@ -16,7 +16,6 @@ type TetrominoBlocksProps = {
 const useStyles = makeStyles(() =>
   createStyles({
     root: {
-      boxShadow: "0 0 0 1px grey",
       boxSizing: "border-box",
       padding: "10%",
       height: "100%",

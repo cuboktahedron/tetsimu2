@@ -4,7 +4,7 @@ import {
   moveTetromino,
   retry,
   rotateTetromino,
-  superRetry
+  superRetry,
 } from "ducks/simu/actions";
 import { getSimuConductor } from "ducks/simu/selectors";
 import {
@@ -12,7 +12,7 @@ import {
   HoldTetrominoAction,
   MoveTetrominoAction,
   RotateTetrominoAction,
-  SimuActionsType
+  SimuActionsType,
 } from "ducks/simu/types";
 import { Direction, FieldCellValue, Tetromino } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
@@ -20,6 +20,7 @@ import { sleep } from "utils/function";
 import { makeCurrent } from "../../utils/tetsimu/testUtils/makeCurrent";
 import { makeField } from "../../utils/tetsimu/testUtils/makeField";
 import { makeHold } from "../../utils/tetsimu/testUtils/makeHold";
+import { makeNextNote } from "../../utils/tetsimu/testUtils/makeNextNote";
 import { makeSeed } from "../../utils/tetsimu/testUtils/makeSeed";
 import { makeSimuState } from "../../utils/tetsimu/testUtils/makeSimuState";
 
@@ -34,16 +35,8 @@ describe("simuModule", () => {
             hold: makeHold(Tetromino.NONE, true),
             nexts: {
               settled: [Tetromino.S, Tetromino.Z],
-              unsettled: [
-                {
-                  candidates: [Tetromino.J],
-                  take: 1,
-                },
-                {
-                  candidates: [Tetromino.I],
-                  take: 1,
-                },
-              ],
+              unsettled: [makeNextNote("J", 1), makeNextNote("I", 1)],
+              bag: makeNextNote("JI", 2),
             },
             seed: makeSeed(1),
           })
@@ -58,12 +51,8 @@ describe("simuModule", () => {
           isDead: false,
           nexts: {
             settled: [Tetromino.Z, Tetromino.J],
-            unsettled: [
-              {
-                candidates: [Tetromino.I],
-                take: 1,
-              },
-            ],
+            unsettled: [makeNextNote("I", 1)],
+            bag: makeNextNote("I", 1),
           },
           seed: makeSeed(41702199),
           succeeded: true,
@@ -82,16 +71,8 @@ describe("simuModule", () => {
             hold: makeHold(Tetromino.L, true),
             nexts: {
               settled: [Tetromino.S, Tetromino.Z],
-              unsettled: [
-                {
-                  candidates: [Tetromino.J],
-                  take: 1,
-                },
-                {
-                  candidates: [Tetromino.I],
-                  take: 1,
-                },
-              ],
+              unsettled: [makeNextNote("J", 1), makeNextNote("I", 1)],
+              bag: makeNextNote("JI", 2),
             },
             seed: makeSeed(2),
           })
@@ -106,16 +87,8 @@ describe("simuModule", () => {
           isDead: false,
           nexts: {
             settled: [Tetromino.S, Tetromino.Z],
-            unsettled: [
-              {
-                candidates: [Tetromino.J],
-                take: 1,
-              },
-              {
-                candidates: [Tetromino.I],
-                take: 1,
-              },
-            ],
+            unsettled: [makeNextNote("J", 1), makeNextNote("I", 1)],
+            bag: makeNextNote("JI", 2),
           },
           seed: makeSeed(2),
           succeeded: true,
@@ -134,16 +107,7 @@ describe("simuModule", () => {
             hold: makeHold(Tetromino.NONE, false),
             nexts: {
               settled: [Tetromino.S, Tetromino.Z],
-              unsettled: [
-                {
-                  candidates: [Tetromino.J],
-                  take: 1,
-                },
-                {
-                  candidates: [Tetromino.I],
-                  take: 1,
-                },
-              ],
+              unsettled: [makeNextNote("J", 1), makeNextNote("I", 1)],
             },
             seed: makeSeed(),
           })
@@ -176,16 +140,8 @@ describe("simuModule", () => {
             hold: makeHold(Tetromino.I, false),
             nexts: {
               settled: [Tetromino.S, Tetromino.Z],
-              unsettled: [
-                {
-                  candidates: [Tetromino.J],
-                  take: 1,
-                },
-                {
-                  candidates: [Tetromino.I],
-                  take: 1,
-                },
-              ],
+              unsettled: [makeNextNote("J", 1), makeNextNote("I", 1)],
+              bag: makeNextNote("JI", 2),
             },
             seed: makeSeed(3),
           })
@@ -207,12 +163,8 @@ describe("simuModule", () => {
           isDead: false,
           nexts: {
             settled: [Tetromino.Z, Tetromino.J],
-            unsettled: [
-              {
-                candidates: [Tetromino.I],
-                take: 1,
-              },
-            ],
+            unsettled: [makeNextNote("I", 1)],
+            bag: makeNextNote("I", 1),
           },
           seed: makeSeed(55079790),
         },
@@ -453,7 +405,8 @@ describe("simuModule", () => {
   describe("retry", () => {
     it("should retry from initial state", () => {
       const config = { nextNum: 3 };
-      const retryState = {
+      const retryState: SimuRetryState = {
+        bag: makeNextNote("IOT", 3),
         field: makeField("IJLOSTZNNN"),
         hold: {
           canHold: false,
@@ -498,6 +451,7 @@ describe("simuModule", () => {
     it("should retry from initial state with another seed", async () => {
       const config = { nextNum: 3 };
       const retryState: SimuRetryState = {
+        bag: makeNextNote("IOT", 3),
         field: makeField("IJLOSTZNNN"),
         hold: {
           canHold: false,
@@ -538,6 +492,9 @@ describe("simuModule", () => {
       expect(actual1.payload.lastRoseUpColumn).toEqual(
         actual2.payload.lastRoseUpColumn
       );
+      expect(actual1.payload.retryState.bag).toEqual(
+        actual2.payload.retryState.bag
+      );
       expect(actual1.payload.retryState.field).toEqual(
         actual2.payload.retryState.field
       );
@@ -555,6 +512,7 @@ describe("simuModule", () => {
         riseUpRate: { first: 100, second: 100 },
       };
       const retryState: SimuRetryState = {
+        bag: makeNextNote("IOT", 3),
         field: makeField("IJLOSTZNNN"),
         hold: {
           canHold: false,
@@ -606,6 +564,7 @@ describe("simuModule", () => {
         riseUpRate: { first: 0, second: 0 },
       };
       const retryState: SimuRetryState = {
+        bag: makeNextNote("IOT", 3),
         field: makeField("IJLOSTZNNN"),
         hold: {
           canHold: false,
@@ -635,7 +594,7 @@ describe("simuModule", () => {
         expect(noneCols[i]).not.toBe(noneCols[i + 1]);
       }
 
-      // Lines(<= 16) are not buried garbage
+      // Lines(>= 16) are not buried garbage
       expect(actual.payload.field[garbegeHeight]).toEqual(
         new Array(10).fill(FieldCellValue.NONE)
       );

@@ -11,6 +11,7 @@ const useStyles = makeStyles(() =>
     },
 
     next: {
+      boxShadow: "0 0 0 1px grey",
       height: (props: StyleProps) =>
         Math.min(96 * props.zoom, props.height / props.nextNums),
       width: (props: StyleProps) =>

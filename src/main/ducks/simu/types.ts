@@ -59,6 +59,7 @@ export type ClearSimuAction = {
     nexts: {
       settled: Tetromino[];
       unsettled: NextNote[];
+      bag: NextNote;
     };
     retryState: SimuRetryState;
     seed: number;
@@ -75,6 +76,7 @@ export type HardDropTetrominoAction = {
     nexts: {
       settled: Tetromino[];
       unsettled: NextNote[];
+      bag: NextNote;
     };
     seed: number;
   };
@@ -90,6 +92,7 @@ export type HoldTetrominoAction = {
         nexts: {
           settled: Tetromino[];
           unsettled: NextNote[];
+          bag: NextNote;
         };
         seed: number;
         succeeded: true;
@@ -122,6 +125,7 @@ export type RedoAction = {
     nexts: {
       settled: Tetromino[];
       unsettled: NextNote[];
+      bag: NextNote;
     };
     seed: number;
     step: number;
@@ -138,6 +142,7 @@ export type RetryAction = {
     nexts: {
       settled: Tetromino[];
       unsettled: NextNote[];
+      bag: NextNote;
     };
     seed: number;
   };
@@ -165,6 +170,7 @@ export type SuperRetryAction = {
     nexts: {
       settled: Tetromino[];
       unsettled: NextNote[];
+      bag: NextNote;
     };
     retryState: SimuRetryState;
     seed: number;
@@ -182,6 +188,7 @@ export type UndoAction = {
     nexts: {
       settled: Tetromino[];
       unsettled: NextNote[];
+      bag: NextNote;
     };
     seed: number;
     step: number;

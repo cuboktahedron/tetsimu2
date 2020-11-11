@@ -1,4 +1,4 @@
-import { Tetromino } from 'types/core';
+import { NextNote, Tetromino } from "types/core";
 
 export const tetrominoToType = (tetromino: Tetromino): string => {
   switch (tetromino) {
@@ -19,4 +19,19 @@ export const tetrominoToType = (tetromino: Tetromino): string => {
     case Tetromino.NONE:
       return "";
   }
+};
+
+export const makeFullNextNote = (): NextNote => {
+  return {
+    candidates: [
+      Tetromino.I,
+      Tetromino.J,
+      Tetromino.L,
+      Tetromino.O,
+      Tetromino.S,
+      Tetromino.T,
+      Tetromino.Z,
+    ],
+    take: 7,
+  };
 };

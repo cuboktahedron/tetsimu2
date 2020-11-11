@@ -11,7 +11,6 @@ const useStyles = makeStyles(() =>
   createStyles({
     root: {
       background: "black",
-      divShadow: "0 0 0 1px grey",
       height: "100%",
       width: "100%",
     },

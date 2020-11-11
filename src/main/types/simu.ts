@@ -21,6 +21,7 @@ export type SimuConfig = {
 };
 
 export type SimuRetryState = {
+  bag: NextNote;
   field: FieldState;
   hold: HoldState;
   lastRoseUpColumn: number;

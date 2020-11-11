@@ -1,6 +1,7 @@
 import { EditState } from "stores/EditState";
 import { SimuState } from "stores/SimuState";
 import { Direction, MAX_NEXTS_NUM, Tetromino, TetsimuMode } from "types/core";
+import { makeFullNextNote } from 'utils/tetsimu/functions';
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
@@ -55,9 +56,11 @@ export const editToSimuMode = (state: EditState): EditToSimuModeAction => {
       nexts: {
         settled: newNextSettles,
         unsettled: [],
+        bag: lastGenNext.bag,
       },
       lastRoseUpColumn: -1,
       retryState: {
+        bag: makeFullNextNote(), // TODO: temporary
         field: state.field,
         hold: state.hold,
         lastRoseUpColumn: -1,

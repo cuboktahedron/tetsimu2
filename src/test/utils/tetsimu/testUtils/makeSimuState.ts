@@ -1,3 +1,4 @@
+import merge from "deepmerge";
 import { SimuState, SimuStateHistory } from "stores/SimuState";
 import {
   ActiveTetromino,
@@ -9,7 +10,7 @@ import {
   Tetromino,
 } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
-import merge from "deepmerge";
+import { makeNextNote } from "./makeNextNote";
 
 export const makeSimuState = (state: {
   config?: {
@@ -29,6 +30,7 @@ export const makeSimuState = (state: {
   nexts?: {
     settled?: Tetromino[];
     unsettled?: NextNote[];
+    bag?: NextNote;
   };
   retryState?: SimuRetryState;
   seed?: number;
@@ -68,6 +70,7 @@ export const makeSimuState = (state: {
       nexts: {
         settled: [],
         unsettled: [],
+        bag: makeNextNote("", 0),
       },
       retryState: {
         field: [],

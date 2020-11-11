@@ -37,6 +37,7 @@ export type EditToSimuAction = {
     nexts: {
       settled: Tetromino[];
       unsettled: NextNote[];
+      bag: NextNote;
     };
     retryState: SimuRetryState;
     seed: number;
