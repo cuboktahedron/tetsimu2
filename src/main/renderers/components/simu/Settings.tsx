@@ -219,6 +219,15 @@ const Settings: React.FC = () => {
     );
   };
 
+  const handleShowCycleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(
+      changeConfig({
+        ...config,
+        showsCycle: e.target.checked,
+      })
+    );
+  };
+
   const handleTapControllerTypeChange = (
     e: React.ChangeEvent<{ value: unknown }>
   ) => {
@@ -323,6 +332,17 @@ const Settings: React.FC = () => {
             />
           }
           label="Show ghost"
+        />
+      </div>
+      <div>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={config.showsCycle}
+              onChange={handleShowCycleChange}
+            />
+          }
+          label="Show Cycle"
         />
       </div>
 

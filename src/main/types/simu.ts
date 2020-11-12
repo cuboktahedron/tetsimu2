@@ -14,6 +14,7 @@ export type SimuConfig = {
     first: number;
     second: number;
   };
+  showsCycle: boolean;
   showsGhost: boolean;
   showsPivot: boolean;
   tapControllerType: TapControllerType;

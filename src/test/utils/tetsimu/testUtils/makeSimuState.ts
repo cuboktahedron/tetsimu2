@@ -44,6 +44,7 @@ export const makeSimuState = (state: {
           first: 10,
           second: 70,
         },
+        showsCycle: true,
         showsGhost: true,
         showsPivot: true,
         tapControllerType: TapControllerType.None,
