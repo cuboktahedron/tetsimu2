@@ -5,7 +5,7 @@ import {
   MAX_FIELD_HEIGHT,
   NextNote,
   Tetromino,
-  Vector2,
+  Vector2
 } from "types/core";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import { tetrominoToType } from "utils/tetsimu/functions";
@@ -17,10 +17,11 @@ import {
   ChangeNextAction,
   ChangeNextBaseNoAction,
   ChangeNextsPatternAction,
+  ChangeNoOfCycleAction,
   ChangeToolCellValueAction,
   ChangeZoomAction,
   ClearEditAction,
-  EditActionsType,
+  EditActionsType
 } from "./types";
 
 export const buildUpField = (
@@ -158,12 +159,12 @@ export const changeNext = (
     if (types === undefined) {
       break;
     }
-    
+
     if (types.length > 0) {
       nextTypess.push(types);
       break;
     }
-  } while (nextTypess.length !== 0)
+  } while (nextTypess.length !== 0);
 
   // Recompose next notes
   const newNextNotes: NextNote[] = [];
@@ -225,6 +226,15 @@ export const changeNextsPattern = (
     payload: {
       nextsPattern,
       nextNotes,
+    },
+  };
+};
+
+export const changeNoOfCycle = (noOfCycle: number): ChangeNoOfCycleAction => {
+  return {
+    type: EditActionsType.ChangeNoOfCycle,
+    payload: {
+      noOfCycle,
     },
   };
 };

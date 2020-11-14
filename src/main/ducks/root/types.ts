@@ -54,6 +54,7 @@ export type SimuToEditAction = {
     };
     tools: {
       nextsPattern: string;
+      noOfCycle: number;
     };
   };
 } & Action;

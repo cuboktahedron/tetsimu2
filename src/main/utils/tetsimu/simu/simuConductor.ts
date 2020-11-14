@@ -185,7 +185,11 @@ export class SimuConductor {
 
   retry() {
     const rgn = new RandomNumberGenerator(this.state.retryState.seed);
-    const gen = new NextGenerator(rgn, this.state.retryState.unsettledNexts);
+    const gen = new NextGenerator(
+      rgn,
+      this.state.retryState.unsettledNexts,
+      this.state.retryState.bag
+    );
     const currentGenNext = gen.next();
     let lastGenNext = currentGenNext;
 
@@ -243,7 +247,11 @@ export class SimuConductor {
   superRetry() {
     const rgn = new RandomNumberGenerator();
     const initialSeed = rgn.seed;
-    const gen = new NextGenerator(rgn, this.state.retryState.unsettledNexts);
+    const gen = new NextGenerator(
+      rgn,
+      this.state.retryState.unsettledNexts,
+      this.state.retryState.bag
+    );
     const currentGenNext = gen.next();
     let lastGenNext = currentGenNext;
 

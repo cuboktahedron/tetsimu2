@@ -1,4 +1,5 @@
 import { createStyles, makeStyles } from "@material-ui/core";
+import clsx from "clsx";
 import { getClippedEditNexts } from "ducks/edit/selectors";
 import React from "react";
 import { EditContext } from "./Edit";
@@ -16,6 +17,14 @@ const useStyles = makeStyles(() =>
         Math.min(96 * props.zoom, props.height / props.nextNums),
       width: (props: StyleProps) =>
         Math.min(96 * props.zoom, props.height / props.nextNums),
+    },
+
+    cycleBegin: {
+      boxShadow: "0 -6px 0 0 red, 0 0 0 1px grey",
+    },
+
+    cycleEnd: {
+      boxShadow: "0 6px 0 0 red, 0 0 0 1px grey",
     },
   })
 );
@@ -40,20 +49,30 @@ const Nexts: React.FC<NextsProps> = (props) => {
   });
 
   let nextNo = state.tools.nextBaseNo;
+  const noOfCycleBase = (state.tools.nextBaseNo - 1 + state.tools.noOfCycle - 1) % 7;
+  let i = 0;
   const nextdives = nextNotes.flatMap((note) => {
     const nexts: JSX.Element[] = [];
     let take = note.take;
 
     while (take > 0) {
       take--;
+      const noOfCycle = (noOfCycleBase + i) % 7;
 
       nexts.push(
-        <div key={nextNo} className={classes.next}>
+        <div
+          key={nextNo}
+          className={clsx(classes.next, {
+            [classes.cycleBegin]: noOfCycle === 0,
+            [classes.cycleEnd]: noOfCycle === 6,
+          })}
+        >
           <Next nextNo={nextNo} note={note} />
         </div>
       );
 
       nextNo++;
+      i++;
     }
 
     return nexts;

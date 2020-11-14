@@ -37,6 +37,7 @@ describe("EditSelector", () => {
         tools: {
           nextBaseNo: 3,
           nextsPattern: "",
+          noOfCycle: 1,
           selectedCellValues: [FieldCellValue.NONE],
         },
       });
@@ -70,6 +71,7 @@ describe("EditSelector", () => {
         tools: {
           nextBaseNo: 98,
           nextsPattern: "",
+          noOfCycle: 1,
           selectedCellValues: [FieldCellValue.NONE],
         },
       });
@@ -91,6 +93,7 @@ describe("EditSelector", () => {
         tools: {
           nextBaseNo: 90,
           nextsPattern: "",
+          noOfCycle: 1,
           selectedCellValues: [FieldCellValue.NONE],
         },
       });
@@ -108,6 +111,7 @@ describe("EditSelector", () => {
         tools: {
           nextBaseNo: 993,
           nextsPattern: "",
+          noOfCycle: 1,
           selectedCellValues: [FieldCellValue.NONE],
         },
       });

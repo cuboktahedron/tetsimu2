@@ -63,6 +63,14 @@ const reducer = (state: EditState, anyAction: Action): EditState => {
           nextsPattern: action.payload.nextsPattern,
         },
       };
+    case EditActionsType.ChangeNoOfCycle:
+      return {
+        ...state,
+        tools: {
+          ...state.tools,
+          noOfCycle: action.payload.noOfCycle,
+        },
+      };
     case EditActionsType.ChangeToolCellValues:
       return {
         ...state,

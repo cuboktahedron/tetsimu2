@@ -1,4 +1,5 @@
 import { NextNote, Tetromino } from "types/core";
+import { makeFullNextNote } from "utils/tetsimu/functions";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
@@ -50,7 +51,8 @@ describe("nextGenerator", () => {
   it("should generate types with specified order", () => {
     const gen = new NextGenerator(
       new RandomNumberGenerator(),
-      new NextNotesInterpreter().interpret("IJLOSTZ")
+      new NextNotesInterpreter().interpret("IJLOSTZ"),
+      makeFullNextNote()
     );
 
     expect(gen.next().type).toBe(Tetromino.I);
@@ -65,7 +67,8 @@ describe("nextGenerator", () => {
   it("should comsump head notes", () => {
     const gen = new NextGenerator(
       new RandomNumberGenerator(),
-      new NextNotesInterpreter().interpret("[IJ]p2[OS]")
+      new NextNotesInterpreter().interpret("[IJ]p2[OS]"),
+      makeFullNextNote()
     );
 
     const expectedBase: NextNote[] = [
@@ -99,7 +102,8 @@ describe("nextGenerator", () => {
   it("should generate with keeping 7types per cycle (I q5 Z)", () => {
     const gen = new NextGenerator(
       new RandomNumberGenerator(),
-      new NextNotesInterpreter().interpret("I q5 Z")
+      new NextNotesInterpreter().interpret("I q5 Z"),
+      makeFullNextNote()
     );
     const types1: Tetromino[] = [];
 
@@ -119,7 +123,8 @@ describe("nextGenerator", () => {
   it("should generate with keeping 7types per cycle ([IJ]p2 q3 [TZ]p2)", () => {
     const gen = new NextGenerator(
       new RandomNumberGenerator(),
-      new NextNotesInterpreter().interpret("[IJ]p2 q3 [TZ]p2")
+      new NextNotesInterpreter().interpret("[IJ]p2 q3 [TZ]p2"),
+      makeFullNextNote()
     );
     const types1: Tetromino[] = [];
 
@@ -139,7 +144,8 @@ describe("nextGenerator", () => {
   it("should generate with keeping 7types per cycle ([IJL]p2 q5 [IJL]p1)", () => {
     const gen = new NextGenerator(
       new RandomNumberGenerator(),
-      new NextNotesInterpreter().interpret("[IJL]p1 q5 [IJL]p1")
+      new NextNotesInterpreter().interpret("[IJL]p1 q5 [IJL]p1"),
+      makeFullNextNote()
     );
     const types1: Tetromino[] = [];
 
@@ -159,7 +165,8 @@ describe("nextGenerator", () => {
   it("should generate with keeping 7types per cycle as long as possible (IJ q3 [IJ]p2)", () => {
     const gen = new NextGenerator(
       new RandomNumberGenerator(),
-      new NextNotesInterpreter().interpret("IJ q3 [IJ]p2")
+      new NextNotesInterpreter().interpret("IJ q3 [IJ]p2"),
+      makeFullNextNote()
     );
     const types1: Tetromino[] = [];
 

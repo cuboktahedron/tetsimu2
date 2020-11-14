@@ -10,6 +10,7 @@ import {
   Tetromino,
 } from "types/core";
 import { PlayMode, SimuConfig, SimuRetryState } from "types/simu";
+import { makeFullNextNote } from 'utils/tetsimu/functions';
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 
@@ -53,7 +54,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
   const rng = new RandomNumberGenerator();
   const initialSeed = rng.seed;
   const nexts: Tetromino[] = [];
-  const nextGen = new NextGenerator(rng, []);
+  const nextGen = new NextGenerator(rng, [], makeFullNextNote());
   const currentGenNext = nextGen.next();
   let lastGenNext = currentGenNext;
 

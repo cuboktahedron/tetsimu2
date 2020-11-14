@@ -1,7 +1,6 @@
 import { EditState } from "stores/EditState";
 import { SimuState } from "stores/SimuState";
 import { Direction, MAX_NEXTS_NUM, Tetromino, TetsimuMode } from "types/core";
-import { makeFullNextNote } from 'utils/tetsimu/functions';
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
@@ -28,7 +27,20 @@ export const editToSimuMode = (state: EditState): EditToSimuModeAction => {
   const nextNotes = interpreter.interpret(state.tools.nextsPattern);
   const rgn = new RandomNumberGenerator();
   const initialSeed = rgn.seed;
-  const gen = new NextGenerator(rgn, nextNotes);
+  const initialBag = {
+    candidates: [
+      Tetromino.I,
+      Tetromino.J,
+      Tetromino.L,
+      Tetromino.O,
+      Tetromino.S,
+      Tetromino.T,
+      Tetromino.Z,
+    ],
+    take: (7 - state.tools.noOfCycle + 1) % 7,
+  };
+
+  const gen = new NextGenerator(rgn, nextNotes, initialBag);
   const currentGenNext = gen.next();
   let lastGenNext = currentGenNext;
 
@@ -55,12 +67,12 @@ export const editToSimuMode = (state: EditState): EditToSimuModeAction => {
       hold: state.hold,
       nexts: {
         settled: newNextSettles,
-        unsettled: [],
+        unsettled: lastGenNext.nextNotes,
         bag: lastGenNext.bag,
       },
       lastRoseUpColumn: -1,
       retryState: {
-        bag: makeFullNextNote(), // TODO: temporary
+        bag: initialBag,
         field: state.field,
         hold: state.hold,
         lastRoseUpColumn: -1,
@@ -82,13 +94,18 @@ export const simuToEditMode = (state: SimuState): SimuToEditModeAction => {
     ...state.nexts.settled.slice(0, state.config.nextNum),
   ];
 
-  const nextsPattern = settled.map((type) => valueToKey[type]).join("");
+  const nextsPattern = settled.map((type) => valueToKey[type]).join(" ");
   const nextNotes = settled.map((type) => {
     return {
       candidates: [type],
       take: 1,
     };
   });
+
+  let noOfCycle = (7 - (state.nexts.bag.take + (MAX_NEXTS_NUM - 7))) % 7;
+  if (noOfCycle < 1) {
+    noOfCycle += 7;
+  }
 
   return {
     type: RootActionsType.SimuToEditMode,
@@ -100,6 +117,7 @@ export const simuToEditMode = (state: SimuState): SimuToEditModeAction => {
       },
       tools: {
         nextsPattern,
+        noOfCycle,
       },
     },
   };

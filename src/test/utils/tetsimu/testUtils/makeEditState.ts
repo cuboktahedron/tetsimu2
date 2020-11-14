@@ -19,8 +19,9 @@ export const makeEditState = (state: {
   };
   tools?: {
     nextBaseNo: number;
-    selectedCellValues: FieldCellValue[];
     nextsPattern: string;
+    noOfCycle: number;
+    selectedCellValues: FieldCellValue[];
   };
   zoom?: number;
 }): EditState => {
@@ -39,8 +40,9 @@ export const makeEditState = (state: {
       },
       tools: {
         nextBaseNo: 1,
-        selectedCellValues: [FieldCellValue.NONE],
         nextsPattern: "",
+        noOfCycle: 1,
+        selectedCellValues: [FieldCellValue.NONE],
       },
       zoom: 0,
     },

@@ -18,18 +18,9 @@ export default class NextGenerator {
   constructor(
     private gen: RandomNumberGenerator,
     _nextNotes: NextNote[],
-    _bag?: NextNote
+    _bag: NextNote
   ) {
-    if (!_bag) {
-      // TODO: make variable "_bag" not an optional
-      this.bag = new CycleBag({
-        candidates: [...fullBag],
-        take: fullBag.length,
-      });
-    } else {
-      this.bag = new CycleBag(_bag);
-    }
-
+    this.bag = new CycleBag(_bag);
     this.nextNotes = new NextNotes(_nextNotes);
   }
 

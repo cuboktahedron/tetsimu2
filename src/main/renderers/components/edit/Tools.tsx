@@ -21,6 +21,7 @@ import clsx from "clsx";
 import {
   changeNextBaseNo,
   changeNextsPattern,
+  changeNoOfCycle,
   changeToolCellValue,
   clearEdit
 } from "ducks/edit/actions";
@@ -111,6 +112,7 @@ const Tools: React.FC = () => {
   const [textKeys, setTextKeys] = React.useState({
     nextBaseNo: new Date().getTime(),
     nextsPattern: new Date().getTime(),
+    noOfCycle: new Date().getTime(),
   });
 
   useEffect(() => {
@@ -208,6 +210,26 @@ const Tools: React.FC = () => {
     dispatch(changeNextBaseNo(value));
   };
 
+  const handleNoOfCycleBlur = (): void => {
+    setTextKeys({ ...textKeys, noOfCycle: new Date().getTime() });
+  };
+
+  const handleNoOfCycleChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    let value = +e.currentTarget.value;
+
+    if (isNaN(value)) {
+      value = 1;
+    } else if (value < 1) {
+      value = 1;
+    } else if (value > 7) {
+      value = 7;
+    }
+
+    dispatch(changeNoOfCycle(value));
+  };
+
   const handleNextBaseNoBlur = (): void => {
     setTextKeys({ ...textKeys, nextBaseNo: new Date().getTime() });
   };
@@ -293,10 +315,29 @@ const Tools: React.FC = () => {
             InputLabelProps={{
               shrink: true,
             }}
+            style={{ minWidth: 100 }}
             value={state.tools.nextBaseNo}
             variant="outlined"
             onBlur={handleNextBaseNoBlur}
             onChange={handleNextBaseNoChange}
+          />
+        </FormControl>
+      </div>
+      <div>
+        <FormControl>
+          <TextField
+            key={textKeys.noOfCycle}
+            type="number"
+            label="No Of Cycle"
+            InputProps={{ inputProps: { min: 1, max: 7 } }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            style={{ minWidth: 100 }}
+            value={state.tools.noOfCycle}
+            variant="outlined"
+            onBlur={handleNoOfCycleBlur}
+            onChange={handleNoOfCycleChange}
           />
         </FormControl>
       </div>

@@ -58,6 +58,7 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
             tools: {
               ...state.edit.tools,
               nextsPattern: action.payload.tools.nextsPattern,
+              noOfCycle: action.payload.tools.noOfCycle,
             },
           },
           mode: TetsimuMode.Edit,

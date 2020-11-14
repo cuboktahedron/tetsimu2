@@ -14,6 +14,7 @@ export const EditActionsType = {
   ChangeNext: "edit/changeNext",
   ChangeNextBaseNo: "edit/changeNextBaseNo",
   ChangeNextsPattern: "edit/changeNextsPattern",
+  ChangeNoOfCycle: "edit/changeNoOfCycle",
   ChangeToolCellValues: "edit/changeToolCellValues",
   ChangeZoom: "edit/changeZoom",
   Clear: "edit/clear",
@@ -25,6 +26,7 @@ export type EditActions =
   | ChangeNextAction
   | ChangeNextBaseNoAction
   | ChangeNextsPatternAction
+  | ChangeNoOfCycleAction
   | ChangeToolCellValueAction
   | ChangeZoomAction
   | ClearEditAction
@@ -84,6 +86,14 @@ export type ChangeNextsPatternAction = {
     nextsPattern: string;
   };
 } & Action;
+
+export type ChangeNoOfCycleAction = {
+  type: typeof EditActionsType.ChangeNoOfCycle;
+  payload: {
+    noOfCycle: number;
+  };
+} & Action;
+
 
 export type ChangeToolCellValueAction = {
   type: typeof EditActionsType.ChangeToolCellValues;
