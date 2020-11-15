@@ -13,7 +13,6 @@ import {
   Radio,
   RadioGroup,
   Select,
-  TextField,
   Theme,
 } from "@material-ui/core";
 import { changeConfig, clearSimu } from "ducks/simu/actions";
@@ -21,8 +20,8 @@ import { getSimuConductor } from "ducks/simu/selectors";
 import React, { useEffect } from "react";
 import { MAX_NEXTS_NUM, TapControllerType } from "types/core";
 import { PlayMode } from "types/simu";
+import NumberTextField from "../ext/NumberTextField";
 import { SimuContext } from "./Simu";
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -52,33 +51,8 @@ const Settings: React.FC = () => {
   const { state, dispatch } = React.useContext(SimuContext);
   const config = state.config;
   const [playMode, setPlayMode] = React.useState(config.playMode);
-  const [riseUpRateFirst, setRiseUpRateFirst] = React.useState(
-    config.riseUpRate.first + ""
-  );
-  const [riseUpRateSecond, setRiseUpRateSecond] = React.useState(
-    config.riseUpRate.second + ""
-  );
-  const [textKeys, setTextKeys] = React.useState({
-    nextNums: new Date().getTime(),
-    riseUpRateFirst: new Date().getTime(),
-    riseUpRateSecond: new Date().getTime(),
-  });
 
-  const handleNextsNumChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    let value = +e.currentTarget.value;
-
-    if (isNaN(value)) {
-      return;
-    }
-
-    if (value < 1) {
-      value = 1;
-    } else if (value > MAX_NEXTS_NUM) {
-      value = MAX_NEXTS_NUM;
-    }
-
+  const handleNextsNumChange = (value: number): void => {
     if (value !== state.config.nextNum) {
       dispatch(
         changeConfig({
@@ -89,115 +63,31 @@ const Settings: React.FC = () => {
     }
   };
 
-  const handleNextsNumBlur = (): void => {
-    setTextKeys({ ...textKeys, nextNums: new Date().getTime() });
-  };
-
-  const handleRiseUpRateFirstChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    let value = +e.currentTarget.value;
-
-    if (isNaN(value)) {
-      return;
-    }
-
-    if (value < 0) {
-      value = 0;
-    } else if (value > 100) {
-      value = 100;
-    }
-
-    setRiseUpRateFirst(value + "");
-  };
-
-  const handleRiseUpRateFirstKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>
-  ): void => {
-    if (e.key !== "Enter") {
-      return;
-    }
-
-    if (+riseUpRateFirst !== config.riseUpRate.first) {
+  const handleRiseUpRateFirstChange = (value: number): void => {
+    if (value !== state.config.riseUpRate.first) {
       dispatch(
         changeConfig({
           ...config,
           riseUpRate: {
             ...config.riseUpRate,
-            first: +riseUpRateFirst,
+            first: value,
           },
         })
       );
     }
   };
 
-  const handleRiseUpRateFirstBlur = (): void => {
-    if (+riseUpRateFirst !== config.riseUpRate.first) {
+  const handleRiseUpRateSecondChange = (value: number): void => {
+    if (value !== state.config.riseUpRate.second) {
       dispatch(
         changeConfig({
           ...config,
           riseUpRate: {
             ...config.riseUpRate,
-            first: +riseUpRateFirst,
+            second: value,
           },
         })
       );
-
-      setTextKeys({ ...textKeys, riseUpRateFirst: new Date().getTime() });
-    }
-  };
-
-  const handleRiseUpRateSecondChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    let value = +e.currentTarget.value;
-
-    if (isNaN(value)) {
-      return;
-    }
-
-    if (value < 0) {
-      value = 0;
-    } else if (value > 100) {
-      value = 100;
-    }
-
-    setRiseUpRateSecond(value + "");
-  };
-
-  const handleRiseUpRateSecondKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>
-  ): void => {
-    if (e.key !== "Enter") {
-      return;
-    }
-
-    if (+riseUpRateSecond !== config.riseUpRate.second) {
-      dispatch(
-        changeConfig({
-          ...config,
-          riseUpRate: {
-            ...config.riseUpRate,
-            second: +riseUpRateSecond,
-          },
-        })
-      );
-    }
-  };
-
-  const handleRiseUpRateSecondBlur = (): void => {
-    if (+riseUpRateSecond !== config.riseUpRate.second) {
-      dispatch(
-        changeConfig({
-          ...config,
-          riseUpRate: {
-            ...config.riseUpRate,
-            second: +riseUpRateSecond,
-          },
-        })
-      );
-
-      setTextKeys({ ...textKeys, riseUpRateSecond: new Date().getTime() });
     }
   };
 
@@ -297,18 +187,18 @@ const Settings: React.FC = () => {
           Display
         </FormLabel>
         <FormControl>
-          <TextField
-            key={textKeys.nextNums}
-            type="number"
+          <NumberTextField
             label="Nexts"
-            InputProps={{ inputProps: { min: 1, max: MAX_NEXTS_NUM } }}
+            numberProps={{
+              min: 1,
+              max: MAX_NEXTS_NUM,
+              change: handleNextsNumChange,
+            }}
             InputLabelProps={{
               shrink: true,
             }}
             value={state.config.nextNum}
             variant="outlined"
-            onBlur={handleNextsNumBlur}
-            onChange={handleNextsNumChange}
           />
         </FormControl>
       </div>
@@ -364,54 +254,48 @@ const Settings: React.FC = () => {
               control={<Radio />}
               label="Dig"
             />
-            <div>
-              <div>Rise up rate</div>
-              <FormControl style={{ marginRight: 4 }}>
-                <TextField
-                  key={textKeys.riseUpRateFirst}
-                  type="number"
-                  label="first"
-                  InputProps={{
-                    inputProps: { min: 0, max: 100 },
-                    endAdornment: (
-                      <InputAdornment position="end">%</InputAdornment>
-                    ),
-                  }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  value={riseUpRateFirst}
-                  variant="outlined"
-                  disabled={config.playMode !== PlayMode.Dig}
-                  onBlur={handleRiseUpRateFirstBlur}
-                  onChange={handleRiseUpRateFirstChange}
-                  onKeyDown={handleRiseUpRateFirstKeyDown}
-                />
-              </FormControl>
-              <FormControl>
-                <TextField
-                  key={textKeys.riseUpRateSecond}
-                  type="number"
-                  label="second"
-                  InputProps={{
-                    inputProps: { min: 0, max: 100 },
-                    endAdornment: (
-                      <InputAdornment position="end">%</InputAdornment>
-                    ),
-                  }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  value={riseUpRateSecond}
-                  variant="outlined"
-                  disabled={config.playMode !== PlayMode.Dig}
-                  onBlur={handleRiseUpRateSecondBlur}
-                  onChange={handleRiseUpRateSecondChange}
-                  onKeyDown={handleRiseUpRateSecondKeyDown}
-                />
-              </FormControl>
-            </div>
           </RadioGroup>
+          <div>
+            <div>Rise up rate</div>
+            <FormControl style={{ marginRight: 4 }}>
+              <NumberTextField
+                label="first"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                numberProps={{
+                  min: 0,
+                  max: 100,
+                  endAdornment: (
+                    <InputAdornment position="end">%</InputAdornment>
+                  ),
+                  change: handleRiseUpRateFirstChange,
+                }}
+                value={state.config.riseUpRate.first}
+                variant="outlined"
+                disabled={config.playMode !== PlayMode.Dig}
+              />
+            </FormControl>
+            <FormControl>
+              <NumberTextField
+                label="second"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                numberProps={{
+                  min: 0,
+                  max: 100,
+                  endAdornment: (
+                    <InputAdornment position="end">%</InputAdornment>
+                  ),
+                  change: handleRiseUpRateSecondChange,
+                }}
+                value={state.config.riseUpRate.second}
+                variant="outlined"
+                disabled={config.playMode !== PlayMode.Dig}
+              />
+            </FormControl>
+          </div>
         </FormGroup>
       </div>
 

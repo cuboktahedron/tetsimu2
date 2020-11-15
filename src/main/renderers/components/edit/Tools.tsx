@@ -4,7 +4,6 @@ import {
   Divider,
   FormControl,
   makeStyles,
-  TextField,
   Theme
 } from "@material-ui/core";
 import {
@@ -29,6 +28,8 @@ import { changeTetsimuMode, editToSimuMode } from "ducks/root/actions";
 import React, { useEffect } from "react";
 import { FieldCellValue, TetsimuMode } from "types/core";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
+import NumberTextField from "../ext/NumberTextField";
+import TextFieldEx from "../ext/TextFieldEx";
 import { EditContext } from "./Edit";
 
 const fieldCellColors = {
@@ -109,11 +110,6 @@ const Tools: React.FC = () => {
     errorText: "",
     value: state.tools.nextsPattern,
   });
-  const [textKeys, setTextKeys] = React.useState({
-    nextBaseNo: new Date().getTime(),
-    nextsPattern: new Date().getTime(),
-    noOfCycle: new Date().getTime(),
-  });
 
   useEffect(() => {
     setNextsPattern({
@@ -186,52 +182,16 @@ const Tools: React.FC = () => {
     }
   };
 
-  const handleNextsPatternBlur = (): void => {
-    if (nextsPattern.value !== state.tools.nextsPattern) {
-      dispatch(changeNextsPattern(nextsPattern.value));
-
-      setTextKeys({ ...textKeys, nextsPattern: new Date().getTime() });
+  const handleNextBaseNoChange = (value: number): void => {
+    if (value !== state.tools.nextBaseNo) {
+      dispatch(changeNextBaseNo(value));
     }
   };
 
-  const handleNextBaseNoChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    let value = +e.currentTarget.value;
-
-    if (isNaN(value)) {
-      value = 1;
-    } else if (value < 1) {
-      value = 1;
-    } else if (value > MAX_NEXT_BASE_NO) {
-      value = MAX_NEXT_BASE_NO;
+  const handleNoOfCycleChange = (value: number): void => {
+    if (value !== state.tools.noOfCycle) {
+      dispatch(changeNoOfCycle(value));
     }
-
-    dispatch(changeNextBaseNo(value));
-  };
-
-  const handleNoOfCycleBlur = (): void => {
-    setTextKeys({ ...textKeys, noOfCycle: new Date().getTime() });
-  };
-
-  const handleNoOfCycleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    let value = +e.currentTarget.value;
-
-    if (isNaN(value)) {
-      value = 1;
-    } else if (value < 1) {
-      value = 1;
-    } else if (value > 7) {
-      value = 7;
-    }
-
-    dispatch(changeNoOfCycle(value));
-  };
-
-  const handleNextBaseNoBlur = (): void => {
-    setTextKeys({ ...textKeys, nextBaseNo: new Date().getTime() });
   };
 
   const cellTypes = [
@@ -290,8 +250,7 @@ const Tools: React.FC = () => {
       <div className={classes.cellTypes}>{cellTypes}</div>
       <Divider />
       <div>
-        <TextField
-          key={textKeys.nextsPattern}
+        <TextFieldEx
           error={!!nextsPattern.errorText}
           fullWidth
           label="Nexts pattern"
@@ -301,43 +260,42 @@ const Tools: React.FC = () => {
           value={nextsPattern.value}
           helperText={nextsPattern.errorText}
           variant="outlined"
-          onBlur={handleNextsPatternBlur}
           onChange={handleNextsPatternChange}
         />
       </div>
       <div>
         <FormControl>
-          <TextField
-            key={textKeys.nextBaseNo}
-            type="number"
+          <NumberTextField
             label="Next"
-            InputProps={{ inputProps: { min: 1, max: MAX_NEXT_BASE_NO } }}
+            numberProps={{
+              min: 1,
+              max: MAX_NEXT_BASE_NO,
+              change: handleNextBaseNoChange,
+            }}
             InputLabelProps={{
               shrink: true,
             }}
             style={{ minWidth: 100 }}
             value={state.tools.nextBaseNo}
             variant="outlined"
-            onBlur={handleNextBaseNoBlur}
-            onChange={handleNextBaseNoChange}
           />
         </FormControl>
       </div>
       <div>
         <FormControl>
-          <TextField
-            key={textKeys.noOfCycle}
-            type="number"
-            label="No Of Cycle"
-            InputProps={{ inputProps: { min: 1, max: 7 } }}
+          <NumberTextField
+            label="No of Cycle"
+            numberProps={{
+              min: 1,
+              max: 7,
+              change: handleNoOfCycleChange,
+            }}
             InputLabelProps={{
               shrink: true,
             }}
             style={{ minWidth: 100 }}
             value={state.tools.noOfCycle}
             variant="outlined"
-            onBlur={handleNoOfCycleBlur}
-            onChange={handleNoOfCycleChange}
           />
         </FormControl>
       </div>
