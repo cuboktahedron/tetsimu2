@@ -21,7 +21,8 @@ import {
   ChangeToolCellValueAction,
   ChangeZoomAction,
   ClearEditAction,
-  EditActionsType
+  EditActionsType,
+  FlipFieldAction
 } from "./types";
 
 export const buildUpField = (
@@ -277,6 +278,30 @@ export const clearEdit = (): ClearEditAction => {
         nextBaseNo: 1,
         nextsPattern: "",
       },
+    },
+  };
+};
+
+export const flipField = (field: FieldState): FlipFieldAction => {
+  const newField: FieldState = field.map((row) => [...row].reverse().map(cell => {
+    switch (cell) {
+      case FieldCellValue.J:
+        return FieldCellValue.L;
+      case FieldCellValue.L:
+        return FieldCellValue.J;
+      case FieldCellValue.S:
+        return FieldCellValue.Z;
+      case FieldCellValue.Z:
+        return FieldCellValue.S;
+      default:
+        return cell
+    }
+  }));
+
+  return {
+    type: EditActionsType.FlipField,
+    payload: {
+      field: newField,
     },
   };
 };

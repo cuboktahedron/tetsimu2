@@ -98,6 +98,11 @@ const reducer = (state: EditState, anyAction: Action): EditState => {
           nextsPattern: action.payload.tools.nextsPattern,
         },
       };
+    case EditActionsType.FlipField:
+      return {
+        ...state,
+        field: action.payload.field,
+      };
   }
   return state;
 };

@@ -22,7 +22,8 @@ import {
   changeNextsPattern,
   changeNoOfCycle,
   changeToolCellValue,
-  clearEdit
+  clearEdit,
+  flipField
 } from "ducks/edit/actions";
 import { changeTetsimuMode, editToSimuMode } from "ducks/root/actions";
 import React, { useEffect } from "react";
@@ -150,6 +151,10 @@ const Tools: React.FC = () => {
 
   const handleClearClick = () => {
     dispatch(clearEdit());
+  };
+
+  const handleFlipClick = () => {
+    dispatch(flipField(state.field));
   };
 
   const handleSimuClick = () => {
@@ -299,10 +304,21 @@ const Tools: React.FC = () => {
           />
         </FormControl>
       </div>
-
-      <Button variant="contained" color="secondary" onClick={handleClearClick}>
-        CLEAR
-      </Button>
+      <Divider />
+      <div>
+        <Button variant="contained" color="secondary" onClick={handleFlipClick}>
+          FLIP
+        </Button>
+      </div>
+      <div>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleClearClick}
+        >
+          CLEAR
+        </Button>
+      </div>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import {
   FieldState,
   HoldState,
   NextNote,
-  Tetromino,
+  Tetromino
 } from "types/core";
 
 export const EditActionsType = {
@@ -18,9 +18,11 @@ export const EditActionsType = {
   ChangeToolCellValues: "edit/changeToolCellValues",
   ChangeZoom: "edit/changeZoom",
   Clear: "edit/clear",
+  FlipField: "edit/flipField",
 } as const;
 
 export type EditActions =
+  | BuildUpFieldAction
   | ChangeFieldAction
   | ChangeHoldAction
   | ChangeNextAction
@@ -30,7 +32,14 @@ export type EditActions =
   | ChangeToolCellValueAction
   | ChangeZoomAction
   | ClearEditAction
-  | BuildUpFieldAction;
+  | FlipFieldAction;
+
+export type BuildUpFieldAction = {
+  type: typeof EditActionsType.BuildUpField;
+  payload: {
+    field: FieldState;
+  };
+} & Action;
 
 export type ChangeFieldAction = {
   type: typeof EditActionsType.ChangeField;
@@ -94,7 +103,6 @@ export type ChangeNoOfCycleAction = {
   };
 } & Action;
 
-
 export type ChangeToolCellValueAction = {
   type: typeof EditActionsType.ChangeToolCellValues;
   payload: {
@@ -124,8 +132,8 @@ export type ClearEditAction = {
   };
 } & Action;
 
-export type BuildUpFieldAction = {
-  type: typeof EditActionsType.BuildUpField;
+export type FlipFieldAction = {
+  type: typeof EditActionsType.FlipField;
   payload: {
     field: FieldState;
   };

@@ -1,9 +1,15 @@
-import { buildUpField, changeNext, clearEdit } from "ducks/edit/actions";
+import {
+  buildUpField,
+  changeNext,
+  clearEdit,
+  flipField,
+} from "ducks/edit/actions";
 import {
   BuildUpFieldAction,
   ChangeNextAction,
   ClearEditAction,
   EditActionsType,
+  FlipFieldAction,
 } from "ducks/edit/types";
 import { Tetromino } from "types/core";
 import { makeField } from "../../utils/tetsimu/testUtils/makeField";
@@ -208,6 +214,32 @@ describe("editModule", () => {
             nextBaseNo: 1,
             nextsPattern: "",
           },
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+  });
+
+  describe("flipField", () => {
+    it("should flip field horizontally", () => {
+      const actual = flipField(
+        // prettier-ignore
+        makeField(
+          "GGGZNSSNNJ",
+          "OOZZSSTTTJ",
+          "OOZIIIITJJ",
+        )
+      );
+
+      const expected: FlipFieldAction = {
+        type: EditActionsType.FlipField,
+        payload: {
+          // prettier-ignore
+          field: makeField(
+            "LNNZZNSGGG",
+            "LTTTZZSSOO",
+            "LLTIIIISOO"),
         },
       };
 
