@@ -8,11 +8,12 @@ type NumberTextFieldProps = {
     max: number;
     change: (value: number) => void;
   };
+  value: string;
 } & TextFieldProps;
 
 const NumberTextField: React.FC<NumberTextFieldProps> = (props) => {
-  let input: HTMLInputElement | null = null;
   const [key, setKey] = React.useState(new Date().getTime());
+  const [textValue, setTextValue] = React.useState(props.value);
 
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>): void => {
     e.target.select();
@@ -20,46 +21,46 @@ const NumberTextField: React.FC<NumberTextFieldProps> = (props) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (e.currentTarget.value.trim() === "") {
-      return props.numberProps.change(props.numberProps.min);
+      setTextValue("");
+      return;
     }
 
     let value = +e.currentTarget.value;
 
     if (isNaN(value)) {
-      return;
-    }
-
-    if (value < props.numberProps.min) {
+      value = props.numberProps.min;
+    } else if (value < props.numberProps.min) {
       value = props.numberProps.min;
     } else if (value > props.numberProps.max) {
       value = props.numberProps.max;
     }
 
     props.numberProps.change(value);
-    if (input === null) {
-      return;
-    }
-    input.value = "" + value;
+    setTextValue("" + value);
   };
 
   const handleBlur = (): void => {
+    if (textValue.trim() === "") {
+      const value = props.numberProps.min;
+      props.numberProps.change(value);
+      setTextValue("" + value);
+    }
+
     setKey(new Date().getTime());
   };
 
-  const { numberProps, ...textFieldProps } = props;
+  const { numberProps, value, ...textFieldProps } = props;
 
   return (
     <>
       <TextField
         key={key}
-        inputRef={(node: HTMLInputElement) => {
-          input = node;
-        }}
         type="number"
         InputProps={{
           inputProps: { min: numberProps.min, max: numberProps.max },
           endAdornment: numberProps.endAdornment,
         }}
+        value={textValue}
         {...textFieldProps}
         onBlur={handleBlur}
         onChange={handleChange}

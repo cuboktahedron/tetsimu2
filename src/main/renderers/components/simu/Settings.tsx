@@ -197,7 +197,7 @@ const Settings: React.FC = () => {
             InputLabelProps={{
               shrink: true,
             }}
-            value={state.config.nextNum}
+            value={"" + state.config.nextNum}
             variant="outlined"
           />
         </FormControl>
@@ -271,7 +271,7 @@ const Settings: React.FC = () => {
                   ),
                   change: handleRiseUpRateFirstChange,
                 }}
-                value={state.config.riseUpRate.first}
+                value={"" + state.config.riseUpRate.first}
                 variant="outlined"
                 disabled={config.playMode !== PlayMode.Dig}
               />
@@ -290,7 +290,7 @@ const Settings: React.FC = () => {
                   ),
                   change: handleRiseUpRateSecondChange,
                 }}
-                value={state.config.riseUpRate.second}
+                value={"" + state.config.riseUpRate.second}
                 variant="outlined"
                 disabled={config.playMode !== PlayMode.Dig}
               />

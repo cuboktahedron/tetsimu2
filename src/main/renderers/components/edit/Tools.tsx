@@ -281,7 +281,7 @@ const Tools: React.FC = () => {
               shrink: true,
             }}
             style={{ minWidth: 100 }}
-            value={state.tools.nextBaseNo}
+            value={"" + state.tools.nextBaseNo}
             variant="outlined"
           />
         </FormControl>
@@ -299,7 +299,7 @@ const Tools: React.FC = () => {
               shrink: true,
             }}
             style={{ minWidth: 100 }}
-            value={state.tools.noOfCycle}
+            value={"" + state.tools.noOfCycle}
             variant="outlined"
           />
         </FormControl>
