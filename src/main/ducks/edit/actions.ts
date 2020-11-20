@@ -22,7 +22,8 @@ import {
   ChangeZoomAction,
   ClearEditAction,
   EditActionsType,
-  FlipFieldAction
+  FlipFieldAction,
+  SlideFieldAction
 } from "./types";
 
 export const buildUpField = (
@@ -283,23 +284,41 @@ export const clearEdit = (): ClearEditAction => {
 };
 
 export const flipField = (field: FieldState): FlipFieldAction => {
-  const newField: FieldState = field.map((row) => [...row].reverse().map(cell => {
-    switch (cell) {
-      case FieldCellValue.J:
-        return FieldCellValue.L;
-      case FieldCellValue.L:
-        return FieldCellValue.J;
-      case FieldCellValue.S:
-        return FieldCellValue.Z;
-      case FieldCellValue.Z:
-        return FieldCellValue.S;
-      default:
-        return cell
-    }
-  }));
+  const newField: FieldState = field.map((row) =>
+    [...row].reverse().map((cell) => {
+      switch (cell) {
+        case FieldCellValue.J:
+          return FieldCellValue.L;
+        case FieldCellValue.L:
+          return FieldCellValue.J;
+        case FieldCellValue.S:
+          return FieldCellValue.Z;
+        case FieldCellValue.Z:
+          return FieldCellValue.S;
+        default:
+          return cell;
+      }
+    })
+  );
 
   return {
     type: EditActionsType.FlipField,
+    payload: {
+      field: newField,
+    },
+  };
+};
+
+export const slideField = (
+  field: FieldState,
+  slideNum: number
+): SlideFieldAction => {
+  const newField = field.map((row) =>
+    row.slice(-slideNum).concat(row.slice(0, -slideNum))
+  );
+
+  return {
+    type: EditActionsType.SlideField,
     payload: {
       field: newField,
     },

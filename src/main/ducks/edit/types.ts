@@ -19,6 +19,7 @@ export const EditActionsType = {
   ChangeZoom: "edit/changeZoom",
   Clear: "edit/clear",
   FlipField: "edit/flipField",
+  SlideField: "edit/slideField",
 } as const;
 
 export type EditActions =
@@ -32,7 +33,8 @@ export type EditActions =
   | ChangeToolCellValueAction
   | ChangeZoomAction
   | ClearEditAction
-  | FlipFieldAction;
+  | FlipFieldAction
+  | SlideFieldAction;
 
 export type BuildUpFieldAction = {
   type: typeof EditActionsType.BuildUpField;
@@ -134,6 +136,13 @@ export type ClearEditAction = {
 
 export type FlipFieldAction = {
   type: typeof EditActionsType.FlipField;
+  payload: {
+    field: FieldState;
+  };
+} & Action;
+
+export type SlideFieldAction = {
+  type: typeof EditActionsType.SlideField;
   payload: {
     field: FieldState;
   };

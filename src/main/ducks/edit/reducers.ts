@@ -103,6 +103,11 @@ const reducer = (state: EditState, anyAction: Action): EditState => {
         ...state,
         field: action.payload.field,
       };
+    case EditActionsType.SlideField:
+      return {
+        ...state,
+        field: action.payload.field,
+      };
   }
   return state;
 };

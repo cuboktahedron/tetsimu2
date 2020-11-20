@@ -18,12 +18,14 @@ import {
 } from "@material-ui/core/colors";
 import clsx from "clsx";
 import {
+  buildUpField,
   changeNextBaseNo,
   changeNextsPattern,
   changeNoOfCycle,
   changeToolCellValue,
   clearEdit,
-  flipField
+  flipField,
+  slideField
 } from "ducks/edit/actions";
 import { changeTetsimuMode, editToSimuMode } from "ducks/root/actions";
 import React, { useEffect } from "react";
@@ -156,6 +158,22 @@ const Tools: React.FC = () => {
   const handleFlipClick = () => {
     dispatch(flipField(state.field));
   };
+
+  const handleSlideClick = (isLeft: boolean) => {
+    if (isLeft) {
+      dispatch(slideField(state.field, -1));
+    } else {
+      dispatch(slideField(state.field, 1));
+    }
+  };
+
+  const handleBuildUp = (isUp: boolean) => {
+    if (isUp) {
+      dispatch(buildUpField(state.field, 1));
+    } else {
+      dispatch(buildUpField(state.field, -1));
+    }
+  }
 
   const handleSimuClick = () => {
     dispatch(editToSimuMode(state));
@@ -305,6 +323,39 @@ const Tools: React.FC = () => {
         </FormControl>
       </div>
       <Divider />
+      <div>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => handleSlideClick(true)}
+        >
+          &lt;
+        </Button>
+        &nbsp;
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => handleBuildUp(true)}
+        >
+          ∧
+        </Button>
+        &nbsp;
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => handleBuildUp(false)}
+        >
+          ∨
+        </Button>
+        &nbsp;
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => handleSlideClick(false)}
+        >
+          &gt;
+        </Button>
+      </div>
       <div>
         <Button variant="contained" color="secondary" onClick={handleFlipClick}>
           FLIP

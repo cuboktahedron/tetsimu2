@@ -3,6 +3,7 @@ import {
   changeNext,
   clearEdit,
   flipField,
+  slideField,
 } from "ducks/edit/actions";
 import {
   BuildUpFieldAction,
@@ -10,6 +11,7 @@ import {
   ClearEditAction,
   EditActionsType,
   FlipFieldAction,
+  SlideFieldAction,
 } from "ducks/edit/types";
 import { Tetromino } from "types/core";
 import { makeField } from "../../utils/tetsimu/testUtils/makeField";
@@ -240,6 +242,60 @@ describe("editModule", () => {
             "LNNZZNSGGG",
             "LTTTZZSSOO",
             "LLTIIIISOO"),
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+  });
+
+  describe("slide", () => {
+    it("should slide left", () => {
+      const actual = slideField(
+        // prettier-ignore
+        makeField(
+          "NGGGGGGGGG",
+          "NGGGGGGGGG",
+          "NIJLOSTZGG",
+        ),
+        -1
+      );
+
+      const expected: SlideFieldAction = {
+        type: EditActionsType.SlideField,
+        payload: {
+          // prettier-ignore
+          field: makeField(
+            "GGGGGGGGGN",
+            "GGGGGGGGGN",
+            "IJLOSTZGGN",
+          ),
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should slide right", () => {
+      const actual = slideField(
+        // prettier-ignore
+        makeField(
+          "GGGGGGGGGN",
+          "GGGGGGGGGN",
+          "IJLOSTZGGN",
+        ),
+        1
+      );
+
+      const expected: SlideFieldAction = {
+        type: EditActionsType.SlideField,
+        payload: {
+          // prettier-ignore
+          field: makeField(
+            "NGGGGGGGGG",
+            "NGGGGGGGGG",
+            "NIJLOSTZGG",
+            ),
         },
       };
 
