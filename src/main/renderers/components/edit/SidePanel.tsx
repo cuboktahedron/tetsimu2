@@ -168,6 +168,10 @@ const SidePanel: React.FC = () => {
   };
 
   const handleResizeHandleTouchMove = (e: React.TouchEvent) => {
+    if (e.isDefaultPrevented()) {
+      return;
+    }
+
     if (prevDragX === null) {
       return;
     }

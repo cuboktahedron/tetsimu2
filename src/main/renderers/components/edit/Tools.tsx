@@ -29,6 +29,7 @@ import {
 } from "ducks/edit/actions";
 import { changeTetsimuMode, editToSimuMode } from "ducks/root/actions";
 import React, { useEffect } from "react";
+import { useLongTap } from "renderers/hooks/useLongTap";
 import { FieldCellValue, TetsimuMode } from "types/core";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import NumberTextField from "../ext/NumberTextField";
@@ -102,6 +103,10 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: "0.5rem",
       marginBottom: "0.5rem",
     },
+
+    longTapButton: {
+      touchAction: "none",
+    }
   })
 );
 
@@ -159,21 +164,21 @@ const Tools: React.FC = () => {
     dispatch(flipField(state.field));
   };
 
-  const handleSlideClick = (isLeft: boolean) => {
-    if (isLeft) {
-      dispatch(slideField(state.field, -1));
-    } else {
-      dispatch(slideField(state.field, 1));
-    }
-  };
+  const handleSlideLeft = React.useCallback(() => {
+    dispatch(slideField(state.field, -1));
+  }, [state.field]);
 
-  const handleBuildUp = (isUp: boolean) => {
-    if (isUp) {
-      dispatch(buildUpField(state.field, 1));
-    } else {
-      dispatch(buildUpField(state.field, -1));
-    }
-  }
+  const handleSlideRight = React.useCallback(() => {
+    dispatch(slideField(state.field, 1));
+  }, [state.field]);
+
+  const handleBuildUp = React.useCallback(() => {
+    dispatch(buildUpField(state.field, 1));
+  }, [state.field]);
+
+  const handleBuildDown = React.useCallback(() => {
+    dispatch(buildUpField(state.field, -1));
+  }, [state.field]);
 
   const handleSimuClick = () => {
     dispatch(editToSimuMode(state));
@@ -325,33 +330,53 @@ const Tools: React.FC = () => {
       <Divider />
       <div>
         <Button
+          className={classes.longTapButton}
           variant="contained"
           color="secondary"
-          onClick={() => handleSlideClick(true)}
+          {...useLongTap({
+            onPress: handleSlideLeft,
+            onLongPress: handleSlideLeft,
+            interval: 120,
+          })}
         >
           &lt;
         </Button>
         &nbsp;
         <Button
+          className={classes.longTapButton}
           variant="contained"
           color="secondary"
-          onClick={() => handleBuildUp(true)}
+          {...useLongTap({
+            onPress: handleBuildUp,
+            onLongPress: handleBuildUp,
+            interval: 120,
+          })}
         >
           ∧
         </Button>
         &nbsp;
         <Button
+          className={classes.longTapButton}
           variant="contained"
           color="secondary"
-          onClick={() => handleBuildUp(false)}
+          {...useLongTap({
+            onPress: handleBuildDown,
+            onLongPress: handleBuildDown,
+            interval: 120,
+          })}
         >
           ∨
         </Button>
         &nbsp;
         <Button
+          className={classes.longTapButton}
           variant="contained"
           color="secondary"
-          onClick={() => handleSlideClick(false)}
+          {...useLongTap({
+            onPress: handleSlideRight,
+            onLongPress: handleSlideRight,
+            interval: 120,
+          })}
         >
           &gt;
         </Button>
