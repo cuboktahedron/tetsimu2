@@ -4,10 +4,11 @@ import {
   FieldState,
   HoldState,
   NextNote,
-  Tetromino
+  Tetromino,
 } from "types/core";
 
 export const EditActionsType = {
+  BeginCellValueMultiSelection: "edit/beginCellValueMultiSelection",
   BuildUpField: "edit/buildUpField",
   ChangeField: "edit/changeField",
   ChangeHold: "edit/changeHold",
@@ -18,11 +19,13 @@ export const EditActionsType = {
   ChangeToolCellValues: "edit/changeToolCellValues",
   ChangeZoom: "edit/changeZoom",
   Clear: "edit/clear",
+  EndCellValueMultiSelection: "edit/endCellValueMultiSelection",
   FlipField: "edit/flipField",
   SlideField: "edit/slideField",
 } as const;
 
 export type EditActions =
+  | BeginCellValueMultiSelectionAction
   | BuildUpFieldAction
   | ChangeFieldAction
   | ChangeHoldAction
@@ -33,8 +36,14 @@ export type EditActions =
   | ChangeToolCellValueAction
   | ChangeZoomAction
   | ClearEditAction
+  | EndCellValueMultiSelectionAction
   | FlipFieldAction
   | SlideFieldAction;
+
+export type BeginCellValueMultiSelectionAction = {
+  type: typeof EditActionsType.BeginCellValueMultiSelection;
+  payload: {};
+} & Action;
 
 export type BuildUpFieldAction = {
   type: typeof EditActionsType.BuildUpField;
@@ -132,6 +141,11 @@ export type ClearEditAction = {
       nextsPattern: string;
     };
   };
+} & Action;
+
+export type EndCellValueMultiSelectionAction = {
+  type: typeof EditActionsType.EndCellValueMultiSelection;
+  payload: {};
 } & Action;
 
 export type FlipFieldAction = {

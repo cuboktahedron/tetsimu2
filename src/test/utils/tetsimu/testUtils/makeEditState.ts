@@ -18,6 +18,7 @@ export const makeEditState = (state: {
     nextNotes: NextNote[];
   };
   tools?: {
+    isCellValueMultiSelection: boolean;
     nextBaseNo: number;
     nextsPattern: string;
     noOfCycle: number;
@@ -39,6 +40,7 @@ export const makeEditState = (state: {
         nextNotes: [],
       },
       tools: {
+        isCellValueMultiSelection: false,
         nextBaseNo: 1,
         nextsPattern: "",
         noOfCycle: 1,

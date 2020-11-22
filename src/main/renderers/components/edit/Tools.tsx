@@ -4,7 +4,7 @@ import {
   Divider,
   FormControl,
   makeStyles,
-  Theme
+  Theme,
 } from "@material-ui/core";
 import {
   blue,
@@ -14,18 +14,21 @@ import {
   orange,
   purple,
   red,
-  yellow
+  yellow,
 } from "@material-ui/core/colors";
+import CloseIcon from "@material-ui/icons/Close";
 import clsx from "clsx";
 import {
+  beginCellValueMultiSelection,
   buildUpField,
   changeNextBaseNo,
   changeNextsPattern,
   changeNoOfCycle,
   changeToolCellValue,
   clearEdit,
+  endCellValueMultiSelection,
   flipField,
-  slideField
+  slideField,
 } from "ducks/edit/actions";
 import { changeTetsimuMode, editToSimuMode } from "ducks/root/actions";
 import React, { useEffect } from "react";
@@ -72,30 +75,48 @@ const useStyles = makeStyles((theme: Theme) =>
     cellTypes: {
       display: "flex",
       flexWrap: "wrap",
+    },
 
-      "& > div": {
-        border: "solid 4px black",
-        borderRadius: 8,
-        boxSizing: "border-box",
-        fontSize: "24px",
-        fontWeight: "bold",
-        height: 48,
-        lineHeight: "42px",
-        margin: 2,
-        opacity: 0.7,
-        textAlign: "center",
-        width: "48px",
+    cellType: {
+      border: "solid 4px black",
+      borderRadius: 8,
+      boxSizing: "border-box",
+      fontSize: "24px",
+      fontWeight: "bold",
+      height: 48,
+      lineHeight: "42px",
+      margin: 2,
+      opacity: 0.7,
+      textAlign: "center",
+      width: 48,
 
-        "&:hover": {
-          border: "solid 4px grey",
-          cursor: "pointer",
-        },
-
-        "&.selected": {
-          border: "solid 4px red",
-          opacity: 1,
-        },
+      "&:hover": {
+        border: "solid 4px grey",
+        cursor: "pointer",
       },
+
+      "&.selected": {
+        border: "solid 4px red",
+        opacity: 1,
+      },
+    },
+
+    endMultiSelection: {
+      height: 48,
+      margin: 2,
+      textAlign: "center",
+      width: 48,
+    },
+
+    hide: {
+      visibility: "hidden",
+    },
+
+    endMultiSelectionIcon: {
+      height: "36px",
+      opacity: 0.5,
+      padding: 6,
+      width: "36px",
     },
 
     settingGroupTitle: {
@@ -106,7 +127,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
     longTapButton: {
       touchAction: "none",
-    }
+    },
   })
 );
 
@@ -125,12 +146,12 @@ const Tools: React.FC = () => {
       value: state.tools.nextsPattern,
     });
   }, [state.tools.nextsPattern]);
-  const handleToolCellClick = (
-    e: React.MouseEvent,
+  const handleToolCellPress = (
+    e: React.MouseEvent | React.TouchEvent,
     cellValue: FieldCellValue
   ) => {
     const selectedCellValues = state.tools.selectedCellValues;
-    if (e.ctrlKey || e.metaKey) {
+    if (e.ctrlKey || e.metaKey || state.tools.isCellValueMultiSelection) {
       if (selectedCellValues.some((selected) => selected === cellValue)) {
         if (selectedCellValues.length === 1) {
           return;
@@ -154,6 +175,14 @@ const Tools: React.FC = () => {
         }
       }
     }
+  };
+
+  const handleToolCellLongPress = () => {
+    dispatch(beginCellValueMultiSelection());
+  };
+
+  const handleEndMultiSelection = () => {
+    dispatch(endCellValueMultiSelection());
   };
 
   const handleClearClick = () => {
@@ -222,6 +251,8 @@ const Tools: React.FC = () => {
     }
   };
 
+  const classes = useStyles();
+
   const cellTypes = [
     { type: FieldCellValue.I, letter: "I" },
     { type: FieldCellValue.J, letter: "J" },
@@ -236,20 +267,23 @@ const Tools: React.FC = () => {
     return (
       <div
         key={cellType.type}
-        className={clsx({
+        className={clsx(classes.cellType, classes.longTapButton, {
           selected: state.tools.selectedCellValues.some(
             (type) => type === cellType.type
           ),
         })}
         style={{ background: fieldCellColors[cellType.type] }}
-        onClick={(e) => handleToolCellClick(e, cellType.type)}
+        {...useLongTap({
+          onPress: (e) => handleToolCellPress(e, cellType.type),
+          onLongPress: () => handleToolCellLongPress(),
+          interval1: 1000,
+        })}
       >
         {cellType.letter}
       </div>
     );
   });
 
-  const classes = useStyles();
   return (
     <div className={classes.root}>
       <div className={classes.buttons}>
@@ -275,7 +309,18 @@ const Tools: React.FC = () => {
         </div>
       </div>
       <Divider />
-      <div className={classes.cellTypes}>{cellTypes}</div>
+      <div className={classes.cellTypes}>
+        {cellTypes}
+        <div
+          key={Number.MAX_SAFE_INTEGER}
+          className={clsx(classes.endMultiSelection, {
+            [classes.hide]: !state.tools.isCellValueMultiSelection,
+          })}
+          onClick={handleEndMultiSelection}
+        >
+          <CloseIcon className={classes.endMultiSelectionIcon} />
+        </div>
+      </div>
       <Divider />
       <div>
         <TextFieldEx
@@ -336,7 +381,8 @@ const Tools: React.FC = () => {
           {...useLongTap({
             onPress: handleSlideLeft,
             onLongPress: handleSlideLeft,
-            interval: 120,
+            interval1: 300,
+            interval2: 100,
           })}
         >
           &lt;
@@ -349,7 +395,8 @@ const Tools: React.FC = () => {
           {...useLongTap({
             onPress: handleBuildUp,
             onLongPress: handleBuildUp,
-            interval: 120,
+            interval1: 300,
+            interval2: 100,
           })}
         >
           ∧
@@ -362,7 +409,8 @@ const Tools: React.FC = () => {
           {...useLongTap({
             onPress: handleBuildDown,
             onLongPress: handleBuildDown,
-            interval: 120,
+            interval1: 300,
+            interval2: 100,
           })}
         >
           ∨
@@ -375,7 +423,8 @@ const Tools: React.FC = () => {
           {...useLongTap({
             onPress: handleSlideRight,
             onLongPress: handleSlideRight,
-            interval: 120,
+            interval1: 300,
+            interval2: 100,
           })}
         >
           &gt;

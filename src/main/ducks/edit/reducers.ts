@@ -6,6 +6,14 @@ const reducer = (state: EditState, anyAction: Action): EditState => {
   const action = anyAction as EditActions;
 
   switch (action.type) {
+    case EditActionsType.BeginCellValueMultiSelection:
+      return {
+        ...state,
+        tools: {
+          ...state.tools,
+          isCellValueMultiSelection: true,
+        },
+      };
     case EditActionsType.BuildUpField:
       return {
         ...state,
@@ -96,6 +104,15 @@ const reducer = (state: EditState, anyAction: Action): EditState => {
           ...state.tools,
           nextBaseNo: action.payload.tools.nextBaseNo,
           nextsPattern: action.payload.tools.nextsPattern,
+        },
+      };
+    case EditActionsType.EndCellValueMultiSelection:
+      return {
+        ...state,
+        tools: {
+          ...state.tools,
+          isCellValueMultiSelection: false,
+          selectedCellValues: [state.tools.selectedCellValues[0]],
         },
       };
     case EditActionsType.FlipField:

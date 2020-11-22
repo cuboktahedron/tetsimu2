@@ -1,7 +1,7 @@
 import editReducer from "ducks/edit";
 import simuReducer from "ducks/simu";
 import { RootState } from "stores/RootState";
-import { Action, TetsimuMode } from "types/core";
+import { Action, FieldCellValue, TetsimuMode } from "types/core";
 import { RootActions, RootActionsType } from "./types";
 
 const reducers = {
@@ -56,9 +56,11 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
             hold: action.payload.hold,
             nexts: action.payload.nexts,
             tools: {
-              ...state.edit.tools,
+              isCellValueMultiSelection: false,
+              nextBaseNo: 1,
               nextsPattern: action.payload.tools.nextsPattern,
               noOfCycle: action.payload.tools.noOfCycle,
+              selectedCellValues: [FieldCellValue.I],
             },
           },
           mode: TetsimuMode.Edit,

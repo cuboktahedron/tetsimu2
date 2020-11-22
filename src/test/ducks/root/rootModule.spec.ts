@@ -41,6 +41,7 @@ describe("rootModule", () => {
           field: makeField("IJLOSTZNNN"),
           hold: makeHold(Tetromino.I, false),
           tools: {
+            isCellValueMultiSelection: false,
             nextBaseNo: 1,
             nextsPattern: "IJ, LOSTZIJ, ZTSOL",
             noOfCycle: 6,
@@ -104,7 +105,7 @@ describe("rootModule", () => {
     });
   });
 
-  describe("editToSimuMode", () => {
+  describe("simuToEditMode", () => {
     it("should change mode and take over state", () => {
       const actual = simuToEditMode(
         makeSimuState({

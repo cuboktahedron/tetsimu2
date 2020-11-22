@@ -35,6 +35,7 @@ describe("EditSelector", () => {
           ],
         },
         tools: {
+          isCellValueMultiSelection: false,
           nextBaseNo: 3,
           nextsPattern: "",
           noOfCycle: 1,
@@ -69,6 +70,7 @@ describe("EditSelector", () => {
           nextNotes: [makeNextNote("", 100), makeNextNote("I", 1)],
         },
         tools: {
+          isCellValueMultiSelection: false,
           nextBaseNo: 98,
           nextsPattern: "",
           noOfCycle: 1,
@@ -91,6 +93,7 @@ describe("EditSelector", () => {
           nextNotes: [makeNextNote("", 100)],
         },
         tools: {
+          isCellValueMultiSelection: false,
           nextBaseNo: 90,
           nextsPattern: "",
           noOfCycle: 1,
@@ -109,6 +112,7 @@ describe("EditSelector", () => {
           nextNotes: [],
         },
         tools: {
+          isCellValueMultiSelection: false,
           nextBaseNo: 993,
           nextsPattern: "",
           noOfCycle: 1,

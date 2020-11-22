@@ -11,6 +11,7 @@ import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import { tetrominoToType } from "utils/tetsimu/functions";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import {
+  BeginCellValueMultiSelectionAction,
   BuildUpFieldAction,
   ChangeFieldAction,
   ChangeHoldAction,
@@ -22,9 +23,17 @@ import {
   ChangeZoomAction,
   ClearEditAction,
   EditActionsType,
+  EndCellValueMultiSelectionAction,
   FlipFieldAction,
   SlideFieldAction
 } from "./types";
+
+export const beginCellValueMultiSelection = (): BeginCellValueMultiSelectionAction => {
+  return {
+    type: EditActionsType.BeginCellValueMultiSelection,
+    payload: {},
+  };
+};
 
 export const buildUpField = (
   field: FieldState,
@@ -280,6 +289,13 @@ export const clearEdit = (): ClearEditAction => {
         nextsPattern: "",
       },
     },
+  };
+};
+
+export const endCellValueMultiSelection = (): EndCellValueMultiSelectionAction => {
+  return {
+    type: EditActionsType.EndCellValueMultiSelection,
+    payload: {},
   };
 };
 

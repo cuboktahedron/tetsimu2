@@ -17,6 +17,7 @@ export type EditState = {
     nextNotes: NextNote[];
   };
   tools: {
+    isCellValueMultiSelection: boolean;
     nextBaseNo: number;
     nextsPattern: string;
     noOfCycle: number;
@@ -55,6 +56,7 @@ export const initialEditState: EditState = ((): EditState => {
     hold,
     nexts: nextsInfo,
     tools: {
+      isCellValueMultiSelection: false,
       nextBaseNo: 1,
       nextsPattern: "[IJLOST]p6",
       noOfCycle: 1,
