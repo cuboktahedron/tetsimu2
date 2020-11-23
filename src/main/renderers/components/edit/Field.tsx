@@ -71,7 +71,6 @@ const Field: React.FC<FieldProps> = () => {
   });
   const fieldRef = React.createRef<HTMLDivElement>();
 
-  const field = state.field;
   const styleProps = { zoom: state.zoom };
   const classes = useStyles(styleProps);
 
@@ -115,9 +114,9 @@ const Field: React.FC<FieldProps> = () => {
 
     const pos = calculatePos(e.pageX, e.pageY);
     if (isLeft) {
-      dispatch(changeField(field, cellValueToSet, pos));
+      dispatch(changeField(state.field, cellValueToSet, pos));
     } else {
-      dispatch(changeField(field, FieldCellValue.NONE, pos));
+      dispatch(changeField(state.field, FieldCellValue.NONE, pos));
     }
   };
 
@@ -128,9 +127,9 @@ const Field: React.FC<FieldProps> = () => {
 
     const pos = calculatePos(e.pageX, e.pageY);
     if (editPointerState.isLeft) {
-      dispatch(changeField(field, cellValueToSet, pos));
+      dispatch(changeField(state.field, cellValueToSet, pos));
     } else {
-      dispatch(changeField(field, FieldCellValue.NONE, pos));
+      dispatch(changeField(state.field, FieldCellValue.NONE, pos));
     }
   };
 
@@ -155,14 +154,14 @@ const Field: React.FC<FieldProps> = () => {
     return (): void => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  });
+  }, [state.field, editPointerState]);
 
   React.useEffect(() => {
     window.addEventListener("mouseup", handleMouseUp);
     return (): void => {
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  });
+  }, [state.field, editPointerState]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
@@ -173,7 +172,7 @@ const Field: React.FC<FieldProps> = () => {
     });
 
     const pos = calculatePos(touch.pageX, touch.pageY);
-    dispatch(changeField(field, cellValueToSet, pos));
+    dispatch(changeField(state.field, cellValueToSet, pos));
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -183,7 +182,7 @@ const Field: React.FC<FieldProps> = () => {
 
     const touch = e.touches[0];
     const pos = calculatePos(touch.pageX, touch.pageY);
-    dispatch(changeField(field, cellValueToSet, pos));
+    dispatch(changeField(state.field, cellValueToSet, pos));
   };
 
   const handleTouchEnd = () => {
@@ -201,7 +200,7 @@ const Field: React.FC<FieldProps> = () => {
     }
   };
 
-  const rows = field.slice(0, MAX_VISIBLE_FIELD_HEIGHT).map((row, rowIndex) => {
+  const rows = state.field.slice(0, MAX_VISIBLE_FIELD_HEIGHT).map((row, rowIndex) => {
     const cols = row.map((cell, colIndex) => {
       const background = cellBackground[cell];
 
