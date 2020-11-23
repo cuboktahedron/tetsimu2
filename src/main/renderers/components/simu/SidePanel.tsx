@@ -7,7 +7,7 @@ import {
   makeStyles,
   Theme,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@material-ui/core";
 import { blueGrey, grey } from "@material-ui/core/colors";
 import CallToActionIcon from "@material-ui/icons/CallToAction";
@@ -102,6 +102,7 @@ const SidePanel: React.FC = () => {
   const [drawerWidth, setDrawerWidth] = React.useContext(
     SidePanelContext
   ).drawerWidth;
+  const resizeHandlerRef = React.useRef<HTMLDivElement>(null);
   const [open, setOpen] = React.useContext(SidePanelContext).open;
 
   const [selectedIconName, setSelectedIconName] = React.useState<
@@ -142,11 +143,16 @@ const SidePanel: React.FC = () => {
     }
   };
 
-  const handleResizeHandleMouseDown = (e: React.MouseEvent) => {
+  const handleResizeHandlePointerDown = (e: React.PointerEvent) => {
+    if (resizeHandlerRef.current === null) {
+      return;
+    }
+
+    resizeHandlerRef.current.setPointerCapture(e.pointerId);
     setPrevDragX(e.pageX);
   };
 
-  const handleMouseMove = (e: MouseEvent) => {
+  const handleResizeHandlePointerMove = (e: React.PointerEvent) => {
     if (prevDragX === null) {
       return;
     }
@@ -161,11 +167,16 @@ const SidePanel: React.FC = () => {
     setPrevDragX(e.pageX);
   };
 
-  const handleMouseUp = () => {
+  const handleResizeHandlePointerUp = (e: React.PointerEvent) => {
+    if (resizeHandlerRef.current === null) {
+      return;
+    }
+
     if (prevDragX === null) {
       return;
     }
 
+    resizeHandlerRef.current.releasePointerCapture(e.pointerId);
     setPrevDragX(null);
   };
 
@@ -198,20 +209,6 @@ const SidePanel: React.FC = () => {
     setPrevDragX(null);
   };
 
-  React.useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove);
-    return (): void => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  });
-
-  React.useEffect(() => {
-    window.addEventListener("mouseup", handleMouseUp);
-    return (): void => {
-      window.removeEventListener("mouseup", handleMouseUp);
-    };
-  });
-
   return (
     <div className={classes.root}>
       <Drawer
@@ -229,8 +226,11 @@ const SidePanel: React.FC = () => {
         }}
       >
         <div
+          ref={resizeHandlerRef}
           className={classes.resizeHandle}
-          onMouseDown={handleResizeHandleMouseDown}
+          onPointerDown={handleResizeHandlePointerDown}
+          onPointerMove={handleResizeHandlePointerMove}
+          onPointerUp={handleResizeHandlePointerUp}
         ></div>
         <div
           className={classes.main}
