@@ -11,6 +11,7 @@ import React from "react";
 import { TetsimuMode } from "types/core";
 import { SimuConductor } from "utils/tetsimu/simu/simuConductor";
 import { SimuContext } from "./Simu";
+import EditIcon from "@material-ui/icons/Edit";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -89,7 +90,6 @@ const Tools: React.FC = () => {
           <Button
             variant="contained"
             color="secondary"
-            title="Switch to edit mode and reset"
             onClick={handleEditClick}
           >
             EDIT
@@ -99,10 +99,9 @@ const Tools: React.FC = () => {
           <Button
             variant="contained"
             color="primary"
-            title="Switch to edit mode and no reset"
             onClick={handleEditNoResetClick}
           >
-            EDIT
+            <EditIcon />
           </Button>
         </div>
       </div>

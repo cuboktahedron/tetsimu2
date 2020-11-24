@@ -3,8 +3,9 @@ import {
   createStyles,
   Divider,
   FormControl,
+
   makeStyles,
-  Theme,
+  Theme
 } from "@material-ui/core";
 import {
   blue,
@@ -14,9 +15,10 @@ import {
   orange,
   purple,
   red,
-  yellow,
+  yellow
 } from "@material-ui/core/colors";
 import CloseIcon from "@material-ui/icons/Close";
+import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import clsx from "clsx";
 import {
   beginCellValueMultiSelection,
@@ -28,7 +30,7 @@ import {
   clearEdit,
   endCellValueMultiSelection,
   flipField,
-  slideField,
+  slideField
 } from "ducks/edit/actions";
 import { changeTetsimuMode, editToSimuMode } from "ducks/root/actions";
 import React, { useEffect } from "react";
@@ -291,7 +293,6 @@ const Tools: React.FC = () => {
           <Button
             variant="contained"
             color="secondary"
-            title="Switch to simu mode and reset"
             onClick={handleSimuClick}
           >
             SIMU
@@ -301,10 +302,9 @@ const Tools: React.FC = () => {
           <Button
             variant="contained"
             color="primary"
-            title="Switch to simu mode and no reset"
             onClick={handleEditNoResetClick}
           >
-            SIMU
+            <SportsEsportsIcon />
           </Button>
         </div>
       </div>
@@ -377,7 +377,7 @@ const Tools: React.FC = () => {
         <Button
           className={classes.longTapButton}
           variant="contained"
-          color="secondary"
+          color="primary"
           {...useLongTap({
             onPress: handleSlideLeft,
             onLongPress: handleSlideLeft,
@@ -391,7 +391,7 @@ const Tools: React.FC = () => {
         <Button
           className={classes.longTapButton}
           variant="contained"
-          color="secondary"
+          color="primary"
           {...useLongTap({
             onPress: handleBuildUp,
             onLongPress: handleBuildUp,
@@ -405,7 +405,7 @@ const Tools: React.FC = () => {
         <Button
           className={classes.longTapButton}
           variant="contained"
-          color="secondary"
+          color="primary"
           {...useLongTap({
             onPress: handleBuildDown,
             onLongPress: handleBuildDown,
@@ -419,7 +419,7 @@ const Tools: React.FC = () => {
         <Button
           className={classes.longTapButton}
           variant="contained"
-          color="secondary"
+          color="primary"
           {...useLongTap({
             onPress: handleSlideRight,
             onLongPress: handleSlideRight,
@@ -431,10 +431,11 @@ const Tools: React.FC = () => {
         </Button>
       </div>
       <div>
-        <Button variant="contained" color="secondary" onClick={handleFlipClick}>
+        <Button variant="contained" color="primary" onClick={handleFlipClick}>
           FLIP
         </Button>
       </div>
+      <br />
       <div>
         <Button
           variant="contained"
