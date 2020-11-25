@@ -12,6 +12,7 @@ import FieldWrapper from "./FieldWrapper";
 import HoldNexts from "./HoldNexts";
 import HotKey from "./Hotkey";
 import NextsOnly from "./NextsOnly";
+import Operation from "./Operation";
 import SidePanel from "./SidePanel";
 
 export const EditContext = React.createContext({
@@ -73,6 +74,7 @@ const Edit: React.FC = () => {
           <div style={{ display: "flex" }}>
             <FieldWrapper />
             <HoldNexts />
+            <Operation />
           </div>
           <HotKey />
         </div>
@@ -88,14 +90,13 @@ const Edit: React.FC = () => {
               <div className={classes.fieldLeft}>
                 <FieldLeft />
               </div>
-              <div
-                className={classes.field}
-              >
+              <div className={classes.field}>
                 <FieldWrapper />
               </div>
               <div className={classes.nextsOnly}>
                 <NextsOnly />
               </div>
+              <Operation />
             </div>
           </div>
           <HotKey />
