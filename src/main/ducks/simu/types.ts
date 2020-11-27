@@ -1,3 +1,4 @@
+import { SimuStateHistory } from "stores/SimuState";
 import {
   Action,
   ActiveTetromino,
@@ -12,6 +13,7 @@ export const SimuActionsType = {
   ChangeConfig: "simu/changeConfig",
   ChangeZoom: "simu/changeZoom",
   Clear: "simu/clear",
+  DoSimu: "simu/doSimu",
   HardDropTetromino: "simu/hardDropTetromino",
   HoldTetromino: "simu/holdTetromino",
   MoveTetromino: "simu/moveTetromino",
@@ -26,12 +28,9 @@ export type SimuActions =
   | ChangeConfigAction
   | ChangeZoomAction
   | ClearSimuAction
-  | HardDropTetrominoAction
-  | HoldTetrominoAction
-  | MoveTetrominoAction
+  | DoSimuAction
   | RedoAction
   | RetryAction
-  | RotateTetrominoAction
   | SuperRetryAction
   | UndoAction;
 
@@ -66,47 +65,23 @@ export type ClearSimuAction = {
   };
 } & Action;
 
-export type HardDropTetrominoAction = {
-  type: typeof SimuActionsType.HardDropTetromino;
-  payload: {
-    current: ActiveTetromino;
-    field: FieldState;
-    hold: HoldState;
-    isDead: boolean;
-    nexts: {
-      settled: Tetromino[];
-      unsettled: NextNote[];
-      bag: NextNote;
-    };
-    seed: number;
-  };
-} & Action;
-
-export type HoldTetrominoAction = {
-  type: typeof SimuActionsType.HoldTetromino;
+export type DoSimuAction = {
+  type: typeof SimuActionsType.DoSimu;
   payload:
     | {
         current: ActiveTetromino;
+        field: FieldState;
+        histories: SimuStateHistory[];
         hold: HoldState;
         isDead: boolean;
+        lastRoseUpColumn: number;
         nexts: {
           settled: Tetromino[];
           unsettled: NextNote[];
           bag: NextNote;
         };
         seed: number;
-        succeeded: true;
-      }
-    | {
-        succeeded: false;
-      };
-} & Action;
-
-export type MoveTetrominoAction = {
-  type: typeof SimuActionsType.MoveTetromino;
-  payload:
-    | {
-        current: ActiveTetromino;
+        step: number;
         succeeded: true;
       }
     | {
@@ -146,18 +121,6 @@ export type RetryAction = {
     };
     seed: number;
   };
-} & Action;
-
-export type RotateTetrominoAction = {
-  type: typeof SimuActionsType.RotateTetromino;
-  payload:
-    | {
-        current: ActiveTetromino;
-        succeeded: true;
-      }
-    | {
-        succeeded: false;
-      };
 } & Action;
 
 export type SuperRetryAction = {

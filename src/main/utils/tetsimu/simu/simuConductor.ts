@@ -6,7 +6,7 @@ import {
   MAX_FIELD_HEIGHT,
   MAX_NEXTS_NUM,
   NextNote,
-  Tetromino,
+  Tetromino
 } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
 import { FieldHelper } from "../fieldHelper";
@@ -29,12 +29,14 @@ export class SimuConductor {
     return this._state;
   }
 
-  hardDropTetromino = (): void => {
+  hardDropTetromino = (): boolean => {
     const current = this.state.current;
     if (current.type === Tetromino.NONE) {
-      throw new Error(
-        `Specified invalid field tetromino value(${current.type})`
-      );
+      return false;
+    }
+
+    if (this.state.isDead) {
+      return false;
     }
 
     let row = current.pos.y;
@@ -93,9 +95,15 @@ export class SimuConductor {
     this.state.current = newCurrent;
     this.state.field = this.fieldHelper.field;
     this.state.seed = this.rng.seed;
+
+    return true;
   };
 
   holdTetromino = (): boolean => {
+    if (this.state.isDead) {
+      return false;
+    }
+
     if (!this.state.hold.canHold) {
       return false;
     }
@@ -143,6 +151,10 @@ export class SimuConductor {
   };
 
   moveTetromino = (direction: Direction): boolean => {
+    if (this.state.isDead) {
+      return false;
+    }
+
     const deltaX = (() => {
       switch (direction) {
         case Direction.LEFT:
@@ -225,6 +237,10 @@ export class SimuConductor {
   }
 
   rotateTetrominoLeft(): boolean {
+    if (this.state.isDead) {
+      return false;
+    }
+
     const newActiveCurrent = this.fieldHelper.rotateLeft(this.state.current);
     if (newActiveCurrent === null) {
       return false;
@@ -235,6 +251,10 @@ export class SimuConductor {
   }
 
   rotateTetrominoRight(): boolean {
+    if (this.state.isDead) {
+      return false;
+    }
+
     const newActiveCurrent = this.fieldHelper.rotateRight(this.state.current);
     if (newActiveCurrent === null) {
       return false;

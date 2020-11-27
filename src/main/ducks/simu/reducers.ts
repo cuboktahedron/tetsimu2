@@ -40,58 +40,7 @@ const reducer = (state: SimuState, anyAction: Action): SimuState => {
         step: 0,
       };
 
-    case SimuActionsType.HardDropTetromino: {
-      const newHistories = state.histories.slice(0, state.step + 1);
-      newHistories.push({
-        currentType: action.payload.current.type,
-        field: action.payload.field,
-        hold: action.payload.hold,
-        isDead: action.payload.isDead,
-        lastRoseUpColumn: state.lastRoseUpColumn,
-        nexts: action.payload.nexts,
-        seed: action.payload.seed,
-      });
-
-      return {
-        ...state,
-        current: action.payload.current,
-        field: action.payload.field,
-        histories: newHistories,
-        hold: action.payload.hold,
-        isDead: action.payload.isDead,
-        nexts: action.payload.nexts,
-        step: state.step + 1,
-        seed: action.payload.seed,
-      };
-    }
-    case SimuActionsType.HoldTetromino: {
-      if (!action.payload.succeeded) {
-        return state;
-      }
-
-      const newHistories = state.histories.slice(0, state.step + 1);
-      newHistories.push({
-        currentType: action.payload.current.type,
-        field: state.field,
-        hold: action.payload.hold,
-        isDead: action.payload.isDead,
-        lastRoseUpColumn: state.lastRoseUpColumn,
-        nexts: action.payload.nexts,
-        seed: action.payload.seed,
-      });
-
-      return {
-        ...state,
-        current: action.payload.current,
-        histories: newHistories,
-        hold: action.payload.hold,
-        isDead: action.payload.isDead,
-        nexts: action.payload.nexts,
-        seed: action.payload.seed,
-        step: state.step + 1,
-      };
-    }
-    case SimuActionsType.MoveTetromino:
+    case SimuActionsType.DoSimu: {
       if (!action.payload.succeeded) {
         return state;
       }
@@ -99,7 +48,16 @@ const reducer = (state: SimuState, anyAction: Action): SimuState => {
       return {
         ...state,
         current: action.payload.current,
+        field: action.payload.field,
+        histories: action.payload.histories,
+        hold: action.payload.hold,
+        isDead: action.payload.isDead,
+        lastRoseUpColumn: action.payload.lastRoseUpColumn,
+        nexts: action.payload.nexts,
+        seed: action.payload.seed,
+        step: action.payload.step,
       };
+    }
     case SimuActionsType.Redo: {
       return {
         ...state,
@@ -157,15 +115,6 @@ const reducer = (state: SimuState, anyAction: Action): SimuState => {
         retryState: action.payload.retryState,
         seed: action.payload.seed,
         step: 0,
-      };
-    case SimuActionsType.RotateTetromino:
-      if (!action.payload.succeeded) {
-        return state;
-      }
-
-      return {
-        ...state,
-        current: action.payload.current,
       };
     case SimuActionsType.Undo: {
       return {

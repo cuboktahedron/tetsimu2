@@ -1,5 +1,5 @@
 import { SimuStateHistory } from "stores/SimuState";
-import { Direction } from "types/core";
+import { ControllerKeys, Direction } from "types/core";
 import { SimuConfig } from "types/simu";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import { SimuConductor } from "utils/tetsimu/simu/simuConductor";
@@ -7,15 +7,12 @@ import {
   ChangeConfigAction,
   ChangeZoomAction,
   ClearSimuAction,
-  HardDropTetrominoAction,
-  HoldTetrominoAction,
-  MoveTetrominoAction,
+  DoSimuAction,
   RedoAction,
   RetryAction,
-  RotateTetrominoAction,
   SimuActionsType,
   SuperRetryAction,
-  UndoAction,
+  UndoAction
 } from "./types";
 
 export const changeConfig = (config: SimuConfig): ChangeConfigAction => {
@@ -54,73 +51,85 @@ export const clearSimu = (conductor: SimuConductor): ClearSimuAction => {
   };
 };
 
-export const hardDropTetromino = (
-  conductor: SimuConductor
-): HardDropTetrominoAction => {
-  conductor.hardDropTetromino();
+export const doSimu = (
+  conductor: SimuConductor,
+  keys: ControllerKeys
+): DoSimuAction => {
+  let changed = false;
+  let historyProgress = false;
 
-  const newState = conductor.state;
-  return {
-    type: SimuActionsType.HardDropTetromino,
-    payload: {
-      current: newState.current,
-      field: newState.field,
-      hold: newState.hold,
-      isDead: newState.isDead,
-      nexts: newState.nexts,
-      seed: newState.seed,
-    },
-  };
-};
+  if (keys.ArrowUp.active) {
+    const ret = conductor.hardDropTetromino();
+    historyProgress = ret;
+    changed = ret || changed;
+  } else if (keys.c.active) {
+    const ret = conductor.holdTetromino();
+    historyProgress = ret;
+    changed = ret || changed;
+  } else {
+    if (keys.ArrowDown.active) {
+      changed = conductor.moveTetromino(Direction.DOWN) || changed;
+    } else {
+      if (keys.ArrowLeft.active) {
+        changed = conductor.moveTetromino(Direction.LEFT) || changed;
+      }
 
-export const holdTetromino = (
-  conductor: SimuConductor
-): HoldTetrominoAction => {
-  const succeeded = conductor.holdTetromino();
-  if (succeeded) {
+      if (keys.ArrowRight.active) {
+        changed = conductor.moveTetromino(Direction.RIGHT) || changed;
+      }
+    }
+
+    if (keys.z.active) {
+      changed = conductor.rotateTetrominoLeft() || changed;
+    }
+
+    if (keys.x.active) {
+      changed = conductor.rotateTetrominoRight() || changed;
+    }
+  }
+
+  if (changed) {
     const newState = conductor.state;
-
-    return {
-      type: SimuActionsType.HoldTetromino,
-      payload: {
-        current: newState.current,
+    let newHistories;
+    let newStep;
+    if (historyProgress) {
+      newHistories = newState.histories.slice(0, newState.step + 1);
+      newHistories.push({
+        currentType: newState.current.type,
+        field: newState.field,
         hold: newState.hold,
         isDead: newState.isDead,
+        lastRoseUpColumn: newState.lastRoseUpColumn,
         nexts: newState.nexts,
         seed: newState.seed,
-        succeeded,
-      },
-    };
-  } else {
-    return {
-      type: SimuActionsType.HoldTetromino,
-      payload: {
-        succeeded: false,
-      },
-    };
-  }
-};
+      });
 
-export const moveTetromino = (
-  direction: Direction,
-  conductor: SimuConductor
-): MoveTetrominoAction => {
-  const succeeded = conductor.moveTetromino(direction);
+      newStep = newState.step + 1;
+    } else {
+      newHistories = newState.histories;
+      newStep = newState.step;
+    }
 
-  if (succeeded) {
-    const newState = conductor.state;
     return {
-      type: SimuActionsType.MoveTetromino,
+      type: SimuActionsType.DoSimu,
       payload: {
         current: newState.current,
-        succeeded,
+        field: newState.field,
+        histories: newHistories,
+        hold: newState.hold,
+        isDead: newState.isDead,
+        lastRoseUpColumn: newState.lastRoseUpColumn,
+        nexts: newState.nexts,
+        seed: newState.seed,
+        step: newStep,
+        succeeded: true,
       },
     };
   } else {
     return {
-      type: SimuActionsType.MoveTetromino,
+      type: SimuActionsType.DoSimu,
       payload: {
-        succeeded,
+        succeeded: false,
       },
     };
   }
@@ -149,32 +158,6 @@ export const redo = (
       step: newStep,
     },
   };
-};
-
-export const rotateTetromino = (
-  rotatesRight: boolean,
-  conductor: SimuConductor
-): RotateTetrominoAction => {
-  const succeeded = rotatesRight
-    ? conductor.rotateTetrominoRight()
-    : conductor.rotateTetrominoLeft();
-
-  if (succeeded) {
-    return {
-      type: SimuActionsType.RotateTetromino,
-      payload: {
-        current: conductor.state.current,
-        succeeded: true,
-      },
-    };
-  } else {
-    return {
-      type: SimuActionsType.RotateTetromino,
-      payload: {
-        succeeded: false,
-      },
-    };
-  }
 };
 
 export const retry = (conductor: SimuConductor): RetryAction => {
