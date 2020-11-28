@@ -135,9 +135,6 @@ export default class NextGenerator {
     const nextCandidates = headNote.candidates.filter((candidate) =>
       bag.candidates.includes(candidate)
     );
-    if (nextCandidates.length < headNote.take) {
-      return false;
-    }
 
     for (let i = 0; i < nextCandidates.length; i++) {
       const type = nextCandidates[i];

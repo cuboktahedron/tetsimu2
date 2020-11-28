@@ -141,7 +141,7 @@ describe("nextGenerator", () => {
     expect(types1.filter((type) => type === Tetromino.Z).length).toBe(1);
   });
 
-  it("should generate with keeping 7types per cycle ([IJL]p2 q5 [IJL]p1)", () => {
+  it("should generate with keeping 7types per cycle ([IJL]p1 q5 [IJL]p1)", () => {
     const gen = new NextGenerator(
       new RandomNumberGenerator(),
       new NextNotesInterpreter().interpret("[IJL]p1 q5 [IJL]p1"),
@@ -207,5 +207,16 @@ describe("nextGenerator", () => {
 
     expect(expectTypes.includes(actual.type)).toBeTruthy();
     expect(actual.bag).toEqual(makeNextNote("OSTZ", 3));
+  });
+
+  it("should not generate subsequent tetromino (q1 I)", () => {
+    const gen = new NextGenerator(
+      new RandomNumberGenerator(),
+      new NextNotesInterpreter().interpret("q1 I"),
+      makeNextNote("IJLOSTZ", 7)
+    );
+
+    const actual = gen.next();
+    expect(actual.type).not.toBe(Tetromino.I);
   });
 });
