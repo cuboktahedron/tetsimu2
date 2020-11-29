@@ -1,7 +1,7 @@
-# tetsimu2
+# Tetsimu2
  
 テトリスができます。  
-[tetsimu](https://github.com/cuboktahedron/tetsimu)の後継版です。
+[Tetsimu](https://github.com/cuboktahedron/tetsimu)の後継版です。
 
 # Demo
  
