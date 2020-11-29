@@ -111,7 +111,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
       first: 10,
       second: 70,
     },
-    showsCycle: true,
+    showsCycle: false,
     showsGhost: true,
     showsPivot: true,
     tapControllerType: isTouchDevice
