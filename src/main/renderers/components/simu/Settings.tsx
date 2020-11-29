@@ -232,7 +232,7 @@ const Settings: React.FC = () => {
               onChange={handleShowCycleChange}
             />
           }
-          label="Show Cycle"
+          label="Show cycle"
         />
       </div>
 
