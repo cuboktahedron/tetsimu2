@@ -5,6 +5,7 @@ import { initialRootState } from "stores/RootState";
 import { Action, TetsimuMode } from "types/core";
 import { reducerLogger } from "utils/reducerLogger";
 import Edit from "./edit/Edit";
+import Replay from "./replay/Replay";
 import Simu from "./simu/Simu";
 
 const theme = createMuiTheme({
@@ -19,9 +20,9 @@ export const RootContext = React.createContext({
 });
 
 type SidePanelContext = {
-  drawerWidth: [number, React.Dispatch<React.SetStateAction<number>>],
-  open: [boolean, React.Dispatch<React.SetStateAction<boolean>>],
-}
+  drawerWidth: [number, React.Dispatch<React.SetStateAction<number>>];
+  open: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+};
 export const SidePanelContext = React.createContext({} as SidePanelContext);
 
 const wrappedReducer = reducerLogger(reducer);
@@ -34,10 +35,13 @@ const App: React.FC = () => {
   const [open, setOpen] = React.useState(false);
 
   const main = (() => {
-    if (state.mode === TetsimuMode.Simu) {
-      return <Simu />;
-    } else {
-      return <Edit />;
+    switch (state.mode) {
+      case TetsimuMode.Simu:
+        return <Simu />;
+      case TetsimuMode.Edit:
+        return <Edit />;
+      case TetsimuMode.Replay:
+        return <Replay />;
     }
   })();
 

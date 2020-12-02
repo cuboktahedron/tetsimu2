@@ -1,12 +1,14 @@
 import editReducer from "ducks/edit";
+import replayReducer from "ducks/replay";
 import simuReducer from "ducks/simu";
 import { RootState } from "stores/RootState";
 import { Action, FieldCellValue, TetsimuMode } from "types/core";
 import { RootActions, RootActionsType } from "./types";
 
 const reducers = {
-  simu: simuReducer,
   edit: editReducer,
+  replay: replayReducer,
+  simu: simuReducer,
 };
 
 const reducer = (state: RootState, anyAction: Action): RootState => {
@@ -84,6 +86,18 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
   }
 
   if (reducerName === "edit") {
+    const newState = reducers[reducerName](state[reducerName], anyAction);
+    if (newState !== state[reducerName]) {
+      return {
+        ...state,
+        [reducerName]: newState,
+      };
+    } else {
+      return state;
+    }
+  }
+
+  if (reducerName === "replay") {
     const newState = reducers[reducerName](state[reducerName], anyAction);
     if (newState !== state[reducerName]) {
       return {

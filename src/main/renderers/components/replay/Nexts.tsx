@@ -1,9 +1,10 @@
 import { createStyles, makeStyles } from "@material-ui/core";
 import clsx from "clsx";
 import React from "react";
-import { MAX_NEXTS_NUM } from "types/core";
+import { ReplayStepType } from "stores/ReplayState";
+import { Tetromino } from "types/core";
 import Next from "./Next";
-import { SimuContext } from "./Simu";
+import { ReplayContext } from "./Replay";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -39,19 +40,34 @@ type StyleProps = {
 } & NextsProps;
 
 const Nexts: React.FC<NextsProps> = (props) => {
-  const { state } = React.useContext(SimuContext);
-  const config = state.config;
+  const { state } = React.useContext(ReplayContext);
+
   const classes = useStyles({
-    nextNums: config.nextNum,
+    nextNums: state.replayInfo.nextNum,
     zoom: state.zoom,
     ...props,
   });
 
-  const noOfCycleBase = (7 - (state.nexts.bag.take + (MAX_NEXTS_NUM - 7))) % 7;
+  const currentStep = state.replaySteps.slice(state.step);
+  const nextSteps = currentStep
+    .filter((step) => step.type === ReplayStepType.Next)
+    .slice(0, state.replayInfo.nextNum) as {
+    type: typeof ReplayStepType.Next;
+    tetromino: Tetromino;
+  }[];
+  const nexts = (() => {
+    const nexts = nextSteps.map((step) => step.tetromino);
+    if (nexts.length >= state.replayInfo.nextNum) {
+      return nexts;
+    } else {
+      return nexts.concat(
+        new Array(state.replayInfo.nextNum - nexts.length).fill(Tetromino.NONE)
+      );
+    }
+  })();
 
-  const visibleNexts = state.nexts.settled.slice(0, config.nextNum);
-  const nextdives = visibleNexts.map((next, index) => {
-    const noOfCycle = (noOfCycleBase + index) % 7;
+  const nextdives = nexts.map((next, index) => {
+    const noOfCycle = (state.noOfCycle + index) % 7;
     return (
       <div
         key={index}

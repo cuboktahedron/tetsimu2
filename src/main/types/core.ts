@@ -11,6 +11,7 @@ export const MAX_VISIBLE_FIELD_HEIGHT = 21;
 export const TetsimuMode = {
   Simu: 1,
   Edit: 2,
+  Replay: 3,
 } as const;
 
 export type TetsimuMode = typeof TetsimuMode[keyof typeof TetsimuMode];
