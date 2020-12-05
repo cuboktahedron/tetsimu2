@@ -16,6 +16,22 @@ const reducer = (state: ReplayState, anyAction: Action): ReplayState => {
         ...state,
         zoom: action.payload.zoom,
       };
+    case ReplayActionsType.ForwardStepAction:
+      if (!action.payload.succeeded) {
+        return state;
+      } else {
+        return {
+          ...state,
+          current: action.payload.current,
+          field: action.payload.field,
+          histories: action.payload.histories,
+          hold: action.payload.hold,
+          isDead: action.payload.isDead,
+          nexts: action.payload.nexts,
+          noOfCycle: action.payload.noOfCycle,
+          step: action.payload.step,
+        };
+      }
   }
   return state;
 };

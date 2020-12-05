@@ -1,5 +1,13 @@
 import { ReplayStepType } from "stores/ReplayState";
-import { FieldState, HoldState, NextNote, Tetromino } from "./core";
+import {
+  ActiveTetromino,
+  Direction,
+  FieldState,
+  HoldState,
+  NextNote,
+  Tetromino,
+  Vector2,
+} from "./core";
 
 export type ReplayConfig = {
   showsCycle: boolean;
@@ -15,24 +23,31 @@ export type ReplayRetryState = {
 
 export type ReplayStepType = typeof ReplayStepType[keyof typeof ReplayStepType];
 
-export type ReplayStep =
-  | {
-      type: typeof ReplayStepType.Next;
-      tetromino: Tetromino;
-    }
-  | {
-      type: typeof ReplayStepType.Hold;
-    }
-  | {
-      type: typeof ReplayStepType.Attacked;
-      cols: number[];
-    };
+export type ReplayStepDrop = {
+  type: typeof ReplayStepType.Drop;
+  dir: Direction;
+  pos: Vector2;
+};
+
+export type ReplayStepHold = {
+  type: typeof ReplayStepType.Hold;
+};
+
+export type ReplayStepHardDrop = {
+  type: typeof ReplayStepType.HardDrop;
+  attacked?: {
+    cols: number[];
+  };
+};
+
+export type ReplayStep = ReplayStepDrop | ReplayStepHold | ReplayStepHardDrop;
 
 export type ReplayStateHistory = {
-  currentType: Tetromino;
+  current: ActiveTetromino;
   field: FieldState;
   hold: HoldState;
   isDead: boolean;
+  nexts: Tetromino[];
   noOfCycle: number;
 };
 

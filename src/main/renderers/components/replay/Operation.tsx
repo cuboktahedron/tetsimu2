@@ -1,4 +1,13 @@
-import { createStyles, List, makeStyles, Theme } from "@material-ui/core";
+import {
+  createStyles,
+  IconButton,
+  List,
+  makeStyles,
+  Theme
+} from "@material-ui/core";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import { forwardStep } from "ducks/replay/actions";
+import { canForward, getReplayConductor } from "ducks/replay/selectors";
 import React from "react";
 import { ReplayContext } from "./Replay";
 
@@ -34,12 +43,26 @@ type StyleProps = {
 };
 
 const Operation: React.FC = () => {
-  const { state } = React.useContext(ReplayContext);
+  const { state, dispatch } = React.useContext(ReplayContext);
   const styleProps = { zoom: state.zoom };
+
+  const handleForward = () => {
+    dispatch(forwardStep(getReplayConductor(state)));
+  };
 
   const classes = useStyles(styleProps);
 
-  return <List className={classes.root} disablePadding={true}></List>;
+  return (
+    <List className={classes.root} disablePadding={true}>
+      <IconButton
+        className={classes.iconButton}
+        disabled={!canForward(state)}
+        onClick={handleForward}
+      >
+        <NavigateNextIcon className={classes.icon} />
+      </IconButton>
+    </List>
+  );
 };
 
 export default Operation;

@@ -1,8 +1,10 @@
 import { ReplayConfig } from "types/replay";
+import { ReplayConductor } from "utils/tetsimu/replay/replayConductor";
 import {
   ChangeConfigAction,
   ChangeZoomAction,
-  ReplayActionsType,
+  ForwardStepAction,
+  ReplayActionsType
 } from "./types";
 
 export const changeConfig = (config: ReplayConfig): ChangeConfigAction => {
@@ -21,4 +23,31 @@ export const changeZoom = (zoom: number): ChangeZoomAction => {
       zoom,
     },
   };
+};
+
+export const forwardStep = (conductor: ReplayConductor): ForwardStepAction => {
+  if (conductor.forwardStep()) {
+    const newState = conductor.state;
+    return {
+      type: ReplayActionsType.ForwardStepAction,
+      payload: {
+        current: newState.current,
+        field: newState.field,
+        histories: newState.histories,
+        hold: newState.hold,
+        isDead: newState.isDead,
+        nexts: newState.nexts,
+        noOfCycle: newState.noOfCycle,
+        step: newState.step,
+        succeeded: true,
+      },
+    };
+  } else {
+    return {
+      type: ReplayActionsType.ForwardStepAction,
+      payload: {
+        succeeded: false,
+      },
+    };
+  }
 };

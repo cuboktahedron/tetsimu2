@@ -1,7 +1,6 @@
 import { createStyles, makeStyles } from "@material-ui/core";
 import clsx from "clsx";
 import React from "react";
-import { ReplayStepType } from "stores/ReplayState";
 import { Tetromino } from "types/core";
 import Next from "./Next";
 import { ReplayContext } from "./Replay";
@@ -16,6 +15,7 @@ const useStyles = makeStyles(() =>
       boxShadow: "0 0 0 1px grey",
       height: (props: StyleProps) =>
         Math.min(96 * props.zoom, props.height / props.nextNums),
+      position: "relative",
       width: (props: StyleProps) =>
         Math.min(96 * props.zoom, props.height / props.nextNums),
     },
@@ -48,20 +48,14 @@ const Nexts: React.FC<NextsProps> = (props) => {
     ...props,
   });
 
-  const currentStep = state.replaySteps.slice(state.step);
-  const nextSteps = currentStep
-    .filter((step) => step.type === ReplayStepType.Next)
-    .slice(0, state.replayInfo.nextNum) as {
-    type: typeof ReplayStepType.Next;
-    tetromino: Tetromino;
-  }[];
   const nexts = (() => {
-    const nexts = nextSteps.map((step) => step.tetromino);
-    if (nexts.length >= state.replayInfo.nextNum) {
-      return nexts;
+    if (state.nexts.length >= state.replayInfo.nextNum) {
+      return state.nexts.slice(0, state.replayInfo.nextNum);
     } else {
-      return nexts.concat(
-        new Array(state.replayInfo.nextNum - nexts.length).fill(Tetromino.NONE)
+      return state.nexts.concat(
+        new Array(state.replayInfo.nextNum - state.nexts.length).fill(
+          Tetromino.NONE
+        )
       );
     }
   })();

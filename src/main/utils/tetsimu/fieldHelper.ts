@@ -238,10 +238,10 @@ export class FieldHelper {
     return lastRoseUpColumn;
   }
 
-  riseUpLine(lastRoseUpColumn: number) {
+  riseUpLine(col: number) {
     this.field.pop();
     const row = new Array(10).fill(FieldCellValue.GARBAGE);
-    row[lastRoseUpColumn] = FieldCellValue.NONE;
+    row[col] = FieldCellValue.NONE;
     this.field.unshift(row);
   }
 

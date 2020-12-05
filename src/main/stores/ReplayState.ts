@@ -14,9 +14,9 @@ import {
 } from "types/replay";
 
 export const ReplayStepType = {
-  Next: 1,
+  Drop: 1,
   Hold: 2,
-  Attacked: 3,
+  HardDrop: 3,
 } as const;
 
 export type ReplayState = {
@@ -29,6 +29,7 @@ export type ReplayState = {
   histories: ReplayStateHistory[];
   hold: HoldState;
   isDead: boolean;
+  nexts: Tetromino[];
   noOfCycle: number;
   replayInfo: ReplayInfo;
   replaySteps: ReplayStep[];
@@ -38,61 +39,77 @@ export type ReplayState = {
 
 export const initialReplayState: ReplayState = ((): ReplayState => {
   // TOOD: temporary
+  const nexts = [
+    Tetromino.J,
+    Tetromino.L,
+    Tetromino.O,
+    Tetromino.S,
+    Tetromino.T,
+    Tetromino.Z,
+    Tetromino.I,
+    Tetromino.J,
+    Tetromino.L,
+    Tetromino.O,
+    Tetromino.S,
+    Tetromino.T,
+    Tetromino.Z,
+  ];
   const steps: ReplayStep[] = [
     {
-      type: ReplayStepType.Next,
-      tetromino: Tetromino.I,
+      type: ReplayStepType.Drop,
+      pos: {
+        x: 1,
+        y: 0,
+      },
+      dir: Direction.UP,
     },
     {
-      type: ReplayStepType.Next,
-      tetromino: Tetromino.J,
+      type: ReplayStepType.HardDrop,
+    },
+    {
+      type: ReplayStepType.Drop,
+      pos: {
+        x: 7,
+        y: 2,
+      },
+      dir: Direction.RIGHT,
+    },
+    {
+      type: ReplayStepType.HardDrop,
     },
     {
       type: ReplayStepType.Hold,
     },
     {
-      type: ReplayStepType.Next,
-      tetromino: Tetromino.L,
+      type: ReplayStepType.Drop,
+      pos: { x: 1, y: 2 },
+      dir: Direction.DOWN,
     },
     {
-      type: ReplayStepType.Next,
-      tetromino: Tetromino.S,
+      type: ReplayStepType.HardDrop,
     },
     {
-      type: ReplayStepType.Next,
-      tetromino: Tetromino.T,
+      type: ReplayStepType.Drop,
+      pos: { x: 8, y: 2 },
+      dir: Direction.LEFT,
     },
     {
-      type: ReplayStepType.Next,
-      tetromino: Tetromino.Z,
+      type: ReplayStepType.HardDrop,
+      attacked: {
+        cols: [1, 2, 3],
+      },
+
     },
     {
-      type: ReplayStepType.Next,
-      tetromino: Tetromino.O,
+      type: ReplayStepType.Drop,
+      pos: { x: 2, y: 2 },
+      dir: Direction.UP,
     },
     {
-      type: ReplayStepType.Next,
-      tetromino: Tetromino.J,
+      type: ReplayStepType.HardDrop,
     },
     {
-      type: ReplayStepType.Next,
-      tetromino: Tetromino.L,
-    },
-    {
-      type: ReplayStepType.Next,
-      tetromino: Tetromino.O,
-    },
-    {
-      type: ReplayStepType.Next,
-      tetromino: Tetromino.J,
-    },
-    {
-      type: ReplayStepType.Next,
-      tetromino: Tetromino.L,
-    },
-    {
-      type: ReplayStepType.Next,
-      tetromino: Tetromino.O,
+      type: ReplayStepType.Hold,
     },
   ];
 
@@ -106,7 +123,7 @@ export const initialReplayState: ReplayState = ((): ReplayState => {
       x: 4,
       y: 19,
     },
-    type: steps[0].type,
+    type: Tetromino.I,
   };
 
   const hold = {
@@ -129,21 +146,23 @@ export const initialReplayState: ReplayState = ((): ReplayState => {
     field,
     histories: [
       {
-        currentType: current.type,
+        current,
         field,
         hold,
         isDead: false,
+        nexts: nexts,
         noOfCycle: 1,
       },
     ],
     hold,
     isDead: false,
+    nexts: nexts,
     noOfCycle: 1,
     replayInfo: {
-      nextNum: 12,
+      nextNum: 5,
     },
     replaySteps: steps,
-    step: 1,
+    step: 0,
     zoom: 1,
   };
 })();
