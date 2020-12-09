@@ -3,21 +3,40 @@ import {
   ActiveTetromino,
   FieldState,
   HoldState,
-  Tetromino,
+  Tetromino
 } from "types/core";
-import { ReplayConfig } from "types/replay";
+import { ReplayConfig, ReplayStateHistory } from "types/replay";
 
 export const ReplayActionsType = {
+  BackwardStepAction: "replay/backwardStep",
   ChangeConfig: "replay/changeConfig",
   ChangeZoom: "replay/changeZoom",
   ForwardStepAction: "replay/forwardStep",
-  BackwardStepAction: "replay/backwardStep",
 } as const;
 
 export type ReplayActions =
+  | BackwardStepAction
   | ChangeConfigAction
   | ChangeZoomAction
   | ForwardStepAction;
+
+export type BackwardStepAction = {
+  type: typeof ReplayActionsType.BackwardStepAction;
+  payload:
+    | {
+        current: ActiveTetromino;
+        field: FieldState;
+        hold: HoldState;
+        isDead: boolean;
+        nexts: Tetromino[];
+        noOfCycle: number;
+        step: number;
+        succeeded: true;
+      }
+    | {
+        succeeded: false;
+      };
+} & Action;
 
 export type ChangeConfigAction = {
   type: typeof ReplayActionsType.ChangeConfig;

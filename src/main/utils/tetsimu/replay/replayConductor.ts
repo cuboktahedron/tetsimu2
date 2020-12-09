@@ -180,4 +180,23 @@ export class ReplayConductor {
 
     return true;
   }
+
+  backwardStep(): boolean {
+    if (this.state.step <= 0) {
+      return false;
+    }
+
+    const newStep = this.state.step - 1;
+    const history = this.state.histories[newStep];
+
+    this.state.current = history.current;
+    this.state.field = history.field;
+    this.state.hold = history.hold;
+    this.state.isDead = history.isDead;
+    this.state.nexts = history.nexts;
+    this.state.noOfCycle = history.noOfCycle;
+    this.state.step = newStep;
+
+    return true;
+  }
 }

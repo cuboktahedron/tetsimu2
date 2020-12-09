@@ -6,6 +6,21 @@ const reducer = (state: ReplayState, anyAction: Action): ReplayState => {
   const action = anyAction as ReplayActions;
 
   switch (action.type) {
+    case ReplayActionsType.BackwardStepAction:
+      if (!action.payload.succeeded) {
+        return state;
+      } else {
+        return {
+          ...state,
+          current: action.payload.current,
+          field: action.payload.field,
+          hold: action.payload.hold,
+          isDead: action.payload.isDead,
+          nexts: action.payload.nexts,
+          noOfCycle: action.payload.noOfCycle,
+          step: action.payload.step,
+        };
+      }
     case ReplayActionsType.ChangeConfig:
       return {
         ...state,

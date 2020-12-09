@@ -8,3 +8,7 @@ export const getReplayConductor = (state: ReplayState) => {
 export const canForward = (state: ReplayState) => {
   return state.step < state.replaySteps.length;
 };
+
+export const canBackward = (state: ReplayState) => {
+  return state.step > 0;
+};

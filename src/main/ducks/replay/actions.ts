@@ -1,11 +1,40 @@
 import { ReplayConfig } from "types/replay";
 import { ReplayConductor } from "utils/tetsimu/replay/replayConductor";
 import {
+  BackwardStepAction,
   ChangeConfigAction,
   ChangeZoomAction,
   ForwardStepAction,
   ReplayActionsType
 } from "./types";
+
+export const backwardStep = (
+  conductor: ReplayConductor
+): BackwardStepAction => {
+  if (conductor.backwardStep()) {
+    const newState = conductor.state;
+    return {
+      type: ReplayActionsType.BackwardStepAction,
+      payload: {
+        current: newState.current,
+        field: newState.field,
+        hold: newState.hold,
+        isDead: newState.isDead,
+        nexts: newState.nexts,
+        noOfCycle: newState.noOfCycle,
+        step: newState.step,
+        succeeded: true,
+      },
+    };
+  } else {
+    return {
+      type: ReplayActionsType.BackwardStepAction,
+      payload: {
+        succeeded: false,
+      },
+    };
+  }
+};
 
 export const changeConfig = (config: ReplayConfig): ChangeConfigAction => {
   return {

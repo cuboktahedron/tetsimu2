@@ -2,12 +2,18 @@ import {
   createStyles,
   IconButton,
   List,
+  ListItem,
   makeStyles,
   Theme
 } from "@material-ui/core";
+import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import { forwardStep } from "ducks/replay/actions";
-import { canForward, getReplayConductor } from "ducks/replay/selectors";
+import { backwardStep, forwardStep } from "ducks/replay/actions";
+import {
+  canBackward,
+  canForward,
+  getReplayConductor
+} from "ducks/replay/selectors";
 import React from "react";
 import { ReplayContext } from "./Replay";
 
@@ -50,17 +56,32 @@ const Operation: React.FC = () => {
     dispatch(forwardStep(getReplayConductor(state)));
   };
 
+  const handleBackward = () => {
+    dispatch(backwardStep(getReplayConductor(state)));
+  };
+
   const classes = useStyles(styleProps);
 
   return (
     <List className={classes.root} disablePadding={true}>
-      <IconButton
-        className={classes.iconButton}
-        disabled={!canForward(state)}
-        onClick={handleForward}
-      >
-        <NavigateNextIcon className={classes.icon} />
-      </IconButton>
+      <ListItem className={classes.listItem} disableGutters={true}>
+        <IconButton
+          className={classes.iconButton}
+          disabled={!canForward(state)}
+          onClick={handleForward}
+        >
+          <NavigateNextIcon className={classes.icon} />
+        </IconButton>
+      </ListItem>
+      <ListItem className={classes.listItem} disableGutters={true}>
+        <IconButton
+          className={classes.iconButton}
+          disabled={!canBackward(state)}
+          onClick={handleBackward}
+        >
+          <NavigateBeforeIcon className={classes.icon} />
+        </IconButton>
+      </ListItem>
     </List>
   );
 };

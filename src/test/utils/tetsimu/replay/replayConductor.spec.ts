@@ -9,7 +9,7 @@ import { makeReplayState } from "../testUtils/makeReplayState";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
-  makeReplayHoldStep
+  makeReplayHoldStep,
 } from "../testUtils/makeReplayStep";
 
 describe("replayConductor", () => {
@@ -209,6 +209,51 @@ describe("replayConductor", () => {
         nexts: [],
         noOfCycle: 2,
         step: 1,
+      };
+
+      expect(actual).toEqual(expected);
+    });
+  });
+
+  describe("backwardStep", () => {
+    it("should be backward step", () => {
+      const state = makeReplayState({
+        current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+        field: makeField("IIIINNNNNN"),
+        histories: [
+          {
+            current: makeCurrent(Direction.UP, 1, 0, Tetromino.I),
+            field: makeField("NNNNNNNNNN"),
+            hold: makeHold(Tetromino.T, false),
+            isDead: false,
+            nexts: makeNextTypes("J"),
+            noOfCycle: 1,
+          },
+          {
+            current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+            field: makeField("IIIINNNNNN"),
+            hold: makeHold(Tetromino.T, true),
+            isDead: false,
+            nexts: makeNextTypes(""),
+            noOfCycle: 2,
+          },
+        ],
+        hold: makeHold(Tetromino.T, true),
+        nexts: makeNextTypes(""),
+        replaySteps: [makeReplayHardDropStep()],
+        step: 1,
+      });
+
+      const conductor = getReplayConductor(state);
+      expect(conductor.backwardStep()).toBeTruthy();
+
+      const actual = { ...conductor.state };
+
+      const expected: ReplayState = {
+        ...state,
+        ...state.histories[0],
+        histories: [...state.histories],
+        step: 0,
       };
 
       expect(actual).toEqual(expected);
