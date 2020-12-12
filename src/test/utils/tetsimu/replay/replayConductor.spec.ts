@@ -259,4 +259,191 @@ describe("replayConductor", () => {
       expect(actual).toEqual(expected);
     });
   });
+
+  describe("changeStep", () => {
+    it("should be change forward without histories", () => {
+      const state = makeReplayState({
+        current: makeCurrent(Direction.UP, 4, 19, Tetromino.I),
+        field: makeField("NNNNNNNNNN"),
+        histories: [
+          {
+            current: makeCurrent(Direction.UP, 4, 19, Tetromino.I),
+            field: makeField("NNNNNNNNNN"),
+            hold: makeHold(Tetromino.T, false),
+            isDead: false,
+            nexts: makeNextTypes("JO"),
+            noOfCycle: 1,
+          },
+        ],
+        hold: makeHold(Tetromino.T, false),
+        nexts: makeNextTypes("JO"),
+        noOfCycle: 1,
+        replaySteps: [
+          makeReplayDropStep(Direction.DOWN, 1, 1),
+          makeReplayHardDropStep(),
+        ],
+        step: 0,
+      });
+
+      const conductor = getReplayConductor(state);
+      expect(conductor.changeStep(2)).toBeTruthy();
+
+      const actual = { ...conductor.state };
+
+      const expected: ReplayState = {
+        ...state,
+        current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+        field: makeField("IIIINNNNNN"),
+        hold: makeHold(Tetromino.T, true),
+        isDead: false,
+        nexts: makeNextTypes("O"),
+        noOfCycle: 2,
+        histories: [
+          { ...state.histories[0] },
+          {
+            ...state.histories[0],
+            current: makeCurrent(Direction.DOWN, 1, 1, Tetromino.I),
+          },
+          {
+            current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+            field: makeField("IIIINNNNNN"),
+            hold: makeHold(Tetromino.T, true),
+            isDead: false,
+            nexts: makeNextTypes("O"),
+            noOfCycle: 2,
+          },
+        ],
+        step: 2,
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should be change forward with histories", () => {
+      const state = makeReplayState({
+        current: makeCurrent(Direction.UP, 4, 19, Tetromino.I),
+        field: makeField("NNNNNNNNNN"),
+        histories: [
+          {
+            current: makeCurrent(Direction.UP, 4, 19, Tetromino.I),
+            field: makeField("NNNNNNNNNN"),
+            hold: makeHold(Tetromino.T, false),
+            isDead: false,
+            nexts: makeNextTypes("JO"),
+            noOfCycle: 1,
+          },
+          {
+            current: makeCurrent(Direction.DOWN, 1, 1, Tetromino.I),
+            field: makeField("NNNNNNNNNN"),
+            hold: makeHold(Tetromino.T, false),
+            isDead: false,
+            nexts: makeNextTypes("JO"),
+            noOfCycle: 1,
+          },
+          {
+            current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+            field: makeField("IIIINNNNNN"),
+            hold: makeHold(Tetromino.T, true),
+            isDead: false,
+            nexts: makeNextTypes("O"),
+            noOfCycle: 2,
+          },
+        ],
+        hold: makeHold(Tetromino.T, false),
+        nexts: makeNextTypes("JO"),
+        noOfCycle: 1,
+        replaySteps: [
+          makeReplayDropStep(Direction.DOWN, 1, 1),
+          makeReplayHardDropStep(),
+        ],
+        step: 0,
+      });
+
+      const conductor = getReplayConductor(state);
+      expect(conductor.changeStep(2)).toBeTruthy();
+
+      const actual = { ...conductor.state };
+
+      const expected: ReplayState = {
+        ...state,
+        ...state.histories[2],
+        histories: [
+          { ...state.histories[0] },
+          {
+            ...state.histories[1],
+          },
+          {
+            ...state.histories[2],
+          },
+        ],
+        step: 2,
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should be change backward", () => {
+      const state = makeReplayState({
+        current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+        field: makeField("IIIINNNNNN"),
+        histories: [
+          {
+            current: makeCurrent(Direction.UP, 4, 19, Tetromino.I),
+            field: makeField("NNNNNNNNNN"),
+            hold: makeHold(Tetromino.T, false),
+            isDead: false,
+            nexts: makeNextTypes("JO"),
+            noOfCycle: 1,
+          },
+          {
+            current: makeCurrent(Direction.DOWN, 1, 1, Tetromino.I),
+            field: makeField("NNNNNNNNNN"),
+            hold: makeHold(Tetromino.T, false),
+            isDead: false,
+            nexts: makeNextTypes("JO"),
+            noOfCycle: 1,
+          },
+          {
+            current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+            field: makeField("IIIINNNNNN"),
+            hold: makeHold(Tetromino.T, true),
+            isDead: false,
+            nexts: makeNextTypes("O"),
+            noOfCycle: 2,
+          },
+        ],
+        hold: makeHold(Tetromino.T, true),
+        isDead: false,
+        nexts: makeNextTypes("O"),
+        noOfCycle: 2,
+        replaySteps: [
+          makeReplayDropStep(Direction.DOWN, 1, 1),
+          makeReplayHardDropStep(),
+        ],
+        step: 2,
+      });
+
+      const conductor = getReplayConductor(state);
+      expect(conductor.changeStep(0)).toBeTruthy();
+
+      const actual = { ...conductor.state };
+
+      const expected: ReplayState = {
+        ...state,
+        ...state.histories[0],
+        histories: [
+          { ...state.histories[0] },
+          {
+            ...state.histories[1],
+          },
+          {
+            ...state.histories[2],
+          },
+        ],
+        step: 0,
+      };
+
+      expect(actual).toEqual(expected);
+    });
+  });
 });

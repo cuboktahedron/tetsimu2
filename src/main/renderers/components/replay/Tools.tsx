@@ -1,14 +1,19 @@
 import {
   Button,
   createStyles,
-
+  Divider,
+  FormControl,
+  InputAdornment,
   makeStyles,
   Theme
 } from "@material-ui/core";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
+import { changeStep } from "ducks/replay/actions";
+import { getReplayConductor } from "ducks/replay/selectors";
 import { changeTetsimuMode } from "ducks/root/actions";
 import React from "react";
 import { TetsimuMode } from "types/core";
+import NumberTextField from "../ext/NumberTextField";
 import { ReplayContext } from "./Replay";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -66,13 +71,21 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Tools: React.FC = () => {
-  const { dispatch } = React.useContext(ReplayContext);
+  const { state, dispatch } = React.useContext(ReplayContext);
 
   const handleSimuNoResetClick = () => {
     dispatch(changeTetsimuMode(TetsimuMode.Simu));
   };
 
+  const handleStepChange = (value: number): void => {
+    if (value !== state.step) {
+      dispatch(changeStep(getReplayConductor(state), value));
+    }
+  };
+
   const classes = useStyles();
+  const stepNum = state.replaySteps.length;
+  console.log(state.step);
   return (
     <div className={classes.root}>
       <div className={classes.buttons}>
@@ -85,6 +98,28 @@ const Tools: React.FC = () => {
             <SportsEsportsIcon />
           </Button>
         </div>
+      </div>
+      <Divider />
+      <div>
+        <FormControl>
+          <NumberTextField
+            label="Step"
+            numberProps={{
+              min: 0,
+              max: state.replaySteps.length,
+              change: handleStepChange,
+              endAdornment: (
+                <InputAdornment position="end">/ {stepNum}</InputAdornment>
+              ),
+            }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            style={{ minWidth: 100 }}
+            value={"" + state.step}
+            variant="outlined"
+          />
+        </FormControl>
       </div>
     </div>
   );

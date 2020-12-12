@@ -6,7 +6,7 @@ const reducer = (state: ReplayState, anyAction: Action): ReplayState => {
   const action = anyAction as ReplayActions;
 
   switch (action.type) {
-    case ReplayActionsType.BackwardStepAction:
+    case ReplayActionsType.BackwardStep:
       if (!action.payload.succeeded) {
         return state;
       } else {
@@ -26,12 +26,28 @@ const reducer = (state: ReplayState, anyAction: Action): ReplayState => {
         ...state,
         config: action.payload.config,
       };
+    case ReplayActionsType.ChangeStep:
+      if (!action.payload.succeeded) {
+        return state;
+      } else {
+        return {
+          ...state,
+          current: action.payload.current,
+          field: action.payload.field,
+          histories: action.payload.histories,
+          hold: action.payload.hold,
+          isDead: action.payload.isDead,
+          nexts: action.payload.nexts,
+          noOfCycle: action.payload.noOfCycle,
+          step: action.payload.step,
+        };
+      }
     case ReplayActionsType.ChangeZoom:
       return {
         ...state,
         zoom: action.payload.zoom,
       };
-    case ReplayActionsType.ForwardStepAction:
+    case ReplayActionsType.ForwardStep:
       if (!action.payload.succeeded) {
         return state;
       } else {

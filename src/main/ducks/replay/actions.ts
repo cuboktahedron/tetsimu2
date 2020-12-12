@@ -3,9 +3,10 @@ import { ReplayConductor } from "utils/tetsimu/replay/replayConductor";
 import {
   BackwardStepAction,
   ChangeConfigAction,
+  ChangeStepAction,
   ChangeZoomAction,
   ForwardStepAction,
-  ReplayActionsType
+  ReplayActionsType,
 } from "./types";
 
 export const backwardStep = (
@@ -14,7 +15,7 @@ export const backwardStep = (
   if (conductor.backwardStep()) {
     const newState = conductor.state;
     return {
-      type: ReplayActionsType.BackwardStepAction,
+      type: ReplayActionsType.BackwardStep,
       payload: {
         current: newState.current,
         field: newState.field,
@@ -28,7 +29,7 @@ export const backwardStep = (
     };
   } else {
     return {
-      type: ReplayActionsType.BackwardStepAction,
+      type: ReplayActionsType.BackwardStep,
       payload: {
         succeeded: false,
       },
@@ -45,20 +46,14 @@ export const changeConfig = (config: ReplayConfig): ChangeConfigAction => {
   };
 };
 
-export const changeZoom = (zoom: number): ChangeZoomAction => {
-  return {
-    type: ReplayActionsType.ChangeZoom,
-    payload: {
-      zoom,
-    },
-  };
-};
-
-export const forwardStep = (conductor: ReplayConductor): ForwardStepAction => {
-  if (conductor.forwardStep()) {
+export const changeStep = (
+  conductor: ReplayConductor,
+  step: number
+): ChangeStepAction => {
+  if (conductor.changeStep(step)) {
     const newState = conductor.state;
     return {
-      type: ReplayActionsType.ForwardStepAction,
+      type: ReplayActionsType.ChangeStep,
       payload: {
         current: newState.current,
         field: newState.field,
@@ -73,7 +68,43 @@ export const forwardStep = (conductor: ReplayConductor): ForwardStepAction => {
     };
   } else {
     return {
-      type: ReplayActionsType.ForwardStepAction,
+      type: ReplayActionsType.ChangeStep,
+      payload: {
+        succeeded: false,
+      },
+    };
+  }
+};
+
+export const changeZoom = (zoom: number): ChangeZoomAction => {
+  return {
+    type: ReplayActionsType.ChangeZoom,
+    payload: {
+      zoom,
+    },
+  };
+};
+
+export const forwardStep = (conductor: ReplayConductor): ForwardStepAction => {
+  if (conductor.forwardStep()) {
+    const newState = conductor.state;
+    return {
+      type: ReplayActionsType.ForwardStep,
+      payload: {
+        current: newState.current,
+        field: newState.field,
+        histories: newState.histories,
+        hold: newState.hold,
+        isDead: newState.isDead,
+        nexts: newState.nexts,
+        noOfCycle: newState.noOfCycle,
+        step: newState.step,
+        succeeded: true,
+      },
+    };
+  } else {
+    return {
+      type: ReplayActionsType.ForwardStep,
       payload: {
         succeeded: false,
       },
