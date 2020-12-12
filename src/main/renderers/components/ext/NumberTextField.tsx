@@ -15,6 +15,10 @@ const NumberTextField: React.FC<NumberTextFieldProps> = (props) => {
   const [key, setKey] = React.useState(new Date().getTime());
   const [textValue, setTextValue] = React.useState(props.value);
 
+  React.useEffect(() => {
+    setTextValue(value);
+  }, [props.value]);
+
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>): void => {
     e.target.select();
   };
