@@ -10,7 +10,7 @@ import {
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import { changeStep } from "ducks/replay/actions";
 import { getReplayConductor } from "ducks/replay/selectors";
-import { changeTetsimuMode } from "ducks/root/actions";
+import { changeTetsimuMode, replayToSimuMode } from "ducks/root/actions";
 import React from "react";
 import { TetsimuMode } from "types/core";
 import NumberTextField from "../ext/NumberTextField";
@@ -31,6 +31,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
     buttons: {
       display: "flex",
+      flexDirection: "column",
+
+      "& > div": {
+        display: "flex",
+        margin: "4px 0",
+      },
     },
 
     cellTypes: {
@@ -73,6 +79,10 @@ const useStyles = makeStyles((theme: Theme) =>
 const Tools: React.FC = () => {
   const { state, dispatch } = React.useContext(ReplayContext);
 
+  const handleSimuClick = () => {
+    dispatch(replayToSimuMode(state));
+  };
+
   const handleSimuNoResetClick = () => {
     dispatch(changeTetsimuMode(TetsimuMode.Simu));
   };
@@ -89,14 +99,25 @@ const Tools: React.FC = () => {
   return (
     <div className={classes.root}>
       <div className={classes.buttons}>
-        <div style={{ marginLeft: "auto" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSimuNoResetClick}
-          >
-            <SportsEsportsIcon />
-          </Button>
+        <div>
+          <div>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleSimuClick}
+            >
+              SIMU
+            </Button>
+          </div>
+          <div style={{ marginLeft: "auto" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSimuNoResetClick}
+            >
+              <SportsEsportsIcon />
+            </Button>
+          </div>
         </div>
       </div>
       <Divider />

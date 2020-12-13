@@ -5,6 +5,7 @@ import {
   FieldState,
   HoldState,
   NextNote,
+  ReplayStep,
   Tetromino,
 } from "types/core";
 import { SimuConfig, SimuRetryState } from "types/simu";
@@ -80,6 +81,8 @@ export type DoSimuAction = {
           unsettled: NextNote[];
           bag: NextNote;
         };
+        replayStep: number;
+        replaySteps: ReplayStep[];
         seed: number;
         step: number;
         succeeded: true;
@@ -102,6 +105,7 @@ export type RedoAction = {
       unsettled: NextNote[];
       bag: NextNote;
     };
+    replayStep: number;
     seed: number;
     step: number;
   };
@@ -153,6 +157,7 @@ export type UndoAction = {
       unsettled: NextNote[];
       bag: NextNote;
     };
+    replayStep: number;
     seed: number;
     step: number;
   };

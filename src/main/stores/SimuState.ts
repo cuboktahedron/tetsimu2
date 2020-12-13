@@ -6,11 +6,12 @@ import {
   MAX_FIELD_HEIGHT,
   MAX_NEXTS_NUM,
   NextNote,
+  ReplayStep,
   TapControllerType,
   Tetromino,
 } from "types/core";
 import { PlayMode, SimuConfig, SimuRetryState } from "types/simu";
-import { makeFullNextNote } from 'utils/tetsimu/functions';
+import { makeFullNextNote } from "utils/tetsimu/functions";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 
@@ -25,6 +26,7 @@ export type SimuStateHistory = {
     unsettled: NextNote[];
     bag: NextNote;
   };
+  replayStep: number;
   seed: number;
 };
 
@@ -44,6 +46,8 @@ export type SimuState = {
     unsettled: NextNote[];
     bag: NextNote;
   };
+  replayStep: number;
+  replaySteps: ReplayStep[];
   retryState: SimuRetryState;
   seed: number;
   step: number;
@@ -133,6 +137,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
         isDead: false,
         lastRoseUpColumn: -1,
         nexts: nextsInfo,
+        replayStep: 0,
         seed: rng.seed,
       },
     ],
@@ -140,6 +145,8 @@ export const initialSimuState: SimuState = ((): SimuState => {
     isDead: false,
     lastRoseUpColumn: -1,
     nexts: nextsInfo,
+    replayStep: 0,
+    replaySteps: [],
     retryState: retryState,
     seed: rng.seed,
     step: 0,

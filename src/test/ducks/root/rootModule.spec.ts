@@ -1,13 +1,17 @@
 import {
   changeTetsimuMode,
   editToSimuMode,
-  simuToEditMode
+  replayToSimuMode,
+  simuToEditMode,
+  simuToReplayMode
 } from "ducks/root/actions";
 import {
   ChangeTetsimuModeAction,
   EditToSimuAction,
+  ReplayToSimuAction,
   RootActionsType,
-  SimuToEditAction
+  SimuToEditAction,
+  SimuToReplayAction
 } from "ducks/root/types";
 import { Direction, Tetromino, TetsimuMode } from "types/core";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
@@ -16,6 +20,9 @@ import { makeEditState } from "../../utils/tetsimu/testUtils/makeEditState";
 import { makeField } from "../../utils/tetsimu/testUtils/makeField";
 import { makeHold } from "../../utils/tetsimu/testUtils/makeHold";
 import { makeNextNote } from "../../utils/tetsimu/testUtils/makeNextNote";
+import { makeNextTypes } from "../../utils/tetsimu/testUtils/makeNextTypes";
+import { makeReplayState } from "../../utils/tetsimu/testUtils/makeReplayState";
+import { makeReplayHoldStep } from "../../utils/tetsimu/testUtils/makeReplayStep";
 import { makeSimuState } from "../../utils/tetsimu/testUtils/makeSimuState";
 
 describe("rootModule", () => {
@@ -148,6 +155,150 @@ describe("rootModule", () => {
             nextsPattern: "I J L O S T",
             noOfCycle: 6,
           },
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+  });
+
+  describe("replayToSimuMode", () => {
+    it("should change mode and take over state", () => {
+      const actual = replayToSimuMode(
+        makeReplayState({
+          current: makeCurrent(Direction.DOWN, 5, 3, Tetromino.T),
+          field: makeField("IJLOSTZNNN"),
+          hold: makeHold(Tetromino.I, false),
+          isDead: false,
+          nexts: makeNextTypes("ZTSOLJIIJLOSTZ"),
+          noOfCycle: 5,
+          replayInfo: {
+            nextNum: 12,
+          },
+        })
+      );
+
+      const expected: ReplayToSimuAction = {
+        type: RootActionsType.ReplayToSimuMode,
+        payload: {
+          current: makeCurrent(Direction.UP, 4, 19, Tetromino.T),
+          field: makeField("IJLOSTZNNN"),
+          hold: makeHold(Tetromino.I, false),
+          isDead: false,
+          lastRoseUpColumn: -1,
+          nexts: {
+            bag: makeNextNote("IJLTZ", 5),
+            nextNum: 12,
+            settled: [
+              Tetromino.Z,
+              Tetromino.T,
+              Tetromino.S,
+              Tetromino.O,
+              Tetromino.L,
+              Tetromino.J,
+              Tetromino.I,
+              Tetromino.I,
+              Tetromino.J,
+              Tetromino.L,
+              Tetromino.O,
+              Tetromino.S,
+            ],
+            unsettled: [],
+          },
+          retryState: {
+            bag: {
+              candidates: [
+                Tetromino.I,
+                Tetromino.J,
+                Tetromino.L,
+                Tetromino.O,
+                Tetromino.S,
+                Tetromino.T,
+                Tetromino.Z,
+              ],
+              take: 4,
+            },
+            field: makeField("IJLOSTZNNN"),
+            hold: makeHold(Tetromino.I, false),
+            lastRoseUpColumn: -1,
+            seed: actual.payload.retryState.seed,
+            unsettledNexts: new NextNotesInterpreter().interpret(
+              "TZTSOLJIIJLOS"
+            ),
+          },
+          seed: actual.payload.seed,
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+  });
+
+  describe("simuToReplayMode", () => {
+    it("should change mode and take over state", () => {
+      const actual = simuToReplayMode(
+        makeSimuState({
+          config: {
+            nextNum: 12,
+          },
+          histories: [
+            {
+              currentType: Tetromino.T,
+              field: makeField("IJLOSTZNNN"),
+              hold: makeHold(Tetromino.I, false),
+              isDead: false,
+              lastRoseUpColumn: -1,
+              nexts: {
+                bag: makeNextNote("IJLTZ", 5),
+                settled: [
+                  Tetromino.Z,
+                  Tetromino.T,
+                  Tetromino.S,
+                  Tetromino.O,
+                  Tetromino.L,
+                  Tetromino.J,
+                  Tetromino.I,
+                  Tetromino.I,
+                  Tetromino.J,
+                  Tetromino.L,
+                  Tetromino.O,
+                  Tetromino.S,
+                ],
+                unsettled: [],
+              },
+              replayStep: 1,
+              seed: 1,
+            },
+          ],
+          replayStep: 1,
+          replaySteps: [makeReplayHoldStep()],
+        })
+      );
+
+      const expected: SimuToReplayAction = {
+        type: RootActionsType.SimuToReplayMode,
+        payload: {
+          current: makeCurrent(Direction.UP, 4, 19, Tetromino.T),
+          field: makeField("IJLOSTZNNN"),
+          histories: [
+            {
+              current: makeCurrent(Direction.UP, 4, 19, Tetromino.T),
+              field: makeField("IJLOSTZNNN"),
+              hold: makeHold(Tetromino.I, false),
+              isDead: false,
+              nexts: makeNextTypes("ZTSOLJIIJLOS"),
+              noOfCycle: 3,
+            },
+          ],
+          hold: makeHold(Tetromino.I, false),
+          isDead: false,
+          nexts: makeNextTypes("ZTSOLJIIJLOS"),
+          noOfCycle: 3,
+          replayInfo: {
+            nextNum: 12,
+          },
+          replaySteps: [makeReplayHoldStep()],
+          step: 0,
         },
       };
 

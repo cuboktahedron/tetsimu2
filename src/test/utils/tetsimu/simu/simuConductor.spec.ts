@@ -7,6 +7,11 @@ import { makeHold } from "../../../utils/tetsimu/testUtils/makeHold";
 import { makeNextNote } from "../../../utils/tetsimu/testUtils/makeNextNote";
 import { makeSeed } from "../../../utils/tetsimu/testUtils/makeSeed";
 import { makeSimuState } from "../../../utils/tetsimu/testUtils/makeSimuState";
+import {
+  makeReplayDropStep,
+  makeReplayHardDropStep,
+  makeReplayHoldStep
+} from "../testUtils/makeReplayStep";
 
 describe("simuConductor", () => {
   describe("holdTetrimino", () => {
@@ -30,6 +35,22 @@ describe("simuConductor", () => {
       const expected: SimuState = {
         ...state,
         current: makeCurrent(Direction.UP, 4, 19, Tetromino.S),
+        histories: [
+          {
+            currentType: Tetromino.S,
+            field: state.field,
+            hold: makeHold(Tetromino.I, false),
+            isDead: false,
+            lastRoseUpColumn: -1,
+            nexts: {
+              settled: [Tetromino.Z, Tetromino.J],
+              unsettled: [makeNextNote("I", 1)],
+              bag: makeNextNote("I", 1),
+            },
+            replayStep: 1,
+            seed: makeSeed(41702199),
+          },
+        ],
         hold: makeHold(Tetromino.I, false),
         isDead: false,
         nexts: {
@@ -37,6 +58,9 @@ describe("simuConductor", () => {
           unsettled: [makeNextNote("I", 1)],
           bag: makeNextNote("I", 1),
         },
+        replayStep: 1,
+        replaySteps: [makeReplayHoldStep()],
+        step: 1,
         seed: makeSeed(41702199),
       };
 
@@ -63,6 +87,22 @@ describe("simuConductor", () => {
       const expected: SimuState = {
         ...state,
         current: makeCurrent(Direction.UP, 4, 19, Tetromino.L),
+        histories: [
+          {
+            currentType: Tetromino.L,
+            field: state.field,
+            hold: makeHold(Tetromino.T, false),
+            isDead: false,
+            lastRoseUpColumn: -1,
+            nexts: {
+              settled: [Tetromino.S, Tetromino.Z],
+              unsettled: [makeNextNote("J", 1), makeNextNote("I", 1)],
+              bag: makeNextNote("JI", 2),
+            },
+            replayStep: 1,
+            seed: makeSeed(2),
+          },
+        ],
         hold: makeHold(Tetromino.T, false),
         isDead: false,
         nexts: {
@@ -70,6 +110,11 @@ describe("simuConductor", () => {
           unsettled: [makeNextNote("J", 1), makeNextNote("I", 1)],
           bag: makeNextNote("JI", 2),
         },
+        replayStep: 1,
+        replaySteps: [
+          makeReplayHoldStep(),
+        ],
+        step: 1,
         seed: makeSeed(2),
       };
 
@@ -121,13 +166,33 @@ describe("simuConductor", () => {
         const expected: SimuState = {
           ...state,
           current: makeCurrent(Direction.UP, 4, 19, Tetromino.S),
-
           // prettier-ignore
           field: makeField(
             "NNNNNNNNNN",
             "IIIINNNNNN",
             "IJLOSTZNNN"
           ),
+          histories: [
+            {
+              currentType: Tetromino.S,
+              // prettier-ignore
+              field: makeField(
+                "NNNNNNNNNN",
+                "IIIINNNNNN",
+                "IJLOSTZNNN"
+              ),
+              hold: makeHold(Tetromino.I, true),
+              isDead: false,
+              lastRoseUpColumn: -1,
+              nexts: {
+                settled: [Tetromino.Z, Tetromino.J],
+                unsettled: [makeNextNote("I", 1)],
+                bag: makeNextNote("I", 1),
+              },
+              replayStep: 2,
+              seed: makeSeed(55079790),
+            },
+          ],
           hold: makeHold(Tetromino.I, true),
           isDead: false,
           nexts: {
@@ -135,6 +200,12 @@ describe("simuConductor", () => {
             unsettled: [makeNextNote("I", 1)],
             bag: makeNextNote("I", 1),
           },
+          step: 1,
+          replayStep: 2,
+          replaySteps: [
+            makeReplayDropStep(Direction.UP, 1, 1),
+            makeReplayHardDropStep(),
+          ],
           seed: makeSeed(55079790),
         };
 

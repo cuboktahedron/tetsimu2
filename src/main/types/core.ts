@@ -101,3 +101,30 @@ export const MouseButton = {
   Middle: 1,
   Right: 2,
 } as const;
+
+export const ReplayStepType = {
+  Drop: 1,
+  Hold: 2,
+  HardDrop: 3,
+} as const;
+
+export type ReplayStepType = typeof ReplayStepType[keyof typeof ReplayStepType];
+
+export type ReplayStepDrop = {
+  type: typeof ReplayStepType.Drop;
+  dir: Direction;
+  pos: Vector2;
+};
+
+export type ReplayStepHold = {
+  type: typeof ReplayStepType.Hold;
+};
+
+export type ReplayStepHardDrop = {
+  type: typeof ReplayStepType.HardDrop;
+  attacked?: {
+    cols: number[];
+  };
+};
+
+export type ReplayStep = ReplayStepDrop | ReplayStepHold | ReplayStepHardDrop;

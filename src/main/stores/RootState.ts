@@ -12,7 +12,7 @@ export type RootState = {
 
 export const initialRootState: RootState = {
   edit: initialEditState,
-  mode: TetsimuMode.Replay,
+  mode: TetsimuMode.Simu,
   replay: initialReplayState,
   simu: initialSimuState,
 };

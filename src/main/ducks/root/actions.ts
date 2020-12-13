@@ -1,14 +1,24 @@
 import { EditState } from "stores/EditState";
+import { ReplayState } from "stores/ReplayState";
 import { SimuState } from "stores/SimuState";
-import { Direction, MAX_NEXTS_NUM, Tetromino, TetsimuMode } from "types/core";
+import {
+  ActiveTetromino,
+  Direction,
+  MAX_NEXTS_NUM,
+  NextNote,
+  Tetromino,
+  TetsimuMode,
+} from "types/core";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 import {
   ChangeTetsimuModeAction,
-  EditToSimuAction as EditToSimuModeAction,
+  EditToSimuAction,
+  ReplayToSimuAction,
   RootActionsType,
-  SimuToEditAction as SimuToEditModeAction,
+  SimuToEditAction,
+  SimuToReplayAction,
 } from "./types";
 
 export const changeTetsimuMode = (
@@ -22,7 +32,7 @@ export const changeTetsimuMode = (
   };
 };
 
-export const editToSimuMode = (state: EditState): EditToSimuModeAction => {
+export const editToSimuMode = (state: EditState): EditToSimuAction => {
   const interpreter = new NextNotesInterpreter();
   const nextNotes = interpreter.interpret(state.tools.nextsPattern);
   const rgn = new RandomNumberGenerator();
@@ -84,7 +94,82 @@ export const editToSimuMode = (state: EditState): EditToSimuModeAction => {
   };
 };
 
-export const simuToEditMode = (state: SimuState): SimuToEditModeAction => {
+export const replayToSimuMode = (state: ReplayState): ReplayToSimuAction => {
+  const rgn = new RandomNumberGenerator();
+  const initialSeed = rgn.seed;
+  const initialBag = {
+    candidates: [
+      Tetromino.I,
+      Tetromino.J,
+      Tetromino.L,
+      Tetromino.O,
+      Tetromino.S,
+      Tetromino.T,
+      Tetromino.Z,
+    ],
+    take: (7 - (state.noOfCycle - 1) + 1) % 7,
+  };
+
+  const nextNotes: NextNote[] = [
+    {
+      candidates: [state.current.type],
+      take: 1,
+    },
+    ...state.nexts
+      .map((next) => ({
+        candidates: [next],
+        take: 1,
+      }))
+      .slice(0, state.replayInfo.nextNum),
+  ];
+
+  const gen = new NextGenerator(rgn, nextNotes, initialBag);
+  const currentGenNext = gen.next();
+  let lastGenNext = currentGenNext;
+
+  const newNextSettles: Tetromino[] = [];
+  for (let i = 0; i < MAX_NEXTS_NUM; i++) {
+    lastGenNext = gen.next();
+    newNextSettles.push(lastGenNext.type);
+  }
+
+  const newCurrent = {
+    direction: Direction.UP,
+    pos: {
+      x: 4,
+      y: 19,
+    },
+    type: currentGenNext.type,
+  };
+
+  return {
+    type: RootActionsType.ReplayToSimuMode,
+    payload: {
+      current: newCurrent,
+      field: state.field,
+      hold: state.hold,
+      isDead: state.isDead,
+      lastRoseUpColumn: -1,
+      nexts: {
+        bag: lastGenNext.bag,
+        nextNum: state.replayInfo.nextNum,
+        settled: newNextSettles,
+        unsettled: lastGenNext.nextNotes,
+      },
+      retryState: {
+        bag: initialBag,
+        field: state.field,
+        hold: state.hold,
+        lastRoseUpColumn: -1,
+        unsettledNexts: nextNotes,
+        seed: initialSeed,
+      },
+      seed: rgn.seed,
+    },
+  };
+};
+
+export const simuToEditMode = (state: SimuState): SimuToEditAction => {
   const valueToKey = Object.fromEntries(
     Object.entries(Tetromino).map(([key, value]) => [value, key])
   );
@@ -119,6 +204,45 @@ export const simuToEditMode = (state: SimuState): SimuToEditModeAction => {
         nextsPattern,
         noOfCycle,
       },
+    },
+  };
+};
+
+export const simuToReplayMode = (state: SimuState): SimuToReplayAction => {
+  const history = state.histories[0];
+  const current: ActiveTetromino = {
+    direction: Direction.UP,
+    pos: { x: 4, y: 19 },
+    type: history.currentType,
+  };
+
+  const nexts = history.nexts.settled;
+  const noOfCycle = (7 - history.nexts.bag.take + 1) % 7;
+
+  return {
+    type: RootActionsType.SimuToReplayMode,
+    payload: {
+      current,
+      field: history.field,
+      isDead: history.isDead,
+      nexts: nexts,
+      noOfCycle,
+      hold: history.hold,
+      histories: [
+        {
+          current,
+          field: history.field,
+          hold: history.hold,
+          isDead: history.isDead,
+          nexts: nexts,
+          noOfCycle,
+        },
+      ],
+      replaySteps: state.replaySteps,
+      replayInfo: {
+        nextNum: state.config.nextNum,
+      },
+      step: 0,
     },
   };
 };

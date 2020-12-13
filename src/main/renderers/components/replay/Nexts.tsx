@@ -61,7 +61,8 @@ const Nexts: React.FC<NextsProps> = (props) => {
   })();
 
   const nextdives = nexts.map((next, index) => {
-    const noOfCycle = (state.noOfCycle + index) % 7;
+    const noOfCycle = (state.noOfCycle - 1 + index) % 7;
+    console.log(noOfCycle, index);
     return (
       <div
         key={index}

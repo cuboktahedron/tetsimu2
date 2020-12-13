@@ -6,7 +6,9 @@ import {
   MAX_FIELD_HEIGHT,
   MAX_NEXTS_NUM,
   NextNote,
-  Tetromino
+  ReplayStep,
+  ReplayStepType,
+  Tetromino,
 } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
 import { FieldHelper } from "../fieldHelper";
@@ -28,6 +30,34 @@ export class SimuConductor {
   get state(): SimuState {
     return this._state;
   }
+
+  recordReplaySteps = (replaySteps: ReplayStep[]) => {
+    const newReplaySteps = this.state.replaySteps.slice(
+      0,
+      this.state.replayStep + 1
+    );
+    newReplaySteps.push(...replaySteps);
+
+    this.state.replayStep = this.state.replayStep + replaySteps.length;
+    this.state.replaySteps = newReplaySteps;
+  };
+
+  recordHistory = () => {
+    const newHistories = this.state.histories.slice(0, this.state.step + 1);
+    newHistories.push({
+      currentType: this.state.current.type,
+      field: this.state.field,
+      hold: this.state.hold,
+      isDead: this.state.isDead,
+      lastRoseUpColumn: this.state.lastRoseUpColumn,
+      nexts: this.state.nexts,
+      replayStep: this.state.replayStep,
+      seed: this.state.seed,
+    });
+
+    this.state.step++;
+    this.state.histories = newHistories;
+  };
 
   hardDropTetromino = (): boolean => {
     const current = this.state.current;
@@ -96,6 +126,18 @@ export class SimuConductor {
     this.state.field = this.fieldHelper.field;
     this.state.seed = this.rng.seed;
 
+    this.recordReplaySteps([
+      {
+        type: ReplayStepType.Drop,
+        dir: current.direction,
+        pos: { x: current.pos.x, y: row },
+      },
+      {
+        type: ReplayStepType.HardDrop,
+      },
+    ]);
+    this.recordHistory();
+
     return true;
   };
 
@@ -146,6 +188,13 @@ export class SimuConductor {
     this.state.isDead = isDead;
     this.state.nexts = newNexts;
     this.state.seed = this.rng.seed;
+
+    this.recordReplaySteps([
+      {
+        type: ReplayStepType.Hold,
+      },
+    ]);
+    this.recordHistory();
 
     return true;
   };

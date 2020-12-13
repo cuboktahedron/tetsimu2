@@ -6,6 +6,7 @@ import {
   FieldState,
   HoldState,
   NextNote,
+  ReplayStep,
   TapControllerType,
   Tetromino,
 } from "types/core";
@@ -32,6 +33,8 @@ export const makeSimuState = (state: {
     unsettled?: NextNote[];
     bag?: NextNote;
   };
+  replayStep?: number;
+  replaySteps?: ReplayStep[];
   retryState?: SimuRetryState;
   seed?: number;
   step?: number;
@@ -72,6 +75,8 @@ export const makeSimuState = (state: {
         unsettled: [],
         bag: makeNextNote("", 0),
       },
+      replayStep: 0,
+      replaySteps: [],
       retryState: {
         field: [],
         hold: {

@@ -1,10 +1,10 @@
-import { ReplayStepType } from "stores/ReplayState";
-import { Direction } from "types/core";
 import {
+  Direction,
   ReplayStepDrop,
   ReplayStepHardDrop,
-  ReplayStepHold
-} from "types/replay";
+  ReplayStepHold,
+  ReplayStepType,
+} from "types/core";
 
 export const makeReplayHoldStep = (): ReplayStepHold => {
   return {

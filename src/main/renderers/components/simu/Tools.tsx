@@ -3,15 +3,20 @@ import {
   createStyles,
   Divider,
   makeStyles,
-  Theme,
+  Theme
 } from "@material-ui/core";
-import { changeTetsimuMode, simuToEditMode } from "ducks/root/actions";
+import EditIcon from "@material-ui/icons/Edit";
+import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
+import {
+  changeTetsimuMode,
+  simuToEditMode,
+  simuToReplayMode
+} from "ducks/root/actions";
 import { clearSimu } from "ducks/simu/actions";
 import React from "react";
 import { TetsimuMode } from "types/core";
 import { SimuConductor } from "utils/tetsimu/simu/simuConductor";
 import { SimuContext } from "./Simu";
-import EditIcon from "@material-ui/icons/Edit";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,6 +33,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
     buttons: {
       display: "flex",
+      flexDirection: "column",
+
+      "& > div": {
+        display: "flex",
+        margin: "4px 0",
+      },
     },
 
     cellTypes: {
@@ -74,8 +85,16 @@ const Tools: React.FC = () => {
     dispatch(simuToEditMode(state));
   };
 
+  const handleReplayClick = () => {
+    dispatch(simuToReplayMode(state));
+  };
+
   const handleEditNoResetClick = () => {
     dispatch(changeTetsimuMode(TetsimuMode.Edit));
+  };
+
+  const handleReplayNoResetClick = () => {
+    dispatch(changeTetsimuMode(TetsimuMode.Replay));
   };
 
   const handleClearClick = () => {
@@ -87,30 +106,48 @@ const Tools: React.FC = () => {
     <div className={classes.root}>
       <div className={classes.buttons}>
         <div>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleEditClick}
-          >
-            EDIT
-          </Button>
+          <div>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleEditClick}
+            >
+              EDIT
+            </Button>
+          </div>
+          <div style={{ marginLeft: "auto" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleEditNoResetClick}
+            >
+              <EditIcon />
+            </Button>
+          </div>
         </div>
-        <div style={{ marginLeft: "auto" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleEditNoResetClick}
-          >
-            <EditIcon />
-          </Button>
+        <div>
+          <div>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleReplayClick}
+            >
+              REPLAY
+            </Button>
+          </div>
+          <div style={{ marginLeft: "auto" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleReplayNoResetClick}
+            >
+              <PlayCircleOutlineIcon />
+            </Button>
+          </div>
         </div>
       </div>
       <Divider />
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={handleClearClick}
-      >
+      <Button variant="contained" color="secondary" onClick={handleClearClick}>
         CLEAR
       </Button>
     </div>

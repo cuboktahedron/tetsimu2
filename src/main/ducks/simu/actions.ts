@@ -12,7 +12,7 @@ import {
   RetryAction,
   SimuActionsType,
   SuperRetryAction,
-  UndoAction
+  UndoAction,
 } from "./types";
 
 export const changeConfig = (config: SimuConfig): ChangeConfigAction => {
@@ -56,15 +56,12 @@ export const doSimu = (
   keys: ControllerKeys
 ): DoSimuAction => {
   let changed = false;
-  let historyProgress = false;
 
   if (keys.ArrowUp.active) {
     const ret = conductor.hardDropTetromino();
-    historyProgress = ret;
     changed = ret || changed;
   } else if (keys.c.active) {
     const ret = conductor.holdTetromino();
-    historyProgress = ret;
     changed = ret || changed;
   } else {
     if (keys.ArrowDown.active) {
@@ -90,38 +87,20 @@ export const doSimu = (
 
   if (changed) {
     const newState = conductor.state;
-    let newHistories;
-    let newStep;
-    if (historyProgress) {
-      newHistories = newState.histories.slice(0, newState.step + 1);
-      newHistories.push({
-        currentType: newState.current.type,
-        field: newState.field,
-        hold: newState.hold,
-        isDead: newState.isDead,
-        lastRoseUpColumn: newState.lastRoseUpColumn,
-        nexts: newState.nexts,
-        seed: newState.seed,
-      });
-
-      newStep = newState.step + 1;
-    } else {
-      newHistories = newState.histories;
-      newStep = newState.step;
-    }
-
     return {
       type: SimuActionsType.DoSimu,
       payload: {
         current: newState.current,
         field: newState.field,
-        histories: newHistories,
+        histories: newState.histories,
         hold: newState.hold,
         isDead: newState.isDead,
         lastRoseUpColumn: newState.lastRoseUpColumn,
         nexts: newState.nexts,
+        replayStep: newState.replayStep,
+        replaySteps: newState.replaySteps,
         seed: newState.seed,
-        step: newStep,
+        step: newState.step,
         succeeded: true,
       },
     };
@@ -154,6 +133,7 @@ export const redo = (
       isDead: history.isDead,
       lastRoseUpColumn: history.lastRoseUpColumn,
       nexts: history.nexts,
+      replayStep: history.replayStep,
       seed: history.seed,
       step: newStep,
     },
@@ -214,6 +194,7 @@ export const undo = (
       isDead: history.isDead,
       lastRoseUpColumn: history.lastRoseUpColumn,
       nexts: history.nexts,
+      replayStep: history.replayStep,
       seed: history.seed,
       step: newStep,
     },

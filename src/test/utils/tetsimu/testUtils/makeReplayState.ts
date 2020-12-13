@@ -5,9 +5,10 @@ import {
   Direction,
   FieldState,
   HoldState,
+  ReplayStep,
   Tetromino,
 } from "types/core";
-import { ReplayInfo, ReplayStateHistory, ReplayStep } from "types/replay";
+import { ReplayInfo, ReplayStateHistory } from "types/replay";
 
 export const makeReplayState = (state: {
   current?: ActiveTetromino;

@@ -1,10 +1,12 @@
-import { ReplayState, ReplayStepType } from "stores/ReplayState";
-import { ActiveTetromino, Tetromino } from "types/core";
+import { ReplayState } from "stores/ReplayState";
 import {
-  ReplayStateHistory,
+  ActiveTetromino,
   ReplayStepDrop,
   ReplayStepHardDrop,
-} from "types/replay";
+  ReplayStepType,
+  Tetromino,
+} from "types/core";
+import { ReplayStateHistory } from "types/replay";
 import { FieldHelper } from "../fieldHelper";
 
 export class ReplayConductor {

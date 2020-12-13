@@ -44,6 +44,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
     buttons: {
       display: "flex",
+      flexDirection: "column",
+
+      "& > div": {
+        display: "flex",
+        margin: "4px 0",
+      },
     },
 
     settingGroupTitle: {
@@ -146,22 +152,24 @@ const Tools: React.FC = () => {
     <div className={classes.root}>
       <div className={classes.buttons}>
         <div>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={handleSimuClick}
-          >
-            SIMU
-          </Button>
-        </div>
-        <div style={{ marginLeft: "auto" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleEditNoResetClick}
-          >
-            <SportsEsportsIcon />
-          </Button>
+          <div>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleSimuClick}
+            >
+              SIMU
+            </Button>
+          </div>
+          <div style={{ marginLeft: "auto" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleEditNoResetClick}
+            >
+              <SportsEsportsIcon />
+            </Button>
+          </div>
         </div>
       </div>
       <Divider />

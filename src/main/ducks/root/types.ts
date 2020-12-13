@@ -4,21 +4,27 @@ import {
   FieldState,
   HoldState,
   NextNote,
+  ReplayStep,
   Tetromino,
-  TetsimuMode
+  TetsimuMode,
 } from "types/core";
-import { SimuRetryState } from 'types/simu';
+import { ReplayStateHistory } from "types/replay";
+import { SimuRetryState } from "types/simu";
 
 export const RootActionsType = {
   ChangeTetsimuMode: "root/changeTetsimuMode",
   EditToSimuMode: "root/editToSimuMode",
+  ReplayToSimuMode: "root/replayToSimuMode",
   SimuToEditMode: "root/simuToEditMode",
+  SimuToReplayMode: "root/simuToReplayMode",
 } as const;
 
 export type RootActions =
   | ChangeTetsimuModeAction
   | EditToSimuAction
-  | SimuToEditAction;
+  | ReplayToSimuAction
+  | SimuToEditAction
+  | SimuToReplayAction;
 
 export type ChangeTetsimuModeAction = {
   type: typeof RootActionsType.ChangeTetsimuMode;
@@ -44,6 +50,25 @@ export type EditToSimuAction = {
   };
 } & Action;
 
+export type ReplayToSimuAction = {
+  type: typeof RootActionsType.ReplayToSimuMode;
+  payload: {
+    current: ActiveTetromino;
+    field: FieldState;
+    hold: HoldState;
+    isDead: boolean;
+    lastRoseUpColumn: number;
+    nexts: {
+      bag: NextNote;
+      nextNum: number;
+      settled: Tetromino[];
+      unsettled: NextNote[];
+    };
+    retryState: SimuRetryState;
+    seed: number;
+  };
+} & Action;
+
 export type SimuToEditAction = {
   type: typeof RootActionsType.SimuToEditMode;
   payload: {
@@ -56,5 +81,23 @@ export type SimuToEditAction = {
       nextsPattern: string;
       noOfCycle: number;
     };
+  };
+} & Action;
+
+export type SimuToReplayAction = {
+  type: typeof RootActionsType.SimuToReplayMode;
+  payload: {
+    current: ActiveTetromino;
+    field: FieldState;
+    histories: ReplayStateHistory[];
+    hold: HoldState;
+    isDead: boolean;
+    nexts: Tetromino[];
+    noOfCycle: number;
+    replayInfo: {
+      nextNum: number;
+    };
+    replaySteps: ReplayStep[];
+    step: number;
   };
 } & Action;
