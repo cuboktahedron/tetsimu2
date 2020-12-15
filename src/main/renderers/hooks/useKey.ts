@@ -18,6 +18,12 @@ export const useKey = (): ControllerKeys => {
 
   React.useEffect(() => {
     const callback = (e: KeyboardEvent) => {
+      const target = e.target as Element;
+      const nodeName = target?.nodeName.toLowerCase();
+      if (nodeName === "input") {
+        return;
+      }
+
       if (e.shiftKey || e.altKey || e.ctrlKey) {
         return;
       }
@@ -59,6 +65,12 @@ export const useKey = (): ControllerKeys => {
 
   React.useEffect(() => {
     const callback = (e: KeyboardEvent) => {
+      const target = e.target as Element;
+      const nodeName = target?.nodeName.toLowerCase();
+      if (nodeName === "input") {
+        return;
+      }
+
       switch (e.key.toLowerCase()) {
         case "arrowup":
           keys["ArrowUp"].up();

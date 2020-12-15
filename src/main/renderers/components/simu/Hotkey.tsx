@@ -22,6 +22,12 @@ const HotKey: React.FC = () => {
 
   React.useEffect(() => {
     const callback = (e: KeyboardEvent) => {
+      const target = e.target as Element;
+      const nodeName = target?.nodeName.toLowerCase();
+      if (nodeName === "input") {
+        return;
+      }
+
       if (e.shiftKey) {
         switch (e.key.toLowerCase()) {
           case "b":
@@ -51,6 +57,12 @@ const HotKey: React.FC = () => {
 
   React.useEffect(() => {
     const callback = (e: KeyboardEvent) => {
+      const target = e.target as Element;
+      const nodeName = target?.nodeName.toLowerCase();
+      if (nodeName === "input") {
+        return;
+      }
+
       if (e.key === "Shift") {
         subKeys["shift + b"].up();
         subKeys["shift + r"].up();
