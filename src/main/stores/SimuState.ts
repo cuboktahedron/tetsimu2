@@ -8,7 +8,7 @@ import {
   NextNote,
   ReplayStep,
   TapControllerType,
-  Tetromino,
+  Tetromino
 } from "types/core";
 import { PlayMode, SimuConfig, SimuRetryState } from "types/simu";
 import { makeFullNextNote } from "utils/tetsimu/functions";
@@ -26,6 +26,7 @@ export type SimuStateHistory = {
     unsettled: NextNote[];
     bag: NextNote;
   };
+  replayNextStep: number;
   replayStep: number;
   seed: number;
 };
@@ -46,6 +47,8 @@ export type SimuState = {
     unsettled: NextNote[];
     bag: NextNote;
   };
+  replayNextStep: number;
+  replayNexts: Tetromino[];
   replayStep: number;
   replaySteps: ReplayStep[];
   retryState: SimuRetryState;
@@ -122,6 +125,8 @@ export const initialSimuState: SimuState = ((): SimuState => {
       ? TapControllerType.TypeB
       : TapControllerType.None,
   };
+
+  const replayNexts = nexts;
   return {
     config,
     current,
@@ -137,6 +142,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
         isDead: false,
         lastRoseUpColumn: -1,
         nexts: nextsInfo,
+        replayNextStep: replayNexts.length,
         replayStep: 0,
         seed: rng.seed,
       },
@@ -145,6 +151,8 @@ export const initialSimuState: SimuState = ((): SimuState => {
     isDead: false,
     lastRoseUpColumn: -1,
     nexts: nextsInfo,
+    replayNextStep: replayNexts.length,
+    replayNexts: replayNexts,
     replayStep: 0,
     replaySteps: [],
     retryState: retryState,

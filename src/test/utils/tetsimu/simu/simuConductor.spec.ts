@@ -10,7 +10,7 @@ import { makeSimuState } from "../../../utils/tetsimu/testUtils/makeSimuState";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
-  makeReplayHoldStep
+  makeReplayHoldStep,
 } from "../testUtils/makeReplayStep";
 
 describe("simuConductor", () => {
@@ -25,6 +25,8 @@ describe("simuConductor", () => {
           unsettled: [makeNextNote("J", 1), makeNextNote("I", 1)],
           bag: makeNextNote("JI", 2),
         },
+        replayNexts: [Tetromino.S, Tetromino.Z],
+        replayNextStep: 2,
         seed: makeSeed(1),
       });
       const conductor = getSimuConductor(state);
@@ -47,6 +49,7 @@ describe("simuConductor", () => {
               unsettled: [makeNextNote("I", 1)],
               bag: makeNextNote("I", 1),
             },
+            replayNextStep: 3,
             replayStep: 1,
             seed: makeSeed(41702199),
           },
@@ -58,6 +61,8 @@ describe("simuConductor", () => {
           unsettled: [makeNextNote("I", 1)],
           bag: makeNextNote("I", 1),
         },
+        replayNexts: [Tetromino.S, Tetromino.Z, Tetromino.J],
+        replayNextStep: 3,
         replayStep: 1,
         replaySteps: [makeReplayHoldStep()],
         step: 1,
@@ -77,6 +82,8 @@ describe("simuConductor", () => {
           unsettled: [makeNextNote("J", 1), makeNextNote("I", 1)],
           bag: makeNextNote("JI", 2),
         },
+        replayNexts: [Tetromino.S, Tetromino.Z],
+        replayNextStep: 2,
         seed: makeSeed(2),
       });
       const conductor = getSimuConductor(state);
@@ -99,6 +106,7 @@ describe("simuConductor", () => {
               unsettled: [makeNextNote("J", 1), makeNextNote("I", 1)],
               bag: makeNextNote("JI", 2),
             },
+            replayNextStep: 2,
             replayStep: 1,
             seed: makeSeed(2),
           },
@@ -110,10 +118,10 @@ describe("simuConductor", () => {
           unsettled: [makeNextNote("J", 1), makeNextNote("I", 1)],
           bag: makeNextNote("JI", 2),
         },
+        replayNexts: [Tetromino.S, Tetromino.Z],
+        replayNextStep: 2,
         replayStep: 1,
-        replaySteps: [
-          makeReplayHoldStep(),
-        ],
+        replaySteps: [makeReplayHoldStep()],
         step: 1,
         seed: makeSeed(2),
       };
@@ -156,6 +164,8 @@ describe("simuConductor", () => {
             unsettled: [makeNextNote("J", 1), makeNextNote("I", 1)],
             bag: makeNextNote("JI", 2),
           },
+          replayNexts: [Tetromino.S, Tetromino.Z],
+          replayNextStep: 2,
           seed: makeSeed(3),
         });
         const conductor = getSimuConductor(state);
@@ -189,6 +199,7 @@ describe("simuConductor", () => {
                 unsettled: [makeNextNote("I", 1)],
                 bag: makeNextNote("I", 1),
               },
+              replayNextStep: 3,
               replayStep: 2,
               seed: makeSeed(55079790),
             },
@@ -200,13 +211,15 @@ describe("simuConductor", () => {
             unsettled: [makeNextNote("I", 1)],
             bag: makeNextNote("I", 1),
           },
-          step: 1,
+          replayNexts: [Tetromino.S, Tetromino.Z, Tetromino.J],
+          replayNextStep: 3,
           replayStep: 2,
           replaySteps: [
             makeReplayDropStep(Direction.UP, 1, 1),
             makeReplayHardDropStep(),
           ],
           seed: makeSeed(55079790),
+          step: 1,
         };
 
         expect(actual).toEqual(expected);

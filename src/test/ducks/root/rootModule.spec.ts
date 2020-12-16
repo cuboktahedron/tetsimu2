@@ -3,7 +3,7 @@ import {
   editToSimuMode,
   replayToSimuMode,
   simuToEditMode,
-  simuToReplayMode
+  simuToReplayMode,
 } from "ducks/root/actions";
 import {
   ChangeTetsimuModeAction,
@@ -11,7 +11,7 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction
+  SimuToReplayAction,
 } from "ducks/root/types";
 import { Direction, Tetromino, TetsimuMode } from "types/core";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
@@ -250,26 +250,29 @@ describe("rootModule", () => {
               lastRoseUpColumn: -1,
               nexts: {
                 bag: makeNextNote("IJLTZ", 5),
-                settled: [
-                  Tetromino.Z,
-                  Tetromino.T,
-                  Tetromino.S,
-                  Tetromino.O,
-                  Tetromino.L,
-                  Tetromino.J,
-                  Tetromino.I,
-                  Tetromino.I,
-                  Tetromino.J,
-                  Tetromino.L,
-                  Tetromino.O,
-                  Tetromino.S,
-                ],
+                settled: [Tetromino.Z],
                 unsettled: [],
               },
+              replayNextStep: 12,
               replayStep: 1,
               seed: 1,
             },
           ],
+          replayNexts: [
+            Tetromino.Z,
+            Tetromino.T,
+            Tetromino.S,
+            Tetromino.O,
+            Tetromino.L,
+            Tetromino.J,
+            Tetromino.I,
+            Tetromino.I,
+            Tetromino.J,
+            Tetromino.L,
+            Tetromino.O,
+            Tetromino.S,
+          ],
+          replayNextStep: 12,
           replayStep: 1,
           replaySteps: [makeReplayHoldStep()],
         })

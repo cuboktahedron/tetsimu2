@@ -8,7 +8,7 @@ import {
   NextNote,
   ReplayStep,
   TapControllerType,
-  Tetromino,
+  Tetromino
 } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
 import { makeNextNote } from "./makeNextNote";
@@ -33,6 +33,8 @@ export const makeSimuState = (state: {
     unsettled?: NextNote[];
     bag?: NextNote;
   };
+  replayNexts?: Tetromino[];
+  replayNextStep?: number;
   replayStep?: number;
   replaySteps?: ReplayStep[];
   retryState?: SimuRetryState;
@@ -75,6 +77,8 @@ export const makeSimuState = (state: {
         unsettled: [],
         bag: makeNextNote("", 0),
       },
+      replayNexts: [],
+      replayNextStep: 0,
       replayStep: 0,
       replaySteps: [],
       retryState: {

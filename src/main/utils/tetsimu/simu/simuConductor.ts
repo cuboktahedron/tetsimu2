@@ -8,7 +8,7 @@ import {
   NextNote,
   ReplayStep,
   ReplayStepType,
-  Tetromino,
+  Tetromino
 } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
 import { FieldHelper } from "../fieldHelper";
@@ -31,10 +31,21 @@ export class SimuConductor {
     return this._state;
   }
 
+  recordReplayNexts(replayNexts: Tetromino[]) {
+    const newReplayNexts = this.state.replayNexts.slice(
+      0,
+      this.state.replayNextStep
+    );
+    newReplayNexts.push(...replayNexts);
+
+    this.state.replayNextStep = this.state.replayNextStep + replayNexts.length;
+    this.state.replayNexts = newReplayNexts;
+  }
+
   recordReplaySteps = (replaySteps: ReplayStep[]) => {
     const newReplaySteps = this.state.replaySteps.slice(
       0,
-      this.state.replayStep + 1
+      this.state.replayStep
     );
     newReplaySteps.push(...replaySteps);
 
@@ -51,6 +62,7 @@ export class SimuConductor {
       isDead: this.state.isDead,
       lastRoseUpColumn: this.state.lastRoseUpColumn,
       nexts: this.state.nexts,
+      replayNextStep: this.state.replayNexts.length,
       replayStep: this.state.replayStep,
       seed: this.state.seed,
     });
@@ -94,6 +106,8 @@ export class SimuConductor {
       unsettled: genNext.nextNotes,
       bag: genNext.bag,
     };
+    this.recordReplayNexts([genNext.type]);
+
     this.state.nexts = newNexts;
 
     const tetrominoToBeSettled = {
@@ -171,6 +185,8 @@ export class SimuConductor {
         unsettled: genNext.nextNotes,
         bag: genNext.bag,
       };
+      this.recordReplayNexts([genNext.type]);
+
     } else {
       newCurrentType = this.state.hold.type;
       newNexts = this.state.nexts;

@@ -216,7 +216,7 @@ export const simuToReplayMode = (state: SimuState): SimuToReplayAction => {
     type: history.currentType,
   };
 
-  const nexts = history.nexts.settled;
+  const nexts = state.replayNexts;
   const noOfCycle = (7 - history.nexts.bag.take + 1) % 7;
 
   return {

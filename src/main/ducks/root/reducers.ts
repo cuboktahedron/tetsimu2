@@ -23,7 +23,7 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
           ...state,
           mode: action.payload.mode,
         };
-      case RootActionsType.EditToSimuMode:
+      case RootActionsType.EditToSimuMode: {
         return {
           ...state,
           mode: TetsimuMode.Simu,
@@ -41,11 +41,14 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
                 isDead: false,
                 lastRoseUpColumn: action.payload.lastRoseUpColumn,
                 nexts: action.payload.nexts,
+                replayNextStep: action.payload.nexts.settled.length,
                 replayStep: 0,
                 seed: action.payload.seed,
               },
             ],
             isDead: false,
+            replayNexts: action.payload.nexts.settled,
+            replayNextStep: action.payload.nexts.settled.length,
             replayStep: 0,
             replaySteps: [],
             retryState: action.payload.retryState,
@@ -53,6 +56,7 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
             step: 0,
           },
         };
+      }
       case RootActionsType.ReplayToSimuMode:
         return {
           ...state,
@@ -77,10 +81,13 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
                 isDead: false,
                 lastRoseUpColumn: action.payload.lastRoseUpColumn,
                 nexts: action.payload.nexts,
+                replayNextStep: action.payload.nexts.settled.length,
                 replayStep: 0,
                 seed: action.payload.seed,
               },
             ],
+            replayNexts: action.payload.nexts.settled,
+            replayNextStep: action.payload.nexts.settled.length,
             replayStep: 0,
             replaySteps: [],
             retryState: action.payload.retryState,

@@ -31,18 +31,20 @@ const reducer = (state: SimuState, anyAction: Action): SimuState => {
             isDead: false,
             lastRoseUpColumn: action.payload.lastRoseUpColumn,
             nexts: action.payload.nexts,
+            replayNextStep: action.payload.nexts.settled.length,
             replayStep: 0,
             seed: action.payload.seed,
           },
         ],
         isDead: false,
+        replayNexts: action.payload.nexts.settled,
+        replayNextStep: action.payload.nexts.settled.length,
         replayStep: 0,
         replaySteps: [],
         retryState: action.payload.retryState,
         seed: action.payload.seed,
         step: 0,
       };
-
     case SimuActionsType.DoSimu: {
       if (!action.payload.succeeded) {
         return state;
@@ -58,6 +60,8 @@ const reducer = (state: SimuState, anyAction: Action): SimuState => {
         lastRoseUpColumn: action.payload.lastRoseUpColumn,
         nexts: action.payload.nexts,
         seed: action.payload.seed,
+        replayNexts: action.payload.replayNexts,
+        replayNextStep: action.payload.replayNextStep,
         replayStep: action.payload.replayStep,
         replaySteps: action.payload.replaySteps,
         step: action.payload.step,
@@ -72,6 +76,8 @@ const reducer = (state: SimuState, anyAction: Action): SimuState => {
         isDead: action.payload.isDead,
         lastRoseUpColumn: action.payload.lastRoseUpColumn,
         nexts: action.payload.nexts,
+        replayNextStep: action.payload.replayNextStep,
+        replayStep: action.payload.replayStep,
         seed: action.payload.seed,
         step: action.payload.step,
       };
@@ -91,11 +97,14 @@ const reducer = (state: SimuState, anyAction: Action): SimuState => {
             isDead: false,
             lastRoseUpColumn: action.payload.lastRoseUpColumn,
             nexts: action.payload.nexts,
+            replayNextStep: action.payload.nexts.settled.length,
             replayStep: 0,
             seed: action.payload.seed,
           },
         ],
         isDead: false,
+        replayNextStep: action.payload.nexts.settled.length,
+        replayNexts: action.payload.nexts.settled,
         replayStep: 0,
         replaySteps: [],
         seed: action.payload.seed,
@@ -116,17 +125,21 @@ const reducer = (state: SimuState, anyAction: Action): SimuState => {
             isDead: false,
             lastRoseUpColumn: action.payload.lastRoseUpColumn,
             nexts: action.payload.nexts,
+            replayNextStep: action.payload.nexts.settled.length,
             replayStep: 0,
             seed: action.payload.seed,
           },
         ],
         isDead: false,
+        replayNextStep: action.payload.nexts.settled.length,
+        replayNexts: action.payload.nexts.settled,
         replayStep: 0,
         replaySteps: [],
         retryState: action.payload.retryState,
         seed: action.payload.seed,
         step: 0,
       };
+
     case SimuActionsType.Undo: {
       return {
         ...state,
@@ -136,6 +149,8 @@ const reducer = (state: SimuState, anyAction: Action): SimuState => {
         isDead: action.payload.isDead,
         lastRoseUpColumn: action.payload.lastRoseUpColumn,
         nexts: action.payload.nexts,
+        replayNextStep: action.payload.replayNextStep,
+        replayStep: action.payload.replayStep,
         seed: action.payload.seed,
         step: action.payload.step,
       };

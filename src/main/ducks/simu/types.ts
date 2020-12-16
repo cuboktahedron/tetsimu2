@@ -81,6 +81,8 @@ export type DoSimuAction = {
           unsettled: NextNote[];
           bag: NextNote;
         };
+        replayNexts: Tetromino[];
+        replayNextStep: number;
         replayStep: number;
         replaySteps: ReplayStep[];
         seed: number;
@@ -105,6 +107,7 @@ export type RedoAction = {
       unsettled: NextNote[];
       bag: NextNote;
     };
+    replayNextStep: number;
     replayStep: number;
     seed: number;
     step: number;
@@ -157,6 +160,7 @@ export type UndoAction = {
       unsettled: NextNote[];
       bag: NextNote;
     };
+    replayNextStep: number;
     replayStep: number;
     seed: number;
     step: number;
