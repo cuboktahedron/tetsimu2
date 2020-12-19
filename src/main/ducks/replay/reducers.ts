@@ -10,15 +10,10 @@ const reducer = (state: ReplayState, anyAction: Action): ReplayState => {
       if (!action.payload.succeeded) {
         return state;
       } else {
+        const { succeeded, ...payload } = action.payload;
         return {
           ...state,
-          current: action.payload.current,
-          field: action.payload.field,
-          hold: action.payload.hold,
-          isDead: action.payload.isDead,
-          nexts: action.payload.nexts,
-          noOfCycle: action.payload.noOfCycle,
-          step: action.payload.step,
+          ...payload,
         };
       }
     case ReplayActionsType.ChangeConfig:
@@ -30,16 +25,10 @@ const reducer = (state: ReplayState, anyAction: Action): ReplayState => {
       if (!action.payload.succeeded) {
         return state;
       } else {
+        const { succeeded, ...payload } = action.payload;
         return {
           ...state,
-          current: action.payload.current,
-          field: action.payload.field,
-          histories: action.payload.histories,
-          hold: action.payload.hold,
-          isDead: action.payload.isDead,
-          nexts: action.payload.nexts,
-          noOfCycle: action.payload.noOfCycle,
-          step: action.payload.step,
+          ...payload,
         };
       }
     case ReplayActionsType.ChangeZoom:
@@ -51,16 +40,10 @@ const reducer = (state: ReplayState, anyAction: Action): ReplayState => {
       if (!action.payload.succeeded) {
         return state;
       } else {
+        const { succeeded, ...payload } = action.payload;
         return {
           ...state,
-          current: action.payload.current,
-          field: action.payload.field,
-          histories: action.payload.histories,
-          hold: action.payload.hold,
-          isDead: action.payload.isDead,
-          nexts: action.payload.nexts,
-          noOfCycle: action.payload.noOfCycle,
-          step: action.payload.step,
+          ...payload,
         };
       }
   }

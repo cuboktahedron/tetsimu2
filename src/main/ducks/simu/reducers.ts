@@ -19,140 +19,40 @@ const reducer = (state: SimuState, anyAction: Action): SimuState => {
     case SimuActionsType.Clear:
       return {
         ...state,
-        current: action.payload.current,
-        field: action.payload.field,
-        hold: action.payload.hold,
-        nexts: action.payload.nexts,
-        histories: [
-          {
-            currentType: action.payload.current.type,
-            field: action.payload.field,
-            hold: action.payload.hold,
-            isDead: false,
-            lastRoseUpColumn: action.payload.lastRoseUpColumn,
-            nexts: action.payload.nexts,
-            replayNextStep: action.payload.nexts.settled.length,
-            replayStep: 0,
-            seed: action.payload.seed,
-          },
-        ],
-        isDead: false,
-        replayNexts: action.payload.nexts.settled,
-        replayNextStep: action.payload.nexts.settled.length,
-        replayStep: 0,
-        replaySteps: [],
-        retryState: action.payload.retryState,
-        seed: action.payload.seed,
-        step: 0,
+        ...action.payload,
       };
     case SimuActionsType.DoSimu: {
       if (!action.payload.succeeded) {
         return state;
       }
 
+      const { succeeded, ...payload } = action.payload;
       return {
         ...state,
-        current: action.payload.current,
-        field: action.payload.field,
-        histories: action.payload.histories,
-        hold: action.payload.hold,
-        isDead: action.payload.isDead,
-        lastRoseUpColumn: action.payload.lastRoseUpColumn,
-        nexts: action.payload.nexts,
-        seed: action.payload.seed,
-        replayNexts: action.payload.replayNexts,
-        replayNextStep: action.payload.replayNextStep,
-        replayStep: action.payload.replayStep,
-        replaySteps: action.payload.replaySteps,
-        step: action.payload.step,
+        ...payload,
       };
     }
     case SimuActionsType.Redo: {
       return {
         ...state,
-        current: action.payload.current,
-        field: action.payload.field,
-        hold: action.payload.hold,
-        isDead: action.payload.isDead,
-        lastRoseUpColumn: action.payload.lastRoseUpColumn,
-        nexts: action.payload.nexts,
-        replayNextStep: action.payload.replayNextStep,
-        replayStep: action.payload.replayStep,
-        seed: action.payload.seed,
-        step: action.payload.step,
+        ...action.payload,
       };
     }
     case SimuActionsType.Retry:
       return {
         ...state,
-        current: action.payload.current,
-        field: action.payload.field,
-        hold: action.payload.hold,
-        nexts: action.payload.nexts,
-        histories: [
-          {
-            currentType: action.payload.current.type,
-            field: action.payload.field,
-            hold: action.payload.hold,
-            isDead: false,
-            lastRoseUpColumn: action.payload.lastRoseUpColumn,
-            nexts: action.payload.nexts,
-            replayNextStep: action.payload.nexts.settled.length,
-            replayStep: 0,
-            seed: action.payload.seed,
-          },
-        ],
-        isDead: false,
-        replayNextStep: action.payload.nexts.settled.length,
-        replayNexts: action.payload.nexts.settled,
-        replayStep: 0,
-        replaySteps: [],
-        seed: action.payload.seed,
-        step: 0,
+        ...action.payload,
       };
     case SimuActionsType.SuperRetry:
       return {
         ...state,
-        current: action.payload.current,
-        field: action.payload.field,
-        hold: action.payload.hold,
-        nexts: action.payload.nexts,
-        histories: [
-          {
-            currentType: action.payload.current.type,
-            field: action.payload.field,
-            hold: action.payload.hold,
-            isDead: false,
-            lastRoseUpColumn: action.payload.lastRoseUpColumn,
-            nexts: action.payload.nexts,
-            replayNextStep: action.payload.nexts.settled.length,
-            replayStep: 0,
-            seed: action.payload.seed,
-          },
-        ],
-        isDead: false,
-        replayNextStep: action.payload.nexts.settled.length,
-        replayNexts: action.payload.nexts.settled,
-        replayStep: 0,
-        replaySteps: [],
-        retryState: action.payload.retryState,
-        seed: action.payload.seed,
-        step: 0,
+        ...action.payload,
       };
 
     case SimuActionsType.Undo: {
       return {
         ...state,
-        current: action.payload.current,
-        field: action.payload.field,
-        hold: action.payload.hold,
-        isDead: action.payload.isDead,
-        lastRoseUpColumn: action.payload.lastRoseUpColumn,
-        nexts: action.payload.nexts,
-        replayNextStep: action.payload.replayNextStep,
-        replayStep: action.payload.replayStep,
-        seed: action.payload.seed,
-        step: action.payload.step,
+        ...action.payload,
       };
     }
   }

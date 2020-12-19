@@ -6,7 +6,9 @@ import { PlayMode, SimuRetryState } from "types/simu";
 import { sleep } from "utils/function";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { makeField } from "../../utils/tetsimu/testUtils/makeField";
+import { makeHold } from "../../utils/tetsimu/testUtils/makeHold";
 import { makeNextNote } from "../../utils/tetsimu/testUtils/makeNextNote";
+import { makeReplayHoldStep } from "../../utils/tetsimu/testUtils/makeReplayStep";
 import { makeSeed } from "../../utils/tetsimu/testUtils/makeSeed";
 import { makeSimuState } from "../../utils/tetsimu/testUtils/makeSimuState";
 
@@ -17,11 +19,8 @@ describe("simuModule", () => {
       const retryState: SimuRetryState = {
         bag: makeNextNote("IOT", 3),
         field: makeField("IJLOSTZNNN"),
-        hold: {
-          canHold: false,
-          type: Tetromino.T,
-        },
-        lastRoseUpColumn: -1,
+        hold: makeHold(Tetromino.T, false),
+        lastRoseUpColumn: 3,
         unsettledNexts: new NextNotesInterpreter().interpret("I"),
         seed: makeSeed(1),
       };
@@ -30,7 +29,13 @@ describe("simuModule", () => {
         getSimuConductor(
           makeSimuState({
             config,
+            isDead: true,
             retryState,
+            replayNexts: [Tetromino.I],
+            replayNextStep: 10,
+            replayStep: 1,
+            replaySteps: [makeReplayHoldStep()],
+            step: 3,
           })
         )
       );
@@ -39,15 +44,30 @@ describe("simuModule", () => {
           makeSimuState({
             config,
             retryState,
+            replayNexts: [Tetromino.I],
+            replayNextStep: 10,
+            replayStep: 1,
+            replaySteps: [makeReplayHoldStep()],
+            step: 3,
           })
         )
       );
 
       expect(actual1).toEqual(actual2);
       expect(actual1.type).toBe(SimuActionsType.Retry);
-      expect(actual1.payload.field).toEqual(retryState.field);
-      expect(actual1.payload.nexts.settled.length).toEqual(12);
       expect(actual1.payload.current.type).toEqual(Tetromino.I);
+      expect(actual1.payload.field).toEqual(retryState.field);
+      expect(actual1.payload.hold).toEqual(retryState.hold);
+      expect(actual1.payload.isDead).toBeFalsy();
+      expect(actual1.payload.lastRoseUpColumn).toEqual(
+        retryState.lastRoseUpColumn
+      );
+      expect(actual1.payload.nexts.settled.length).toEqual(12);
+      expect(actual1.payload.replayNextStep).toEqual(12);
+      expect(actual1.payload.replayNexts.length).toEqual(12);
+      expect(actual1.payload.replayStep).toEqual(0);
+      expect(actual1.payload.replaySteps.length).toEqual(0);
+      expect(actual1.payload.step).toEqual(0);
     });
   });
 
@@ -57,11 +77,8 @@ describe("simuModule", () => {
       const retryState: SimuRetryState = {
         bag: makeNextNote("IOT", 3),
         field: makeField("IJLOSTZNNN"),
-        hold: {
-          canHold: false,
-          type: Tetromino.T,
-        },
-        lastRoseUpColumn: -1,
+        hold: makeHold(Tetromino.T, false),
+        lastRoseUpColumn: 3,
         unsettledNexts: new NextNotesInterpreter().interpret("[IJL]p3"),
         seed: makeSeed(1),
       };
@@ -71,6 +88,11 @@ describe("simuModule", () => {
           makeSimuState({
             config,
             retryState,
+            replayNexts: [Tetromino.I],
+            replayNextStep: 10,
+            replayStep: 1,
+            replaySteps: [makeReplayHoldStep()],
+            step: 3,
           })
         )
       );
@@ -86,6 +108,7 @@ describe("simuModule", () => {
 
       expect(actual1).not.toEqual(actual2);
       expect(actual1.type).toBe(SimuActionsType.SuperRetry);
+      expect(actual1.payload.current.type).toEqual(Tetromino.I);
       expect(actual1.payload.field).toEqual(actual2.payload.field);
       expect(actual1.payload.hold).toEqual(actual2.payload.hold);
       expect(actual1.payload.lastRoseUpColumn).toEqual(
@@ -103,6 +126,19 @@ describe("simuModule", () => {
       expect(actual1.payload.retryState.unsettledNexts).toEqual(
         actual2.payload.retryState.unsettledNexts
       );
+
+      expect(actual1.payload.field).toEqual(retryState.field);
+      expect(actual1.payload.hold).toEqual(retryState.hold);
+      expect(actual1.payload.isDead).toBeFalsy();
+      expect(actual1.payload.lastRoseUpColumn).toEqual(
+        retryState.lastRoseUpColumn
+      );
+      expect(actual1.payload.nexts.settled.length).toEqual(12);
+      expect(actual1.payload.replayNextStep).toEqual(12);
+      expect(actual1.payload.replayNexts.length).toEqual(12);
+      expect(actual1.payload.replayStep).toEqual(0);
+      expect(actual1.payload.replaySteps.length).toEqual(0);
+      expect(actual1.payload.step).toEqual(0);
     });
 
     it("should retry with dig mode(rose up rate 100%)", async () => {

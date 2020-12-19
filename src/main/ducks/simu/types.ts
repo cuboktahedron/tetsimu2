@@ -55,14 +55,21 @@ export type ClearSimuAction = {
     field: FieldState;
     hold: HoldState;
     current: ActiveTetromino;
+    histories: SimuStateHistory[];
+    isDead: boolean;
     lastRoseUpColumn: number;
     nexts: {
       settled: Tetromino[];
       unsettled: NextNote[];
       bag: NextNote;
     };
+    replayNexts: Tetromino[];
+    replayNextStep: number;
+    replayStep: number;
+    replaySteps: ReplayStep[];
     retryState: SimuRetryState;
     seed: number;
+    step: number;
   };
 } & Action;
 
@@ -117,33 +124,47 @@ export type RedoAction = {
 export type RetryAction = {
   type: typeof SimuActionsType.Retry;
   payload: {
-    field: FieldState;
-    hold: HoldState;
     current: ActiveTetromino;
+    field: FieldState;
+    isDead: boolean;
+    histories: SimuStateHistory[];
+    hold: HoldState;
     lastRoseUpColumn: number;
     nexts: {
       settled: Tetromino[];
       unsettled: NextNote[];
       bag: NextNote;
     };
+    replayNexts: Tetromino[];
+    replayNextStep: number;
+    replayStep: number;
+    replaySteps: ReplayStep[];
     seed: number;
+    step: number;
   };
 } & Action;
 
 export type SuperRetryAction = {
   type: typeof SimuActionsType.SuperRetry;
   payload: {
-    field: FieldState;
-    hold: HoldState;
     current: ActiveTetromino;
+    field: FieldState;
+    isDead: boolean;
+    histories: SimuStateHistory[];
+    hold: HoldState;
     lastRoseUpColumn: number;
     nexts: {
       settled: Tetromino[];
       unsettled: NextNote[];
       bag: NextNote;
     };
+    replayNexts: Tetromino[];
+    replayNextStep: number;
+    replayStep: number;
+    replaySteps: ReplayStep[];
     retryState: SimuRetryState;
     seed: number;
+    step: number;
   };
 } & Action;
 

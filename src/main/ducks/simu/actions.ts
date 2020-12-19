@@ -42,11 +42,18 @@ export const clearSimu = (conductor: SimuConductor): ClearSimuAction => {
     payload: {
       current: newState.current,
       field: newState.field,
+      histories: newState.histories,
       hold: newState.hold,
+      isDead: newState.isDead,
       nexts: newState.nexts,
       lastRoseUpColumn: newState.lastRoseUpColumn,
+      replayNextStep: newState.replayNextStep,
+      replayNexts: newState.replayNexts,
+      replayStep: newState.replayStep,
+      replaySteps: newState.replaySteps,
       retryState: newState.retryState,
       seed: newState.seed,
+      step: newState.step,
     },
   };
 };
@@ -152,10 +159,17 @@ export const retry = (conductor: SimuConductor): RetryAction => {
     payload: {
       current: newState.current,
       field: newState.field,
+      histories: newState.histories,
       hold: newState.hold,
+      isDead: newState.isDead,
       lastRoseUpColumn: newState.lastRoseUpColumn,
       nexts: newState.nexts,
+      replayNextStep: newState.replayNextStep,
+      replayNexts: newState.replayNexts,
+      replayStep: newState.replayStep,
+      replaySteps: newState.replaySteps,
       seed: newState.seed,
+      step: newState.step,
     },
   };
 };
@@ -169,11 +183,18 @@ export const superRetry = (conductor: SimuConductor): SuperRetryAction => {
     payload: {
       current: newState.current,
       field: newState.field,
+      histories: newState.histories,
+      isDead: newState.isDead,
       hold: newState.hold,
       nexts: newState.nexts,
       lastRoseUpColumn: newState.lastRoseUpColumn,
       retryState: newState.retryState,
+      replayNextStep: newState.replayNextStep,
+      replayNexts: newState.replayNexts,
+      replayStep: newState.replayStep,
+      replaySteps: newState.replaySteps,
       seed: newState.seed,
+      step: newState.step,
     },
   };
 };

@@ -186,7 +186,6 @@ export class SimuConductor {
         bag: genNext.bag,
       };
       this.recordReplayNexts([genNext.type]);
-
     } else {
       newCurrentType = this.state.hold.type;
       newNexts = this.state.nexts;
@@ -286,7 +285,7 @@ export class SimuConductor {
     };
     const newField = this.state.retryState.field;
     const newHold = this.state.retryState.hold;
-    const lastRoseUpColumn = this.state.retryState.lastRoseUpColumn;
+    const newLastRoseUpColumn = this.state.retryState.lastRoseUpColumn;
     const newNexts = {
       settled: newNextSettles,
       unsettled: lastGenNext.nextNotes,
@@ -295,10 +294,29 @@ export class SimuConductor {
 
     this.state.current = newCurrent;
     this.state.field = newField;
+    this.state.isDead = false;
+    this.state.histories = [
+      {
+        currentType: newCurrent.type,
+        field: newField,
+        hold: newHold,
+        isDead: false,
+        lastRoseUpColumn: newLastRoseUpColumn,
+        nexts: newNexts,
+        replayNextStep: newNexts.settled.length,
+        replayStep: 0,
+        seed: rgn.seed,
+      },
+    ];
     this.state.hold = newHold;
-    this.state.lastRoseUpColumn = lastRoseUpColumn;
+    this.state.lastRoseUpColumn = newLastRoseUpColumn;
     this.state.nexts = newNexts;
+    this.state.replayNextStep = newNexts.settled.length;
+    this.state.replayNexts = newNexts.settled;
+    this.state.replayStep = 0;
+    this.state.replaySteps = [];
     this.state.seed = rgn.seed;
+    this.state.step = 0;
   }
 
   rotateTetrominoLeft(): boolean {
@@ -384,11 +402,30 @@ export class SimuConductor {
 
     this.state.current = newCurrent;
     this.state.field = newField;
+    this.state.isDead = false;
+    this.state.histories = [
+      {
+        currentType: newCurrent.type,
+        field: newField,
+        hold: newHold,
+        isDead: false,
+        lastRoseUpColumn: newLastRoseUpColumn,
+        nexts: newNexts,
+        replayNextStep: newNexts.settled.length,
+        replayStep: 0,
+        seed: rgn.seed,
+      },
+    ];
     this.state.hold = newHold;
     this.state.lastRoseUpColumn = newLastRoseUpColumn;
     this.state.nexts = newNexts;
     this.state.retryState = newRetryState;
+    this.state.replayNextStep = newNexts.settled.length;
+    this.state.replayNexts = newNexts.settled;
+    this.state.replayStep = 0;
+    this.state.replaySteps = [];
     this.state.seed = rgn.seed;
+    this.state.step = 0;
   }
 
   private resetFieldWithDigModeSuperRetry(): [FieldState, number] {
