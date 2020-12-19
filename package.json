@@ -16,9 +16,11 @@
   "devDependencies": {
     "@material-ui/core": "^4.8.3",
     "@material-ui/icons": "^4.5.1",
+    "@react-hook/window-size": "^3.0.7",
     "@testing-library/react": "^10.0.3",
     "@types/jest": "^26.0.3",
     "@types/jquery": "^3.5.0",
+    "@types/mersenne-twister": "^1.1.2",
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
     "@typescript-eslint/eslint-plugin": "^3.4.0",
@@ -39,18 +41,15 @@
     "sass-loader": "^9.0.1",
     "ts-jest": "^26.1.1",
     "ts-loader": "^7.0.5",
+    "typed-loquat": "https://github.com/susisu/typed-loquat",
     "typescript": "^3.7.4",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10",
     "webpack-merge": "^5.0.9"
   },
   "dependencies": {
-    "@react-hook/window-size": "^3.0.7",
-    "@types/mersenne-twister": "^1.1.2",
     "deep-object-diff": "^1.1.0",
     "mersenne-twister": "^1.1.0",
-    "react-hotkeys-hook": "^2.2.2",
-    "tslib": "^2.0.0",
-    "typed-loquat": "https://github.com/susisu/typed-loquat"
+    "tslib": "^2.0.0"
   }
 }
