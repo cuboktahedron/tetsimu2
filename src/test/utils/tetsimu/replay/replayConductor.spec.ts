@@ -4,13 +4,13 @@ import { Direction, Tetromino } from "types/core";
 import { makeCurrent } from "../testUtils/makeCurrent";
 import { makeField } from "../testUtils/makeField";
 import { makeHold } from "../testUtils/makeHold";
-import { makeNextTypes } from "../testUtils/makeNextTypes";
 import { makeReplayState } from "../testUtils/makeReplayState";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
   makeReplayHoldStep,
 } from "../testUtils/makeReplayStep";
+import { makeTetrominos } from "../testUtils/makeTetrominos";
 
 describe("replayConductor", () => {
   describe("forwardStep", () => {
@@ -24,12 +24,12 @@ describe("replayConductor", () => {
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.NONE, true),
             isDead: false,
-            nexts: makeNextTypes("J"),
+            nexts: makeTetrominos("J"),
             noOfCycle: 1,
           },
         ],
         hold: makeHold(Tetromino.NONE, true),
-        nexts: makeNextTypes("J"),
+        nexts: makeTetrominos("J"),
         replaySteps: [makeReplayDropStep(Direction.UP, 1, 0)],
       });
       const conductor = getReplayConductor(state);
@@ -65,12 +65,12 @@ describe("replayConductor", () => {
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.NONE, true),
             isDead: false,
-            nexts: makeNextTypes("J"),
+            nexts: makeTetrominos("J"),
             noOfCycle: 1,
           },
         ],
         hold: makeHold(Tetromino.NONE, true),
-        nexts: makeNextTypes("J"),
+        nexts: makeTetrominos("J"),
         replaySteps: [makeReplayHoldStep()],
       });
       const conductor = getReplayConductor(state);
@@ -91,7 +91,7 @@ describe("replayConductor", () => {
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.I, false),
             isDead: false,
-            nexts: makeNextTypes(""),
+            nexts: makeTetrominos(""),
             noOfCycle: 2,
           },
         ],
@@ -114,12 +114,12 @@ describe("replayConductor", () => {
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.NONE, true),
             isDead: false,
-            nexts: makeNextTypes("J"),
+            nexts: makeTetrominos("J"),
             noOfCycle: 1,
           },
         ],
         hold: makeHold(Tetromino.NONE, true),
-        nexts: makeNextTypes("J"),
+        nexts: makeTetrominos("J"),
         replaySteps: [makeReplayHardDropStep()],
       });
       const conductor = getReplayConductor(state);
@@ -140,7 +140,7 @@ describe("replayConductor", () => {
             field: makeField("IIIINNNNNN"),
             hold: makeHold(Tetromino.NONE, true),
             isDead: false,
-            nexts: makeNextTypes(""),
+            nexts: makeTetrominos(""),
             noOfCycle: 2,
           },
         ],
@@ -163,12 +163,12 @@ describe("replayConductor", () => {
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
-            nexts: makeNextTypes("J"),
+            nexts: makeTetrominos("J"),
             noOfCycle: 1,
           },
         ],
         hold: makeHold(Tetromino.T, false),
-        nexts: makeNextTypes("J"),
+        nexts: makeTetrominos("J"),
         replaySteps: [makeReplayHardDropStep([1, 2, 3])],
       });
       const conductor = getReplayConductor(state);
@@ -202,7 +202,7 @@ describe("replayConductor", () => {
             ),
             hold: makeHold(Tetromino.T, true),
             isDead: false,
-            nexts: makeNextTypes(""),
+            nexts: makeTetrominos(""),
             noOfCycle: 2,
           },
         ],
@@ -226,7 +226,7 @@ describe("replayConductor", () => {
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
-            nexts: makeNextTypes("J"),
+            nexts: makeTetrominos("J"),
             noOfCycle: 1,
           },
           {
@@ -234,12 +234,12 @@ describe("replayConductor", () => {
             field: makeField("IIIINNNNNN"),
             hold: makeHold(Tetromino.T, true),
             isDead: false,
-            nexts: makeNextTypes(""),
+            nexts: makeTetrominos(""),
             noOfCycle: 2,
           },
         ],
         hold: makeHold(Tetromino.T, true),
-        nexts: makeNextTypes(""),
+        nexts: makeTetrominos(""),
         replaySteps: [makeReplayHardDropStep()],
         step: 1,
       });
@@ -271,12 +271,12 @@ describe("replayConductor", () => {
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
-            nexts: makeNextTypes("JO"),
+            nexts: makeTetrominos("JO"),
             noOfCycle: 1,
           },
         ],
         hold: makeHold(Tetromino.T, false),
-        nexts: makeNextTypes("JO"),
+        nexts: makeTetrominos("JO"),
         noOfCycle: 1,
         replaySteps: [
           makeReplayDropStep(Direction.DOWN, 1, 1),
@@ -296,7 +296,7 @@ describe("replayConductor", () => {
         field: makeField("IIIINNNNNN"),
         hold: makeHold(Tetromino.T, true),
         isDead: false,
-        nexts: makeNextTypes("O"),
+        nexts: makeTetrominos("O"),
         noOfCycle: 2,
         histories: [
           { ...state.histories[0] },
@@ -309,7 +309,7 @@ describe("replayConductor", () => {
             field: makeField("IIIINNNNNN"),
             hold: makeHold(Tetromino.T, true),
             isDead: false,
-            nexts: makeNextTypes("O"),
+            nexts: makeTetrominos("O"),
             noOfCycle: 2,
           },
         ],
@@ -329,7 +329,7 @@ describe("replayConductor", () => {
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
-            nexts: makeNextTypes("JO"),
+            nexts: makeTetrominos("JO"),
             noOfCycle: 1,
           },
           {
@@ -337,7 +337,7 @@ describe("replayConductor", () => {
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
-            nexts: makeNextTypes("JO"),
+            nexts: makeTetrominos("JO"),
             noOfCycle: 1,
           },
           {
@@ -345,12 +345,12 @@ describe("replayConductor", () => {
             field: makeField("IIIINNNNNN"),
             hold: makeHold(Tetromino.T, true),
             isDead: false,
-            nexts: makeNextTypes("O"),
+            nexts: makeTetrominos("O"),
             noOfCycle: 2,
           },
         ],
         hold: makeHold(Tetromino.T, false),
-        nexts: makeNextTypes("JO"),
+        nexts: makeTetrominos("JO"),
         noOfCycle: 1,
         replaySteps: [
           makeReplayDropStep(Direction.DOWN, 1, 1),
@@ -392,7 +392,7 @@ describe("replayConductor", () => {
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
-            nexts: makeNextTypes("JO"),
+            nexts: makeTetrominos("JO"),
             noOfCycle: 1,
           },
           {
@@ -400,7 +400,7 @@ describe("replayConductor", () => {
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
-            nexts: makeNextTypes("JO"),
+            nexts: makeTetrominos("JO"),
             noOfCycle: 1,
           },
           {
@@ -408,13 +408,13 @@ describe("replayConductor", () => {
             field: makeField("IIIINNNNNN"),
             hold: makeHold(Tetromino.T, true),
             isDead: false,
-            nexts: makeNextTypes("O"),
+            nexts: makeTetrominos("O"),
             noOfCycle: 2,
           },
         ],
         hold: makeHold(Tetromino.T, true),
         isDead: false,
-        nexts: makeNextTypes("O"),
+        nexts: makeTetrominos("O"),
         noOfCycle: 2,
         replaySteps: [
           makeReplayDropStep(Direction.DOWN, 1, 1),

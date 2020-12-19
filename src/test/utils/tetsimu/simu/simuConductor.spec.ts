@@ -4,7 +4,10 @@ import { Direction, Tetromino } from "types/core";
 import { makeCurrent } from "../../../utils/tetsimu/testUtils/makeCurrent";
 import { makeField } from "../../../utils/tetsimu/testUtils/makeField";
 import { makeHold } from "../../../utils/tetsimu/testUtils/makeHold";
-import { makeNextNote } from "../../../utils/tetsimu/testUtils/makeNextNote";
+import {
+  makeNextNote,
+  makeNextNotes,
+} from "../../../utils/tetsimu/testUtils/makeNextNote";
 import { makeSeed } from "../../../utils/tetsimu/testUtils/makeSeed";
 import { makeSimuState } from "../../../utils/tetsimu/testUtils/makeSimuState";
 import {
@@ -12,6 +15,7 @@ import {
   makeReplayHardDropStep,
   makeReplayHoldStep,
 } from "../testUtils/makeReplayStep";
+import { makeTetrominos } from "../testUtils/makeTetrominos";
 
 describe("simuConductor", () => {
   describe("holdTetrimino", () => {
@@ -21,11 +25,11 @@ describe("simuConductor", () => {
         field: makeField("NNNNNNNNNN"),
         hold: makeHold(Tetromino.NONE, true),
         nexts: {
-          settled: [Tetromino.S, Tetromino.Z],
-          unsettled: [makeNextNote("J", 1), makeNextNote("I", 1)],
           bag: makeNextNote("JI", 2),
+          settled: makeTetrominos("SZ"),
+          unsettled: makeNextNotes("J I"),
         },
-        replayNexts: [Tetromino.S, Tetromino.Z],
+        replayNexts: makeTetrominos("SZ"),
         replayNextStep: 2,
         seed: makeSeed(1),
       });
@@ -45,9 +49,9 @@ describe("simuConductor", () => {
             isDead: false,
             lastRoseUpColumn: -1,
             nexts: {
-              settled: [Tetromino.Z, Tetromino.J],
-              unsettled: [makeNextNote("I", 1)],
               bag: makeNextNote("I", 1),
+              settled: makeTetrominos("ZJ"),
+              unsettled: makeNextNotes("I"),
             },
             replayNextStep: 3,
             replayStep: 1,
@@ -57,11 +61,11 @@ describe("simuConductor", () => {
         hold: makeHold(Tetromino.I, false),
         isDead: false,
         nexts: {
-          settled: [Tetromino.Z, Tetromino.J],
-          unsettled: [makeNextNote("I", 1)],
           bag: makeNextNote("I", 1),
+          settled: makeTetrominos("ZJ"),
+          unsettled: makeNextNotes("I"),
         },
-        replayNexts: [Tetromino.S, Tetromino.Z, Tetromino.J],
+        replayNexts: makeTetrominos("SZJ"),
         replayNextStep: 3,
         replayStep: 1,
         replaySteps: [makeReplayHoldStep()],
@@ -78,11 +82,11 @@ describe("simuConductor", () => {
         field: makeField("NNNNNNNNNN"),
         hold: makeHold(Tetromino.L, true),
         nexts: {
-          settled: [Tetromino.S, Tetromino.Z],
-          unsettled: [makeNextNote("J", 1), makeNextNote("I", 1)],
           bag: makeNextNote("JI", 2),
+          settled: makeTetrominos("SZ"),
+          unsettled: makeNextNotes("J I"),
         },
-        replayNexts: [Tetromino.S, Tetromino.Z],
+        replayNexts: makeTetrominos("SZ"),
         replayNextStep: 2,
         seed: makeSeed(2),
       });
@@ -102,9 +106,9 @@ describe("simuConductor", () => {
             isDead: false,
             lastRoseUpColumn: -1,
             nexts: {
-              settled: [Tetromino.S, Tetromino.Z],
-              unsettled: [makeNextNote("J", 1), makeNextNote("I", 1)],
               bag: makeNextNote("JI", 2),
+              settled: makeTetrominos("SZ"),
+              unsettled: makeNextNotes("J I"),
             },
             replayNextStep: 2,
             replayStep: 1,
@@ -114,11 +118,11 @@ describe("simuConductor", () => {
         hold: makeHold(Tetromino.T, false),
         isDead: false,
         nexts: {
-          settled: [Tetromino.S, Tetromino.Z],
-          unsettled: [makeNextNote("J", 1), makeNextNote("I", 1)],
           bag: makeNextNote("JI", 2),
+          settled: makeTetrominos("SZ"),
+          unsettled: makeNextNotes("J I"),
         },
-        replayNexts: [Tetromino.S, Tetromino.Z],
+        replayNexts: makeTetrominos("SZ"),
         replayNextStep: 2,
         replayStep: 1,
         replaySteps: [makeReplayHoldStep()],
@@ -135,8 +139,8 @@ describe("simuConductor", () => {
         field: makeField("NNNNNNNNNN"),
         hold: makeHold(Tetromino.NONE, false),
         nexts: {
-          settled: [Tetromino.S, Tetromino.Z],
-          unsettled: [makeNextNote("J", 1), makeNextNote("I", 1)],
+          settled: makeTetrominos("SZ"),
+          unsettled: makeNextNotes("J I"),
         },
         seed: makeSeed(),
       });
@@ -160,11 +164,11 @@ describe("simuConductor", () => {
           ),
           hold: makeHold(Tetromino.I, false),
           nexts: {
-            settled: [Tetromino.S, Tetromino.Z],
-            unsettled: [makeNextNote("J", 1), makeNextNote("I", 1)],
             bag: makeNextNote("JI", 2),
+            settled: makeTetrominos("SZ"),
+            unsettled: makeNextNotes("J I"),
           },
-          replayNexts: [Tetromino.S, Tetromino.Z],
+          replayNexts: makeTetrominos("SZ"),
           replayNextStep: 2,
           seed: makeSeed(3),
         });
@@ -195,9 +199,9 @@ describe("simuConductor", () => {
               isDead: false,
               lastRoseUpColumn: -1,
               nexts: {
-                settled: [Tetromino.Z, Tetromino.J],
-                unsettled: [makeNextNote("I", 1)],
                 bag: makeNextNote("I", 1),
+                settled: makeTetrominos("ZJ"),
+                unsettled: makeNextNotes("I"),
               },
               replayNextStep: 3,
               replayStep: 2,
@@ -207,11 +211,11 @@ describe("simuConductor", () => {
           hold: makeHold(Tetromino.I, true),
           isDead: false,
           nexts: {
-            settled: [Tetromino.Z, Tetromino.J],
-            unsettled: [makeNextNote("I", 1)],
             bag: makeNextNote("I", 1),
+            settled: makeTetrominos("ZJ"),
+            unsettled: makeNextNotes("I"),
           },
-          replayNexts: [Tetromino.S, Tetromino.Z, Tetromino.J],
+          replayNexts: makeTetrominos("SZJ"),
           replayNextStep: 3,
           replayStep: 2,
           replaySteps: [

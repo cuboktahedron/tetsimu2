@@ -4,6 +4,7 @@ import { SimuActionsType } from "ducks/simu/types";
 import { FieldCellValue, Tetromino } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
 import { sleep } from "utils/function";
+import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { makeField } from "../../utils/tetsimu/testUtils/makeField";
 import { makeNextNote } from "../../utils/tetsimu/testUtils/makeNextNote";
 import { makeSeed } from "../../utils/tetsimu/testUtils/makeSeed";
@@ -21,12 +22,7 @@ describe("simuModule", () => {
           type: Tetromino.T,
         },
         lastRoseUpColumn: -1,
-        unsettledNexts: [
-          {
-            candidates: [Tetromino.I],
-            take: 1,
-          },
-        ],
+        unsettledNexts: new NextNotesInterpreter().interpret("I"),
         seed: makeSeed(1),
       };
 
@@ -66,12 +62,7 @@ describe("simuModule", () => {
           type: Tetromino.T,
         },
         lastRoseUpColumn: -1,
-        unsettledNexts: [
-          {
-            candidates: [Tetromino.I, Tetromino.J, Tetromino.L],
-            take: 3,
-          },
-        ],
+        unsettledNexts: new NextNotesInterpreter().interpret("[IJL]p3"),
         seed: makeSeed(1),
       };
 

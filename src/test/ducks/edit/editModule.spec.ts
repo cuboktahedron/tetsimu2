@@ -3,7 +3,7 @@ import {
   changeNext,
   clearEdit,
   flipField,
-  slideField,
+  slideField
 } from "ducks/edit/actions";
 import {
   BuildUpFieldAction,
@@ -11,11 +11,14 @@ import {
   ClearEditAction,
   EditActionsType,
   FlipFieldAction,
-  SlideFieldAction,
+  SlideFieldAction
 } from "ducks/edit/types";
 import { Tetromino } from "types/core";
 import { makeField } from "../../utils/tetsimu/testUtils/makeField";
-import { makeNextNote } from "../../utils/tetsimu/testUtils/makeNextNote";
+import {
+  makeNextNotes
+} from "../../utils/tetsimu/testUtils/makeNextNote";
+import { makeTetrominos } from "../../utils/tetsimu/testUtils/makeTetrominos";
 
 describe("editModule", () => {
   describe("buildUpField", () => {
@@ -64,7 +67,7 @@ describe("editModule", () => {
       const expected: ChangeNextAction = {
         type: EditActionsType.ChangeNext,
         payload: {
-          nextNotes: [makeNextNote("I", 1)],
+          nextNotes: makeNextNotes("I"),
           nextsPattern: "I",
           succeeded: true,
         },
@@ -74,12 +77,12 @@ describe("editModule", () => {
     });
 
     it("should change next to 'I' -> 'J'", () => {
-      const actual = changeNext([makeNextNote("I", 1)], 1, [Tetromino.J]);
+      const actual = changeNext(makeNextNotes("I"), 1, [Tetromino.J]);
 
       const expected: ChangeNextAction = {
         type: EditActionsType.ChangeNext,
         payload: {
-          nextNotes: [makeNextNote("J", 1)],
+          nextNotes: makeNextNotes("J"),
           nextsPattern: "J",
           succeeded: true,
         },
@@ -89,16 +92,12 @@ describe("editModule", () => {
     });
 
     it("should change next to 'I' -> 'I q2 J'", () => {
-      const actual = changeNext([makeNextNote("I", 1)], 4, [Tetromino.J]);
+      const actual = changeNext(makeNextNotes("I"), 4, [Tetromino.J]);
 
       const expected: ChangeNextAction = {
         type: EditActionsType.ChangeNext,
         payload: {
-          nextNotes: [
-            makeNextNote("I", 1),
-            makeNextNote("", 2),
-            makeNextNote("J", 1),
-          ],
+          nextNotes: makeNextNotes("I q2 J"),
           nextsPattern: "I q2 J",
           succeeded: true,
         },
@@ -108,12 +107,12 @@ describe("editModule", () => {
     });
 
     it("should change next to 'I' -> 'II'", () => {
-      const actual = changeNext([makeNextNote("I", 1)], 2, [Tetromino.I]);
+      const actual = changeNext(makeNextNotes("I"), 2, [Tetromino.I]);
 
       const expected: ChangeNextAction = {
         type: EditActionsType.ChangeNext,
         payload: {
-          nextNotes: [makeNextNote("I", 1), makeNextNote("I", 1)],
+          nextNotes: makeNextNotes("I I"),
           nextsPattern: "I I",
           succeeded: true,
         },
@@ -123,20 +122,12 @@ describe("editModule", () => {
     });
 
     it("should change next to 'III' -> 'I q1 I'", () => {
-      const actual = changeNext(
-        [makeNextNote("I", 1), makeNextNote("I", 1), makeNextNote("I", 1)],
-        2,
-        []
-      );
+      const actual = changeNext(makeNextNotes("III"), 2, []);
 
       const expected: ChangeNextAction = {
         type: EditActionsType.ChangeNext,
         payload: {
-          nextNotes: [
-            makeNextNote("I", 1),
-            makeNextNote("", 1),
-            makeNextNote("I", 1),
-          ],
+          nextNotes: makeNextNotes("I q1 I"),
           nextsPattern: "I q1 I",
           succeeded: true,
         },
@@ -146,15 +137,12 @@ describe("editModule", () => {
     });
 
     it("should change next to '[IJ]' -> '[IJ]p2'", () => {
-      const actual = changeNext([makeNextNote("IJ", 1)], 2, [
-        Tetromino.J,
-        Tetromino.I,
-      ]);
+      const actual = changeNext(makeNextNotes("[IJ]"), 2, makeTetrominos("JI"));
 
       const expected: ChangeNextAction = {
         type: EditActionsType.ChangeNext,
         payload: {
-          nextNotes: [makeNextNote("IJ", 2)],
+          nextNotes: makeNextNotes("[IJ]p2"),
           nextsPattern: "[IJ]p2",
           succeeded: true,
         },
@@ -164,15 +152,16 @@ describe("editModule", () => {
     });
 
     it("should change next to '[IJ]p2' -> '[IJ]p2 [IJ]'", () => {
-      const actual = changeNext([makeNextNote("IJ", 2)], 3, [
-        Tetromino.I,
-        Tetromino.J,
-      ]);
+      const actual = changeNext(
+        makeNextNotes("[IJ]p2"),
+        3,
+        makeTetrominos("IJ")
+      );
 
       const expected: ChangeNextAction = {
         type: EditActionsType.ChangeNext,
         payload: {
-          nextNotes: [makeNextNote("IJ", 2), makeNextNote("IJ", 1)],
+          nextNotes: makeNextNotes("[IJ]p2 [IJ]"),
           nextsPattern: "[IJ]p2 [IJ]",
           succeeded: true,
         },
@@ -182,7 +171,7 @@ describe("editModule", () => {
     });
 
     it("should change next to 'p2 I' -> ''", () => {
-      const actual = changeNext([makeNextNote("", 2)], 3, []);
+      const actual = changeNext(makeNextNotes("q2"), 3, []);
 
       const expected: ChangeNextAction = {
         type: EditActionsType.ChangeNext,

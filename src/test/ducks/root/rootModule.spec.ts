@@ -3,7 +3,7 @@ import {
   editToSimuMode,
   replayToSimuMode,
   simuToEditMode,
-  simuToReplayMode,
+  simuToReplayMode
 } from "ducks/root/actions";
 import {
   ChangeTetsimuModeAction,
@@ -11,7 +11,7 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction,
+  SimuToReplayAction
 } from "ducks/root/types";
 import { Direction, Tetromino, TetsimuMode } from "types/core";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
@@ -19,11 +19,14 @@ import { makeCurrent } from "../../utils/tetsimu/testUtils/makeCurrent";
 import { makeEditState } from "../../utils/tetsimu/testUtils/makeEditState";
 import { makeField } from "../../utils/tetsimu/testUtils/makeField";
 import { makeHold } from "../../utils/tetsimu/testUtils/makeHold";
-import { makeNextNote } from "../../utils/tetsimu/testUtils/makeNextNote";
-import { makeNextTypes } from "../../utils/tetsimu/testUtils/makeNextTypes";
+import {
+  makeNextNote,
+  makeNextNotes
+} from "../../utils/tetsimu/testUtils/makeNextNote";
 import { makeReplayState } from "../../utils/tetsimu/testUtils/makeReplayState";
 import { makeReplayHoldStep } from "../../utils/tetsimu/testUtils/makeReplayStep";
 import { makeSimuState } from "../../utils/tetsimu/testUtils/makeSimuState";
+import { makeTetrominos } from "../../utils/tetsimu/testUtils/makeTetrominos";
 
 describe("rootModule", () => {
   describe("changeTetsimuMode", () => {
@@ -65,34 +68,13 @@ describe("rootModule", () => {
           hold: makeHold(Tetromino.I, false),
           lastRoseUpColumn: -1,
           nexts: {
-            settled: [
-              Tetromino.J,
-              Tetromino.L,
-              Tetromino.O,
-              Tetromino.S,
-              Tetromino.T,
-              Tetromino.Z,
-              Tetromino.I,
-              Tetromino.J,
-              Tetromino.Z,
-              Tetromino.T,
-              Tetromino.S,
-              Tetromino.O,
-            ],
-            unsettled: [makeNextNote("L", 1)],
+            settled: makeTetrominos("JLOSTZIJZTSO"),
+            unsettled: makeNextNotes("L"),
             bag: makeNextNote("IJL", 3),
           },
           retryState: {
             bag: {
-              candidates: [
-                Tetromino.I,
-                Tetromino.J,
-                Tetromino.L,
-                Tetromino.O,
-                Tetromino.S,
-                Tetromino.T,
-                Tetromino.Z,
-              ],
+              candidates: makeTetrominos("IJLOSTZ"),
               take: 2,
             },
             field: makeField("IJLOSTZNNN"),
@@ -124,21 +106,8 @@ describe("rootModule", () => {
           hold: makeHold(Tetromino.I, false),
           nexts: {
             bag: makeNextNote("IJL", 3),
-            settled: [
-              Tetromino.J,
-              Tetromino.L,
-              Tetromino.O,
-              Tetromino.S,
-              Tetromino.T,
-              Tetromino.Z,
-              Tetromino.I,
-              Tetromino.J,
-              Tetromino.Z,
-              Tetromino.T,
-              Tetromino.S,
-              Tetromino.O,
-            ],
-            unsettled: [makeNextNote("L", 1)],
+            settled: makeTetrominos("JLOSTZIJZTSO"),
+            unsettled: makeNextNotes("L"),
           },
         })
       );
@@ -170,7 +139,7 @@ describe("rootModule", () => {
           field: makeField("IJLOSTZNNN"),
           hold: makeHold(Tetromino.I, false),
           isDead: false,
-          nexts: makeNextTypes("ZTSOLJIIJLOSTZ"),
+          nexts: makeTetrominos("ZTSOLJIIJLOSTZ"),
           noOfCycle: 5,
           replayInfo: {
             nextNum: 12,
@@ -189,33 +158,12 @@ describe("rootModule", () => {
           nexts: {
             bag: makeNextNote("IJLTZ", 5),
             nextNum: 12,
-            settled: [
-              Tetromino.Z,
-              Tetromino.T,
-              Tetromino.S,
-              Tetromino.O,
-              Tetromino.L,
-              Tetromino.J,
-              Tetromino.I,
-              Tetromino.I,
-              Tetromino.J,
-              Tetromino.L,
-              Tetromino.O,
-              Tetromino.S,
-            ],
+            settled: makeTetrominos("ZTSOLJIIJLOS"),
             unsettled: [],
           },
           retryState: {
             bag: {
-              candidates: [
-                Tetromino.I,
-                Tetromino.J,
-                Tetromino.L,
-                Tetromino.O,
-                Tetromino.S,
-                Tetromino.T,
-                Tetromino.Z,
-              ],
+              candidates: makeTetrominos("IJLOSTZ"),
               take: 4,
             },
             field: makeField("IJLOSTZNNN"),
@@ -258,20 +206,7 @@ describe("rootModule", () => {
               seed: 1,
             },
           ],
-          replayNexts: [
-            Tetromino.Z,
-            Tetromino.T,
-            Tetromino.S,
-            Tetromino.O,
-            Tetromino.L,
-            Tetromino.J,
-            Tetromino.I,
-            Tetromino.I,
-            Tetromino.J,
-            Tetromino.L,
-            Tetromino.O,
-            Tetromino.S,
-          ],
+          replayNexts: makeTetrominos("ZTSOLJIIJLOS"),
           replayNextStep: 12,
           replayStep: 1,
           replaySteps: [makeReplayHoldStep()],
@@ -289,13 +224,13 @@ describe("rootModule", () => {
               field: makeField("IJLOSTZNNN"),
               hold: makeHold(Tetromino.I, false),
               isDead: false,
-              nexts: makeNextTypes("ZTSOLJIIJLOS"),
+              nexts: makeTetrominos("ZTSOLJIIJLOS"),
               noOfCycle: 3,
             },
           ],
           hold: makeHold(Tetromino.I, false),
           isDead: false,
-          nexts: makeNextTypes("ZTSOLJIIJLOS"),
+          nexts: makeTetrominos("ZTSOLJIIJLOS"),
           noOfCycle: 3,
           replayInfo: {
             nextNum: 12,

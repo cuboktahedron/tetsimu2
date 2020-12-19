@@ -1,6 +1,6 @@
 import { Tetromino } from "types/core";
 
-export const makeNextTypes = (types: string): Tetromino[] => {
+export const makeTetrominos = (types: string): Tetromino[] => {
   const nextTypes = types.split("").map((type) => {
     switch (type) {
       case "I":

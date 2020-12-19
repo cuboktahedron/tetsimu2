@@ -1,4 +1,11 @@
 import { Tetromino } from "types/core";
+import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
+
+const interpreter = new NextNotesInterpreter();
+
+export const makeNextNotes = (pattern: string) => {
+  return interpreter.interpret(pattern);
+};
 
 export const makeNextNote = (types: string, take: number) => {
   const candidates = types.split("").map((type) => {

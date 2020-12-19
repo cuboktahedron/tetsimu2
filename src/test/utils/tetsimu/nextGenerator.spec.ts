@@ -3,7 +3,7 @@ import { makeFullNextNote } from "utils/tetsimu/functions";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
-import { makeNextNote } from "./testUtils/makeNextNote";
+import { makeNextNote, makeNextNotes } from "./testUtils/makeNextNote";
 
 describe("nextGenerator", () => {
   it("should generate 7 types per cycle", () => {
@@ -67,14 +67,11 @@ describe("nextGenerator", () => {
   it("should comsump head notes", () => {
     const gen = new NextGenerator(
       new RandomNumberGenerator(),
-      new NextNotesInterpreter().interpret("[IJ]p2[OS]"),
+      makeNextNotes("[IJ]p2[OS]"),
       makeFullNextNote()
     );
 
-    const expectedBase: NextNote[] = [
-      makeNextNote("IJ", 2),
-      makeNextNote("OS", 1),
-    ];
+    const expectedBase: NextNote[] = makeNextNotes("[IJ]p2[OS]");
 
     // generate 1st time
     const genNext1 = gen.next();
@@ -198,7 +195,7 @@ describe("nextGenerator", () => {
   it("should generate next from note candites ([IJL]p1)", () => {
     const gen = new NextGenerator(
       new RandomNumberGenerator(),
-      new NextNotesInterpreter().interpret("[IJL]p1"),
+      makeNextNotes("[IJL]p1"),
       makeNextNote("OSTZ", 4)
     );
 
@@ -212,7 +209,7 @@ describe("nextGenerator", () => {
   it("should not generate subsequent tetromino (q1 I)", () => {
     const gen = new NextGenerator(
       new RandomNumberGenerator(),
-      new NextNotesInterpreter().interpret("q1 I"),
+      makeNextNotes("q1 I"),
       makeNextNote("IJLOSTZ", 7)
     );
 
