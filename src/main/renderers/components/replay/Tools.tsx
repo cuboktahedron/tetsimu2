@@ -95,7 +95,6 @@ const Tools: React.FC = () => {
 
   const classes = useStyles();
   const stepNum = state.replaySteps.length;
-  console.log(state.step);
   return (
     <div className={classes.root}>
       <div className={classes.buttons}>
