@@ -7,8 +7,9 @@ import {
   MAX_NEXTS_NUM,
   NextNote,
   ReplayStep,
+  SpinType,
   TapControllerType,
-  Tetromino
+  Tetromino,
 } from "types/core";
 import { PlayMode, SimuConfig, SimuRetryState } from "types/simu";
 import { makeFullNextNote } from "utils/tetsimu/functions";
@@ -87,6 +88,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
       x: 4,
       y: 19,
     },
+    spinType: SpinType.None,
     type: currentGenNext.type,
   };
 

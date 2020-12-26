@@ -6,6 +6,7 @@ import {
   Direction,
   MAX_NEXTS_NUM,
   NextNote,
+  SpinType,
   Tetromino,
   TetsimuMode,
 } from "types/core";
@@ -60,12 +61,13 @@ export const editToSimuMode = (state: EditState): EditToSimuAction => {
     newNextSettles.push(lastGenNext.type);
   }
 
-  const newCurrent = {
+  const newCurrent: ActiveTetromino = {
     direction: Direction.UP,
     pos: {
       x: 4,
       y: 19,
     },
+    spinType: SpinType.None,
     type: currentGenNext.type,
   };
 
@@ -133,12 +135,13 @@ export const replayToSimuMode = (state: ReplayState): ReplayToSimuAction => {
     newNextSettles.push(lastGenNext.type);
   }
 
-  const newCurrent = {
+  const newCurrent: ActiveTetromino = {
     direction: Direction.UP,
     pos: {
       x: 4,
       y: 19,
     },
+    spinType: SpinType.None,
     type: currentGenNext.type,
   };
 
@@ -213,6 +216,7 @@ export const simuToReplayMode = (state: SimuState): SimuToReplayAction => {
   const current: ActiveTetromino = {
     direction: Direction.UP,
     pos: { x: 4, y: 19 },
+    spinType: SpinType.None,
     type: history.currentType,
   };
 

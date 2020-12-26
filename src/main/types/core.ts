@@ -49,19 +49,28 @@ export type Vector2 = {
 };
 
 export const Direction = {
-  UP: 1,
-  LEFT: 2,
-  DOWN: 4,
-  RIGHT: 8,
+  UP: 0,
+  LEFT: 1,
+  DOWN: 2,
+  RIGHT: 3,
 } as const;
 
 export type Direction = typeof Direction[keyof typeof Direction];
 
 export type FieldState = FieldCellValue[][];
 
+export const SpinType = {
+  None: 0,
+  Mini: 1,
+  Spin: 2,
+};
+
+export type SpinType = typeof SpinType[keyof typeof SpinType];
+
 export type ActiveTetromino = {
   direction: Direction;
   pos: Vector2;
+  spinType: SpinType;
   type: Tetromino;
 };
 
@@ -114,6 +123,7 @@ export type ReplayStepDrop = {
   type: typeof ReplayStepType.Drop;
   dir: Direction;
   pos: Vector2;
+  spinType: SpinType,
 };
 
 export type ReplayStepHold = {

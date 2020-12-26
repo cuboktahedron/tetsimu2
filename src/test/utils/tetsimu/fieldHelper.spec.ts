@@ -1,6 +1,6 @@
-import { Direction, Tetromino } from "types/core";
+import { ActiveTetromino, Direction, SpinType, Tetromino } from "types/core";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
-import { makeField } from './testUtils/makeField';
+import { makeField } from "./testUtils/makeField";
 
 describe("Field", () => {
   describe("eraseLines", () => {
@@ -48,6 +48,7 @@ describe("Field", () => {
           x: 4,
           y: 0,
         },
+        spinType: SpinType.None,
       });
 
       // prettier-ignore
@@ -68,6 +69,7 @@ describe("Field", () => {
         direction: Direction.UP,
         pos: { x: 4, y: 20 },
         type: Tetromino.T,
+        spinType: SpinType.None,
       });
 
       expect(actual).toBeTruthy();
@@ -83,6 +85,7 @@ describe("Field", () => {
         direction: Direction.DOWN,
         pos: { x: 4, y: 20 },
         type: Tetromino.T,
+        spinType: SpinType.None,
       });
 
       expect(actual).toBeFalsy();
@@ -105,12 +108,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.UP,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.LEFT,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -131,12 +136,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.UP,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.LEFT,
         pos: { x: 2, y: 4 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -157,12 +164,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.UP,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.LEFT,
         pos: { x: 1, y: 1 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -183,12 +192,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.UP,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.LEFT,
         pos: { x: 2, y: 1 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -209,12 +220,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.LEFT,
         pos: { x: 8, y: 2 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.DOWN,
         pos: { x: 7, y: 2 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -235,12 +248,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.LEFT,
         pos: { x: 8, y: 2 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.DOWN,
         pos: { x: 7, y: 1 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -261,12 +276,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.LEFT,
         pos: { x: 8, y: 2 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.DOWN,
         pos: { x: 8, y: 4 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -287,12 +304,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.LEFT,
         pos: { x: 8, y: 2 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.DOWN,
         pos: { x: 7, y: 4 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -313,12 +332,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.DOWN,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.RIGHT,
         pos: { x: 0, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -339,12 +360,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.DOWN,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.RIGHT,
         pos: { x: 0, y: 4 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -365,12 +388,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.DOWN,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.RIGHT,
         pos: { x: 1, y: 1 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -391,12 +416,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.DOWN,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.RIGHT,
         pos: { x: 0, y: 1 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -417,12 +444,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.RIGHT,
         pos: { x: 1, y: 1 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.UP,
         pos: { x: 2, y: 1 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -443,12 +472,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.RIGHT,
         pos: { x: 1, y: 1 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.UP,
         pos: { x: 2, y: 0 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -469,12 +500,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.RIGHT,
         pos: { x: 1, y: 1 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.UP,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -495,12 +528,178 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.RIGHT,
         pos: { x: 1, y: 1 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.UP,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should be tspin(pattern:0)", () => {
+      // prettier-ignore
+      const field = makeField(
+        "GNNNNNNNNN",
+        "NNNNNNNNNN",
+        "GNGNNNNNNN"
+      );
+
+      const fieldHelper = new FieldHelper(field);
+      const actual = fieldHelper.rotateLeft({
+        type: Tetromino.T,
+        direction: Direction.RIGHT,
+        pos: { x: 1, y: 1 },
+        spinType: SpinType.None,
+      });
+
+      const expected: ActiveTetromino = {
+        type: Tetromino.T,
+        direction: Direction.UP,
+        pos: { x: 1, y: 1 },
+        spinType: SpinType.Spin,
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should be tspin-mini(pattern:2)", () => {
+      // prettier-ignore
+      const field = makeField(
+        "NNNNNNNNNN",
+        "NNGNNNNNNN",
+        "NNNGNNNNNN"
+      );
+
+      const fieldHelper = new FieldHelper(field);
+      const actual = fieldHelper.rotateLeft({
+        type: Tetromino.T,
+        direction: Direction.RIGHT,
+        pos: { x: 0, y: 1 },
+        spinType: SpinType.None,
+      });
+
+      const expected: ActiveTetromino = {
+        type: Tetromino.T,
+        direction: Direction.UP,
+        pos: { x: 1, y: 0 },
+        spinType: SpinType.Mini,
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should be tspin(pattern:3)", () => {
+      // prettier-ignore
+      const field = makeField(
+      "NNGGNNNNNN",
+      "NNNGNNNNNN",
+      "GGNGNNNNNN",
+      "GNNGNNNNNN",
+      "GGNGNNNNNN"
+    );
+
+      const fieldHelper = new FieldHelper(field);
+      const actual = fieldHelper.rotateLeft({
+        type: Tetromino.T,
+        direction: Direction.UP,
+        pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
+      });
+
+      const expected: ActiveTetromino = {
+        type: Tetromino.T,
+        direction: Direction.LEFT,
+        pos: { x: 2, y: 1 },
+        spinType: SpinType.Spin,
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should be tspin-fin", () => {
+      // prettier-ignore
+      const field = makeField(
+      "GGGNNNNNNN",
+      "GNNNNNNNNN",
+      "GNNNNNNNNN",
+      "GNNGNNNNNN",
+      "GNGGNNNNNN",
+    );
+
+      const fieldHelper = new FieldHelper(field);
+      const actual = fieldHelper.rotateLeft({
+        type: Tetromino.T,
+        direction: Direction.DOWN,
+        pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
+      });
+
+      const expected: ActiveTetromino = {
+        type: Tetromino.T,
+        direction: Direction.RIGHT,
+        pos: { x: 1, y: 1 },
+        spinType: SpinType.Spin,
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should be tspin-neo", () => {
+      // prettier-ignore
+      const field = makeField(
+      "GGGNNNNNNN",
+      "NNNNNNNNNN",
+      "GNNNNNNNNN",
+      "GNNGNNNNNN",
+      "GNGGNNNNNN",
+    );
+
+      const fieldHelper = new FieldHelper(field);
+      const actual = fieldHelper.rotateLeft({
+        type: Tetromino.T,
+        direction: Direction.DOWN,
+        pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
+      });
+
+      const expected: ActiveTetromino = {
+        type: Tetromino.T,
+        direction: Direction.RIGHT,
+        pos: { x: 1, y: 1 },
+        spinType: SpinType.Mini,
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should be tspin-iso", () => {
+      // prettier-ignore
+      const field = makeField(
+      "NNGGGGNNNN",
+      "NNNNNGNNNN",
+      "NNNNGGNNNN",
+      "GGGNNGNNNN",
+      "GGGNGGNNNN",
+    );
+
+      const fieldHelper = new FieldHelper(field);
+      const actual = fieldHelper.rotateLeft({
+        type: Tetromino.T,
+        direction: Direction.DOWN,
+        pos: { x: 3, y: 3 },
+        spinType: SpinType.None,
+      });
+
+      const expected: ActiveTetromino = {
+        type: Tetromino.T,
+        direction: Direction.RIGHT,
+        pos: { x: 3, y: 1 },
+        spinType: SpinType.Spin,
       };
 
       expect(actual).toEqual(expected);
@@ -523,12 +722,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.UP,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.RIGHT,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -549,12 +750,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.UP,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.RIGHT,
         pos: { x: 1, y: 4 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -575,12 +778,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.UP,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.RIGHT,
         pos: { x: 2, y: 1 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -601,12 +806,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.UP,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.RIGHT,
         pos: { x: 1, y: 1 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -627,12 +834,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.RIGHT,
         pos: { x: 1, y: 2 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.DOWN,
         pos: { x: 2, y: 2 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -653,12 +862,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.RIGHT,
         pos: { x: 1, y: 2 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.DOWN,
         pos: { x: 2, y: 1 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -679,12 +890,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.RIGHT,
         pos: { x: 1, y: 2 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.DOWN,
         pos: { x: 1, y: 4 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -705,12 +918,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.RIGHT,
         pos: { x: 1, y: 2 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.DOWN,
         pos: { x: 2, y: 4 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -731,12 +946,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.DOWN,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.LEFT,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -757,12 +974,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.DOWN,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.LEFT,
         pos: { x: 2, y: 4 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -783,12 +1002,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.DOWN,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.LEFT,
         pos: { x: 1, y: 1 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -809,12 +1030,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.DOWN,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.LEFT,
         pos: { x: 2, y: 1 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -835,12 +1058,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.LEFT,
         pos: { x: 2, y: 1 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.UP,
         pos: { x: 1, y: 1 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -861,12 +1086,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.LEFT,
         pos: { x: 2, y: 1 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.UP,
         pos: { x: 1, y: 0 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -887,12 +1114,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.LEFT,
         pos: { x: 2, y: 1 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.UP,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -913,12 +1142,14 @@ describe("Field", () => {
         type: Tetromino.L,
         direction: Direction.LEFT,
         pos: { x: 2, y: 1 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.L,
         direction: Direction.UP,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -941,12 +1172,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.UP,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.LEFT,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -967,12 +1200,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.UP,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.LEFT,
         pos: { x: 4, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -993,12 +1228,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.UP,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.LEFT,
         pos: { x: 1, y: 5 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1019,12 +1256,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.UP,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.LEFT,
         pos: { x: 4, y: 2 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1045,12 +1284,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.LEFT,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.DOWN,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1071,12 +1312,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.LEFT,
         pos: { x: 4, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.DOWN,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1097,12 +1340,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.LEFT,
         pos: { x: 4, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.DOWN,
         pos: { x: 2, y: 2 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1123,12 +1368,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.LEFT,
         pos: { x: 4, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.DOWN,
         pos: { x: 5, y: 5 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1149,12 +1396,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.DOWN,
         pos: { x: 3, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.RIGHT,
         pos: { x: 4, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1175,12 +1424,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.DOWN,
         pos: { x: 3, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.RIGHT,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1201,12 +1452,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.DOWN,
         pos: { x: 3, y: 4 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.RIGHT,
         pos: { x: 4, y: 2 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1227,12 +1480,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.DOWN,
         pos: { x: 3, y: 4 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.RIGHT,
         pos: { x: 1, y: 5 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1253,12 +1508,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.RIGHT,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.UP,
         pos: { x: 4, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1279,12 +1536,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.RIGHT,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.UP,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1305,12 +1564,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.RIGHT,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.UP,
         pos: { x: 4, y: 4 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1331,12 +1592,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.RIGHT,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.UP,
         pos: { x: 1, y: 1 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1359,12 +1622,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.UP,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.RIGHT,
         pos: { x: 0, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1385,12 +1650,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.UP,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.RIGHT,
         pos: { x: 3, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1411,12 +1678,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.UP,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.RIGHT,
         pos: { x: 0, y: 2 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1437,12 +1706,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.UP,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.RIGHT,
         pos: { x: 3, y: 5 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1463,12 +1734,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.RIGHT,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.DOWN,
         pos: { x: 1, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1489,12 +1762,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.RIGHT,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.DOWN,
         pos: { x: 4, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1515,12 +1790,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.RIGHT,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.DOWN,
         pos: { x: 1, y: 5 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1541,12 +1818,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.RIGHT,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.DOWN,
         pos: { x: 4, y: 2 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1567,12 +1846,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.DOWN,
         pos: { x: 2, y: 4 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.LEFT,
         pos: { x: 4, y: 4 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1593,12 +1874,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.DOWN,
         pos: { x: 2, y: 4 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.LEFT,
         pos: { x: 1, y: 4 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1619,12 +1902,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.DOWN,
         pos: { x: 2, y: 4 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.LEFT,
         pos: { x: 4, y: 5 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1645,12 +1930,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.DOWN,
         pos: { x: 2, y: 4 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.LEFT,
         pos: { x: 1, y: 2 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1671,12 +1958,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.LEFT,
         pos: { x: 4, y: 2 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.UP,
         pos: { x: 2, y: 2 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1697,12 +1986,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.LEFT,
         pos: { x: 4, y: 2 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.UP,
         pos: { x: 5, y: 2 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1723,12 +2014,14 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.LEFT,
         pos: { x: 4, y: 2 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.UP,
         pos: { x: 5, y: 0 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
@@ -1749,15 +2042,182 @@ describe("Field", () => {
         type: Tetromino.I,
         direction: Direction.LEFT,
         pos: { x: 4, y: 2 },
+        spinType: SpinType.None,
       });
 
-      const expected = {
+      const expected: ActiveTetromino = {
         type: Tetromino.I,
         direction: Direction.UP,
         pos: { x: 2, y: 3 },
+        spinType: SpinType.None,
       };
 
       expect(actual).toEqual(expected);
     });
+
+    it("should be tspin(pattern:0)", () => {
+      // prettier-ignore
+      const field = makeField(
+        "NNNNNNNNNG",
+        "NNNNNNNNNN",
+        "NNNNNNNGNG"
+      );
+
+      const fieldHelper = new FieldHelper(field);
+      const actual = fieldHelper.rotateRight({
+        type: Tetromino.T,
+        direction: Direction.LEFT,
+        pos: { x: 8, y: 1 },
+        spinType: SpinType.None,
+      });
+
+      const expected: ActiveTetromino = {
+        type: Tetromino.T,
+        direction: Direction.UP,
+        pos: { x: 8, y: 1 },
+        spinType: SpinType.Spin,
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should be tspin-mini(pattern:2)", () => {
+      // prettier-ignore
+      const field = makeField(
+        "NNNNNNNNNN",
+        "NNNNNNNGNN",
+        "NNNNNNGNNN"
+      );
+
+      const fieldHelper = new FieldHelper(field);
+      const actual = fieldHelper.rotateRight({
+        type: Tetromino.T,
+        direction: Direction.LEFT,
+        pos: { x: 9, y: 1 },
+        spinType: SpinType.None,
+      });
+
+      const expected: ActiveTetromino = {
+        type: Tetromino.T,
+        direction: Direction.UP,
+        pos: { x: 8, y: 0 },
+        spinType: SpinType.Mini,
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should be tspin(pattern:3)", () => {
+      // prettier-ignore
+      const field = makeField(
+      "NNNNNNGGNN",
+      "NNNNNNGNNN",
+      "NNNNNNGNGG",
+      "NNNNNNGNNG",
+      "NNNNNNGNGG"
+    );
+
+      const fieldHelper = new FieldHelper(field);
+      const actual = fieldHelper.rotateRight({
+        type: Tetromino.T,
+        direction: Direction.UP,
+        pos: { x: 8, y: 3 },
+        spinType: SpinType.None,
+      });
+
+      const expected: ActiveTetromino = {
+        type: Tetromino.T,
+        direction: Direction.RIGHT,
+        pos: { x: 7, y: 1 },
+        spinType: SpinType.Spin,
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should be tspin-fin", () => {
+      // prettier-ignore
+      const field = makeField(
+      "NNNNNNNGGG",
+      "NNNNNNNNNG",
+      "NNNNNNNNNG",
+      "NNNNNNGNNG",
+      "NNNNNNGGNG",
+    );
+
+      const fieldHelper = new FieldHelper(field);
+      const actual = fieldHelper.rotateRight({
+        type: Tetromino.T,
+        direction: Direction.DOWN,
+        pos: { x: 7, y: 3 },
+        spinType: SpinType.None,
+      });
+
+      const expected: ActiveTetromino = {
+        type: Tetromino.T,
+        direction: Direction.LEFT,
+        pos: { x: 8, y: 1 },
+        spinType: SpinType.Spin,
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should be tspin-neo", () => {
+      // prettier-ignore
+      const field = makeField(
+      "NNNNNNNGGG",
+      "NNNNNNNNNN",
+      "NNNNNNNNNG",
+      "NNNNNNGNNG",
+      "NNNNNNGGNG",
+    );
+
+      const fieldHelper = new FieldHelper(field);
+      const actual = fieldHelper.rotateRight({
+        type: Tetromino.T,
+        direction: Direction.DOWN,
+        pos: { x: 8, y: 3 },
+        spinType: SpinType.None,
+      });
+
+      const expected: ActiveTetromino = {
+        type: Tetromino.T,
+        direction: Direction.LEFT,
+        pos: { x: 8, y: 1 },
+        spinType: SpinType.Mini,
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should be tspin-iso", () => {
+      // prettier-ignore
+      const field = makeField(
+      "NNNNGGGGNN",
+      "NNNNGNNNNN",
+      "NNNNGGNNNN",
+      "NNNNGNNGGG",
+      "NNNNGGNGGG",
+    );
+
+      const fieldHelper = new FieldHelper(field);
+      const actual = fieldHelper.rotateRight({
+        type: Tetromino.T,
+        direction: Direction.DOWN,
+        pos: { x: 6, y: 3 },
+        spinType: SpinType.None,
+      });
+
+      const expected: ActiveTetromino = {
+        type: Tetromino.T,
+        direction: Direction.LEFT,
+        pos: { x: 6, y: 1 },
+        spinType: SpinType.Spin,
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
   });
 });

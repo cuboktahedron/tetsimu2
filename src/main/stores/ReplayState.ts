@@ -5,7 +5,8 @@ import {
   HoldState,
   MAX_FIELD_HEIGHT,
   ReplayStep,
-  Tetromino
+  SpinType,
+  Tetromino,
 } from "types/core";
 import { ReplayConfig, ReplayInfo, ReplayStateHistory } from "types/replay";
 
@@ -41,6 +42,7 @@ export const initialReplayState: ReplayState = ((): ReplayState => {
       x: 0,
       y: 0,
     },
+    spinType: SpinType.None,
     type: Tetromino.NONE,
   };
 

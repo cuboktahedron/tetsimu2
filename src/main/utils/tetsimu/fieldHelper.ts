@@ -4,8 +4,9 @@ import {
   Direction,
   FieldCellValue,
   MAX_FIELD_HEIGHT,
+  SpinType,
   Tetromino,
-  Vector2,
+  Vector2
 } from "types/core";
 import { RandomNumberGenerator } from "./randomNumberGenerator";
 
@@ -75,6 +76,7 @@ export class FieldHelper {
         x: 4,
         y: 19,
       },
+      spinType: SpinType.None,
       type,
     };
 
@@ -110,6 +112,7 @@ export class FieldHelper {
     const orgNewTetromino = newTetromino;
 
     if (!this.isOverlapping(newTetromino)) {
+      newTetromino.spinType = this.decideSpinType(newTetromino, { x: 0, y: 0 });
       return newTetromino;
     }
 
@@ -131,6 +134,9 @@ export class FieldHelper {
       };
 
       if (!this.isOverlapping(newTetromino)) {
+        const spinType = this.decideSpinType(newTetromino, srs);
+        newTetromino.spinType = spinType;
+
         return newTetromino;
       }
     }
@@ -163,11 +169,75 @@ export class FieldHelper {
     const orgNewTetromino = newTetromino;
 
     if (!this.isOverlapping(newTetromino)) {
+      newTetromino.spinType = this.decideSpinType(newTetromino, { x: 0, y: 0 });
       return newTetromino;
     }
 
     const srss = TetrominoSrss[tetromino.type].right[tetromino.direction];
     return this.applySrs(orgNewTetromino, srss);
+  }
+
+  decideSpinType(tetromino: ActiveTetromino, srs: Vector2): SpinType {
+    if (tetromino.type !== Tetromino.T) {
+      return SpinType.None;
+    }
+
+    const { x, y } = tetromino.pos;
+    let cornerCount = 0;
+    let frontCornerCount = 0;
+    const xs1 = [-1, -1, 1, 1];
+    const xs2 = [1, -1, -1, 1];
+    const xs3 = [-1, 1, 1, -1];
+    const xs4 = [1, 1, -1, -1];
+    const ys1 = [1, -1, -1, 1];
+    const ys2 = [1, 1, -1, -1];
+    const ys3 = [-1, -1, 1, 1];
+    const ys4 = [-1, 1, 1, -1];
+    const dir = tetromino.direction;
+
+    if (this.blockOrWallExists(x + xs1[dir], y + ys1[dir])) {
+      cornerCount++;
+      frontCornerCount++;
+    }
+
+    if (this.blockOrWallExists(x + xs2[dir], y + ys2[dir])) {
+      cornerCount++;
+      frontCornerCount++;
+    }
+
+    if (this.blockOrWallExists(x + xs3[dir], y + ys3[dir])) {
+      cornerCount++;
+    }
+
+    if (this.blockOrWallExists(x + xs4[dir], y + ys4[dir])) {
+      cornerCount++;
+    }
+
+    if (cornerCount < 3) {
+      return SpinType.None;
+    }
+
+    const absX = Math.abs(srs.x);
+    const absY = Math.abs(srs.y);
+
+    if (absX === 0 && absY === 0) {
+      return SpinType.Spin;
+    } else if (
+      (Math.abs(srs.x) !== 1 || Math.abs(srs.y) !== 2) &&
+      frontCornerCount < 2
+    ) {
+      return SpinType.Mini;
+    } else {
+      return SpinType.Spin;
+    }
+  }
+
+  blockOrWallExists(col: number, row: number): boolean {
+    if (col < 0 || col >= 10 || row < 0 || row >= MAX_FIELD_HEIGHT) {
+      return true;
+    }
+
+    return this.state[row][col] !== FieldCellValue.NONE;
   }
 
   isOverlapping(tetromino: ActiveTetromino): boolean {

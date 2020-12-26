@@ -8,7 +8,8 @@ import {
   NextNote,
   ReplayStep,
   ReplayStepType,
-  Tetromino
+  SpinType,
+  Tetromino,
 } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
 import { FieldHelper } from "../fieldHelper";
@@ -127,6 +128,7 @@ export class SimuConductor {
       newCurrent = {
         direction: Direction.UP,
         pos: { x: 0, y: 0 },
+        spinType: SpinType.None,
         type: Tetromino.NONE,
       };
     } else {
@@ -145,6 +147,7 @@ export class SimuConductor {
         type: ReplayStepType.Drop,
         dir: current.direction,
         pos: { x: current.pos.x, y: row },
+        spinType: current.spinType,
       },
       {
         type: ReplayStepType.HardDrop,
@@ -256,6 +259,8 @@ export class SimuConductor {
     }
 
     current.pos = { x: current.pos.x + deltaX, y: current.pos.y + deltaY };
+    current.spinType = SpinType.None;
+
     return true;
   };
 
@@ -281,6 +286,7 @@ export class SimuConductor {
         x: 4,
         y: 19,
       },
+      spinType: SpinType.None,
       type: currentGenNext.type,
     };
     const newField = this.state.retryState.field;
@@ -370,6 +376,7 @@ export class SimuConductor {
         x: 4,
         y: 19,
       },
+      spinType: SpinType.None,
       type: currentGenNext.type,
     };
 

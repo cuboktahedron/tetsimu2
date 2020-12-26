@@ -67,6 +67,7 @@ export class ReplayConductor {
     const newCurrent: ActiveTetromino = {
       direction: step.dir,
       pos: step.pos,
+      spinType: step.spinType,
       type: this.state.current.type,
     };
     const newStep = this.state.step + 1;

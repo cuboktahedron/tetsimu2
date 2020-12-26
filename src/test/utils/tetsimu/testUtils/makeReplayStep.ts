@@ -4,6 +4,7 @@ import {
   ReplayStepHardDrop,
   ReplayStepHold,
   ReplayStepType,
+  SpinType,
 } from "types/core";
 
 export const makeReplayHoldStep = (): ReplayStepHold => {
@@ -15,7 +16,8 @@ export const makeReplayHoldStep = (): ReplayStepHold => {
 export const makeReplayDropStep = (
   dir: Direction,
   col: number,
-  row: number
+  row: number,
+  spinType?: SpinType
 ): ReplayStepDrop => {
   return {
     type: ReplayStepType.Drop,
@@ -24,6 +26,7 @@ export const makeReplayDropStep = (
       x: col,
       y: row,
     },
+    spinType: spinType ?? SpinType.None,
   };
 };
 
