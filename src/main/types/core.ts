@@ -38,7 +38,7 @@ export const FieldCellValue = {
   S: Tetromino.S,
   T: Tetromino.T,
   Z: Tetromino.Z,
-  GARBAGE: 9,
+  GARBAGE: 8,
 } as const;
 
 export type FieldCellValue = typeof FieldCellValue[keyof typeof FieldCellValue];
