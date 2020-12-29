@@ -13,7 +13,9 @@ import { getReplayConductor } from "ducks/replay/selectors";
 import { changeTetsimuMode, replayToSimuMode } from "ducks/root/actions";
 import React from "react";
 import { TetsimuMode } from "types/core";
+import ReplayUrl from "utils/tetsimu/replay/replayUrl";
 import NumberTextField from "../ext/NumberTextField";
+import TextFieldEx from "../ext/TextFieldEx";
 import { ReplayContext } from "./Replay";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -26,6 +28,10 @@ const useStyles = makeStyles((theme: Theme) =>
       "& > hr": {
         marginBottom: theme.spacing(1),
         marginTop: theme.spacing(1),
+      },
+
+      "& > div": {
+        marginBottom: theme.spacing(1),
       },
     },
 
@@ -78,6 +84,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Tools: React.FC = () => {
   const { state, dispatch } = React.useContext(ReplayContext);
+  const [stateUrl, setStateUrl] = React.useState("");
 
   const handleSimuClick = () => {
     dispatch(replayToSimuMode(state));
@@ -91,6 +98,11 @@ const Tools: React.FC = () => {
     if (value !== state.step) {
       dispatch(changeStep(getReplayConductor(state), value));
     }
+  };
+
+  const handleUrlClick = () => {
+    const url = new ReplayUrl().fromState(state);
+    setStateUrl(url);
   };
 
   const classes = useStyles();
@@ -140,6 +152,25 @@ const Tools: React.FC = () => {
             variant="outlined"
           />
         </FormControl>
+      </div>
+      <div>
+        <Button variant="contained" color="primary" onClick={handleUrlClick}>
+          URL
+        </Button>
+      </div>
+      <div>
+        <TextFieldEx
+          fullWidth
+          label="url"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          InputProps={{
+            readOnly: true,
+          }}
+          value={stateUrl}
+          variant="outlined"
+        />
       </div>
     </div>
   );

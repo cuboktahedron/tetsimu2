@@ -1,5 +1,6 @@
 import { EditState } from "stores/EditState";
 import { ReplayState } from "stores/ReplayState";
+import { RootState } from "stores/RootState";
 import { SimuState } from "stores/SimuState";
 import {
   ActiveTetromino,
@@ -10,12 +11,18 @@ import {
   Tetromino,
   TetsimuMode,
 } from "types/core";
+import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
+import ReplayUrl, {
+  ReplayStateFragments,
+} from "utils/tetsimu/replay/replayUrl";
+import SimuUrl, { SimuStateFragments } from "utils/tetsimu/simu/simuUrl";
 import {
   ChangeTetsimuModeAction,
   EditToSimuAction,
+  InitializeAppAction,
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
@@ -93,6 +100,114 @@ export const editToSimuMode = (state: EditState): EditToSimuAction => {
       },
       seed: rgn.seed,
     },
+  };
+};
+
+export const initializeApp = (
+  urlParams: string,
+  state: RootState
+): InitializeAppAction => {
+  const params = urlParams.split("&").map((param) => param.split("="));
+  const paramsObj: { [key: string]: string } = Object.assign(
+    {},
+    ...params.map((item) => ({
+      [item[0]]: item[1],
+    }))
+  );
+
+  switch (+paramsObj.m) {
+    case TetsimuMode.Simu: {
+      const fragments = new SimuUrl().toState(paramsObj);
+      return {
+        type: RootActionsType.InitializeApp,
+        payload: {
+          ...state,
+          mode: TetsimuMode.Simu,
+          simu: initializeSimuState(state.simu, fragments),
+        },
+      };
+    }
+    case TetsimuMode.Replay: {
+      const fragments = new ReplayUrl().toState(paramsObj);
+      return {
+        type: RootActionsType.InitializeApp,
+        payload: {
+          ...state,
+          mode: TetsimuMode.Replay,
+          replay: initializeReplayState(state.replay, fragments),
+        },
+      };
+    }
+    default: {
+      return {
+        type: RootActionsType.InitializeApp,
+        payload: {
+          ...state,
+          mode: TetsimuMode.Simu,
+        },
+      };
+    }
+  }
+};
+
+const initializeSimuState = (
+  state: SimuState,
+  _fragments: SimuStateFragments
+): SimuState => {
+  return state;
+};
+
+const initializeReplayState = (
+  state: ReplayState,
+  fragments: ReplayStateFragments
+): ReplayState => {
+  let current: ActiveTetromino;
+  const noOfCycle = (fragments.numberOfCycle + 1) % 7;
+  const nexts = fragments.replayNexts;
+  const fieldHelper = new FieldHelper(fragments.field);
+  let isDead = false;
+
+  if (nexts.length === 0) {
+    current = {
+      type: Tetromino.NONE,
+      direction: Direction.UP,
+      pos: { x: 0, y: 0 },
+      spinType: SpinType.None,
+    };
+  } else {
+    current = fieldHelper.makeActiveTetromino(nexts[0]);
+    if (fieldHelper.isOverlapping(current)) {
+      current = fieldHelper.makeActiveTetromino(nexts[0]);
+      if (fieldHelper.isOverlapping(current)) {
+        isDead = true;
+      }
+    }
+    nexts.shift();
+  }
+
+  return {
+    ...state,
+    current,
+    field: fragments.field,
+    hold: fragments.hold,
+    isDead,
+    noOfCycle,
+    replayInfo: {
+      ...state.replayInfo,
+      nextNum: fragments.nextNum,
+    },
+    histories: [
+      {
+        current,
+        field: fragments.field,
+        hold: fragments.hold,
+        isDead,
+        nexts,
+        noOfCycle,
+      },
+    ],
+    nexts,
+    replaySteps: fragments.replaySteps,
   };
 };
 
@@ -221,7 +336,7 @@ export const simuToReplayMode = (state: SimuState): SimuToReplayAction => {
   };
 
   const nexts = state.replayNexts;
-  const noOfCycle = (7 - history.nexts.bag.take + 1) % 7;
+  const noOfCycle = ((7 - history.nexts.bag.take + 2) % 7) + 1;
 
   return {
     type: RootActionsType.SimuToReplayMode,

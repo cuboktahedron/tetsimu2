@@ -57,6 +57,15 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
           },
         };
       }
+      case RootActionsType.InitializeApp: {
+        return {
+          ...state,
+          edit: action.payload.edit,
+          mode: action.payload.mode,
+          replay: action.payload.replay,
+          simu: action.payload.simu,
+        };
+      }
       case RootActionsType.ReplayToSimuMode:
         return {
           ...state,

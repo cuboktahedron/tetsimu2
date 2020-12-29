@@ -3,7 +3,7 @@ import {
   editToSimuMode,
   replayToSimuMode,
   simuToEditMode,
-  simuToReplayMode
+  simuToReplayMode,
 } from "ducks/root/actions";
 import {
   ChangeTetsimuModeAction,
@@ -11,7 +11,7 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction
+  SimuToReplayAction,
 } from "ducks/root/types";
 import { Direction, Tetromino, TetsimuMode } from "types/core";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
@@ -21,7 +21,7 @@ import { makeField } from "../../utils/tetsimu/testUtils/makeField";
 import { makeHold } from "../../utils/tetsimu/testUtils/makeHold";
 import {
   makeNextNote,
-  makeNextNotes
+  makeNextNotes,
 } from "../../utils/tetsimu/testUtils/makeNextNote";
 import { makeReplayState } from "../../utils/tetsimu/testUtils/makeReplayState";
 import { makeReplayHoldStep } from "../../utils/tetsimu/testUtils/makeReplayStep";
@@ -184,6 +184,7 @@ describe("rootModule", () => {
 
   describe("simuToReplayMode", () => {
     it("should change mode and take over state", () => {
+      const takeOfBag = 5;
       const actual = simuToReplayMode(
         makeSimuState({
           config: {
@@ -197,7 +198,7 @@ describe("rootModule", () => {
               isDead: false,
               lastRoseUpColumn: -1,
               nexts: {
-                bag: makeNextNote("IJLTZ", 5),
+                bag: makeNextNote("IJLTZ", takeOfBag),
                 settled: [Tetromino.Z],
                 unsettled: [],
               },
@@ -225,13 +226,13 @@ describe("rootModule", () => {
               hold: makeHold(Tetromino.I, false),
               isDead: false,
               nexts: makeTetrominos("ZTSOLJIIJLOS"),
-              noOfCycle: 3,
+              noOfCycle: 5,
             },
           ],
           hold: makeHold(Tetromino.I, false),
           isDead: false,
           nexts: makeTetrominos("ZTSOLJIIJLOS"),
-          noOfCycle: 3,
+          noOfCycle: 5,
           replayInfo: {
             nextNum: 12,
           },

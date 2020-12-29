@@ -9,9 +9,10 @@ export const MAX_FIELD_HEIGHT = 30;
 export const MAX_VISIBLE_FIELD_HEIGHT = 21;
 
 export const TetsimuMode = {
-  Simu: 1,
+  Simu: 0,
+  Replay: 1,
   Edit: 2,
-  Replay: 3,
+  None: 99,
 } as const;
 
 export type TetsimuMode = typeof TetsimuMode[keyof typeof TetsimuMode];
@@ -123,7 +124,7 @@ export type ReplayStepDrop = {
   type: typeof ReplayStepType.Drop;
   dir: Direction;
   pos: Vector2;
-  spinType: SpinType,
+  spinType: SpinType;
 };
 
 export type ReplayStepHold = {

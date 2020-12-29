@@ -16,6 +16,8 @@ import { clearSimu } from "ducks/simu/actions";
 import React from "react";
 import { TetsimuMode } from "types/core";
 import { SimuConductor } from "utils/tetsimu/simu/simuConductor";
+import SimuUrl from "utils/tetsimu/simu/simuUrl";
+import TextFieldEx from "../ext/TextFieldEx";
 import { SimuContext } from "./Simu";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -29,6 +31,10 @@ const useStyles = makeStyles((theme: Theme) =>
         marginBottom: theme.spacing(1),
         marginTop: theme.spacing(1),
       },
+
+      "& > div": {
+        marginBottom: theme.spacing(1),
+      },
     },
 
     buttons: {
@@ -38,35 +44,6 @@ const useStyles = makeStyles((theme: Theme) =>
       "& > div": {
         display: "flex",
         margin: "4px 0",
-      },
-    },
-
-    cellTypes: {
-      display: "flex",
-      flexWrap: "wrap",
-
-      "& > div": {
-        border: "solid 4px black",
-        borderRadius: 8,
-        boxSizing: "border-box",
-        fontSize: "24px",
-        fontWeight: "bold",
-        height: 48,
-        lineHeight: "42px",
-        margin: 2,
-        opacity: 0.7,
-        textAlign: "center",
-        width: "48px",
-
-        "&:hover": {
-          border: "solid 4px grey",
-          cursor: "pointer",
-        },
-
-        "&.selected": {
-          border: "solid 4px red",
-          opacity: 1,
-        },
       },
     },
 
@@ -80,6 +57,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Tools: React.FC = () => {
   const { state, dispatch } = React.useContext(SimuContext);
+  const [stateUrl, setStateUrl] = React.useState("");
 
   const handleEditClick = () => {
     dispatch(simuToEditMode(state));
@@ -95,6 +73,11 @@ const Tools: React.FC = () => {
 
   const handleReplayNoResetClick = () => {
     dispatch(changeTetsimuMode(TetsimuMode.Replay));
+  };
+
+  const handleUrlClick = () => {
+    const url = new SimuUrl().fromState(state);
+    setStateUrl(url);
   };
 
   const handleClearClick = () => {
@@ -147,6 +130,25 @@ const Tools: React.FC = () => {
         </div>
       </div>
       <Divider />
+      <div>
+        <Button variant="contained" color="primary" onClick={handleUrlClick}>
+          URL
+        </Button>
+      </div>
+      <div>
+        <TextFieldEx
+          fullWidth
+          label="url"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          InputProps={{
+            readOnly: true,
+          }}
+          value={stateUrl}
+          variant="outlined"
+        />
+      </div>
       <Button variant="contained" color="secondary" onClick={handleClearClick}>
         CLEAR
       </Button>

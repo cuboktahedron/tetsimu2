@@ -1,5 +1,6 @@
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
 import reducer from "ducks/root";
+import { initializeApp } from "ducks/root/actions";
 import React from "react";
 import { initialRootState } from "stores/RootState";
 import { Action, TetsimuMode } from "types/core";
@@ -34,6 +35,10 @@ const App: React.FC = () => {
   );
   const [open, setOpen] = React.useState(false);
 
+  React.useEffect(() => {
+    dispatch(initializeApp(location.search.replace(/^\?/, ""), state));
+  }, []);
+
   const main = (() => {
     switch (state.mode) {
       case TetsimuMode.Simu:
@@ -42,6 +47,8 @@ const App: React.FC = () => {
         return <Edit />;
       case TetsimuMode.Replay:
         return <Replay />;
+      default:
+        return "";
     }
   })();
 

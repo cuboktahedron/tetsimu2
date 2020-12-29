@@ -1,3 +1,6 @@
+import { EditState } from "stores/EditState";
+import { ReplayState } from "stores/ReplayState";
+import { SimuState } from "stores/SimuState";
 import {
   Action,
   ActiveTetromino,
@@ -14,6 +17,7 @@ import { SimuRetryState } from "types/simu";
 export const RootActionsType = {
   ChangeTetsimuMode: "root/changeTetsimuMode",
   EditToSimuMode: "root/editToSimuMode",
+  InitializeApp: "root/initializeApp",
   ReplayToSimuMode: "root/replayToSimuMode",
   SimuToEditMode: "root/simuToEditMode",
   SimuToReplayMode: "root/simuToReplayMode",
@@ -22,6 +26,7 @@ export const RootActionsType = {
 export type RootActions =
   | ChangeTetsimuModeAction
   | EditToSimuAction
+  | InitializeAppAction
   | ReplayToSimuAction
   | SimuToEditAction
   | SimuToReplayAction;
@@ -47,6 +52,16 @@ export type EditToSimuAction = {
     };
     retryState: SimuRetryState;
     seed: number;
+  };
+} & Action;
+
+export type InitializeAppAction = {
+  type: typeof RootActionsType.InitializeApp;
+  payload: {
+    edit: EditState;
+    mode: TetsimuMode;
+    replay: ReplayState;
+    simu: SimuState;
   };
 } & Action;
 
