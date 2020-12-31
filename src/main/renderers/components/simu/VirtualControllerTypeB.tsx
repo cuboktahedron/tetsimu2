@@ -280,7 +280,7 @@ const VirtualControllerTypeB: React.FC = () => {
           onTouchStart={(e) => handleTouchStart(e, "z")}
           onTouchEnd={(e) => handleTouchEnd(e, "z")}
         >
-          A
+          B
         </div>
         <div
           className={`${classes.key} ${classes.keyButton}`}
@@ -292,7 +292,7 @@ const VirtualControllerTypeB: React.FC = () => {
           onTouchStart={(e) => handleTouchStart(e, "x")}
           onTouchEnd={(e) => handleTouchEnd(e, "x")}
         >
-          B
+          A
         </div>
       </div>
     </div>
