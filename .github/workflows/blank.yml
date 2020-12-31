@@ -39,6 +39,7 @@ jobs:
         mkdir work
         sed -i "s/\${COMMIT_ID}/$(git -C $GITHUB_WORKSPACE/main log --pretty=%H -n 1)/" www/index.html > work/index.html
         cp -p www/index.html work/
+        cp -p www/favicon.ico work/
         cp -p dist/index.js work/
         rm -rf $GITHUB_WORKSPACE/pages_contents/static/q/tetsimu2
         cp -rp work $GITHUB_WORKSPACE/pages_contents/static/q/tetsimu2
