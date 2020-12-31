@@ -214,16 +214,39 @@ const initializeReplayState = (
 export const replayToSimuMode = (state: ReplayState): ReplayToSimuAction => {
   const rgn = new RandomNumberGenerator();
   const initialSeed = rgn.seed;
+
+  const history = (() => {
+    const reverseHistories = state.histories.concat().reverse();
+    let retHistory = reverseHistories[0];
+    for (let i = 1; i < reverseHistories.length; i++) {
+      const history = reverseHistories[i];
+      if (history.noOfCycle === 7) {
+        return history;
+      } else {
+        retHistory = history;
+      }
+    }
+
+    return retHistory;
+  })();
+
+  const consumped = history.nexts.slice(
+    0,
+    history.nexts.length - state.nexts.length - 1
+  );
+
+  let bagCandidates = [
+    Tetromino.I,
+    Tetromino.J,
+    Tetromino.L,
+    Tetromino.O,
+    Tetromino.S,
+    Tetromino.T,
+    Tetromino.Z,
+  ].filter((type) => !consumped.includes(type));
+
   const initialBag = {
-    candidates: [
-      Tetromino.I,
-      Tetromino.J,
-      Tetromino.L,
-      Tetromino.O,
-      Tetromino.S,
-      Tetromino.T,
-      Tetromino.Z,
-    ],
+    candidates: bagCandidates,
     take: (7 - (state.noOfCycle - 1) + 1) % 7,
   };
 

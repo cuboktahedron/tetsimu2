@@ -110,7 +110,7 @@ export class ReplayConductor {
       }
 
       newCurrentType = type;
-      newNoOfCycle++;
+      newNoOfCycle = newNoOfCycle % 7 + 1;
     } else {
       newCurrentType = this.state.hold.type;
     }
@@ -178,7 +178,7 @@ export class ReplayConductor {
     const isDead = this.fieldHelper.isOverlapping(newCurrent);
     const newField = this.fieldHelper.field;
     const newHold = this.state.hold;
-    const newNoOfCycle = this.state.noOfCycle + 1;
+    const newNoOfCycle = this.state.noOfCycle % 7 + 1;
     const newHistory: ReplayStateHistory = {
       current: newCurrent,
       field: newField,

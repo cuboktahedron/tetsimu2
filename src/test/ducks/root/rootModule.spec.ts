@@ -133,14 +133,40 @@ describe("rootModule", () => {
 
   describe("replayToSimuMode", () => {
     it("should change mode and take over state", () => {
+      const historyBase = {
+        field: [],
+        hold: makeHold(Tetromino.I, false),
+        isDead: false,
+      };
+
       const actual = replayToSimuMode(
         makeReplayState({
-          current: makeCurrent(Direction.DOWN, 5, 3, Tetromino.T),
+          current: makeCurrent(Direction.DOWN, 4, 19, Tetromino.L),
           field: makeField("IJLOSTZNNN"),
+          histories: [
+            {
+              ...historyBase,
+              current: makeCurrent(Direction.UP, 4, 19, Tetromino.I),
+              nexts: makeTetrominos("JLOSTZIZTSOLJIIJLOSTZ"),
+              noOfCycle: 1,
+            },
+            {
+              ...historyBase,
+              current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+              nexts: makeTetrominos("LOSTZIZTSOLJIIJLOSTZ"),
+              noOfCycle: 2,
+            },
+            {
+              ...historyBase,
+              current: makeCurrent(Direction.UP, 4, 19, Tetromino.L),
+              nexts: makeTetrominos("OSTZIZTSOLJIIJLOSTZ"),
+              noOfCycle: 3,
+            },
+          ],
           hold: makeHold(Tetromino.I, false),
           isDead: false,
-          nexts: makeTetrominos("ZTSOLJIIJLOSTZ"),
-          noOfCycle: 5,
+          nexts: makeTetrominos("OSTZIZTSOLJIIJLOSTZ"),
+          noOfCycle: 3,
           replayInfo: {
             nextNum: 12,
           },
@@ -150,28 +176,28 @@ describe("rootModule", () => {
       const expected: ReplayToSimuAction = {
         type: RootActionsType.ReplayToSimuMode,
         payload: {
-          current: makeCurrent(Direction.UP, 4, 19, Tetromino.T),
+          current: makeCurrent(Direction.UP, 4, 19, Tetromino.L),
           field: makeField("IJLOSTZNNN"),
           hold: makeHold(Tetromino.I, false),
           isDead: false,
           lastRoseUpColumn: -1,
           nexts: {
-            bag: makeNextNote("IJLTZ", 5),
+            bag: makeNextNote("", 0),
             nextNum: 12,
-            settled: makeTetrominos("ZTSOLJIIJLOS"),
+            settled: makeTetrominos("OSTZIZTSOLJI"),
             unsettled: [],
           },
           retryState: {
             bag: {
-              candidates: makeTetrominos("IJLOSTZ"),
-              take: 4,
+              candidates: makeTetrominos("ILOSTZ"),
+              take: 6,
             },
             field: makeField("IJLOSTZNNN"),
             hold: makeHold(Tetromino.I, false),
             lastRoseUpColumn: -1,
             seed: actual.payload.retryState.seed,
             unsettledNexts: new NextNotesInterpreter().interpret(
-              "TZTSOLJIIJLOS"
+              "LOSTZIZTSOLJI"
             ),
           },
           seed: actual.payload.seed,
