@@ -3,14 +3,25 @@
 テトリスができます。  
 [Tetsimu](https://github.com/cuboktahedron/tetsimu)の後継版です。
 
-# Demo
+# デモ
  
 https://cuboktahedron.github.io/q/tetsimu2/
 
-# License
+# 動作環境
+
+以下で動作することを確認しています。
+
+## Windows
+- Chrome
+- Edge
+
+## Android
+- Chrome
+
+# ライセンス
 MIT
 
-# Author
+# 製作者
 
 - cuboktahedron
 - [Twitter](https://twitter.com/cubokta)
