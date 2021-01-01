@@ -1,4 +1,8 @@
-import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
+import {
+  createMuiTheme,
+  MuiThemeProvider,
+  useMediaQuery
+} from "@material-ui/core";
 import reducer from "ducks/root";
 import { initializeApp } from "ducks/root/actions";
 import React from "react";
@@ -12,6 +16,11 @@ import Simu from "./simu/Simu";
 const theme = createMuiTheme({
   typography: {
     fontFamily: '"游ゴシック", YuGothic, sans-serif',
+  },
+  props: {
+    MuiUseMediaQuery: {
+      noSsr: true,
+    },
   },
 });
 
@@ -34,9 +43,14 @@ const App: React.FC = () => {
     Math.min(480, window.innerWidth)
   );
   const [open, setOpen] = React.useState(false);
+  const mathces = useMediaQuery("(min-width:1168px)", { noSsr: true });
 
   React.useEffect(() => {
     dispatch(initializeApp(location.search.replace(/^\?/, ""), state));
+
+    if (mathces) {
+      setOpen(true);
+    }
   }, []);
 
   const main = (() => {
