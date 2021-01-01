@@ -19,25 +19,25 @@ export const TetrominoShape = {
 
 const StandardSrs = {
   left: {
-    [Direction.UP]: [
+    [Direction.Up]: [
       { x: 1, y: 0 },
       { x: 1, y: 1 },
       { x: 0, y: -2 },
       { x: 1, y: -2 },
     ],
-    [Direction.LEFT]: [
+    [Direction.Left]: [
       { x: -1, y: 0 },
       { x: -1, y: -1 },
       { x: 0, y: 2 },
       { x: -1, y: 2 },
     ],
-    [Direction.DOWN]: [
+    [Direction.Down]: [
       { x: -1, y: 0 },
       { x: -1, y: 1 },
       { x: 0, y: -2 },
       { x: -1, y: -2 },
     ],
-    [Direction.RIGHT]: [
+    [Direction.Right]: [
       { x: 1, y: 0 },
       { x: 1, y: -1 },
       { x: 0, y: 2 },
@@ -45,25 +45,25 @@ const StandardSrs = {
     ],
   },
   right: {
-    [Direction.UP]: [
+    [Direction.Up]: [
       { x: -1, y: 0 },
       { x: -1, y: 1 },
       { x: 0, y: -2 },
       { x: -1, y: -2 },
     ],
-    [Direction.LEFT]: [
+    [Direction.Left]: [
       { x: -1, y: 0 },
       { x: -1, y: -1 },
       { x: 0, y: 2 },
       { x: -1, y: 2 },
     ],
-    [Direction.DOWN]: [
+    [Direction.Down]: [
       { x: 1, y: 0 },
       { x: 1, y: 1 },
       { x: 0, y: -2 },
       { x: 1, y: -2 },
     ],
-    [Direction.RIGHT]: [
+    [Direction.Right]: [
       { x: 1, y: 0 },
       { x: 1, y: -1 },
       { x: 0, y: 2 },

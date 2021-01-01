@@ -40,7 +40,7 @@ const useStyles = makeStyles(() =>
 );
 
 const cellBackground = {
-  [FieldCellValue.NONE]: "transparent",
+  [FieldCellValue.None]: "transparent",
   [FieldCellValue.I]: lightBlue.A100,
   [FieldCellValue.J]: blue.A100,
   [FieldCellValue.L]: orange.A100,
@@ -48,7 +48,7 @@ const cellBackground = {
   [FieldCellValue.S]: green.A100,
   [FieldCellValue.T]: purple.A100,
   [FieldCellValue.Z]: red.A100,
-  [FieldCellValue.GARBAGE]: grey.A100,
+  [FieldCellValue.Garbage]: grey.A100,
 };
 
 type FieldProps = {};
@@ -67,7 +67,7 @@ const Field: React.FC<FieldProps> = () => {
   const rows = field.slice(0, MAX_VISIBLE_FIELD_HEIGHT).map((row, rowIndex) => {
     const cols = row.map((cell, colIndex) => {
       let background: string;
-      if (isDead && cell !== FieldCellValue.NONE) {
+      if (isDead && cell !== FieldCellValue.None) {
         background = grey.A200;
       } else {
         background = cellBackground[cell];

@@ -103,7 +103,7 @@ export class ReplayConductor {
     let newNoOfCycle = this.state.noOfCycle;
     const newNexts = [...this.state.nexts];
 
-    if (this.state.hold.type === Tetromino.NONE) {
+    if (this.state.hold.type === Tetromino.None) {
       const type = newNexts.shift();
       if (type === undefined) {
         return false;

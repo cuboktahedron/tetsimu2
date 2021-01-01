@@ -34,7 +34,7 @@ export const makeEditState = (state: {
       field: [],
       hold: {
         canHold: false,
-        type: Tetromino.NONE,
+        type: Tetromino.None,
       },
       nexts: {
         nextNotes: [],
@@ -44,7 +44,7 @@ export const makeEditState = (state: {
         nextBaseNo: 1,
         nextsPattern: "",
         noOfCycle: 1,
-        selectedCellValues: [FieldCellValue.NONE],
+        selectedCellValues: [FieldCellValue.None],
       },
       zoom: 0,
     },

@@ -79,8 +79,8 @@ export const changeHold = (
   prevHold: HoldState,
   typeToSet: Tetromino
 ): ChangeHoldAction => {
-  if (typeToSet === FieldCellValue.NONE) {
-    if (prevHold.type === Tetromino.NONE) {
+  if (typeToSet === FieldCellValue.None) {
+    if (prevHold.type === Tetromino.None) {
       return {
         type: EditActionsType.ChangeHold,
         payload: {
@@ -117,7 +117,7 @@ export const changeHold = (
         payload: {
           hold: {
             canHold: true,
-            type: Tetromino.NONE,
+            type: Tetromino.None,
           },
           succeeded: true,
         },
@@ -276,11 +276,11 @@ export const clearEdit = (): ClearEditAction => {
     type: EditActionsType.Clear,
     payload: {
       field: new Array(MAX_FIELD_HEIGHT).fill(
-        new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.NONE)
+        new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.None)
       ),
       hold: {
         canHold: true,
-        type: Tetromino.NONE,
+        type: Tetromino.None,
       },
       nexts: {
         nextNotes: [],

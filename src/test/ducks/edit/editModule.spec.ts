@@ -196,7 +196,7 @@ describe("editModule", () => {
           field: makeField(),
           hold: {
             canHold: true,
-            type: Tetromino.NONE,
+            type: Tetromino.None,
           },
           nexts: {
             nextNotes: [],

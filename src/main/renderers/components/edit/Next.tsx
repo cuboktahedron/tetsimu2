@@ -62,16 +62,16 @@ const Next: React.FC<NextProps> = (props) => {
 
     if (isLeft) {
       if (
-        cellValuesToSet[0] === FieldCellValue.NONE ||
-        cellValuesToSet[0] === FieldCellValue.GARBAGE
+        cellValuesToSet[0] === FieldCellValue.None ||
+        cellValuesToSet[0] === FieldCellValue.Garbage
       ) {
         dispatch(changeNext(state.nexts.nextNotes, props.nextNo, []));
       } else {
         const typesToSet = cellValuesToSet
           .filter((cellValue) => {
             return (
-              cellValue !== FieldCellValue.NONE &&
-              cellValue !== FieldCellValue.GARBAGE
+              cellValue !== FieldCellValue.None &&
+              cellValue !== FieldCellValue.Garbage
             );
           })
           .map((cellValue) => cellValue as Tetromino);
@@ -103,7 +103,7 @@ const Next: React.FC<NextProps> = (props) => {
     if (props.note.candidates.length === 0) {
       return [
         <div className={classes.nextNo}>{nextNo}</div>,
-        <TetrominoBlocks type={Tetromino.NONE}></TetrominoBlocks>,
+        <TetrominoBlocks type={Tetromino.None}></TetrominoBlocks>,
       ];
     } else if (props.note.candidates.length === 1 && props.note.take === 1) {
       return [

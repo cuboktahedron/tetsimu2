@@ -15,7 +15,7 @@ import {
 } from "@material-ui/core/colors";
 
 const blockBackground = {
-  [Tetromino.NONE]: "transparent",
+  [Tetromino.None]: "transparent",
   [Tetromino.I]: lightBlue.A100,
   [Tetromino.J]: blue.A100,
   [Tetromino.L]: orange.A100,
@@ -73,7 +73,7 @@ const ActiveField: React.FC<ActiveFieldProps> = () => {
   const classes = useStyles(styleProps);
   const maxRow = MAX_VISIBLE_FIELD_HEIGHT - 1;
 
-  if (current.type === Tetromino.NONE) {
+  if (current.type === Tetromino.None) {
     return <div></div>;
   }
 
@@ -120,7 +120,7 @@ const ActiveField: React.FC<ActiveFieldProps> = () => {
         const blockCol = block.x + current.pos.x;
         return (
           blockRow < 0 ||
-          state.field[blockRow][blockCol] !== FieldCellValue.NONE
+          state.field[blockRow][blockCol] !== FieldCellValue.None
         );
       })
     ) {

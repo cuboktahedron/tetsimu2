@@ -55,7 +55,7 @@ describe("rootModule", () => {
             nextBaseNo: 1,
             nextsPattern: "IJ, LOSTZIJ, ZTSOL",
             noOfCycle: 6,
-            selectedCellValues: [Tetromino.NONE],
+            selectedCellValues: [Tetromino.None],
           },
         })
       );
@@ -63,7 +63,7 @@ describe("rootModule", () => {
       const expected: EditToSimuAction = {
         type: RootActionsType.EditToSimuMode,
         payload: {
-          current: makeCurrent(Direction.UP, 4, 19, Tetromino.I),
+          current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
           field: makeField("IJLOSTZNNN"),
           hold: makeHold(Tetromino.I, false),
           lastRoseUpColumn: -1,
@@ -101,7 +101,7 @@ describe("rootModule", () => {
           config: {
             nextNum: 5,
           },
-          current: makeCurrent(Direction.DOWN, 5, 8, Tetromino.I),
+          current: makeCurrent(Direction.Down, 5, 8, Tetromino.I),
           field: makeField("IJLOSTZNNN"),
           hold: makeHold(Tetromino.I, false),
           nexts: {
@@ -141,24 +141,24 @@ describe("rootModule", () => {
 
       const actual = replayToSimuMode(
         makeReplayState({
-          current: makeCurrent(Direction.DOWN, 4, 19, Tetromino.L),
+          current: makeCurrent(Direction.Down, 4, 19, Tetromino.L),
           field: makeField("IJLOSTZNNN"),
           histories: [
             {
               ...historyBase,
-              current: makeCurrent(Direction.UP, 4, 19, Tetromino.I),
+              current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
               nexts: makeTetrominos("JLOSTZIZTSOLJIIJLOSTZ"),
               noOfCycle: 1,
             },
             {
               ...historyBase,
-              current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+              current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
               nexts: makeTetrominos("LOSTZIZTSOLJIIJLOSTZ"),
               noOfCycle: 2,
             },
             {
               ...historyBase,
-              current: makeCurrent(Direction.UP, 4, 19, Tetromino.L),
+              current: makeCurrent(Direction.Up, 4, 19, Tetromino.L),
               nexts: makeTetrominos("OSTZIZTSOLJIIJLOSTZ"),
               noOfCycle: 3,
             },
@@ -176,7 +176,7 @@ describe("rootModule", () => {
       const expected: ReplayToSimuAction = {
         type: RootActionsType.ReplayToSimuMode,
         payload: {
-          current: makeCurrent(Direction.UP, 4, 19, Tetromino.L),
+          current: makeCurrent(Direction.Up, 4, 19, Tetromino.L),
           field: makeField("IJLOSTZNNN"),
           hold: makeHold(Tetromino.I, false),
           isDead: false,
@@ -243,11 +243,11 @@ describe("rootModule", () => {
       const expected: SimuToReplayAction = {
         type: RootActionsType.SimuToReplayMode,
         payload: {
-          current: makeCurrent(Direction.UP, 4, 19, Tetromino.T),
+          current: makeCurrent(Direction.Up, 4, 19, Tetromino.T),
           field: makeField("IJLOSTZNNN"),
           histories: [
             {
-              current: makeCurrent(Direction.UP, 4, 19, Tetromino.T),
+              current: makeCurrent(Direction.Up, 4, 19, Tetromino.T),
               field: makeField("IJLOSTZNNN"),
               hold: makeHold(Tetromino.I, false),
               isDead: false,

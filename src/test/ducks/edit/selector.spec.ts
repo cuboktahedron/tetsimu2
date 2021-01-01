@@ -39,7 +39,7 @@ describe("EditSelector", () => {
           nextBaseNo: 3,
           nextsPattern: "",
           noOfCycle: 1,
-          selectedCellValues: [FieldCellValue.NONE],
+          selectedCellValues: [FieldCellValue.None],
         },
       });
       const actual = getClippedEditNexts(state);
@@ -74,7 +74,7 @@ describe("EditSelector", () => {
           nextBaseNo: 98,
           nextsPattern: "",
           noOfCycle: 1,
-          selectedCellValues: [FieldCellValue.NONE],
+          selectedCellValues: [FieldCellValue.None],
         },
       });
       const actual = getClippedEditNexts(state);
@@ -97,7 +97,7 @@ describe("EditSelector", () => {
           nextBaseNo: 90,
           nextsPattern: "",
           noOfCycle: 1,
-          selectedCellValues: [FieldCellValue.NONE],
+          selectedCellValues: [FieldCellValue.None],
         },
       });
       const actual = getClippedEditNexts(state);
@@ -116,7 +116,7 @@ describe("EditSelector", () => {
           nextBaseNo: 993,
           nextsPattern: "",
           noOfCycle: 1,
-          selectedCellValues: [FieldCellValue.NONE],
+          selectedCellValues: [FieldCellValue.None],
         },
       });
       const actual = getClippedEditNexts(state);

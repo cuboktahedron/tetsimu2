@@ -38,10 +38,10 @@ const TetrominoBlocksJ: React.FC = () => {
           <Block type={Tetromino.J}></Block>
         </div>
         <div className={classes.block}>
-          <Block type={Tetromino.NONE}></Block>
+          <Block type={Tetromino.None}></Block>
         </div>
         <div className={classes.block}>
-          <Block type={Tetromino.NONE}></Block>
+          <Block type={Tetromino.None}></Block>
         </div>
       </div>
       <div className={classes.innerRoot} style={{ alignItems: "flex-start" }}>

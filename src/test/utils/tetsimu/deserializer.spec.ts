@@ -32,7 +32,7 @@ describe("deserializeField", () => {
 describe("deserializeHold", () => {
   it("should deserialize hold with none", function () {
     const actual = deserializeHold("0");
-    const expected = makeHold(Tetromino.NONE, true);
+    const expected = makeHold(Tetromino.None, true);
 
     expect(actual).toEqual(expected);
   });
@@ -72,10 +72,10 @@ describe("deserializeSteps", () => {
   it("should deserialize steps", function () {
     const actual = deserializeSteps("AAAQ0G8_");
     const expected = [
-      makeReplayDropStep(Direction.UP, 0, 0),
+      makeReplayDropStep(Direction.Up, 0, 0),
       makeReplayHardDropStep(),
       makeReplayHoldStep(),
-      makeReplayDropStep(Direction.LEFT, 8, 20, SpinType.Spin),
+      makeReplayDropStep(Direction.Left, 8, 20, SpinType.Spin),
       makeReplayHardDropStep(),
     ];
 

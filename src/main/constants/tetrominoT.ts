@@ -1,28 +1,28 @@
 import { Direction } from "types/core";
 
 export const Shape = {
-  [Direction.UP]: [
+  [Direction.Up]: [
     { x: 0, y: 0 },
     { x: -1, y: 0 },
     { x: 1, y: 0 },
     { x: 0, y: 1 },
   ],
 
-  [Direction.LEFT]: [
+  [Direction.Left]: [
     { x: 0, y: 0 },
     { x: -1, y: 0 },
     { x: 0, y: 1 },
     { x: 0, y: -1 },
   ],
 
-  [Direction.DOWN]: [
+  [Direction.Down]: [
     { x: 0, y: 0 },
     { x: -1, y: 0 },
     { x: 1, y: 0 },
     { x: 0, y: -1 },
   ],
 
-  [Direction.RIGHT]: [
+  [Direction.Right]: [
     { x: 0, y: 0 },
     { x: 1, y: 0 },
     { x: 0, y: 1 },

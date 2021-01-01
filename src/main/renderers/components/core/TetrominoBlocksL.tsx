@@ -35,10 +35,10 @@ const TetrominoBlocksL: React.FC = () => {
     <div className={classes.root}>
       <div className={classes.innerRoot} style={{ alignItems: "flex-end" }}>
         <div className={classes.block}>
-          <Block type={Tetromino.NONE}></Block>
+          <Block type={Tetromino.None}></Block>
         </div>
         <div className={classes.block}>
-          <Block type={Tetromino.NONE}></Block>
+          <Block type={Tetromino.None}></Block>
         </div>
         <div className={classes.block}>
           <Block type={Tetromino.L}></Block>

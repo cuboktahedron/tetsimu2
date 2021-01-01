@@ -54,7 +54,7 @@ const Nexts: React.FC<NextsProps> = (props) => {
     } else {
       return state.nexts.concat(
         new Array(state.replayInfo.nextNum - state.nexts.length).fill(
-          Tetromino.NONE
+          Tetromino.None
         )
       );
     }

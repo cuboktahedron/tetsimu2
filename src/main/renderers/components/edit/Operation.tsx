@@ -27,8 +27,8 @@ import { FieldCellValue } from "types/core";
 import { EditContext } from "./Edit";
 
 const fieldCellColors = {
-  [FieldCellValue.NONE]: "#000",
-  [FieldCellValue.GARBAGE]: grey.A100,
+  [FieldCellValue.None]: "#000",
+  [FieldCellValue.Garbage]: grey.A100,
   [FieldCellValue.I]: lightBlue.A100,
   [FieldCellValue.J]: blue.A100,
   [FieldCellValue.L]: orange.A100,
@@ -146,8 +146,8 @@ const Operation: React.FC = () => {
     { type: FieldCellValue.S, letter: "S" },
     { type: FieldCellValue.T, letter: "T" },
     { type: FieldCellValue.Z, letter: "Z" },
-    { type: FieldCellValue.GARBAGE, letter: "" },
-    { type: FieldCellValue.NONE, letter: "" },
+    { type: FieldCellValue.Garbage, letter: "" },
+    { type: FieldCellValue.None, letter: "" },
   ].map((cellType) => {
     return (
       <ListItem

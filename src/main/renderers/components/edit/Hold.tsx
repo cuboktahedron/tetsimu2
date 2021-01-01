@@ -36,15 +36,15 @@ const Hold: React.FC<HoldProps> = () => {
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === MouseButton.Left) {
       if (
-        typeToSet === FieldCellValue.NONE ||
-        typeToSet === FieldCellValue.GARBAGE
+        typeToSet === FieldCellValue.None ||
+        typeToSet === FieldCellValue.Garbage
       ) {
-        dispatch(changeHold(state.hold, Tetromino.NONE));
+        dispatch(changeHold(state.hold, Tetromino.None));
       } else {
         dispatch(changeHold(state.hold, typeToSet));
       }
     } else if (e.button === MouseButton.Right) {
-      dispatch(changeHold(state.hold, Tetromino.NONE));
+      dispatch(changeHold(state.hold, Tetromino.None));
     }
   };
 

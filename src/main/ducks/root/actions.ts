@@ -69,7 +69,7 @@ export const editToSimuMode = (state: EditState): EditToSimuAction => {
   }
 
   const newCurrent: ActiveTetromino = {
-    direction: Direction.UP,
+    direction: Direction.Up,
     pos: {
       x: 4,
       y: 19,
@@ -169,8 +169,8 @@ const initializeReplayState = (
 
   if (nexts.length === 0) {
     current = {
-      type: Tetromino.NONE,
-      direction: Direction.UP,
+      type: Tetromino.None,
+      direction: Direction.Up,
       pos: { x: 0, y: 0 },
       spinType: SpinType.None,
     };
@@ -274,7 +274,7 @@ export const replayToSimuMode = (state: ReplayState): ReplayToSimuAction => {
   }
 
   const newCurrent: ActiveTetromino = {
-    direction: Direction.UP,
+    direction: Direction.Up,
     pos: {
       x: 4,
       y: 19,
@@ -352,7 +352,7 @@ export const simuToEditMode = (state: SimuState): SimuToEditAction => {
 export const simuToReplayMode = (state: SimuState): SimuToReplayAction => {
   const history = state.histories[0];
   const current: ActiveTetromino = {
-    direction: Direction.UP,
+    direction: Direction.Up,
     pos: { x: 4, y: 19 },
     spinType: SpinType.None,
     type: history.currentType,

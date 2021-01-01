@@ -72,14 +72,14 @@ export const doSimu = (
     changed = ret || changed;
   } else {
     if (keys.ArrowDown.active) {
-      changed = conductor.moveTetromino(Direction.DOWN) || changed;
+      changed = conductor.moveTetromino(Direction.Down) || changed;
     } else {
       if (keys.ArrowLeft.active) {
-        changed = conductor.moveTetromino(Direction.LEFT) || changed;
+        changed = conductor.moveTetromino(Direction.Left) || changed;
       }
 
       if (keys.ArrowRight.active) {
-        changed = conductor.moveTetromino(Direction.RIGHT) || changed;
+        changed = conductor.moveTetromino(Direction.Right) || changed;
       }
     }
 

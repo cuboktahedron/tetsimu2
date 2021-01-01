@@ -44,7 +44,7 @@ export default class NextGenerator {
     if (this.nextNotes.isEmpty()) {
       if (!options.endless) {
         return {
-          type: Tetromino.NONE,
+          type: Tetromino.None,
           nextNotes: [],
           bag: this.bag,
         };

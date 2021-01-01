@@ -41,12 +41,12 @@ const TetrominoBlocksZ: React.FC = () => {
           <Block type={Tetromino.Z}></Block>
         </div>
         <div className={classes.block}>
-          <Block type={Tetromino.NONE}></Block>
+          <Block type={Tetromino.None}></Block>
         </div>
       </div>
       <div className={classes.innerRoot} style={{ alignItems: "flex-start" }}>
         <div className={classes.block}>
-          <Block type={Tetromino.NONE}></Block>
+          <Block type={Tetromino.None}></Block>
         </div>
         <div className={classes.block}>
           <Block type={Tetromino.Z}></Block>

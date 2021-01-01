@@ -57,9 +57,9 @@ export const makeSimuState = (state: {
         tapControllerType: TapControllerType.None,
       },
       current: {
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 0, y: 0 },
-        type: Tetromino.NONE,
+        type: Tetromino.None,
       },
       env: {
         isTouchDevice: false,
@@ -68,7 +68,7 @@ export const makeSimuState = (state: {
       histories: [],
       hold: {
         canHold: false,
-        type: Tetromino.NONE,
+        type: Tetromino.None,
       },
       isDead: false,
       lastRoseUpColumn: -1,
@@ -85,7 +85,7 @@ export const makeSimuState = (state: {
         field: [],
         hold: {
           canHold: false,
-          type: Tetromino.NONE,
+          type: Tetromino.None,
         },
         lastRoseUpColumn: -1,
         nexts: {

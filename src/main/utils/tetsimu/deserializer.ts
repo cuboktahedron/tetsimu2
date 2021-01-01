@@ -25,7 +25,7 @@ export const deserializeField = (dataString: string): FieldState => {
 
   while (!reader.eof) {
     const value = reader.read(4);
-    if (value <= FieldCellValue.GARBAGE) {
+    if (value <= FieldCellValue.Garbage) {
       fieldCellValues.push(value as FieldCellValue);
     } else {
       break;
@@ -35,7 +35,7 @@ export const deserializeField = (dataString: string): FieldState => {
   const lackOfCellNums =
     MAX_FIELD_HEIGHT * MAX_FIELD_WIDTH - fieldCellValues.length;
   const allFieldCellValues = new Array(lackOfCellNums)
-    .fill(FieldCellValue.NONE)
+    .fill(FieldCellValue.None)
     .concat(fieldCellValues);
 
   const field: FieldState = [...new Array(MAX_FIELD_HEIGHT)]
@@ -54,7 +54,7 @@ export const deserializeNexts = (dataString: string): Tetromino[] => {
 
   while (!reader.eof) {
     const value = reader.read(3);
-    if (value !== Tetromino.NONE) {
+    if (value !== Tetromino.None) {
       nexts.push(value as Tetromino);
     } else {
       break;

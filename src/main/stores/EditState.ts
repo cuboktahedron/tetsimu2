@@ -32,7 +32,7 @@ export const initialEditState: EditState = ((): EditState => {
     const field = [];
     for (let y = 0; y < MAX_FIELD_HEIGHT; y++) {
       const row = new Array<Tetromino>(MAX_FIELD_WIDTH);
-      row.fill(Tetromino.NONE);
+      row.fill(Tetromino.None);
       field.push(row);
     }
 
@@ -40,7 +40,7 @@ export const initialEditState: EditState = ((): EditState => {
   })();
 
   const hold = {
-    type: Tetromino.NONE,
+    type: Tetromino.None,
     canHold: true,
   };
 

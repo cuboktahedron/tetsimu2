@@ -48,7 +48,7 @@ const useStyles = makeStyles(() =>
 );
 
 const cellBackground = {
-  [FieldCellValue.NONE]: "transparent",
+  [FieldCellValue.None]: "transparent",
   [FieldCellValue.I]: lightBlue.A100,
   [FieldCellValue.J]: blue.A100,
   [FieldCellValue.L]: orange.A100,
@@ -56,7 +56,7 @@ const cellBackground = {
   [FieldCellValue.S]: green.A100,
   [FieldCellValue.T]: purple.A100,
   [FieldCellValue.Z]: red.A100,
-  [FieldCellValue.GARBAGE]: grey.A100,
+  [FieldCellValue.Garbage]: grey.A100,
 };
 
 type FieldProps = {};
@@ -117,7 +117,7 @@ const Field: React.FC<FieldProps> = () => {
     if (isLeft) {
       dispatch(changeField(state.field, cellValueToSet, pos));
     } else {
-      dispatch(changeField(state.field, FieldCellValue.NONE, pos));
+      dispatch(changeField(state.field, FieldCellValue.None, pos));
     }
   };
 
@@ -130,7 +130,7 @@ const Field: React.FC<FieldProps> = () => {
     if (editPointerState.isLeft) {
       dispatch(changeField(state.field, cellValueToSet, pos));
     } else {
-      dispatch(changeField(state.field, FieldCellValue.NONE, pos));
+      dispatch(changeField(state.field, FieldCellValue.None, pos));
     }
   };
 

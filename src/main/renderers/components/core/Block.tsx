@@ -20,7 +20,7 @@ const useStyles = makeStyles(() =>
     root: {
       background: (props: BlockProps): string => {
         switch (props.type) {
-          case Tetromino.NONE:
+          case Tetromino.None:
             return "transparent";
           case Tetromino.I:
             return lightBlue.A100;

@@ -16,21 +16,21 @@ describe("replayConductor", () => {
   describe("forwardStep", () => {
     it("should be forward drop step", () => {
       const state = makeReplayState({
-        current: makeCurrent(Direction.UP, 1, 19, Tetromino.I),
+        current: makeCurrent(Direction.Up, 1, 19, Tetromino.I),
         field: makeField("NNNNNNNNNN"),
         histories: [
           {
-            current: makeCurrent(Direction.UP, 1, 19, Tetromino.I),
+            current: makeCurrent(Direction.Up, 1, 19, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
-            hold: makeHold(Tetromino.NONE, true),
+            hold: makeHold(Tetromino.None, true),
             isDead: false,
             nexts: makeTetrominos("J"),
             noOfCycle: 1,
           },
         ],
-        hold: makeHold(Tetromino.NONE, true),
+        hold: makeHold(Tetromino.None, true),
         nexts: makeTetrominos("J"),
-        replaySteps: [makeReplayDropStep(Direction.UP, 1, 0)],
+        replaySteps: [makeReplayDropStep(Direction.Up, 1, 0)],
       });
       const conductor = getReplayConductor(state);
       expect(conductor.forwardStep()).toBeTruthy();
@@ -39,14 +39,14 @@ describe("replayConductor", () => {
 
       const expected: ReplayState = {
         ...state,
-        current: makeCurrent(Direction.UP, 1, 0, Tetromino.I),
+        current: makeCurrent(Direction.Up, 1, 0, Tetromino.I),
         histories: [
           {
             ...state.histories[0],
           },
           {
             ...state.histories[0],
-            current: makeCurrent(Direction.UP, 1, 0, Tetromino.I),
+            current: makeCurrent(Direction.Up, 1, 0, Tetromino.I),
           },
         ],
         step: 1,
@@ -57,19 +57,19 @@ describe("replayConductor", () => {
 
     it("should be forward hold step", () => {
       const state = makeReplayState({
-        current: makeCurrent(Direction.UP, 1, 19, Tetromino.I),
+        current: makeCurrent(Direction.Up, 1, 19, Tetromino.I),
         field: makeField("NNNNNNNNNN"),
         histories: [
           {
-            current: makeCurrent(Direction.UP, 1, 19, Tetromino.I),
+            current: makeCurrent(Direction.Up, 1, 19, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
-            hold: makeHold(Tetromino.NONE, true),
+            hold: makeHold(Tetromino.None, true),
             isDead: false,
             nexts: makeTetrominos("J"),
             noOfCycle: 1,
           },
         ],
-        hold: makeHold(Tetromino.NONE, true),
+        hold: makeHold(Tetromino.None, true),
         nexts: makeTetrominos("J"),
         replaySteps: [makeReplayHoldStep()],
       });
@@ -80,14 +80,14 @@ describe("replayConductor", () => {
 
       const expected: ReplayState = {
         ...state,
-        current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+        current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
         field: makeField("NNNNNNNNNN"),
         histories: [
           {
             ...state.histories[0],
           },
           {
-            current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+            current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.I, false),
             isDead: false,
@@ -106,19 +106,19 @@ describe("replayConductor", () => {
 
     it("should be forward hard drop step without attacked", () => {
       const state = makeReplayState({
-        current: makeCurrent(Direction.UP, 1, 0, Tetromino.I),
+        current: makeCurrent(Direction.Up, 1, 0, Tetromino.I),
         field: makeField("NNNNNNNNNN"),
         histories: [
           {
-            current: makeCurrent(Direction.UP, 1, 0, Tetromino.I),
+            current: makeCurrent(Direction.Up, 1, 0, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
-            hold: makeHold(Tetromino.NONE, true),
+            hold: makeHold(Tetromino.None, true),
             isDead: false,
             nexts: makeTetrominos("J"),
             noOfCycle: 1,
           },
         ],
-        hold: makeHold(Tetromino.NONE, true),
+        hold: makeHold(Tetromino.None, true),
         nexts: makeTetrominos("J"),
         replaySteps: [makeReplayHardDropStep()],
       });
@@ -129,22 +129,22 @@ describe("replayConductor", () => {
 
       const expected: ReplayState = {
         ...state,
-        current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+        current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
         field: makeField("IIIINNNNNN"),
         histories: [
           {
             ...state.histories[0],
           },
           {
-            current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+            current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
             field: makeField("IIIINNNNNN"),
-            hold: makeHold(Tetromino.NONE, true),
+            hold: makeHold(Tetromino.None, true),
             isDead: false,
             nexts: makeTetrominos(""),
             noOfCycle: 2,
           },
         ],
-        hold: makeHold(Tetromino.NONE, true),
+        hold: makeHold(Tetromino.None, true),
         nexts: [],
         noOfCycle: 2,
         step: 1,
@@ -155,11 +155,11 @@ describe("replayConductor", () => {
 
     it("should be forward drop step with attacked", () => {
       const state = makeReplayState({
-        current: makeCurrent(Direction.UP, 1, 0, Tetromino.I),
+        current: makeCurrent(Direction.Up, 1, 0, Tetromino.I),
         field: makeField("NNNNNNNNNN"),
         histories: [
           {
-            current: makeCurrent(Direction.UP, 1, 0, Tetromino.I),
+            current: makeCurrent(Direction.Up, 1, 0, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
@@ -178,7 +178,7 @@ describe("replayConductor", () => {
 
       const expected: ReplayState = {
         ...state,
-        current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+        current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
         field: makeField(
           // prettier-ignore
           "IIIINNNNNN",
@@ -192,7 +192,7 @@ describe("replayConductor", () => {
             ...state.histories[0],
           },
           {
-            current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+            current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
             field: makeField(
               // prettier-ignore
               "IIIINNNNNN",
@@ -218,11 +218,11 @@ describe("replayConductor", () => {
   describe("backwardStep", () => {
     it("should be backward step", () => {
       const state = makeReplayState({
-        current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+        current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
         field: makeField("IIIINNNNNN"),
         histories: [
           {
-            current: makeCurrent(Direction.UP, 1, 0, Tetromino.I),
+            current: makeCurrent(Direction.Up, 1, 0, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
@@ -230,7 +230,7 @@ describe("replayConductor", () => {
             noOfCycle: 1,
           },
           {
-            current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+            current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
             field: makeField("IIIINNNNNN"),
             hold: makeHold(Tetromino.T, true),
             isDead: false,
@@ -263,11 +263,11 @@ describe("replayConductor", () => {
   describe("changeStep", () => {
     it("should be change forward without histories", () => {
       const state = makeReplayState({
-        current: makeCurrent(Direction.UP, 4, 19, Tetromino.I),
+        current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
         field: makeField("NNNNNNNNNN"),
         histories: [
           {
-            current: makeCurrent(Direction.UP, 4, 19, Tetromino.I),
+            current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
@@ -279,7 +279,7 @@ describe("replayConductor", () => {
         nexts: makeTetrominos("JO"),
         noOfCycle: 1,
         replaySteps: [
-          makeReplayDropStep(Direction.DOWN, 1, 1),
+          makeReplayDropStep(Direction.Down, 1, 1),
           makeReplayHardDropStep(),
         ],
         step: 0,
@@ -292,7 +292,7 @@ describe("replayConductor", () => {
 
       const expected: ReplayState = {
         ...state,
-        current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+        current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
         field: makeField("IIIINNNNNN"),
         hold: makeHold(Tetromino.T, true),
         isDead: false,
@@ -302,10 +302,10 @@ describe("replayConductor", () => {
           { ...state.histories[0] },
           {
             ...state.histories[0],
-            current: makeCurrent(Direction.DOWN, 1, 1, Tetromino.I),
+            current: makeCurrent(Direction.Down, 1, 1, Tetromino.I),
           },
           {
-            current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+            current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
             field: makeField("IIIINNNNNN"),
             hold: makeHold(Tetromino.T, true),
             isDead: false,
@@ -321,11 +321,11 @@ describe("replayConductor", () => {
 
     it("should be change forward with histories", () => {
       const state = makeReplayState({
-        current: makeCurrent(Direction.UP, 4, 19, Tetromino.I),
+        current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
         field: makeField("NNNNNNNNNN"),
         histories: [
           {
-            current: makeCurrent(Direction.UP, 4, 19, Tetromino.I),
+            current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
@@ -333,7 +333,7 @@ describe("replayConductor", () => {
             noOfCycle: 1,
           },
           {
-            current: makeCurrent(Direction.DOWN, 1, 1, Tetromino.I),
+            current: makeCurrent(Direction.Down, 1, 1, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
@@ -341,7 +341,7 @@ describe("replayConductor", () => {
             noOfCycle: 1,
           },
           {
-            current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+            current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
             field: makeField("IIIINNNNNN"),
             hold: makeHold(Tetromino.T, true),
             isDead: false,
@@ -353,7 +353,7 @@ describe("replayConductor", () => {
         nexts: makeTetrominos("JO"),
         noOfCycle: 1,
         replaySteps: [
-          makeReplayDropStep(Direction.DOWN, 1, 1),
+          makeReplayDropStep(Direction.Down, 1, 1),
           makeReplayHardDropStep(),
         ],
         step: 0,
@@ -384,11 +384,11 @@ describe("replayConductor", () => {
 
     it("should be change backward", () => {
       const state = makeReplayState({
-        current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+        current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
         field: makeField("IIIINNNNNN"),
         histories: [
           {
-            current: makeCurrent(Direction.UP, 4, 19, Tetromino.I),
+            current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
@@ -396,7 +396,7 @@ describe("replayConductor", () => {
             noOfCycle: 1,
           },
           {
-            current: makeCurrent(Direction.DOWN, 1, 1, Tetromino.I),
+            current: makeCurrent(Direction.Down, 1, 1, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
@@ -404,7 +404,7 @@ describe("replayConductor", () => {
             noOfCycle: 1,
           },
           {
-            current: makeCurrent(Direction.UP, 4, 19, Tetromino.J),
+            current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
             field: makeField("IIIINNNNNN"),
             hold: makeHold(Tetromino.T, true),
             isDead: false,
@@ -417,7 +417,7 @@ describe("replayConductor", () => {
         nexts: makeTetrominos("O"),
         noOfCycle: 2,
         replaySteps: [
-          makeReplayDropStep(Direction.DOWN, 1, 1),
+          makeReplayDropStep(Direction.Down, 1, 1),
           makeReplayHardDropStep(),
         ],
         step: 2,

@@ -43,7 +43,7 @@ describe("Field", () => {
 
       field.settleTetromino({
         type: Tetromino.T,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: {
           x: 4,
           y: 0,
@@ -66,7 +66,7 @@ describe("Field", () => {
       ));
 
       const actual = field.isOverDeadline({
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 4, y: 20 },
         type: Tetromino.T,
         spinType: SpinType.None,
@@ -82,7 +82,7 @@ describe("Field", () => {
       ));
 
       const actual = field.isOverDeadline({
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 4, y: 20 },
         type: Tetromino.T,
         spinType: SpinType.None,
@@ -106,14 +106,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.L,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       };
@@ -134,14 +134,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.L,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 2, y: 4 },
         spinType: SpinType.None,
       };
@@ -162,14 +162,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.L,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 1, y: 1 },
         spinType: SpinType.None,
       };
@@ -190,14 +190,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.L,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 2, y: 1 },
         spinType: SpinType.None,
       };
@@ -218,14 +218,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.L,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 8, y: 2 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 7, y: 2 },
         spinType: SpinType.None,
       };
@@ -246,14 +246,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.L,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 8, y: 2 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 7, y: 1 },
         spinType: SpinType.None,
       };
@@ -274,14 +274,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.L,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 8, y: 2 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 8, y: 4 },
         spinType: SpinType.None,
       };
@@ -302,14 +302,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.L,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 8, y: 2 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 7, y: 4 },
         spinType: SpinType.None,
       };
@@ -330,14 +330,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.L,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 0, y: 3 },
         spinType: SpinType.None,
       };
@@ -358,14 +358,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.L,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 0, y: 4 },
         spinType: SpinType.None,
       };
@@ -386,14 +386,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.L,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 1, y: 1 },
         spinType: SpinType.None,
       };
@@ -414,14 +414,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.L,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 0, y: 1 },
         spinType: SpinType.None,
       };
@@ -442,14 +442,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.L,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 1, y: 1 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 2, y: 1 },
         spinType: SpinType.None,
       };
@@ -470,14 +470,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.L,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 1, y: 1 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 2, y: 0 },
         spinType: SpinType.None,
       };
@@ -498,14 +498,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.L,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 1, y: 1 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       };
@@ -526,14 +526,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.L,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 1, y: 1 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       };
@@ -552,14 +552,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.T,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 1, y: 1 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.T,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 1, y: 1 },
         spinType: SpinType.Spin,
       };
@@ -578,14 +578,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.T,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 0, y: 1 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.T,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 1, y: 0 },
         spinType: SpinType.Mini,
       };
@@ -606,14 +606,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.T,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.T,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 2, y: 1 },
         spinType: SpinType.Spin,
       };
@@ -634,14 +634,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.T,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.T,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 1, y: 1 },
         spinType: SpinType.Spin,
       };
@@ -662,14 +662,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.T,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.T,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 1, y: 1 },
         spinType: SpinType.Mini,
       };
@@ -690,14 +690,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.T,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 3, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.T,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 3, y: 1 },
         spinType: SpinType.Spin,
       };
@@ -720,14 +720,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.L,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       };
@@ -748,14 +748,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.L,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 1, y: 4 },
         spinType: SpinType.None,
       };
@@ -776,14 +776,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.L,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 2, y: 1 },
         spinType: SpinType.None,
       };
@@ -804,14 +804,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.L,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 1, y: 1 },
         spinType: SpinType.None,
       };
@@ -832,14 +832,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.L,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 1, y: 2 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 2, y: 2 },
         spinType: SpinType.None,
       };
@@ -860,14 +860,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.L,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 1, y: 2 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 2, y: 1 },
         spinType: SpinType.None,
       };
@@ -888,14 +888,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.L,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 1, y: 2 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 1, y: 4 },
         spinType: SpinType.None,
       };
@@ -916,14 +916,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.L,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 1, y: 2 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 2, y: 4 },
         spinType: SpinType.None,
       };
@@ -944,14 +944,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.L,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       };
@@ -972,14 +972,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.L,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 2, y: 4 },
         spinType: SpinType.None,
       };
@@ -1000,14 +1000,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.L,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 1, y: 1 },
         spinType: SpinType.None,
       };
@@ -1028,14 +1028,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.L,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 2, y: 1 },
         spinType: SpinType.None,
       };
@@ -1056,14 +1056,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.L,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 2, y: 1 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 1, y: 1 },
         spinType: SpinType.None,
       };
@@ -1084,14 +1084,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.L,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 2, y: 1 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 1, y: 0 },
         spinType: SpinType.None,
       };
@@ -1112,14 +1112,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.L,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 2, y: 1 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       };
@@ -1140,14 +1140,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.L,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 2, y: 1 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.L,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       };
@@ -1170,14 +1170,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.I,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       };
@@ -1198,14 +1198,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.I,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 4, y: 3 },
         spinType: SpinType.None,
       };
@@ -1226,14 +1226,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.I,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 1, y: 5 },
         spinType: SpinType.None,
       };
@@ -1254,14 +1254,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.I,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 4, y: 2 },
         spinType: SpinType.None,
       };
@@ -1282,14 +1282,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.I,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       };
@@ -1310,14 +1310,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.I,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 4, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       };
@@ -1338,14 +1338,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.I,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 4, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 2, y: 2 },
         spinType: SpinType.None,
       };
@@ -1366,14 +1366,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.I,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 4, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 5, y: 5 },
         spinType: SpinType.None,
       };
@@ -1394,14 +1394,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.I,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 3, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 4, y: 3 },
         spinType: SpinType.None,
       };
@@ -1422,14 +1422,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.I,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 3, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       };
@@ -1450,14 +1450,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.I,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 3, y: 4 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 4, y: 2 },
         spinType: SpinType.None,
       };
@@ -1478,14 +1478,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.I,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 3, y: 4 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 1, y: 5 },
         spinType: SpinType.None,
       };
@@ -1506,14 +1506,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.I,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 4, y: 3 },
         spinType: SpinType.None,
       };
@@ -1534,14 +1534,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.I,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       };
@@ -1562,14 +1562,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.I,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 4, y: 4 },
         spinType: SpinType.None,
       };
@@ -1590,14 +1590,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateLeft({
         type: Tetromino.I,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 1, y: 1 },
         spinType: SpinType.None,
       };
@@ -1620,14 +1620,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.I,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 0, y: 3 },
         spinType: SpinType.None,
       };
@@ -1648,14 +1648,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.I,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 3, y: 3 },
         spinType: SpinType.None,
       };
@@ -1676,14 +1676,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.I,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 0, y: 2 },
         spinType: SpinType.None,
       };
@@ -1704,14 +1704,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.I,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 3, y: 5 },
         spinType: SpinType.None,
       };
@@ -1732,14 +1732,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.I,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 1, y: 3 },
         spinType: SpinType.None,
       };
@@ -1760,14 +1760,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.I,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 4, y: 3 },
         spinType: SpinType.None,
       };
@@ -1788,14 +1788,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.I,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 1, y: 5 },
         spinType: SpinType.None,
       };
@@ -1816,14 +1816,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.I,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 4, y: 2 },
         spinType: SpinType.None,
       };
@@ -1844,14 +1844,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.I,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 2, y: 4 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 4, y: 4 },
         spinType: SpinType.None,
       };
@@ -1872,14 +1872,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.I,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 2, y: 4 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 1, y: 4 },
         spinType: SpinType.None,
       };
@@ -1900,14 +1900,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.I,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 2, y: 4 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 4, y: 5 },
         spinType: SpinType.None,
       };
@@ -1928,14 +1928,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.I,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 2, y: 4 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 1, y: 2 },
         spinType: SpinType.None,
       };
@@ -1956,14 +1956,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.I,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 4, y: 2 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 2, y: 2 },
         spinType: SpinType.None,
       };
@@ -1984,14 +1984,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.I,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 4, y: 2 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 5, y: 2 },
         spinType: SpinType.None,
       };
@@ -2012,14 +2012,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.I,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 4, y: 2 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 5, y: 0 },
         spinType: SpinType.None,
       };
@@ -2040,14 +2040,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.I,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 4, y: 2 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.I,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 2, y: 3 },
         spinType: SpinType.None,
       };
@@ -2066,14 +2066,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.T,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 8, y: 1 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.T,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 8, y: 1 },
         spinType: SpinType.Spin,
       };
@@ -2092,14 +2092,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.T,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 9, y: 1 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.T,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 8, y: 0 },
         spinType: SpinType.Mini,
       };
@@ -2120,14 +2120,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.T,
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 8, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.T,
-        direction: Direction.RIGHT,
+        direction: Direction.Right,
         pos: { x: 7, y: 1 },
         spinType: SpinType.Spin,
       };
@@ -2148,14 +2148,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.T,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 7, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.T,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 8, y: 1 },
         spinType: SpinType.Spin,
       };
@@ -2176,14 +2176,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.T,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 8, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.T,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 8, y: 1 },
         spinType: SpinType.Mini,
       };
@@ -2204,14 +2204,14 @@ describe("Field", () => {
       const fieldHelper = new FieldHelper(field);
       const actual = fieldHelper.rotateRight({
         type: Tetromino.T,
-        direction: Direction.DOWN,
+        direction: Direction.Down,
         pos: { x: 6, y: 3 },
         spinType: SpinType.None,
       });
 
       const expected: ActiveTetromino = {
         type: Tetromino.T,
-        direction: Direction.LEFT,
+        direction: Direction.Left,
         pos: { x: 6, y: 1 },
         spinType: SpinType.Spin,
       };

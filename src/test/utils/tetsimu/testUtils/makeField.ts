@@ -26,9 +26,9 @@ export const makeField = (...field: string[]): FieldState => {
         case "Z":
           return FieldCellValue.Z;
         case "G":
-          return FieldCellValue.GARBAGE;
+          return FieldCellValue.Garbage;
         case "N":
-          return FieldCellValue.NONE;
+          return FieldCellValue.None;
         default:
           throw new Error(`Specified invalid letter of field cell(${col})`);
       }

@@ -19,7 +19,7 @@ describe("replayUrl", () => {
         histories: [
           {
             current: {
-              direction: Direction.UP,
+              direction: Direction.Up,
               pos: { x: 4, y: 19 },
               type: Tetromino.I,
               spinType: SpinType.None,
@@ -40,10 +40,10 @@ describe("replayUrl", () => {
           nextNum: 12,
         },
         replaySteps: [
-          makeReplayDropStep(Direction.UP, 0, 0),
+          makeReplayDropStep(Direction.Up, 0, 0),
           makeReplayHardDropStep(),
           makeReplayHoldStep(),
-          makeReplayDropStep(Direction.LEFT, 8, 20, SpinType.Spin),
+          makeReplayDropStep(Direction.Left, 8, 20, SpinType.Spin),
           makeReplayHardDropStep(),
         ],
         step: 0,
@@ -71,13 +71,13 @@ describe("replayUrl", () => {
           {
             current: {
               type: Tetromino.I,
-              direction: Direction.UP,
+              direction: Direction.Up,
               pos: { x: 4, y: 19 },
               spinType: SpinType.None,
             },
             field: makeField("NNNNNNNNNN"),
             isDead: false,
-            hold: makeHold(Tetromino.NONE, true),
+            hold: makeHold(Tetromino.None, true),
             nexts: [],
             noOfCycle: 2,
           },
@@ -136,10 +136,10 @@ describe("replayUrl", () => {
         numberOfCycle: 6,
         replayNexts: makeTetrominos("IJLOSTZ"),
         replaySteps: [
-          makeReplayDropStep(Direction.UP, 0, 0),
+          makeReplayDropStep(Direction.Up, 0, 0),
           makeReplayHardDropStep(),
           makeReplayHoldStep(),
-          makeReplayDropStep(Direction.LEFT, 8, 20, SpinType.Spin),
+          makeReplayDropStep(Direction.Left, 8, 20, SpinType.Spin),
           makeReplayHardDropStep(),
         ],
       };
@@ -154,7 +154,7 @@ describe("replayUrl", () => {
       const expected: ReplayStateFragments = {
         nextNum: 5,
         field: makeField("NNNNNNNNNN"),
-        hold: makeHold(Tetromino.NONE, true),
+        hold: makeHold(Tetromino.None, true),
         numberOfCycle: 1,
         replayNexts: makeTetrominos(""),
         replaySteps: [],

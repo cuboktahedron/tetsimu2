@@ -76,7 +76,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
     const field = [];
     for (let y = 0; y < MAX_FIELD_HEIGHT; y++) {
       const row = new Array<Tetromino>(MAX_FIELD_WIDTH);
-      row.fill(Tetromino.NONE);
+      row.fill(Tetromino.None);
       field.push(row);
     }
 
@@ -84,7 +84,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
   })();
 
   const current = {
-    direction: Direction.UP,
+    direction: Direction.Up,
     pos: {
       x: 4,
       y: 19,
@@ -94,7 +94,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
   };
 
   const hold = {
-    type: Tetromino.NONE,
+    type: Tetromino.None,
     canHold: true,
   };
 

@@ -19,7 +19,7 @@ export const TetsimuMode = {
 export type TetsimuMode = typeof TetsimuMode[keyof typeof TetsimuMode];
 
 export const Tetromino = {
-  NONE: 0,
+  None: 0,
   I: 1,
   J: 2,
   L: 3,
@@ -32,7 +32,7 @@ export const Tetromino = {
 export type Tetromino = typeof Tetromino[keyof typeof Tetromino];
 
 export const FieldCellValue = {
-  NONE: Tetromino.NONE,
+  None: Tetromino.None,
   I: Tetromino.I,
   J: Tetromino.J,
   L: Tetromino.L,
@@ -40,7 +40,7 @@ export const FieldCellValue = {
   S: Tetromino.S,
   T: Tetromino.T,
   Z: Tetromino.Z,
-  GARBAGE: 8,
+  Garbage: 8,
 } as const;
 
 export type FieldCellValue = typeof FieldCellValue[keyof typeof FieldCellValue];
@@ -51,10 +51,10 @@ export type Vector2 = {
 };
 
 export const Direction = {
-  UP: 0,
-  LEFT: 1,
-  DOWN: 2,
-  RIGHT: 3,
+  Up: 0,
+  Left: 1,
+  Down: 2,
+  Right: 3,
 } as const;
 
 export type Direction = typeof Direction[keyof typeof Direction];

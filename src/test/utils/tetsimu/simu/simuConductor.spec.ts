@@ -21,9 +21,9 @@ describe("simuConductor", () => {
   describe("holdTetrimino", () => {
     it("should hold", () => {
       const state = makeSimuState({
-        current: makeCurrent(Direction.DOWN, 1, 5, Tetromino.I),
+        current: makeCurrent(Direction.Down, 1, 5, Tetromino.I),
         field: makeField("NNNNNNNNNN"),
-        hold: makeHold(Tetromino.NONE, true),
+        hold: makeHold(Tetromino.None, true),
         nexts: {
           bag: makeNextNote("JI", 2),
           settled: makeTetrominos("SZ"),
@@ -40,7 +40,7 @@ describe("simuConductor", () => {
 
       const expected: SimuState = {
         ...state,
-        current: makeCurrent(Direction.UP, 4, 19, Tetromino.S),
+        current: makeCurrent(Direction.Up, 4, 19, Tetromino.S),
         histories: [
           {
             currentType: Tetromino.S,
@@ -78,7 +78,7 @@ describe("simuConductor", () => {
 
     it("should exchange current and hold", () => {
       const state = makeSimuState({
-        current: makeCurrent(Direction.DOWN, 1, 5, Tetromino.T),
+        current: makeCurrent(Direction.Down, 1, 5, Tetromino.T),
         field: makeField("NNNNNNNNNN"),
         hold: makeHold(Tetromino.L, true),
         nexts: {
@@ -97,7 +97,7 @@ describe("simuConductor", () => {
 
       const expected: SimuState = {
         ...state,
-        current: makeCurrent(Direction.UP, 4, 19, Tetromino.L),
+        current: makeCurrent(Direction.Up, 4, 19, Tetromino.L),
         histories: [
           {
             currentType: Tetromino.L,
@@ -135,9 +135,9 @@ describe("simuConductor", () => {
 
     it("should not hold", () => {
       const state = makeSimuState({
-        current: makeCurrent(Direction.UP, 1, 5, Tetromino.I),
+        current: makeCurrent(Direction.Up, 1, 5, Tetromino.I),
         field: makeField("NNNNNNNNNN"),
-        hold: makeHold(Tetromino.NONE, false),
+        hold: makeHold(Tetromino.None, false),
         nexts: {
           settled: makeTetrominos("SZ"),
           unsettled: makeNextNotes("J I"),
@@ -155,7 +155,7 @@ describe("simuConductor", () => {
     describe("hardDropTetrimino", () => {
       it("should drop and generate next", () => {
         const state = makeSimuState({
-          current: makeCurrent(Direction.UP, 1, 3, Tetromino.I),
+          current: makeCurrent(Direction.Up, 1, 3, Tetromino.I),
           // prettier-ignore
           field: makeField(
             "NNNNNNNNNN",
@@ -179,7 +179,7 @@ describe("simuConductor", () => {
 
         const expected: SimuState = {
           ...state,
-          current: makeCurrent(Direction.UP, 4, 19, Tetromino.S),
+          current: makeCurrent(Direction.Up, 4, 19, Tetromino.S),
           // prettier-ignore
           field: makeField(
             "NNNNNNNNNN",
@@ -219,7 +219,7 @@ describe("simuConductor", () => {
           replayNextStep: 3,
           replayStep: 2,
           replaySteps: [
-            makeReplayDropStep(Direction.UP, 1, 1),
+            makeReplayDropStep(Direction.Up, 1, 1),
             makeReplayHardDropStep(),
           ],
           seed: makeSeed(55079790),
@@ -233,7 +233,7 @@ describe("simuConductor", () => {
     describe("moveTetrimino", () => {
       it("should move left", () => {
         const state = makeSimuState({
-          current: makeCurrent(Direction.UP, 2, 3, Tetromino.I, SpinType.Spin),
+          current: makeCurrent(Direction.Up, 2, 3, Tetromino.I, SpinType.Spin),
           // prettier-ignore
           field: makeField(
             "NNNNNNNNNN",
@@ -241,13 +241,13 @@ describe("simuConductor", () => {
           ),
         });
         const conductor = getSimuConductor(state);
-        expect(conductor.moveTetromino(Direction.LEFT)).toBeTruthy();
+        expect(conductor.moveTetromino(Direction.Left)).toBeTruthy();
 
         const actual = { ...conductor.state };
 
         const expected: SimuState = {
           ...state,
-          current: makeCurrent(Direction.UP, 1, 3, Tetromino.I, SpinType.None),
+          current: makeCurrent(Direction.Up, 1, 3, Tetromino.I, SpinType.None),
         };
 
         expect(actual).toEqual(expected);
@@ -255,7 +255,7 @@ describe("simuConductor", () => {
 
       it("should not move left because it reaches left edge", () => {
         const state = makeSimuState({
-          current: makeCurrent(Direction.UP, 1, 3, Tetromino.I, SpinType.Spin),
+          current: makeCurrent(Direction.Up, 1, 3, Tetromino.I, SpinType.Spin),
           // prettier-ignore
           field: makeField(
             "NNNNNNNNNN",
@@ -263,7 +263,7 @@ describe("simuConductor", () => {
           ),
         });
         const conductor = getSimuConductor(state);
-        expect(conductor.moveTetromino(Direction.LEFT)).toBeFalsy();
+        expect(conductor.moveTetromino(Direction.Left)).toBeFalsy();
 
         const actual = { ...conductor.state };
 
@@ -272,14 +272,14 @@ describe("simuConductor", () => {
 
       it("should not move left because block exists", () => {
         const state = makeSimuState({
-          current: makeCurrent(Direction.UP, 2, 1, Tetromino.I, SpinType.Mini),
+          current: makeCurrent(Direction.Up, 2, 1, Tetromino.I, SpinType.Mini),
           // prettier-ignore
           field: makeField(
             "ZNNNNNNNNN",
             "NNNNNNNNNN"),
         });
         const conductor = getSimuConductor(state);
-        expect(conductor.moveTetromino(Direction.LEFT)).toBeFalsy();
+        expect(conductor.moveTetromino(Direction.Left)).toBeFalsy();
 
         const actual = { ...conductor.state };
 
@@ -288,20 +288,20 @@ describe("simuConductor", () => {
 
       it("should move right", () => {
         const state = makeSimuState({
-          current: makeCurrent(Direction.UP, 7, 3, Tetromino.T, SpinType.Mini),
+          current: makeCurrent(Direction.Up, 7, 3, Tetromino.T, SpinType.Mini),
           // prettier-ignore
           field: makeField(
             "NNNNNNNNNN",
             "NNNNNNNNNN"),
         });
         const conductor = getSimuConductor(state);
-        expect(conductor.moveTetromino(Direction.RIGHT)).toBeTruthy();
+        expect(conductor.moveTetromino(Direction.Right)).toBeTruthy();
 
         const actual = { ...conductor.state };
 
         const expected: SimuState = {
           ...state,
-          current: makeCurrent(Direction.UP, 8, 3, Tetromino.T, SpinType.None),
+          current: makeCurrent(Direction.Up, 8, 3, Tetromino.T, SpinType.None),
         };
 
         expect(actual).toEqual(expected);
@@ -309,14 +309,14 @@ describe("simuConductor", () => {
 
       it("should not move right because it reaches right edge", () => {
         const state = makeSimuState({
-          current: makeCurrent(Direction.UP, 8, 3, Tetromino.T, SpinType.Spin),
+          current: makeCurrent(Direction.Up, 8, 3, Tetromino.T, SpinType.Spin),
           // prettier-ignore
           field: makeField(
             "NNNNNNNNNN",
             "NNNNNNNNNN"),
         });
         const conductor = getSimuConductor(state);
-        expect(conductor.moveTetromino(Direction.RIGHT)).toBeFalsy();
+        expect(conductor.moveTetromino(Direction.Right)).toBeFalsy();
 
         const actual = { ...conductor.state };
 
@@ -325,7 +325,7 @@ describe("simuConductor", () => {
 
       it("should not move right because block exists", () => {
         const state = makeSimuState({
-          current: makeCurrent(Direction.UP, 7, 1, Tetromino.T, SpinType.Spin),
+          current: makeCurrent(Direction.Up, 7, 1, Tetromino.T, SpinType.Spin),
           // prettier-ignore
           field: makeField(
             "NNNNNNNNNI",
@@ -333,7 +333,7 @@ describe("simuConductor", () => {
           ),
         });
         const conductor = getSimuConductor(state);
-        expect(conductor.moveTetromino(Direction.RIGHT)).toBeFalsy();
+        expect(conductor.moveTetromino(Direction.Right)).toBeFalsy();
 
         const actual = { ...conductor.state };
 
@@ -342,7 +342,7 @@ describe("simuConductor", () => {
 
       it("should move down", () => {
         const state = makeSimuState({
-          current: makeCurrent(Direction.UP, 1, 3, Tetromino.O, SpinType.Spin),
+          current: makeCurrent(Direction.Up, 1, 3, Tetromino.O, SpinType.Spin),
           // prettier-ignore
           field: makeField(
             "NNNNNNNNNN",
@@ -350,13 +350,13 @@ describe("simuConductor", () => {
           ),
         });
         const conductor = getSimuConductor(state);
-        expect(conductor.moveTetromino(Direction.DOWN)).toBeTruthy();
+        expect(conductor.moveTetromino(Direction.Down)).toBeTruthy();
 
         const actual = { ...conductor.state };
 
         const expected: SimuState = {
           ...state,
-          current: makeCurrent(Direction.UP, 1, 2, Tetromino.O, SpinType.None),
+          current: makeCurrent(Direction.Up, 1, 2, Tetromino.O, SpinType.None),
         };
 
         expect(actual).toEqual(expected);
@@ -364,7 +364,7 @@ describe("simuConductor", () => {
 
       it("should not move down because it reaches bottom edge", () => {
         const state = makeSimuState({
-          current: makeCurrent(Direction.UP, 3, 0, Tetromino.O, SpinType.Spin),
+          current: makeCurrent(Direction.Up, 3, 0, Tetromino.O, SpinType.Spin),
           // prettier-ignore
           field: makeField(
             "NNNNNNNNNN",
@@ -372,7 +372,7 @@ describe("simuConductor", () => {
           ),
         });
         const conductor = getSimuConductor(state);
-        expect(conductor.moveTetromino(Direction.DOWN)).toBeFalsy();
+        expect(conductor.moveTetromino(Direction.Down)).toBeFalsy();
 
         const actual = { ...conductor.state };
 
@@ -381,7 +381,7 @@ describe("simuConductor", () => {
 
       it("should not move down because block exists", () => {
         const state = makeSimuState({
-          current: makeCurrent(Direction.UP, 3, 1, Tetromino.O, SpinType.Mini),
+          current: makeCurrent(Direction.Up, 3, 1, Tetromino.O, SpinType.Mini),
           // prettier-ignore
           field: makeField(
             "NNNNNNNNNN",
@@ -389,7 +389,7 @@ describe("simuConductor", () => {
           ),
         });
         const conductor = getSimuConductor(state);
-        expect(conductor.moveTetromino(Direction.DOWN)).toBeFalsy();
+        expect(conductor.moveTetromino(Direction.Down)).toBeFalsy();
 
         const actual = { ...conductor.state };
 
@@ -400,7 +400,7 @@ describe("simuConductor", () => {
     describe("rotateTetromino", () => {
       it("should rotate right", () => {
         const state = makeSimuState({
-          current: makeCurrent(Direction.UP, 4, 19, Tetromino.T, SpinType.Spin),
+          current: makeCurrent(Direction.Up, 4, 19, Tetromino.T, SpinType.Spin),
           // prettier-ignore
           field: makeField(
             "NNNNNNNNNN",
@@ -415,7 +415,7 @@ describe("simuConductor", () => {
         const expected: SimuState = {
           ...state,
           current: {
-            direction: Direction.RIGHT,
+            direction: Direction.Right,
             pos: { x: 4, y: 19 },
             spinType: SpinType.None,
             type: Tetromino.T,
@@ -427,7 +427,7 @@ describe("simuConductor", () => {
 
       it("should not rotate right", () => {
         const state = makeSimuState({
-          current: makeCurrent(Direction.LEFT, 0, 1, Tetromino.I),
+          current: makeCurrent(Direction.Left, 0, 1, Tetromino.I),
           // prettier-ignore
           field: makeField(
             "NGGGGGGGGG",
@@ -446,7 +446,7 @@ describe("simuConductor", () => {
 
       it("should rotate left", () => {
         const state = makeSimuState({
-          current: makeCurrent(Direction.UP, 4, 19, Tetromino.T),
+          current: makeCurrent(Direction.Up, 4, 19, Tetromino.T),
           // prettier-ignore
           field: makeField(
             "NNNNNNNNNN",
@@ -461,7 +461,7 @@ describe("simuConductor", () => {
         const expected: SimuState = {
           ...state,
           current: {
-            direction: Direction.LEFT,
+            direction: Direction.Left,
             pos: { x: 4, y: 19 },
             spinType: SpinType.None,
             type: Tetromino.T,
@@ -473,7 +473,7 @@ describe("simuConductor", () => {
 
       it("should not rotate left", () => {
         const state = makeSimuState({
-          current: makeCurrent(Direction.LEFT, 0, 1, Tetromino.I),
+          current: makeCurrent(Direction.Left, 0, 1, Tetromino.I),
           // prettier-ignore
           field: makeField(
             "NGGGGGGGGG",

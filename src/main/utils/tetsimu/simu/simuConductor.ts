@@ -75,7 +75,7 @@ export class SimuConductor {
 
   hardDropTetromino = (): boolean => {
     const current = this.state.current;
-    if (current.type === Tetromino.NONE) {
+    if (current.type === Tetromino.None) {
       return false;
     }
 
@@ -127,10 +127,10 @@ export class SimuConductor {
     let newCurrent: ActiveTetromino;
     if (isDead) {
       newCurrent = {
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 0, y: 0 },
         spinType: SpinType.None,
-        type: Tetromino.NONE,
+        type: Tetromino.None,
       };
     } else {
       this.fieldHelper.eraseLine();
@@ -180,7 +180,7 @@ export class SimuConductor {
       this.state.nexts.unsettled,
       this.state.nexts.bag
     );
-    if (this.state.hold.type === Tetromino.NONE) {
+    if (this.state.hold.type === Tetromino.None) {
       const genNext = nextGen.next({ endless: true });
 
       newCurrentType = this.state.nexts.settled[0];
@@ -225,9 +225,9 @@ export class SimuConductor {
 
     const deltaX = (() => {
       switch (direction) {
-        case Direction.LEFT:
+        case Direction.Left:
           return -1;
-        case Direction.RIGHT:
+        case Direction.Right:
           return 1;
         default:
           return 0;
@@ -236,9 +236,9 @@ export class SimuConductor {
 
     const deltaY = (() => {
       switch (direction) {
-        case Direction.DOWN:
+        case Direction.Down:
           return -1;
-        case Direction.UP:
+        case Direction.Up:
           return 1;
         default:
           return 0;
@@ -246,7 +246,7 @@ export class SimuConductor {
     })();
 
     const current = this.state.current;
-    if (current.type === Tetromino.NONE) {
+    if (current.type === Tetromino.None) {
       throw new Error(`Specified invalid tetromino value(${current.type})`);
     }
 
@@ -282,7 +282,7 @@ export class SimuConductor {
     }
 
     const newCurrent = {
-      direction: Direction.UP,
+      direction: Direction.Up,
       pos: {
         x: 4,
         y: 19,
@@ -372,7 +372,7 @@ export class SimuConductor {
     }
 
     const newCurrent = {
-      direction: Direction.UP,
+      direction: Direction.Up,
       pos: {
         x: 4,
         y: 19,
@@ -454,7 +454,7 @@ export class SimuConductor {
 
   clear() {
     const field = new Array(MAX_FIELD_HEIGHT).fill(
-      new Array(MAX_FIELD_WIDTH).fill(Tetromino.NONE)
+      new Array(MAX_FIELD_WIDTH).fill(Tetromino.None)
     );
 
     this.state.retryState = {
@@ -462,7 +462,7 @@ export class SimuConductor {
       field,
       hold: {
         canHold: true,
-        type: Tetromino.NONE,
+        type: Tetromino.None,
       },
       lastRoseUpColumn: -1,
       seed: this.rng.seed,

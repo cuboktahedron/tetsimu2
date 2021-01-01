@@ -28,7 +28,7 @@ export class FieldHelper {
   }
 
   settleTetromino(tetromino: ActiveTetromino) {
-    if (tetromino.type === Tetromino.NONE) {
+    if (tetromino.type === Tetromino.None) {
       throw new Error(`Specified invalid tetromino(${tetromino.type})`);
     }
 
@@ -43,7 +43,7 @@ export class FieldHelper {
   }
 
   clear() {
-    this.field.fill(new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.NONE));
+    this.field.fill(new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.None));
   }
 
   eraseLine() {
@@ -51,7 +51,7 @@ export class FieldHelper {
 
     for (let row = 0; row < this.field.length; row++) {
       const erased = this.field[row].every((cell) => {
-        return cell !== FieldCellValue.NONE;
+        return cell !== FieldCellValue.None;
       });
 
       if (erased) {
@@ -62,7 +62,7 @@ export class FieldHelper {
     if (erasedLines.length > 0) {
       erasedLines.reverse().forEach((row) => {
         this.field.splice(row, 1);
-        this.field.push(new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.NONE));
+        this.field.push(new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.None));
         row--;
       });
     }
@@ -72,7 +72,7 @@ export class FieldHelper {
 
   makeActiveTetromino(type: Tetromino): ActiveTetromino {
     const tetromino = {
-      direction: Direction.UP,
+      direction: Direction.Up,
       pos: {
         x: 4,
         y: 19,
@@ -91,18 +91,18 @@ export class FieldHelper {
   rotateLeft(tetromino: ActiveTetromino): ActiveTetromino | null {
     const newDirection = (() => {
       switch (tetromino.direction) {
-        case Direction.UP:
-          return Direction.LEFT;
-        case Direction.LEFT:
-          return Direction.DOWN;
-        case Direction.DOWN:
-          return Direction.RIGHT;
+        case Direction.Up:
+          return Direction.Left;
+        case Direction.Left:
+          return Direction.Down;
+        case Direction.Down:
+          return Direction.Right;
         default:
-          return Direction.UP;
+          return Direction.Up;
       }
     })();
 
-    if (tetromino.type === Tetromino.NONE) {
+    if (tetromino.type === Tetromino.None) {
       return null;
     }
 
@@ -148,18 +148,18 @@ export class FieldHelper {
   rotateRight(tetromino: ActiveTetromino): ActiveTetromino | null {
     const newDirection = (() => {
       switch (tetromino.direction) {
-        case Direction.UP:
-          return Direction.RIGHT;
-        case Direction.LEFT:
-          return Direction.UP;
-        case Direction.DOWN:
-          return Direction.LEFT;
+        case Direction.Up:
+          return Direction.Right;
+        case Direction.Left:
+          return Direction.Up;
+        case Direction.Down:
+          return Direction.Left;
         default:
-          return Direction.DOWN;
+          return Direction.Down;
       }
     })();
 
-    if (tetromino.type === Tetromino.NONE) {
+    if (tetromino.type === Tetromino.None) {
       return null;
     }
 
@@ -243,11 +243,11 @@ export class FieldHelper {
       return true;
     }
 
-    return this.state[row][col] !== FieldCellValue.NONE;
+    return this.state[row][col] !== FieldCellValue.None;
   }
 
   isOverlapping(tetromino: ActiveTetromino): boolean {
-    if (tetromino.type === Tetromino.NONE) {
+    if (tetromino.type === Tetromino.None) {
       return false;
     }
 
@@ -261,7 +261,7 @@ export class FieldHelper {
         blockCol < 0 ||
         blockCol >= MAX_FIELD_WIDTH ||
         (blockRow < this.field.length &&
-          this.field[blockRow][blockCol] !== FieldCellValue.NONE)
+          this.field[blockRow][blockCol] !== FieldCellValue.None)
       );
     });
   }
@@ -271,7 +271,7 @@ export class FieldHelper {
       return true;
     }
 
-    if (tetromino.type === Tetromino.NONE) {
+    if (tetromino.type === Tetromino.None) {
       return false;
     }
 
@@ -316,8 +316,8 @@ export class FieldHelper {
 
   riseUpLine(col: number) {
     this.field.pop();
-    const row = new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.GARBAGE);
-    row[col] = FieldCellValue.NONE;
+    const row = new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.Garbage);
+    row[col] = FieldCellValue.None;
     this.field.unshift(row);
   }
 
@@ -342,12 +342,12 @@ export class FieldHelper {
   buildUpLine(upNum: number) {
     if (upNum < 0) {
       this.field.shift();
-      const row = new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.NONE);
+      const row = new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.None);
       this.field.push(row);
       return;
     } else if (upNum > 0) {
       this.field.pop();
-      const row = new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.GARBAGE);
+      const row = new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.Garbage);
       this.field.unshift(row);
     }
   }

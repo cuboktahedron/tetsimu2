@@ -16,7 +16,7 @@ export const tetrominoToType = (tetromino: Tetromino): string => {
       return "T";
     case Tetromino.Z:
       return "Z";
-    case Tetromino.NONE:
+    case Tetromino.None:
       return "";
   }
 };

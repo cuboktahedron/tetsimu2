@@ -30,9 +30,9 @@ export const makeReplayState = (state: {
         showsPivot: true,
       },
       current: {
-        direction: Direction.UP,
+        direction: Direction.Up,
         pos: { x: 0, y: 0 },
-        type: Tetromino.NONE,
+        type: Tetromino.None,
       },
       env: {
         isTouchDevice: false,

@@ -47,7 +47,7 @@ describe("serializeField", () => {
 
 describe("serializeHold", () => {
   it("should serialize hold with none", function () {
-    const actual = serializeHold(makeHold(Tetromino.NONE, true));
+    const actual = serializeHold(makeHold(Tetromino.None, true));
     expect(actual).toBe("0");
   });
 
@@ -103,7 +103,7 @@ describe("serializeSteps", () => {
       // 00000000 : pos
       // 00       : dir
       // 00       : spinType
-      makeReplayDropStep(Direction.UP, 0, 0),
+      makeReplayDropStep(Direction.Up, 0, 0),
       makeReplayHardDropStep(),
 
       // 0001
@@ -113,7 +113,7 @@ describe("serializeSteps", () => {
       // 11010000 : pos
       // 01       : dir
       // 10       : spinType
-      makeReplayDropStep(Direction.LEFT, 8, 20, SpinType.Spin),
+      makeReplayDropStep(Direction.Left, 8, 20, SpinType.Spin),
       makeReplayHardDropStep(),
     ]);
 

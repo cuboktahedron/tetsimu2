@@ -224,14 +224,14 @@ describe("simuModule", () => {
       const garbegeHeight = 16;
       const noneCols = actual.payload.field
         .slice(0, garbegeHeight)
-        .map((row) => row.findIndex((cell) => cell === FieldCellValue.NONE));
+        .map((row) => row.findIndex((cell) => cell === FieldCellValue.None));
       for (let i = 0; i < garbegeHeight - 1; i++) {
         expect(noneCols[i]).not.toBe(noneCols[i + 1]);
       }
 
       // Lines(>= 16) are not buried garbage
       expect(actual.payload.field[garbegeHeight]).toEqual(
-        new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.NONE)
+        new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.None)
       );
     });
   });

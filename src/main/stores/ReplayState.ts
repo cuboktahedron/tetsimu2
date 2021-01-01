@@ -34,21 +34,21 @@ export const initialReplayState: ReplayState = ((): ReplayState => {
   const steps: ReplayStep[] = [];
 
   const field = new Array(MAX_FIELD_HEIGHT).fill(
-    new Array<Tetromino>(MAX_FIELD_WIDTH).fill(Tetromino.NONE)
+    new Array<Tetromino>(MAX_FIELD_WIDTH).fill(Tetromino.None)
   );
 
   const current = {
-    direction: Direction.UP,
+    direction: Direction.Up,
     pos: {
       x: 0,
       y: 0,
     },
     spinType: SpinType.None,
-    type: Tetromino.NONE,
+    type: Tetromino.None,
   };
 
   const hold = {
-    type: Tetromino.NONE,
+    type: Tetromino.None,
     canHold: true,
   };
 
