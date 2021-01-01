@@ -20,6 +20,7 @@ import { changeTetsimuMode, editToSimuMode } from "ducks/root/actions";
 import React, { useEffect } from "react";
 import { useLongTap } from "renderers/hooks/useLongTap";
 import { TetsimuMode } from "types/core";
+import EditUrl from "utils/tetsimu/edit/editUrl";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import NumberTextField from "../ext/NumberTextField";
 import TextFieldEx from "../ext/TextFieldEx";
@@ -72,6 +73,7 @@ const Tools: React.FC = () => {
     errorText: "",
     value: state.tools.nextsPattern,
   });
+  const [stateUrl, setStateUrl] = React.useState("");
 
   useEffect(() => {
     setNextsPattern({
@@ -79,6 +81,11 @@ const Tools: React.FC = () => {
       value: state.tools.nextsPattern,
     });
   }, [state.tools.nextsPattern]);
+
+  const handleUrlClick = () => {
+    const url = new EditUrl().fromState(state);
+    setStateUrl(url);
+  };
 
   const handleClearClick = () => {
     dispatch(clearEdit());
@@ -286,7 +293,25 @@ const Tools: React.FC = () => {
           FLIP
         </Button>
       </div>
-      <br />
+      <div>
+        <Button variant="contained" color="primary" onClick={handleUrlClick}>
+          URL
+        </Button>
+      </div>
+      <div>
+        <TextFieldEx
+          fullWidth
+          label="url"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          InputProps={{
+            readOnly: true,
+          }}
+          value={stateUrl}
+          variant="outlined"
+        />
+      </div>
       <div>
         <Button
           variant="contained"
