@@ -4,6 +4,7 @@ import {
   Direction,
   FieldCellValue,
   MAX_FIELD_HEIGHT,
+  MAX_FIELD_WIDTH,
   SpinType,
   Tetromino,
   Vector2
@@ -42,7 +43,7 @@ export class FieldHelper {
   }
 
   clear() {
-    this.field.fill(new Array(10).fill(FieldCellValue.NONE));
+    this.field.fill(new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.NONE));
   }
 
   eraseLine() {
@@ -61,7 +62,7 @@ export class FieldHelper {
     if (erasedLines.length > 0) {
       erasedLines.reverse().forEach((row) => {
         this.field.splice(row, 1);
-        this.field.push(new Array(10).fill(FieldCellValue.NONE));
+        this.field.push(new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.NONE));
         row--;
       });
     }
@@ -233,7 +234,12 @@ export class FieldHelper {
   }
 
   blockOrWallExists(col: number, row: number): boolean {
-    if (col < 0 || col >= 10 || row < 0 || row >= MAX_FIELD_HEIGHT) {
+    if (
+      col < 0 ||
+      col >= MAX_FIELD_WIDTH ||
+      row < 0 ||
+      row >= MAX_FIELD_HEIGHT
+    ) {
       return true;
     }
 
@@ -253,7 +259,7 @@ export class FieldHelper {
       return (
         blockRow < 0 ||
         blockCol < 0 ||
-        blockCol >= 10 ||
+        blockCol >= MAX_FIELD_WIDTH ||
         (blockRow < this.field.length &&
           this.field[blockRow][blockCol] !== FieldCellValue.NONE)
       );
@@ -284,8 +290,8 @@ export class FieldHelper {
     }
 
     for (let i = 0; i < lineNum; i++) {
-      if (lastRoseUpColumn < 0 || lastRoseUpColumn >= 10) {
-        lastRoseUpColumn = Math.trunc(rgn.random() * 10);
+      if (lastRoseUpColumn < 0 || lastRoseUpColumn >= MAX_FIELD_WIDTH) {
+        lastRoseUpColumn = Math.trunc(rgn.random() * MAX_FIELD_WIDTH);
         this.riseUpLine(lastRoseUpColumn);
 
         continue;
@@ -297,7 +303,7 @@ export class FieldHelper {
       } else {
         let riseUpColumn;
         do {
-          riseUpColumn = Math.trunc(rgn.random() * 10);
+          riseUpColumn = Math.trunc(rgn.random() * MAX_FIELD_WIDTH);
         } while (lastRoseUpColumn === riseUpColumn);
 
         lastRoseUpColumn = riseUpColumn;
@@ -310,13 +316,18 @@ export class FieldHelper {
 
   riseUpLine(col: number) {
     this.field.pop();
-    const row = new Array(10).fill(FieldCellValue.GARBAGE);
+    const row = new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.GARBAGE);
     row[col] = FieldCellValue.NONE;
     this.field.unshift(row);
   }
 
   putCell(pos: Vector2, cellType: FieldCellValue) {
-    if (pos.x < 0 || pos.x >= 10 || pos.y < 0 || pos.y >= MAX_FIELD_HEIGHT) {
+    if (
+      pos.x < 0 ||
+      pos.x >= MAX_FIELD_WIDTH ||
+      pos.y < 0 ||
+      pos.y >= MAX_FIELD_HEIGHT
+    ) {
       return false;
     }
 
@@ -331,12 +342,12 @@ export class FieldHelper {
   buildUpLine(upNum: number) {
     if (upNum < 0) {
       this.field.shift();
-      const row = new Array(10).fill(FieldCellValue.NONE);
+      const row = new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.NONE);
       this.field.push(row);
       return;
     } else if (upNum > 0) {
       this.field.pop();
-      const row = new Array(10).fill(FieldCellValue.GARBAGE);
+      const row = new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.GARBAGE);
       this.field.unshift(row);
     }
   }

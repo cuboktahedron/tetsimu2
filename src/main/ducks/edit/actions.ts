@@ -3,9 +3,10 @@ import {
   FieldState,
   HoldState,
   MAX_FIELD_HEIGHT,
+  MAX_FIELD_WIDTH,
   NextNote,
   Tetromino,
-  Vector2
+  Vector2,
 } from "types/core";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import { tetrominoToType } from "utils/tetsimu/functions";
@@ -25,7 +26,7 @@ import {
   EditActionsType,
   EndCellValueMultiSelectionAction,
   FlipFieldAction,
-  SlideFieldAction
+  SlideFieldAction,
 } from "./types";
 
 export const beginCellValueMultiSelection = (): BeginCellValueMultiSelectionAction => {
@@ -275,7 +276,7 @@ export const clearEdit = (): ClearEditAction => {
     type: EditActionsType.Clear,
     payload: {
       field: new Array(MAX_FIELD_HEIGHT).fill(
-        new Array(10).fill(FieldCellValue.NONE)
+        new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.NONE)
       ),
       hold: {
         canHold: true,

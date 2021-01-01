@@ -2,6 +2,7 @@ import {
   FieldState,
   HoldState,
   MAX_FIELD_HEIGHT,
+  MAX_FIELD_WIDTH,
   ReplayStep,
   ReplayStepDrop,
   ReplayStepHardDrop,
@@ -30,7 +31,7 @@ export const serializeField = (field: FieldState): string => {
   let isHeadFound = false;
 
   for (let row = MAX_FIELD_HEIGHT - 1; row >= 0; row--) {
-    for (let col = 0; col < 10; col++) {
+    for (let col = 0; col < MAX_FIELD_WIDTH; col++) {
       if (isHeadFound) {
         writer.write(4, field[row][col]);
       } else if (field[row][col] !== 0) {
@@ -108,7 +109,7 @@ const serializeDropStep = (
   }
 
   // drop point
-  writer.write(8, step.pos.y * 10 + step.pos.x);
+  writer.write(8, step.pos.y * MAX_FIELD_WIDTH + step.pos.x);
   writer.write(2, step.dir);
 
   // spin type

@@ -6,6 +6,7 @@ export type Action = {
 
 export const MAX_NEXTS_NUM = 12;
 export const MAX_FIELD_HEIGHT = 30;
+export const MAX_FIELD_WIDTH = 10;
 export const MAX_VISIBLE_FIELD_HEIGHT = 21;
 
 export const TetsimuMode = {

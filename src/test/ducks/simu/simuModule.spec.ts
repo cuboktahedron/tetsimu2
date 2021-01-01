@@ -1,7 +1,7 @@
 import { retry, superRetry } from "ducks/simu/actions";
 import { getSimuConductor } from "ducks/simu/selectors";
 import { SimuActionsType } from "ducks/simu/types";
-import { FieldCellValue, Tetromino } from "types/core";
+import { FieldCellValue, MAX_FIELD_WIDTH, Tetromino } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
 import { sleep } from "utils/function";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
@@ -231,7 +231,7 @@ describe("simuModule", () => {
 
       // Lines(>= 16) are not buried garbage
       expect(actual.payload.field[garbegeHeight]).toEqual(
-        new Array(10).fill(FieldCellValue.NONE)
+        new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.NONE)
       );
     });
   });

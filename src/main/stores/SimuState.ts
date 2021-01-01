@@ -4,6 +4,7 @@ import {
   FieldState,
   HoldState,
   MAX_FIELD_HEIGHT,
+  MAX_FIELD_WIDTH,
   MAX_NEXTS_NUM,
   NextNote,
   ReplayStep,
@@ -74,7 +75,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
   const field = ((): FieldState => {
     const field = [];
     for (let y = 0; y < MAX_FIELD_HEIGHT; y++) {
-      const row = new Array<Tetromino>(10);
+      const row = new Array<Tetromino>(MAX_FIELD_WIDTH);
       row.fill(Tetromino.NONE);
       field.push(row);
     }

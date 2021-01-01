@@ -4,9 +4,10 @@ import {
   FieldState,
   HoldState,
   MAX_FIELD_HEIGHT,
+  MAX_FIELD_WIDTH,
   ReplayStep,
   SpinType,
-  Tetromino,
+  Tetromino
 } from "types/core";
 import { ReplayConfig, ReplayInfo, ReplayStateHistory } from "types/replay";
 
@@ -33,7 +34,7 @@ export const initialReplayState: ReplayState = ((): ReplayState => {
   const steps: ReplayStep[] = [];
 
   const field = new Array(MAX_FIELD_HEIGHT).fill(
-    new Array<Tetromino>(10).fill(Tetromino.NONE)
+    new Array<Tetromino>(MAX_FIELD_WIDTH).fill(Tetromino.NONE)
   );
 
   const current = {

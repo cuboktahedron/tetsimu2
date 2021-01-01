@@ -3,6 +3,7 @@ import {
   FieldState,
   HoldState,
   MAX_FIELD_HEIGHT,
+  MAX_FIELD_WIDTH,
   NextNote,
   Tetromino,
 } from "types/core";
@@ -30,7 +31,7 @@ export const initialEditState: EditState = ((): EditState => {
   const field = ((): FieldState => {
     const field = [];
     for (let y = 0; y < MAX_FIELD_HEIGHT; y++) {
-      const row = new Array<Tetromino>(10);
+      const row = new Array<Tetromino>(MAX_FIELD_WIDTH);
       row.fill(Tetromino.NONE);
       field.push(row);
     }

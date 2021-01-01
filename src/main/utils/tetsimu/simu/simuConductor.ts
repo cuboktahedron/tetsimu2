@@ -4,12 +4,13 @@ import {
   Direction,
   FieldState,
   MAX_FIELD_HEIGHT,
+  MAX_FIELD_WIDTH,
   MAX_NEXTS_NUM,
   NextNote,
   ReplayStep,
   ReplayStepType,
   SpinType,
-  Tetromino,
+  Tetromino
 } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
 import { FieldHelper } from "../fieldHelper";
@@ -453,7 +454,7 @@ export class SimuConductor {
 
   clear() {
     const field = new Array(MAX_FIELD_HEIGHT).fill(
-      new Array(10).fill(Tetromino.NONE)
+      new Array(MAX_FIELD_WIDTH).fill(Tetromino.NONE)
     );
 
     this.state.retryState = {

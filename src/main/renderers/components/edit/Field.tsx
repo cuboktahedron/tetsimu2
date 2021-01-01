@@ -13,6 +13,7 @@ import { buildUpField, changeField } from "ducks/edit/actions";
 import React from "react";
 import {
   FieldCellValue,
+  MAX_FIELD_WIDTH,
   MAX_VISIBLE_FIELD_HEIGHT,
   MouseButton,
   Vector2,
@@ -86,7 +87,7 @@ const Field: React.FC<FieldProps> = () => {
     const rect = fieldRef.current.getBoundingClientRect();
     const offsetX = absX - rect.left + window.pageXOffset;
     const offsetY = absY - rect.top + window.pageYOffset;
-    const x = Math.trunc(offsetX / (width / 10));
+    const x = Math.trunc(offsetX / (width / MAX_FIELD_WIDTH));
     const y = Math.trunc(offsetY / (height / MAX_VISIBLE_FIELD_HEIGHT));
 
     return {
@@ -200,27 +201,29 @@ const Field: React.FC<FieldProps> = () => {
     }
   };
 
-  const rows = state.field.slice(0, MAX_VISIBLE_FIELD_HEIGHT).map((row, rowIndex) => {
-    const cols = row.map((cell, colIndex) => {
-      const background = cellBackground[cell];
+  const rows = state.field
+    .slice(0, MAX_VISIBLE_FIELD_HEIGHT)
+    .map((row, rowIndex) => {
+      const cols = row.map((cell, colIndex) => {
+        const background = cellBackground[cell];
+
+        return (
+          <div
+            key={`${rowIndex}:${colIndex}`}
+            className={classes.row}
+            style={{ background, flex: 1 }}
+          >
+            <div>&nbsp;</div>
+          </div>
+        );
+      });
 
       return (
-        <div
-          key={`${rowIndex}:${colIndex}`}
-          className={classes.row}
-          style={{ background, flex: 1 }}
-        >
-          <div>&nbsp;</div>
+        <div style={{ display: "flex" }} key={rowIndex}>
+          {cols}
         </div>
       );
     });
-
-    return (
-      <div style={{ display: "flex" }} key={rowIndex}>
-        {cols}
-      </div>
-    );
-  });
 
   return (
     <div

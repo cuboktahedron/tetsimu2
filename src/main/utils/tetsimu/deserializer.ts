@@ -4,6 +4,7 @@ import {
   FieldState,
   HoldState,
   MAX_FIELD_HEIGHT,
+  MAX_FIELD_WIDTH,
   ReplayStep,
   ReplayStepType,
   SpinType,
@@ -31,13 +32,16 @@ export const deserializeField = (dataString: string): FieldState => {
     }
   }
 
-  const lackOfCellNums = MAX_FIELD_HEIGHT * 10 - fieldCellValues.length;
+  const lackOfCellNums =
+    MAX_FIELD_HEIGHT * MAX_FIELD_WIDTH - fieldCellValues.length;
   const allFieldCellValues = new Array(lackOfCellNums)
     .fill(FieldCellValue.NONE)
     .concat(fieldCellValues);
 
   const field: FieldState = [...new Array(MAX_FIELD_HEIGHT)]
-    .map((_, i) => allFieldCellValues.slice(i * 10, (i + 1) * 10))
+    .map((_, i) =>
+      allFieldCellValues.slice(i * MAX_FIELD_WIDTH, (i + 1) * MAX_FIELD_WIDTH)
+    )
     .reverse();
 
   return field;
@@ -106,8 +110,8 @@ const deserializeHoldStep = (steps: ReplayStep[]) => {
 
 const deserializeDropStep = (reader: BitReader, steps: ReplayStep[]) => {
   const posValue = reader.read(8);
-  const x = posValue % 10;
-  const y = Math.floor(posValue / 10);
+  const x = posValue % MAX_FIELD_WIDTH;
+  const y = Math.floor(posValue / MAX_FIELD_WIDTH);
   const dir = reader.read(2) as Direction;
   const spinType = reader.read(2) as SpinType;
 
