@@ -1,17 +1,11 @@
 import { SimuState } from "stores/SimuState";
-import {
-  FieldState,
-  HoldState,
-  ReplayStep,
-  Tetromino,
-  TetsimuMode,
-} from "types/core";
+import { FieldState, HoldState, NextNote, TetsimuMode } from "types/core";
 import {
   deserializeField,
   deserializeHold,
   deserializeNexts,
-  deserializeSteps,
 } from "../deserializer";
+import NextNotesInterpreter from "../nextNotesInterpreter";
 import {
   serializeField,
   serializeHold,
@@ -24,8 +18,7 @@ export type SimuStateFragments = {
   field: FieldState;
   nextNum: number;
   numberOfCycle: number;
-  replayNexts: Tetromino[];
-  replaySteps: ReplayStep[];
+  nextNotes: NextNote[];
 };
 
 class SimuUrl {
@@ -53,7 +46,7 @@ class SimuUrl200 {
   toState(params: { [key: string]: string }): SimuStateFragments {
     const f = params.f ?? "";
     const ns = params.ns ?? "";
-    const ss = params.ss ?? "";
+    const np = params.np ?? "";
     const h = params.h ?? "0";
 
     const numberOfCycle = (() => {
@@ -76,16 +69,26 @@ class SimuUrl200 {
 
     const field = deserializeField(f);
     const hold = deserializeHold(h);
-    const replayNexts = deserializeNexts(ns);
-    const replaySteps = deserializeSteps(ss);
+    const nextNotes: NextNote[] = (() => {
+      if (np) {
+        const interpreter = new NextNotesInterpreter();
+        const pattern = np.replace(/_/g, "[").replace(/\./g, "]");
+        return interpreter.interpret(pattern);
+      } else {
+        const replayNexts = deserializeNexts(ns);
+        return replayNexts.map((type) => ({
+          candidates: [type],
+          take: 1,
+        }));
+      }
+    })();
 
     return {
       field,
       hold,
       nextNum,
       numberOfCycle,
-      replayNexts,
-      replaySteps,
+      nextNotes,
     };
   }
 

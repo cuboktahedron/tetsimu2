@@ -9,14 +9,14 @@ import {
   NextNote,
   SpinType,
   Tetromino,
-  TetsimuMode,
+  TetsimuMode
 } from "types/core";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 import ReplayUrl, {
-  ReplayStateFragments,
+  ReplayStateFragments
 } from "utils/tetsimu/replay/replayUrl";
 import SimuUrl, { SimuStateFragments } from "utils/tetsimu/simu/simuUrl";
 import {
@@ -26,7 +26,7 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction,
+  SimuToReplayAction
 } from "./types";
 
 export const changeTetsimuMode = (
@@ -152,9 +152,86 @@ export const initializeApp = (
 
 const initializeSimuState = (
   state: SimuState,
-  _fragments: SimuStateFragments
+  fragments: SimuStateFragments
 ): SimuState => {
-  return state;
+  const fieldHelper = new FieldHelper(fragments.field);
+  const initialBag: NextNote = {
+    candidates: [
+      Tetromino.I,
+      Tetromino.J,
+      Tetromino.L,
+      Tetromino.O,
+      Tetromino.S,
+      Tetromino.T,
+      Tetromino.Z,
+    ],
+    take: 7 - fragments.numberOfCycle + 1,
+  };
+
+  const rng = new RandomNumberGenerator();
+  const initialSeed = rng.seed;
+  const nexts: Tetromino[] = [];
+  const nextGen = new NextGenerator(rng, fragments.nextNotes, initialBag);
+  const currentGenNext = nextGen.next();
+  let isDead = false;
+  let current = fieldHelper.makeActiveTetromino(currentGenNext.type);
+  if (fieldHelper.isOverlapping(current)) {
+    current = fieldHelper.makeActiveTetromino(nexts[0]);
+    if (fieldHelper.isOverlapping(current)) {
+      isDead = true;
+    }
+  }
+
+  let lastGenNext = currentGenNext;
+  for (let i = 0; i < MAX_NEXTS_NUM; i++) {
+    lastGenNext = nextGen.next();
+    nexts.push(lastGenNext.type);
+  }
+
+  return {
+    ...state,
+    current,
+    field: fragments.field,
+    histories: [
+      {
+        currentType: current.type,
+        field: fragments.field,
+        hold: fragments.hold,
+        isDead,
+        lastRoseUpColumn: -1,
+        nexts: {
+          bag: lastGenNext.bag,
+          settled: nexts,
+          unsettled: lastGenNext.nextNotes,
+        },
+        replayNextStep: nexts.length,
+        replayStep: 0,
+        seed: rng.seed,
+      },
+    ],
+    hold: fragments.hold,
+    isDead,
+    lastRoseUpColumn: -1,
+    nexts: {
+      bag: lastGenNext.bag,
+      settled: nexts,
+      unsettled: lastGenNext.nextNotes,
+    },
+    retryState: {
+      bag: initialBag,
+      field: fragments.field,
+      hold: fragments.hold,
+      lastRoseUpColumn: -1,
+      seed: initialSeed,
+      unsettledNexts: fragments.nextNotes,
+    },
+    replayNexts: nexts,
+    replayNextStep: nexts.length,
+    replayStep: 0,
+    replaySteps: [],
+    step: 0,
+    seed: rng.seed,
+  };
 };
 
 const initializeReplayState = (

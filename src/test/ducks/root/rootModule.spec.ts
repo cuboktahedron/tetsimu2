@@ -1,6 +1,7 @@
 import {
   changeTetsimuMode,
   editToSimuMode,
+  initializeApp,
   replayToSimuMode,
   simuToEditMode,
   simuToReplayMode,
@@ -8,11 +9,14 @@ import {
 import {
   ChangeTetsimuModeAction,
   EditToSimuAction,
+  InitializeAppAction,
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
   SimuToReplayAction,
 } from "ducks/root/types";
+import { initialRootState } from "stores/RootState";
+import { initialSimuState, SimuState } from "stores/SimuState";
 import { Direction, Tetromino, TetsimuMode } from "types/core";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { makeCurrent } from "../../utils/tetsimu/testUtils/makeCurrent";
@@ -264,6 +268,129 @@ describe("rootModule", () => {
           },
           replaySteps: [makeReplayHoldStep()],
           step: 0,
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+  });
+
+  describe("initializeApp", () => {
+    it("should initialize simu state with np", () => {
+      const actual = initializeApp(
+        "f=EjRWeAA_&np=I_J.p1LOSIJLOSTq1I&h=9&nc=3&nn=5&m=0&v=2.00",
+        initialRootState
+      );
+      const expectedSimu: SimuState = {
+        ...initialSimuState,
+        current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
+        field: makeField("IJLOSTZGNN"),
+        hold: makeHold(Tetromino.O, false),
+        histories: [
+          {
+            currentType: Tetromino.I,
+            field: makeField("IJLOSTZGNN"),
+            hold: makeHold(Tetromino.O, false),
+            isDead: false,
+            lastRoseUpColumn: -1,
+            nexts: {
+              bag: makeNextNote("JLOSTZ", 6),
+              settled: makeTetrominos("JLOSIJLOSTZI"),
+              unsettled: [],
+            },
+            replayNextStep: 12,
+            replayStep: 0,
+            seed: actual.payload.simu.seed,
+          },
+        ],
+        isDead: false,
+        lastRoseUpColumn: -1,
+        nexts: {
+          bag: makeNextNote("JLOSTZ", 6),
+          settled: makeTetrominos("JLOSIJLOSTZI"),
+          unsettled: [],
+        },
+        replayNexts: makeTetrominos("JLOSIJLOSTZI"),
+        replayNextStep: 12,
+        replayStep: 0,
+        replaySteps: [],
+        retryState: {
+          bag: makeNextNote("IJLOSTZ", 5),
+          field: makeField("IJLOSTZGNN"),
+          hold: makeHold(Tetromino.O, false),
+          lastRoseUpColumn: -1,
+          seed: actual.payload.simu.retryState.seed,
+          unsettledNexts: makeNextNotes("I[J]p1LOS IJLOSTq1 I"),
+        },
+        seed: actual.payload.simu.seed,
+        step: 0,
+      };
+
+      const expected: InitializeAppAction = {
+        type: RootActionsType.InitializeApp,
+        payload: {
+          ...initialRootState,
+          simu: { ...expectedSimu },
+          mode: TetsimuMode.Simu,
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should initialize simu state with ns", () => {
+      const actual = initializeApp("ns=Kcu5TlwA&m=0&v=2.00", initialRootState);
+      const expectedSimu: SimuState = {
+        ...initialSimuState,
+        current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
+        field: makeField("NNNNNNNNNN"),
+        hold: makeHold(Tetromino.None, true),
+        histories: [
+          {
+            currentType: Tetromino.I,
+            field: makeField("NNNNNNNNNN"),
+            hold: makeHold(Tetromino.None, true),
+            isDead: false,
+            lastRoseUpColumn: -1,
+            nexts: {
+              bag: makeNextNote("Z", 1),
+              settled: makeTetrominos("JLOSTZIJLOST"),
+              unsettled: [],
+            },
+            replayNextStep: 12,
+            replayStep: 0,
+            seed: actual.payload.simu.seed,
+          },
+        ],
+        isDead: false,
+        lastRoseUpColumn: -1,
+        nexts: {
+          bag: makeNextNote("Z", 1),
+          settled: makeTetrominos("JLOSTZIJLOST"),
+          unsettled: [],
+        },
+        replayNexts: makeTetrominos("JLOSTZIJLOST"),
+        replayNextStep: 12,
+        replayStep: 0,
+        replaySteps: [],
+        retryState: {
+          bag: makeNextNote("IJLOSTZ", 7),
+          field: makeField("NNNNNNNNNN"),
+          hold: makeHold(Tetromino.None, true),
+          lastRoseUpColumn: -1,
+          seed: actual.payload.simu.retryState.seed,
+          unsettledNexts: makeNextNotes("IJLOSTZIJLOST"),
+        },
+        seed: actual.payload.simu.seed,
+        step: 0,
+      };
+
+      const expected: InitializeAppAction = {
+        type: RootActionsType.InitializeApp,
+        payload: {
+          ...initialRootState,
+          simu: { ...expectedSimu },
+          mode: TetsimuMode.Simu,
         },
       };
 

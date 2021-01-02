@@ -2,11 +2,11 @@ import { Direction, SpinType, Tetromino, TetsimuMode } from "types/core";
 import SimuUrl, { SimuStateFragments } from "utils/tetsimu/simu/simuUrl";
 import { makeField } from "../testUtils/makeField";
 import { makeHold } from "../testUtils/makeHold";
-import { makeNextNote } from "../testUtils/makeNextNote";
+import { makeNextNote, makeNextNotes } from "../testUtils/makeNextNote";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
-  makeReplayHoldStep,
+  makeReplayHoldStep
 } from "../testUtils/makeReplayStep";
 import { makeSimuState } from "../testUtils/makeSimuState";
 import { makeTetrominos } from "../testUtils/makeTetrominos";
@@ -65,7 +65,7 @@ describe("simuUrl", () => {
       expect(actual).toBe(expected);
     });
 
-    it("should generate url(v2.00) of states", () => {
+    it("should generate url(v2.00) of minimum states", () => {
       const state = makeSimuState({
         config: {
           nextNum: 5,
@@ -103,10 +103,9 @@ describe("simuUrl", () => {
   });
 
   describe("toState", () => {
-    it("should generate states from url(v2.00)", () => {
+    it("should generate states from url(v2.00) with ns", () => {
       const f = "EjRWeBI0VngA";
       const ns = "Kcu4";
-      const ss = "AAAQ0G8_";
       const h = "3";
       const nc = "6";
       const nn = "12";
@@ -116,7 +115,6 @@ describe("simuUrl", () => {
       const params = {
         f,
         ns,
-        ss,
         h,
         nc,
         nn,
@@ -135,14 +133,33 @@ describe("simuUrl", () => {
         ),
         hold: makeHold(Tetromino.I, false),
         numberOfCycle: 6,
-        replayNexts: makeTetrominos("IJLOSTZ"),
-        replaySteps: [
-          makeReplayDropStep(Direction.Up, 0, 0),
-          makeReplayHardDropStep(),
-          makeReplayHoldStep(),
-          makeReplayDropStep(Direction.Left, 8, 20, SpinType.Spin),
-          makeReplayHardDropStep(),
-        ],
+        nextNotes: makeNextNotes("IJLOSTZ"),
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should generate states from url(v2.00) with np", () => {
+      const ns = "Kcu4";
+      const np = "q2_IJ.p2LOS";
+      const m = `${TetsimuMode.Simu}`;
+      const v = "2.00";
+
+      const params = {
+        ns,
+        np,
+        m,
+        v,
+      };
+      const gen = new SimuUrl();
+      const actual = gen.toState(params);
+
+      const expected: SimuStateFragments = {
+        nextNum: 5,
+        field: makeField("NNNNNNNNNN"),
+        hold: makeHold(Tetromino.None, true),
+        numberOfCycle: 1,
+        nextNotes: makeNextNotes("q2 [IJ]p2 LOS"),
       };
 
       expect(actual).toEqual(expected);
@@ -157,8 +174,7 @@ describe("simuUrl", () => {
         field: makeField("NNNNNNNNNN"),
         hold: makeHold(Tetromino.None, true),
         numberOfCycle: 1,
-        replayNexts: makeTetrominos(""),
-        replaySteps: [],
+        nextNotes: [],
       };
 
       expect(actual).toEqual(expected);

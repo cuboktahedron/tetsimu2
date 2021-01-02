@@ -65,7 +65,7 @@ describe("replayUrl", () => {
       expect(actual).toBe(expected);
     });
 
-    it("should generate url(v2.0.0) of states", () => {
+    it("should generate url(v2.0.0) of minimum states", () => {
       const state = makeReplayState({
         histories: [
           {
