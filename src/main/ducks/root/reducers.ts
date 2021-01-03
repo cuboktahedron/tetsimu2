@@ -57,6 +57,25 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
           },
         };
       }
+      case RootActionsType.ClearError: {
+        const { error, ...dialog } = { ...state.dialog };
+        return {
+          ...state,
+          dialog: {
+            ...dialog,
+          },
+        };
+      }
+      case RootActionsType.Error:
+        return {
+          ...state,
+          dialog: {
+            error: {
+              title: action.payload.title,
+              message: action.payload.message,
+            },
+          },
+        };
       case RootActionsType.InitializeApp: {
         return {
           ...state,

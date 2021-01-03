@@ -4,11 +4,17 @@ import {
   useMediaQuery
 } from "@material-ui/core";
 import reducer from "ducks/root";
-import { initializeApp } from "ducks/root/actions";
+import {
+  changeTetsimuMode,
+  clearError,
+  error,
+  initializeApp
+} from "ducks/root/actions";
 import React from "react";
 import { initialRootState } from "stores/RootState";
 import { Action, TetsimuMode } from "types/core";
 import { reducerLogger } from "utils/reducerLogger";
+import ErrorDialog from "./core/ErrorDialog";
 import Edit from "./edit/Edit";
 import Replay from "./replay/Replay";
 import Simu from "./simu/Simu";
@@ -46,12 +52,27 @@ const App: React.FC = () => {
   const mathces = useMediaQuery("(min-width:1168px)", { noSsr: true });
 
   React.useEffect(() => {
-    dispatch(initializeApp(location.search.replace(/^\?/, ""), state));
+    try {
+      dispatch(initializeApp(location.search.replace(/^\?/, ""), state));
+    } catch {
+      dispatch(
+        error(
+          "Initialization failed",
+          "This is maybe invalid url parameters passed."
+        )
+      );
+
+      dispatch(changeTetsimuMode(TetsimuMode.Simu));
+    }
 
     if (mathces) {
       setOpen(true);
     }
   }, []);
+
+  const handleErrorDialogClose = () => {
+    dispatch(clearError());
+  };
 
   const main = (() => {
     switch (state.mode) {
@@ -76,6 +97,15 @@ const App: React.FC = () => {
           }}
         >
           {main}
+          {state.dialog.error ? (
+            <ErrorDialog
+              title={state.dialog.error.title}
+              message={state.dialog.error.message}
+              onClose={handleErrorDialogClose}
+            />
+          ) : (
+            ""
+          )}
         </SidePanelContext.Provider>
       </RootContext.Provider>
     </MuiThemeProvider>

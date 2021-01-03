@@ -16,7 +16,9 @@ import { SimuRetryState } from "types/simu";
 
 export const RootActionsType = {
   ChangeTetsimuMode: "root/changeTetsimuMode",
+  ClearError: "root/clearError",
   EditToSimuMode: "root/editToSimuMode",
+  Error: "root/error",
   InitializeApp: "root/initializeApp",
   ReplayToSimuMode: "root/replayToSimuMode",
   SimuToEditMode: "root/simuToEditMode",
@@ -25,7 +27,9 @@ export const RootActionsType = {
 
 export type RootActions =
   | ChangeTetsimuModeAction
+  | ClearErrorAction
   | EditToSimuAction
+  | ErrorAction
   | InitializeAppAction
   | ReplayToSimuAction
   | SimuToEditAction
@@ -36,6 +40,11 @@ export type ChangeTetsimuModeAction = {
   payload: {
     mode: TetsimuMode;
   };
+} & Action;
+
+export type ClearErrorAction = {
+  type: typeof RootActionsType.ClearError;
+  payload: {};
 } & Action;
 
 export type EditToSimuAction = {
@@ -52,6 +61,14 @@ export type EditToSimuAction = {
     };
     retryState: SimuRetryState;
     seed: number;
+  };
+} & Action;
+
+export type ErrorAction = {
+  type: typeof RootActionsType.Error;
+  payload: {
+    title: string;
+    message: string;
   };
 } & Action;
 

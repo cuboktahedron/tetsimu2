@@ -9,24 +9,26 @@ import {
   NextNote,
   SpinType,
   Tetromino,
-  TetsimuMode,
+  TetsimuMode
 } from "types/core";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 import ReplayUrl, {
-  ReplayStateFragments,
+  ReplayStateFragments
 } from "utils/tetsimu/replay/replayUrl";
 import SimuUrl, { SimuStateFragments } from "utils/tetsimu/simu/simuUrl";
 import {
   ChangeTetsimuModeAction,
+  ClearErrorAction,
   EditToSimuAction,
+  ErrorAction,
   InitializeAppAction,
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction,
+  SimuToReplayAction
 } from "./types";
 
 export const changeTetsimuMode = (
@@ -99,6 +101,23 @@ export const editToSimuMode = (state: EditState): EditToSimuAction => {
         seed: initialSeed,
       },
       seed: rgn.seed,
+    },
+  };
+};
+
+export const clearError = (): ClearErrorAction => {
+  return {
+    type: RootActionsType.ClearError,
+    payload: {},
+  };
+};
+
+export const error = (title: string, message: string): ErrorAction => {
+  return {
+    type: RootActionsType.Error,
+    payload: {
+      title,
+      message,
     },
   };
 };

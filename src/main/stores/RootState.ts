@@ -4,6 +4,12 @@ import { initialReplayState, ReplayState } from "./ReplayState";
 import { initialSimuState, SimuState } from "./SimuState";
 
 export type RootState = {
+  dialog: {
+    error?: {
+      title: string;
+      message: string;
+    };
+  };
   edit: EditState;
   mode: TetsimuMode;
   replay: ReplayState;
@@ -11,6 +17,7 @@ export type RootState = {
 };
 
 export const initialRootState: RootState = {
+  dialog: {},
   edit: initialEditState,
   mode: TetsimuMode.None,
   replay: initialReplayState,
