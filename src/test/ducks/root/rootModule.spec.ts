@@ -15,6 +15,7 @@ import {
   SimuToEditAction,
   SimuToReplayAction,
 } from "ducks/root/types";
+import { initialReplayState, ReplayState } from "stores/ReplayState";
 import { initialRootState } from "stores/RootState";
 import { initialSimuState, SimuState } from "stores/SimuState";
 import { Direction, Tetromino, TetsimuMode } from "types/core";
@@ -28,7 +29,11 @@ import {
   makeNextNotes,
 } from "../../utils/tetsimu/testUtils/makeNextNote";
 import { makeReplayState } from "../../utils/tetsimu/testUtils/makeReplayState";
-import { makeReplayHoldStep } from "../../utils/tetsimu/testUtils/makeReplayStep";
+import {
+  makeReplayDropStep,
+  makeReplayHardDropStep,
+  makeReplayHoldStep,
+} from "../../utils/tetsimu/testUtils/makeReplayStep";
 import { makeSimuState } from "../../utils/tetsimu/testUtils/makeSimuState";
 import { makeTetrominos } from "../../utils/tetsimu/testUtils/makeTetrominos";
 
@@ -276,6 +281,55 @@ describe("rootModule", () => {
   });
 
   describe("initializeApp", () => {
+    it("should initialize replay state", () => {
+      const actual = initializeApp(
+        "f=EjRWeAA_&ns=sOZa0vPY&ss=ALAAgB8_&h=b&nc=3&nn=7&m=1&v=2.00",
+        initialRootState
+      );
+
+      const expectedReplay: ReplayState = {
+        ...initialReplayState,
+        current: makeCurrent(Direction.Up, 4, 19, Tetromino.S),
+        field: makeField("IJLOSTZGNN"),
+        hold: makeHold(Tetromino.S, false),
+        histories: [
+          {
+            current: makeCurrent(Direction.Up, 4, 19, Tetromino.S),
+            field: makeField("IJLOSTZGNN"),
+            hold: makeHold(Tetromino.S, false),
+            isDead: false,
+            nexts: makeTetrominos("OITLILJTOSZIZL"),
+            noOfCycle: 4,
+          },
+        ],
+        isDead: false,
+        nexts: makeTetrominos("OITLILJTOSZIZL"),
+        noOfCycle: 4,
+        replayInfo: {
+          nextNum: 7,
+        },
+        replaySteps: [
+          makeReplayDropStep(Direction.Up, 1, 1),
+          makeReplayHardDropStep(),
+          makeReplayDropStep(Direction.Up, 8, 0),
+          makeReplayHardDropStep(),
+          makeReplayHoldStep(),
+        ],
+        step: 0,
+      };
+
+      const expected: InitializeAppAction = {
+        type: RootActionsType.InitializeApp,
+        payload: {
+          ...initialRootState,
+          replay: { ...expectedReplay },
+          mode: TetsimuMode.Replay,
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
     it("should initialize simu state with np", () => {
       const actual = initializeApp(
         "f=EjRWeAA_&np=I_J.p1LOSIJLOSTq1I&h=9&nc=3&nn=5&m=0&v=2.00",
