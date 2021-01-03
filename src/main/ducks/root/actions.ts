@@ -9,14 +9,14 @@ import {
   NextNote,
   SpinType,
   Tetromino,
-  TetsimuMode
+  TetsimuMode,
 } from "types/core";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 import ReplayUrl, {
-  ReplayStateFragments
+  ReplayStateFragments,
 } from "utils/tetsimu/replay/replayUrl";
 import SimuUrl, { SimuStateFragments } from "utils/tetsimu/simu/simuUrl";
 import {
@@ -26,7 +26,7 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction
+  SimuToReplayAction,
 } from "./types";
 
 export const changeTetsimuMode = (
@@ -176,7 +176,7 @@ const initializeSimuState = (
   let isDead = false;
   let current = fieldHelper.makeActiveTetromino(currentGenNext.type);
   if (fieldHelper.isOverlapping(current)) {
-    current = fieldHelper.makeActiveTetromino(nexts[0]);
+    current = fieldHelper.makeActiveTetromino(currentGenNext.type);
     if (fieldHelper.isOverlapping(current)) {
       isDead = true;
     }
