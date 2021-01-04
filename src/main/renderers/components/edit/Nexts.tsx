@@ -49,7 +49,9 @@ const Nexts: React.FC<NextsProps> = (props) => {
   });
 
   let nextNo = state.tools.nextBaseNo;
-  const noOfCycleBase = (state.tools.nextBaseNo - 1 + state.tools.noOfCycle - 1) % 7;
+  const fixedNoOfCycle = state.tools.noOfCycle !== 0;
+  const noOfCycleBase =
+    (state.tools.nextBaseNo - 1 + state.tools.noOfCycle - 1) % 7;
   let i = 0;
   const nextdives = nextNotes.flatMap((note) => {
     const nexts: JSX.Element[] = [];
@@ -63,8 +65,8 @@ const Nexts: React.FC<NextsProps> = (props) => {
         <div
           key={nextNo}
           className={clsx(classes.next, {
-            [classes.cycleBegin]: noOfCycle === 0,
-            [classes.cycleEnd]: noOfCycle === 6,
+            [classes.cycleBegin]: fixedNoOfCycle && noOfCycle === 0,
+            [classes.cycleEnd]: fixedNoOfCycle && noOfCycle === 6,
           })}
         >
           <Next nextNo={nextNo} note={note} />

@@ -1,4 +1,10 @@
-import { FieldState, HoldState, NextNote, TapControllerType } from "./core";
+import {
+  CycleBag,
+  FieldState,
+  HoldState,
+  NextNote,
+  TapControllerType
+} from "./core";
 
 export const PlayMode = {
   Normal: "0",
@@ -21,7 +27,7 @@ export type SimuConfig = {
 };
 
 export type SimuRetryState = {
-  bag: NextNote;
+  bag: CycleBag;
   field: FieldState;
   hold: HoldState;
   lastRoseUpColumn: number;

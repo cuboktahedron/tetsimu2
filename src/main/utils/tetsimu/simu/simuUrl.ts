@@ -51,7 +51,7 @@ class SimuUrl200 {
 
     const numberOfCycle = (() => {
       const nc = parseInt(params.nc);
-      if (isNaN(nc) || nc < 1 || nc > 7) {
+      if (isNaN(nc) || nc < 0 || nc > 7) {
         return 1;
       } else {
         return nc;

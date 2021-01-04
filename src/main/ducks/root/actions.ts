@@ -9,14 +9,14 @@ import {
   NextNote,
   SpinType,
   Tetromino,
-  TetsimuMode
+  TetsimuMode,
 } from "types/core";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 import ReplayUrl, {
-  ReplayStateFragments
+  ReplayStateFragments,
 } from "utils/tetsimu/replay/replayUrl";
 import SimuUrl, { SimuStateFragments } from "utils/tetsimu/simu/simuUrl";
 import {
@@ -28,7 +28,7 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction
+  SimuToReplayAction,
 } from "./types";
 
 export const changeTetsimuMode = (
@@ -47,6 +47,15 @@ export const editToSimuMode = (state: EditState): EditToSimuAction => {
   const nextNotes = interpreter.interpret(state.tools.nextsPattern);
   const rgn = new RandomNumberGenerator();
   const initialSeed = rgn.seed;
+
+  const take = (() => {
+    if (state.tools.noOfCycle === 0) {
+      return Math.floor(rgn.random() * 7) + 1;
+    } else {
+      return (7 - state.tools.noOfCycle + 1) % 7;
+    }
+  })();
+
   const initialBag = {
     candidates: [
       Tetromino.I,
@@ -57,9 +66,23 @@ export const editToSimuMode = (state: EditState): EditToSimuAction => {
       Tetromino.T,
       Tetromino.Z,
     ],
-    take: (7 - state.tools.noOfCycle + 1) % 7,
+    take,
   };
 
+  const retryStateBag =
+    state.tools.noOfCycle !== 0
+      ? initialBag
+      : {
+          candidates: [
+            Tetromino.I,
+            Tetromino.J,
+            Tetromino.L,
+            Tetromino.O,
+            Tetromino.S,
+            Tetromino.T,
+            Tetromino.Z,
+          ],
+        };
   const gen = new NextGenerator(rgn, nextNotes, initialBag);
   const currentGenNext = gen.next();
   let lastGenNext = currentGenNext;
@@ -93,7 +116,7 @@ export const editToSimuMode = (state: EditState): EditToSimuAction => {
       },
       lastRoseUpColumn: -1,
       retryState: {
-        bag: initialBag,
+        bag: retryStateBag,
         field: state.field,
         hold: state.hold,
         lastRoseUpColumn: -1,
@@ -174,6 +197,17 @@ const initializeSimuState = (
   fragments: SimuStateFragments
 ): SimuState => {
   const fieldHelper = new FieldHelper(fragments.field);
+  const rng = new RandomNumberGenerator();
+  const initialSeed = rng.seed;
+
+  const take = (() => {
+    if (fragments.numberOfCycle !== 0) {
+      return 7 - fragments.numberOfCycle + 1;
+    } else {
+      return Math.floor(rng.random() * 7) + 1;
+    }
+  })();
+
   const initialBag: NextNote = {
     candidates: [
       Tetromino.I,
@@ -184,11 +218,24 @@ const initializeSimuState = (
       Tetromino.T,
       Tetromino.Z,
     ],
-    take: 7 - fragments.numberOfCycle + 1,
+    take,
   };
 
-  const rng = new RandomNumberGenerator();
-  const initialSeed = rng.seed;
+  const retryStateBag =
+    fragments.numberOfCycle !== 0
+      ? initialBag
+      : {
+          candidates: [
+            Tetromino.I,
+            Tetromino.J,
+            Tetromino.L,
+            Tetromino.O,
+            Tetromino.S,
+            Tetromino.T,
+            Tetromino.Z,
+          ],
+        };
+
   const nexts: Tetromino[] = [];
   const nextGen = new NextGenerator(rng, fragments.nextNotes, initialBag);
   const currentGenNext = nextGen.next();
@@ -237,7 +284,7 @@ const initializeSimuState = (
       unsettled: lastGenNext.nextNotes,
     },
     retryState: {
-      bag: initialBag,
+      bag: retryStateBag,
       field: fragments.field,
       hold: fragments.hold,
       lastRoseUpColumn: -1,

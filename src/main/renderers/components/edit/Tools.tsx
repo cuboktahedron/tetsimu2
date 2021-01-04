@@ -215,9 +215,9 @@ const Tools: React.FC = () => {
       <div>
         <FormControl>
           <NumberTextField
-            label="No of Cycle"
+            label="No of cycle"
             numberProps={{
-              min: 1,
+              min: 0,
               max: 7,
               change: handleNoOfCycleChange,
             }}

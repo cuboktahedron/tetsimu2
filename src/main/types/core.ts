@@ -86,6 +86,11 @@ export type NextNote = {
   take: number;
 };
 
+export type CycleBag = {
+  candidates: Tetromino[];
+  take?: number;
+};
+
 export type ControllerKeys = {
   ArrowUp: OperationKey;
   ArrowLeft: OperationKey;
