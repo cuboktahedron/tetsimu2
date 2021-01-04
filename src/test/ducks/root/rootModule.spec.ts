@@ -450,5 +450,19 @@ describe("rootModule", () => {
 
       expect(actual).toEqual(expected);
     });
+
+    it("should initialize simu state with s + nc=0", () => {
+      const actual1 = initializeApp("s=1&nc=0&m=0&v=2.00", initialRootState);
+      const actual2 = initializeApp("s=1&nc=0&m=0&v=2.00", initialRootState);
+      const actual3 = initializeApp("s=2&nc=0&m=0&v=2.00", initialRootState);
+
+      expect(actual1).toEqual(actual2);
+      expect(actual1.payload.simu.nexts).not.toEqual(
+        actual3.payload.simu.nexts
+      );
+      expect(actual1.payload.simu.retryState).not.toEqual(
+        actual3.payload.simu.retryState
+      );
+    });
   });
 });

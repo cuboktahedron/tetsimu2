@@ -18,7 +18,10 @@ import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 import ReplayUrl, {
   ReplayStateFragments,
 } from "utils/tetsimu/replay/replayUrl";
-import SimuUrl, { SimuStateFragments } from "utils/tetsimu/simu/simuUrl";
+import SimuUrl, {
+  SimuStateFragments,
+  UNSPECIFIED_SEED,
+} from "utils/tetsimu/simu/simuUrl";
 import {
   ChangeTetsimuModeAction,
   ClearErrorAction,
@@ -197,7 +200,9 @@ const initializeSimuState = (
   fragments: SimuStateFragments
 ): SimuState => {
   const fieldHelper = new FieldHelper(fragments.field);
-  const rng = new RandomNumberGenerator();
+  const seed = fragments.seed === UNSPECIFIED_SEED ? undefined : fragments.seed;
+
+  const rng = new RandomNumberGenerator(seed);
   const initialSeed = rng.seed;
 
   const take = (() => {

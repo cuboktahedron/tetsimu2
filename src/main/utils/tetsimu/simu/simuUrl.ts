@@ -13,12 +13,15 @@ import {
   serializeSteps,
 } from "../serializer";
 
+export const UNSPECIFIED_SEED = -1;
+
 export type SimuStateFragments = {
   hold: HoldState;
   field: FieldState;
   nextNum: number;
   numberOfCycle: number;
   nextNotes: NextNote[];
+  seed: number;
 };
 
 class SimuUrl {
@@ -67,6 +70,15 @@ class SimuUrl200 {
       }
     })();
 
+    const seed = (() => {
+      const seed = parseInt(params.s);
+      if (isNaN(seed) || seed < 0 || seed >= 100_000_000) {
+        return -1;
+      } else {
+        return seed;
+      }
+    })();
+
     const field = deserializeField(f);
     const hold = deserializeHold(h);
     const nextNotes: NextNote[] = (() => {
@@ -89,6 +101,7 @@ class SimuUrl200 {
       nextNum,
       numberOfCycle,
       nextNotes,
+      seed,
     };
   }
 
