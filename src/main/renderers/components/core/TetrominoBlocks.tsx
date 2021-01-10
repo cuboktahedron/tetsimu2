@@ -6,8 +6,9 @@ import {
   orange,
   purple,
   red,
-  yellow
+  yellow,
 } from "@material-ui/core/colors";
+import clsx from "clsx";
 import React from "react";
 import { Tetromino } from "types/core";
 
@@ -24,7 +25,7 @@ const useStyles = makeStyles(() =>
       width: "100%",
     },
 
-    root1: {
+    blockRoot: {
       alignItems: "center",
       display: "flex",
       flexDirection: "column",
@@ -33,17 +34,15 @@ const useStyles = makeStyles(() =>
       width: "100%",
     },
 
-    innerRoot: {
+    innerBlockRoot: {
       display: "flex",
-      height: (props: TetrominoBlocksProps): string => {
-        if (props.type === Tetromino.I) {
-          return "50%";
-        } else {
-          return "100%";
-        }
-      },
+      height: "100%",
       justifyContent: "center",
       width: "100%",
+
+      "&.type-i": {
+        height: "50%",
+      },
     },
 
     block: {
@@ -72,40 +71,19 @@ const useStyles = makeStyles(() =>
         }
       },
 
-      height: (props: TetrominoBlocksProps): string => {
-        if (props.type === Tetromino.I) {
-          return "100%";
-        } else {
-          return "66%";
-        }
-      },
+      height: "66%",
+      width: "33%",
 
-      width: (props: TetrominoBlocksProps): string => {
-        if (props.type === Tetromino.I) {
-          return "25%";
-        } else {
-          return "33%";
-        }
+      "&.type-i": {
+        height: "100%",
+        width: "25%",
       },
     },
 
     none: {
       background: "transparent",
-      height: (props: TetrominoBlocksProps): string => {
-        if (props.type === Tetromino.I) {
-          return "100%";
-        } else {
-          return "66%";
-        }
-      },
-
-      width: (props: TetrominoBlocksProps): string => {
-        if (props.type === Tetromino.I) {
-          return "25%";
-        } else {
-          return "33%";
-        }
-      },
+      height: "66%",
+      width: "33%",
     },
   })
 );
@@ -117,21 +95,21 @@ const TetrominoBlocks: React.FC<TetrominoBlocksProps> = (props) => {
     switch (props.type) {
       case Tetromino.I: {
         return (
-          <div className={classes.root1}>
-            <div className={classes.innerRoot}>
-              <div className={classes.block}></div>
-              <div className={classes.block}></div>
-              <div className={classes.block}></div>
-              <div className={classes.block}></div>
+          <div className={classes.blockRoot}>
+            <div className={clsx(classes.innerBlockRoot, "type-i")}>
+              <div className={clsx(classes.block, "type-i")}></div>
+              <div className={clsx(classes.block, "type-i")}></div>
+              <div className={clsx(classes.block, "type-i")}></div>
+              <div className={clsx(classes.block, "type-i")}></div>
             </div>
           </div>
         );
       }
       case Tetromino.J: {
         return (
-          <div className={classes.root1}>
+          <div className={classes.blockRoot}>
             <div
-              className={classes.innerRoot}
+              className={classes.innerBlockRoot}
               style={{ alignItems: "flex-end" }}
             >
               <div className={classes.block}></div>
@@ -139,7 +117,7 @@ const TetrominoBlocks: React.FC<TetrominoBlocksProps> = (props) => {
               <div className={classes.none}></div>
             </div>
             <div
-              className={classes.innerRoot}
+              className={classes.innerBlockRoot}
               style={{ alignItems: "flex-start" }}
             >
               <div className={classes.block}></div>
@@ -151,9 +129,9 @@ const TetrominoBlocks: React.FC<TetrominoBlocksProps> = (props) => {
       }
       case Tetromino.L: {
         return (
-          <div className={classes.root1}>
+          <div className={classes.blockRoot}>
             <div
-              className={classes.innerRoot}
+              className={classes.innerBlockRoot}
               style={{ alignItems: "flex-end" }}
             >
               <div className={classes.none}></div>
@@ -161,7 +139,7 @@ const TetrominoBlocks: React.FC<TetrominoBlocksProps> = (props) => {
               <div className={classes.block}></div>
             </div>
             <div
-              className={classes.innerRoot}
+              className={classes.innerBlockRoot}
               style={{ alignItems: "flex-start" }}
             >
               <div className={classes.block}></div>
@@ -173,16 +151,16 @@ const TetrominoBlocks: React.FC<TetrominoBlocksProps> = (props) => {
       }
       case Tetromino.O: {
         return (
-          <div className={classes.root1}>
+          <div className={classes.blockRoot}>
             <div
-              className={classes.innerRoot}
+              className={classes.innerBlockRoot}
               style={{ alignItems: "flex-end" }}
             >
               <div className={classes.block}></div>
               <div className={classes.block}></div>
             </div>
             <div
-              className={classes.innerRoot}
+              className={classes.innerBlockRoot}
               style={{ alignItems: "flex-start" }}
             >
               <div className={classes.block}></div>
@@ -193,9 +171,9 @@ const TetrominoBlocks: React.FC<TetrominoBlocksProps> = (props) => {
       }
       case Tetromino.S: {
         return (
-          <div className={classes.root1}>
+          <div className={classes.blockRoot}>
             <div
-              className={classes.innerRoot}
+              className={classes.innerBlockRoot}
               style={{ alignItems: "flex-end" }}
             >
               <div className={classes.none}></div>
@@ -203,7 +181,7 @@ const TetrominoBlocks: React.FC<TetrominoBlocksProps> = (props) => {
               <div className={classes.block}></div>
             </div>
             <div
-              className={classes.innerRoot}
+              className={classes.innerBlockRoot}
               style={{ alignItems: "flex-start" }}
             >
               <div className={classes.block}></div>
@@ -215,9 +193,9 @@ const TetrominoBlocks: React.FC<TetrominoBlocksProps> = (props) => {
       }
       case Tetromino.T: {
         return (
-          <div className={classes.root1}>
+          <div className={classes.blockRoot}>
             <div
-              className={classes.innerRoot}
+              className={classes.innerBlockRoot}
               style={{ alignItems: "flex-end" }}
             >
               <div className={classes.none}></div>
@@ -225,7 +203,7 @@ const TetrominoBlocks: React.FC<TetrominoBlocksProps> = (props) => {
               <div className={classes.none}></div>
             </div>
             <div
-              className={classes.innerRoot}
+              className={classes.innerBlockRoot}
               style={{ alignItems: "flex-start" }}
             >
               <div className={classes.block}></div>
@@ -237,9 +215,9 @@ const TetrominoBlocks: React.FC<TetrominoBlocksProps> = (props) => {
       }
       case Tetromino.Z: {
         return (
-          <div className={classes.root1}>
+          <div className={classes.blockRoot}>
             <div
-              className={classes.innerRoot}
+              className={classes.innerBlockRoot}
               style={{ alignItems: "flex-end" }}
             >
               <div className={classes.block}></div>
@@ -247,7 +225,7 @@ const TetrominoBlocks: React.FC<TetrominoBlocksProps> = (props) => {
               <div className={classes.none}></div>
             </div>
             <div
-              className={classes.innerRoot}
+              className={classes.innerBlockRoot}
               style={{ alignItems: "flex-start" }}
             >
               <div className={classes.none}></div>
