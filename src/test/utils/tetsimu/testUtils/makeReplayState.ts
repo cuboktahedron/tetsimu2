@@ -11,12 +11,16 @@ import {
 import { ReplayInfo, ReplayStateHistory } from "types/replay";
 
 export const makeReplayState = (state: {
+  auto?: {
+    playing: boolean;
+    speed: number;
+  };
   current?: ActiveTetromino;
   field?: FieldState;
   histories?: ReplayStateHistory[];
   hold?: HoldState;
   isDead?: boolean;
-  nexts: Tetromino[];
+  nexts?: Tetromino[];
   noOfCycle?: number;
   replayInfo?: ReplayInfo;
   replaySteps?: ReplayStep[];
@@ -24,6 +28,10 @@ export const makeReplayState = (state: {
 }): ReplayState => {
   return merge(
     {
+      auto: {
+        playing: false,
+        speed: 1,
+      },
       config: {
         showsCycle: false,
         showsGhost: false,

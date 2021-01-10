@@ -5,10 +5,19 @@ import {
   FormControl,
   InputAdornment,
   makeStyles,
-  Theme
+  Theme,
 } from "@material-ui/core";
+import FastForwardIcon from "@material-ui/icons/FastForward";
+import FastRewindIcon from "@material-ui/icons/FastRewind";
+import PauseIcon from "@material-ui/icons/Pause";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
-import { changeStep } from "ducks/replay/actions";
+import {
+  changeAutoPlaying,
+  changeStep,
+  downReplaySpeed,
+  upReplaySpeed,
+} from "ducks/replay/actions";
 import { getReplayConductor } from "ducks/replay/selectors";
 import { changeTetsimuMode, replayToSimuMode } from "ducks/root/actions";
 import React from "react";
@@ -41,7 +50,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
       "& > div": {
         display: "flex",
-        margin: "4px 0",
+        flexWrap: "wrap",
+
+        "& > div": {
+          marginRight: theme.spacing(1),
+        },
       },
     },
 
@@ -100,6 +113,22 @@ const Tools: React.FC = () => {
     }
   };
 
+  const handleFastRewindClick = () => {
+    dispatch(downReplaySpeed(state.auto.speed));
+  };
+
+  const handlePauseClick = () => {
+    dispatch(changeAutoPlaying(false));
+  };
+
+  const handlePlayClick = () => {
+    dispatch(changeAutoPlaying(true));
+  };
+
+  const handleFastForwardClick = () => {
+    dispatch(upReplaySpeed(state.auto.speed));
+  };
+
   const handleUrlClick = () => {
     const url = new ReplayUrl().fromState(state);
     setStateUrl(url);
@@ -152,6 +181,53 @@ const Tools: React.FC = () => {
             variant="outlined"
           />
         </FormControl>
+      </div>
+      <div className={classes.buttons}>
+        <div>
+          <div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleFastRewindClick}
+            >
+              <FastRewindIcon />
+            </Button>
+          </div>
+          <div>
+            {(() => {
+              if (state.auto.playing) {
+                return (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handlePauseClick}
+                  >
+                    <PauseIcon />
+                  </Button>
+                );
+              } else {
+                return (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handlePlayClick}
+                  >
+                    <PlayArrowIcon />
+                  </Button>
+                );
+              }
+            })()}
+          </div>
+          <div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleFastForwardClick}
+            >
+              <FastForwardIcon />
+            </Button>
+          </div>
+        </div>
       </div>
       <div>
         <Button variant="contained" color="primary" onClick={handleUrlClick}>

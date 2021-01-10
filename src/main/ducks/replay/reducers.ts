@@ -14,12 +14,32 @@ const reducer = (state: ReplayState, anyAction: Action): ReplayState => {
         return {
           ...state,
           ...payload,
+          auto: {
+            ...state.auto,
+            playing: false,
+          },
         };
       }
+    case ReplayActionsType.ChangeAutoPlaying:
+      return {
+        ...state,
+        auto: {
+          ...state.auto,
+          playing: action.payload.playing,
+        },
+      };
     case ReplayActionsType.ChangeConfig:
       return {
         ...state,
         config: action.payload.config,
+      };
+    case ReplayActionsType.ChangeReplaySpeed:
+      return {
+        ...state,
+        auto: {
+          ...state.auto,
+          speed: action.payload.speed,
+        },
       };
     case ReplayActionsType.ChangeStep:
       if (!action.payload.succeeded) {
@@ -29,6 +49,10 @@ const reducer = (state: ReplayState, anyAction: Action): ReplayState => {
         return {
           ...state,
           ...payload,
+          auto: {
+            ...state.auto,
+            playing: false,
+          },
         };
       }
     case ReplayActionsType.ChangeZoom:
@@ -44,6 +68,30 @@ const reducer = (state: ReplayState, anyAction: Action): ReplayState => {
         return {
           ...state,
           ...payload,
+          auto: {
+            ...state.auto,
+            playing: false,
+          },
+        };
+      }
+    case ReplayActionsType.ForwardStepAuto:
+      if (!action.payload.succeeded) {
+        return {
+          ...state,
+          auto: {
+            ...state.auto,
+            playing: false,
+          },
+        };
+      } else {
+        const { succeeded, ...payload } = action.payload;
+        return {
+          ...state,
+          ...payload,
+          auto: {
+            ...state.auto,
+            playing: payload.playing,
+          },
         };
       }
   }

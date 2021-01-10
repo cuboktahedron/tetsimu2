@@ -4,7 +4,7 @@ import {
   initializeApp,
   replayToSimuMode,
   simuToEditMode,
-  simuToReplayMode,
+  simuToReplayMode
 } from "ducks/root/actions";
 import {
   ChangeTetsimuModeAction,
@@ -13,7 +13,7 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction,
+  SimuToReplayAction
 } from "ducks/root/types";
 import { initialReplayState, ReplayState } from "stores/ReplayState";
 import { initialRootState } from "stores/RootState";
@@ -26,13 +26,13 @@ import { makeField } from "../../utils/tetsimu/testUtils/makeField";
 import { makeHold } from "../../utils/tetsimu/testUtils/makeHold";
 import {
   makeNextNote,
-  makeNextNotes,
+  makeNextNotes
 } from "../../utils/tetsimu/testUtils/makeNextNote";
 import { makeReplayState } from "../../utils/tetsimu/testUtils/makeReplayState";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
-  makeReplayHoldStep,
+  makeReplayHoldStep
 } from "../../utils/tetsimu/testUtils/makeReplayStep";
 import { makeSimuState } from "../../utils/tetsimu/testUtils/makeSimuState";
 import { makeTetrominos } from "../../utils/tetsimu/testUtils/makeTetrominos";
@@ -252,6 +252,9 @@ describe("rootModule", () => {
       const expected: SimuToReplayAction = {
         type: RootActionsType.SimuToReplayMode,
         payload: {
+          auto: {
+            playing: false,
+          },
           current: makeCurrent(Direction.Up, 4, 19, Tetromino.T),
           field: makeField("IJLOSTZNNN"),
           histories: [

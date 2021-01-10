@@ -12,6 +12,10 @@ import {
 import { ReplayConfig, ReplayInfo, ReplayStateHistory } from "types/replay";
 
 export type ReplayState = {
+  auto: {
+    playing: boolean;
+    speed: number;
+  };
   config: ReplayConfig;
   current: ActiveTetromino;
   env: {
@@ -59,6 +63,10 @@ export const initialReplayState: ReplayState = ((): ReplayState => {
     showsPivot: true,
   };
   return {
+    auto: {
+      playing: false,
+      speed: 1,
+    },
     config,
     current,
     env: {

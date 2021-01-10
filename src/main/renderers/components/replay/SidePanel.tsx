@@ -7,15 +7,19 @@ import {
   makeStyles,
   Theme,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@material-ui/core";
 import { blueGrey, grey } from "@material-ui/core/colors";
 import CallToActionIcon from "@material-ui/icons/CallToAction";
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 import SettingsIcon from "@material-ui/icons/Settings";
 import clsx from "clsx";
+import { forwardStepAuto } from "ducks/replay/actions";
+import { getReplayConductor } from "ducks/replay/selectors";
 import React from "react";
+import { useValueRef } from "renderers/hooks/useValueRef";
 import { SidePanelContext } from "../App";
+import { ReplayContext } from "./Replay";
 import Settings from "./Settings";
 import Tools from "./Tools";
 
@@ -117,6 +121,37 @@ const SidePanel: React.FC = () => {
     drawerWidth,
     maxDrawerWidth: window.innerWidth,
   });
+
+  const { state, dispatch } = React.useContext(ReplayContext);
+  const refState = useValueRef(state);
+  const [replayTimerId, setReplayTimerId] = React.useState<number | null>(null);
+  const refReplayTimerId = useValueRef(replayTimerId);
+
+  React.useEffect(() => {
+    if (state.auto.playing) {
+      if (refReplayTimerId.current) {
+        window.clearInterval(refReplayTimerId.current);
+      }
+
+      const timerId = window.setInterval(() => {
+        dispatch(forwardStepAuto(getReplayConductor(refState.current)));
+      }, (1 / refState.current.auto.speed) * 500);
+
+      setReplayTimerId(timerId);
+    } else {
+      if (refReplayTimerId.current) {
+        window.clearInterval(refReplayTimerId.current);
+        setReplayTimerId(null);
+      }
+    }
+
+    return () => {
+      if (refReplayTimerId.current) {
+        window.clearInterval(refReplayTimerId.current);
+        setReplayTimerId(null);
+      }
+    };
+  }, [state.auto.playing, state.auto.speed]);
 
   const handleMenuIconClick = (iconName: "tools" | "settings") => {
     if (iconName === selectedIconName) {

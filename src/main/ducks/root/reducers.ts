@@ -148,6 +148,10 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
           mode: TetsimuMode.Replay,
           replay: {
             ...state.replay,
+            auto: {
+              ...state.replay.auto,
+              playing: action.payload.auto.playing,
+            },
             current: action.payload.current,
             field: action.payload.field,
             histories: action.payload.histories,

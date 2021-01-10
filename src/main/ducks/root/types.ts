@@ -119,6 +119,9 @@ export type SimuToEditAction = {
 export type SimuToReplayAction = {
   type: typeof RootActionsType.SimuToReplayMode;
   payload: {
+    auto: {
+      playing: boolean;
+    },
     current: ActiveTetromino;
     field: FieldState;
     histories: ReplayStateHistory[];
