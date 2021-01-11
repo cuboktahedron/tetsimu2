@@ -1,6 +1,5 @@
 import {
   Checkbox,
-  createStyles,
   Divider,
   FormControl,
   FormControlLabel,
@@ -8,44 +7,25 @@ import {
   FormLabel,
   InputAdornment,
   InputLabel,
-  makeStyles,
   MenuItem,
   Radio,
   RadioGroup,
-  Select,
-  Theme,
+  Select
 } from "@material-ui/core";
 import { changeConfig, clearSimu } from "ducks/simu/actions";
 import { getSimuConductor } from "ducks/simu/selectors";
 import React, { useEffect } from "react";
+import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { MAX_NEXTS_NUM, TapControllerType } from "types/core";
 import { PlayMode } from "types/simu";
 import NumberTextField from "../ext/NumberTextField";
 import { SimuContext } from "./Simu";
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      background: "white",
-      flexGrow: 1,
-      padding: 8,
 
-      "& > hr": {
-        marginBottom: theme.spacing(1),
-        marginTop: theme.spacing(1),
-      },
-    },
-
-    formControl: {
-      minWidth: 120,
-    },
-
-    settingGroupTitle: {
-      fontWeight: "bold",
-      marginTop: "0.5rem",
-      marginBottom: "0.5rem",
-    },
-  })
-);
+const useStyles = useSidePanelStyles({
+  formControl: {
+    minWidth: 120,
+  },
+});
 
 const Settings: React.FC = () => {
   const { state, dispatch } = React.useContext(SimuContext);
@@ -186,21 +166,19 @@ const Settings: React.FC = () => {
         <FormLabel component="legend" className={classes.settingGroupTitle}>
           Display
         </FormLabel>
-        <FormControl>
-          <NumberTextField
-            label="Nexts"
-            numberProps={{
-              min: 1,
-              max: MAX_NEXTS_NUM,
-              change: handleNextsNumChange,
-            }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            value={"" + state.config.nextNum}
-            variant="outlined"
-          />
-        </FormControl>
+        <NumberTextField
+          label="Nexts"
+          numberProps={{
+            min: 1,
+            max: MAX_NEXTS_NUM,
+            change: handleNextsNumChange,
+          }}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          value={"" + state.config.nextNum}
+          variant="outlined"
+        />
       </div>
       <div>
         <FormControlLabel
@@ -257,44 +235,37 @@ const Settings: React.FC = () => {
           </RadioGroup>
           <div>
             <div>Rise up rate</div>
-            <FormControl style={{ marginRight: 4 }}>
-              <NumberTextField
-                label="first"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                numberProps={{
-                  min: 0,
-                  max: 100,
-                  endAdornment: (
-                    <InputAdornment position="end">%</InputAdornment>
-                  ),
-                  change: handleRiseUpRateFirstChange,
-                }}
-                value={"" + state.config.riseUpRate.first}
-                variant="outlined"
-                disabled={config.playMode !== PlayMode.Dig}
-              />
-            </FormControl>
-            <FormControl>
-              <NumberTextField
-                label="second"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                numberProps={{
-                  min: 0,
-                  max: 100,
-                  endAdornment: (
-                    <InputAdornment position="end">%</InputAdornment>
-                  ),
-                  change: handleRiseUpRateSecondChange,
-                }}
-                value={"" + state.config.riseUpRate.second}
-                variant="outlined"
-                disabled={config.playMode !== PlayMode.Dig}
-              />
-            </FormControl>
+            <NumberTextField
+              label="first"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              numberProps={{
+                min: 0,
+                max: 100,
+                endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                change: handleRiseUpRateFirstChange,
+              }}
+              value={"" + state.config.riseUpRate.first}
+              variant="outlined"
+              disabled={config.playMode !== PlayMode.Dig}
+              style={{ marginRight: 4 }}
+            />
+            <NumberTextField
+              label="second"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              numberProps={{
+                min: 0,
+                max: 100,
+                endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                change: handleRiseUpRateSecondChange,
+              }}
+              value={"" + state.config.riseUpRate.second}
+              variant="outlined"
+              disabled={config.playMode !== PlayMode.Dig}
+            />
           </div>
         </FormGroup>
       </div>

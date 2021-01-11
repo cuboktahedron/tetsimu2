@@ -1,40 +1,10 @@
-import {
-  Checkbox,
-  createStyles,
-
-  FormControlLabel,
-  FormLabel,
-  makeStyles,
-  Theme
-} from "@material-ui/core";
+import { Checkbox, FormControlLabel, FormLabel } from "@material-ui/core";
 import { changeConfig } from "ducks/replay/actions";
 import React from "react";
+import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { ReplayContext } from "./Replay";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      background: "white",
-      flexGrow: 1,
-      padding: 8,
-
-      "& > hr": {
-        marginBottom: theme.spacing(1),
-        marginTop: theme.spacing(1),
-      },
-    },
-
-    formControl: {
-      minWidth: 120,
-    },
-
-    settingGroupTitle: {
-      fontWeight: "bold",
-      marginTop: "0.5rem",
-      marginBottom: "0.5rem",
-    },
-  })
-);
+const useStyles = useSidePanelStyles();
 
 const Settings: React.FC = () => {
   const { state, dispatch } = React.useContext(ReplayContext);

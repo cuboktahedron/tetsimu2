@@ -1,11 +1,4 @@
-import {
-  Button,
-  createStyles,
-  Divider,
-  FormControl,
-  makeStyles,
-  Theme
-} from "@material-ui/core";
+import { Button, Divider, FormControl } from "@material-ui/core";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import {
   buildUpField,
@@ -19,6 +12,7 @@ import {
 import { changeTetsimuMode, editToSimuMode } from "ducks/root/actions";
 import React, { useEffect } from "react";
 import { useLongTap } from "renderers/hooks/useLongTap";
+import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { TetsimuMode } from "types/core";
 import EditUrl from "utils/tetsimu/edit/editUrl";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
@@ -26,44 +20,7 @@ import NumberTextField from "../ext/NumberTextField";
 import TextFieldEx from "../ext/TextFieldEx";
 import { EditContext } from "./Edit";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      background: "white",
-      flexGrow: 1,
-      padding: 8,
-
-      "& > hr": {
-        marginBottom: theme.spacing(1),
-        marginTop: theme.spacing(1),
-      },
-
-      "& > div": {
-        marginBottom: theme.spacing(1),
-      },
-    },
-
-    buttons: {
-      display: "flex",
-      flexDirection: "column",
-
-      "& > div": {
-        display: "flex",
-        margin: "4px 0",
-      },
-    },
-
-    settingGroupTitle: {
-      fontWeight: "bold",
-      marginTop: "0.5rem",
-      marginBottom: "0.5rem",
-    },
-
-    longTapButton: {
-      touchAction: "none",
-    },
-  })
-);
+const useStyles = useSidePanelStyles();
 
 const MAX_NEXT_BASE_NO = 1000 - 7;
 
@@ -231,62 +188,69 @@ const Tools: React.FC = () => {
         </FormControl>
       </div>
       <Divider />
-      <div>
-        <Button
-          className={classes.longTapButton}
-          variant="contained"
-          color="primary"
-          {...useLongTap({
-            onPress: handleSlideLeft,
-            onLongPress: handleSlideLeft,
-            interval1: 300,
-            interval2: 100,
-          })}
-        >
-          &lt;
-        </Button>
-        &nbsp;
-        <Button
-          className={classes.longTapButton}
-          variant="contained"
-          color="primary"
-          {...useLongTap({
-            onPress: handleBuildUp,
-            onLongPress: handleBuildUp,
-            interval1: 300,
-            interval2: 100,
-          })}
-        >
-          ∧
-        </Button>
-        &nbsp;
-        <Button
-          className={classes.longTapButton}
-          variant="contained"
-          color="primary"
-          {...useLongTap({
-            onPress: handleBuildDown,
-            onLongPress: handleBuildDown,
-            interval1: 300,
-            interval2: 100,
-          })}
-        >
-          ∨
-        </Button>
-        &nbsp;
-        <Button
-          className={classes.longTapButton}
-          variant="contained"
-          color="primary"
-          {...useLongTap({
-            onPress: handleSlideRight,
-            onLongPress: handleSlideRight,
-            interval1: 300,
-            interval2: 100,
-          })}
-        >
-          &gt;
-        </Button>
+      <div className={classes.buttons}>
+        <div>
+          <div>
+            <Button
+              className={classes.longTapButton}
+              variant="contained"
+              color="primary"
+              {...useLongTap({
+                onPress: handleSlideLeft,
+                onLongPress: handleSlideLeft,
+                interval1: 300,
+                interval2: 100,
+              })}
+            >
+              &lt;
+            </Button>
+          </div>
+          <div>
+            <Button
+              className={classes.longTapButton}
+              variant="contained"
+              color="primary"
+              {...useLongTap({
+                onPress: handleBuildUp,
+                onLongPress: handleBuildUp,
+                interval1: 300,
+                interval2: 100,
+              })}
+            >
+              ∧
+            </Button>
+          </div>
+          <div>
+            <Button
+              className={classes.longTapButton}
+              variant="contained"
+              color="primary"
+              {...useLongTap({
+                onPress: handleBuildDown,
+                onLongPress: handleBuildDown,
+                interval1: 300,
+                interval2: 100,
+              })}
+            >
+              ∨
+            </Button>
+          </div>
+          <div>
+            <Button
+              className={classes.longTapButton}
+              variant="contained"
+              color="primary"
+              {...useLongTap({
+                onPress: handleSlideRight,
+                onLongPress: handleSlideRight,
+                interval1: 300,
+                interval2: 100,
+              })}
+            >
+              &gt;
+            </Button>
+          </div>
+        </div>
       </div>
       <div>
         <Button variant="contained" color="primary" onClick={handleFlipClick}>

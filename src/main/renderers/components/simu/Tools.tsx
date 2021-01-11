@@ -1,9 +1,7 @@
 import {
   Button,
-  createStyles,
-  Divider,
-  makeStyles,
-  Theme
+
+  Divider
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
@@ -14,46 +12,14 @@ import {
 } from "ducks/root/actions";
 import { clearSimu } from "ducks/simu/actions";
 import React from "react";
+import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { TetsimuMode } from "types/core";
 import { SimuConductor } from "utils/tetsimu/simu/simuConductor";
 import SimuUrl from "utils/tetsimu/simu/simuUrl";
 import TextFieldEx from "../ext/TextFieldEx";
 import { SimuContext } from "./Simu";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      background: "white",
-      flexGrow: 1,
-      padding: 8,
-
-      "& > hr": {
-        marginBottom: theme.spacing(1),
-        marginTop: theme.spacing(1),
-      },
-
-      "& > div": {
-        marginBottom: theme.spacing(1),
-      },
-    },
-
-    buttons: {
-      display: "flex",
-      flexDirection: "column",
-
-      "& > div": {
-        display: "flex",
-        margin: "4px 0",
-      },
-    },
-
-    settingGroupTitle: {
-      fontWeight: "bold",
-      marginTop: "0.5rem",
-      marginBottom: "0.5rem",
-    },
-  })
-);
+const useStyles = useSidePanelStyles();
 
 const Tools: React.FC = () => {
   const { state, dispatch } = React.useContext(SimuContext);

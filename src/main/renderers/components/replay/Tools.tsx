@@ -1,11 +1,8 @@
 import {
   Button,
-  createStyles,
   Divider,
   FormControl,
   InputAdornment,
-  makeStyles,
-  Theme
 } from "@material-ui/core";
 import FastForwardIcon from "@material-ui/icons/FastForward";
 import FastRewindIcon from "@material-ui/icons/FastRewind";
@@ -17,84 +14,48 @@ import {
   changeAutoPlaying,
   changeStep,
   downReplaySpeed,
-  upReplaySpeed
+  upReplaySpeed,
 } from "ducks/replay/actions";
 import { getReplayConductor } from "ducks/replay/selectors";
 import { changeTetsimuMode, replayToSimuMode } from "ducks/root/actions";
 import React from "react";
+import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { TetsimuMode } from "types/core";
 import ReplayUrl from "utils/tetsimu/replay/replayUrl";
 import NumberTextField from "../ext/NumberTextField";
 import TextFieldEx from "../ext/TextFieldEx";
 import { ReplayContext } from "./Replay";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      background: "white",
-      flexGrow: 1,
-      padding: 8,
+const useStyles = useSidePanelStyles({
+  cellTypes: {
+    display: "flex",
+    flexWrap: "wrap",
 
-      "& > hr": {
-        marginBottom: theme.spacing(1),
-        marginTop: theme.spacing(1),
-      },
-
-      "& > div": {
-        marginBottom: theme.spacing(1),
-      },
-    },
-
-    buttons: {
-      display: "flex",
-      flexDirection: "column",
-
-      "& > div": {
-        display: "flex",
-        flexWrap: "wrap",
-
-        "& > div": {
-          marginRight: theme.spacing(1),
-        },
-      },
-    },
-
-    cellTypes: {
-      display: "flex",
-      flexWrap: "wrap",
-
-      "& > div": {
-        border: "solid 4px black",
-        borderRadius: 8,
-        boxSizing: "border-box",
-        fontSize: "24px",
-        fontWeight: "bold",
-        height: 48,
-        lineHeight: "42px",
-        margin: 2,
-        opacity: 0.7,
-        textAlign: "center",
-        width: "48px",
-
-        "&:hover": {
-          border: "solid 4px grey",
-          cursor: "pointer",
-        },
-
-        "&.selected": {
-          border: "solid 4px red",
-          opacity: 1,
-        },
-      },
-    },
-
-    settingGroupTitle: {
+    "& > div": {
+      border: "solid 4px black",
+      borderRadius: 8,
+      boxSizing: "border-box",
+      fontSize: "24px",
       fontWeight: "bold",
-      marginTop: "0.5rem",
-      marginBottom: "0.5rem",
+      height: 48,
+      lineHeight: "42px",
+      margin: 2,
+      opacity: 0.7,
+      textAlign: "center",
+      width: "48px",
+
+      "&:hover": {
+        border: "solid 4px grey",
+        cursor: "pointer",
+      },
+
+      "&.selected": {
+        border: "solid 4px red",
+        opacity: 1,
+      },
     },
-  })
-);
+  },
+});
 
 const Tools: React.FC = () => {
   const { state, dispatch } = React.useContext(ReplayContext);
