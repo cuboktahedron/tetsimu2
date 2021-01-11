@@ -1,4 +1,4 @@
-import { backwardStep, forwardStep } from "ducks/replay/actions";
+import { backwardStep, changeStep, forwardStep } from "ducks/replay/actions";
 import { getReplayConductor } from "ducks/replay/selectors";
 import React from "react";
 import { OperationKey } from "utils/tetsimu/operationKey";
@@ -10,6 +10,7 @@ const HotKey: React.FC = () => {
   const initialKeys = {
     ArrowLeft: new OperationKey({ interval1: 200, interval2: 100 }),
     ArrowRight: new OperationKey({ interval1: 200, interval2: 100 }),
+    r: new OperationKey({}),
   };
 
   const [subKeys, setSubKeys] = React.useState(initialKeys);
@@ -32,6 +33,9 @@ const HotKey: React.FC = () => {
           break;
         case "arrowright":
           subKeys["ArrowRight"].down();
+          break;
+        case "r":
+          subKeys["r"].down();
           break;
       }
     };
@@ -57,6 +61,9 @@ const HotKey: React.FC = () => {
           break;
         case "arrowright":
           subKeys["ArrowRight"].up();
+          break;
+        case "r":
+          subKeys["r"].up();
           break;
       }
     };
@@ -89,6 +96,10 @@ const HotKey: React.FC = () => {
 
     if (subKeys["ArrowRight"].active) {
       dispatch(forwardStep(getReplayConductor(state)));
+    }
+
+    if (subKeys["r"].active) {
+      dispatch(changeStep(getReplayConductor(state), 0));
     }
   }, [subKeys]);
 

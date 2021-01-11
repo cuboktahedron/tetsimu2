@@ -5,18 +5,19 @@ import {
   FormControl,
   InputAdornment,
   makeStyles,
-  Theme,
+  Theme
 } from "@material-ui/core";
 import FastForwardIcon from "@material-ui/icons/FastForward";
 import FastRewindIcon from "@material-ui/icons/FastRewind";
 import PauseIcon from "@material-ui/icons/Pause";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import {
   changeAutoPlaying,
   changeStep,
   downReplaySpeed,
-  upReplaySpeed,
+  upReplaySpeed
 } from "ducks/replay/actions";
 import { getReplayConductor } from "ducks/replay/selectors";
 import { changeTetsimuMode, replayToSimuMode } from "ducks/root/actions";
@@ -113,6 +114,10 @@ const Tools: React.FC = () => {
     }
   };
 
+  const handleBackToHeadClick = () => {
+    dispatch(changeStep(getReplayConductor(state), 0));
+  };
+
   const handleFastRewindClick = () => {
     dispatch(downReplaySpeed(state.auto.speed));
   };
@@ -161,7 +166,17 @@ const Tools: React.FC = () => {
         </div>
       </div>
       <Divider />
-      <div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ margin: "4px 4px 4px 0" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ minWidth: 32, padding: "6px 8px" }}
+            onClick={handleBackToHeadClick}
+          >
+            <SkipPreviousIcon />
+          </Button>
+        </div>
         <FormControl>
           <NumberTextField
             label="Step"
