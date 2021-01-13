@@ -71,6 +71,28 @@ const Settings: React.FC = () => {
     }
   };
 
+  const handleGeneratesGarbagesChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    dispatch(
+      changeConfig({
+        ...config,
+        generatesGarbages: e.target.checked,
+      })
+    );
+  };
+
+  const handleGenerateGarbagesLevelChange = (value: number): void => {
+    if (value !== state.config.generateGarbagesLevel) {
+      dispatch(
+        changeConfig({
+          ...config,
+          generateGarbagesLevel: value,
+        })
+      );
+    }
+  };
+
   const handleShowPivotChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(
       changeConfig({
@@ -265,6 +287,34 @@ const Settings: React.FC = () => {
               value={"" + state.config.riseUpRate.second}
               variant="outlined"
               disabled={config.playMode !== PlayMode.Dig}
+            />
+          </div>
+
+          <div>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={config.generatesGarbages}
+                  onChange={handleGeneratesGarbagesChange}
+                />
+              }
+              label="Generates garbages"
+            />
+          </div>
+          <div>
+            <NumberTextField
+              label="level"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              numberProps={{
+                min: 0,
+                max: 9999,
+                change: handleGenerateGarbagesLevelChange,
+              }}
+              value={"" + state.config.generateGarbagesLevel}
+              variant="outlined"
+              disabled={!state.config.generatesGarbages}
             />
           </div>
         </FormGroup>

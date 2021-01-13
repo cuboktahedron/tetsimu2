@@ -8,6 +8,7 @@ import {
   MAX_NEXTS_NUM,
   NextNote,
   ReplayStep,
+  ReplayStepHardDrop,
   ReplayStepType,
   SpinType,
   Tetromino
@@ -16,6 +17,7 @@ import { PlayMode, SimuRetryState } from "types/simu";
 import { FieldHelper } from "../fieldHelper";
 import NextGenerator from "../nextGenerator";
 import { RandomNumberGenerator } from "../randomNumberGenerator";
+import GarbageGenerator from "./garbageGenerator";
 
 export class SimuConductor {
   private _state: SimuState;
@@ -60,6 +62,7 @@ export class SimuConductor {
     newHistories.push({
       currentType: this.state.current.type,
       field: this.state.field,
+      garbages: this.state.garbages,
       hold: this.state.hold,
       isDead: this.state.isDead,
       lastRoseUpColumn: this.state.lastRoseUpColumn,
@@ -124,6 +127,20 @@ export class SimuConductor {
       this.state.hold = { ...this.state.hold, canHold: true };
     }
 
+    const garbage = this.state.garbages[0];
+    let newLastRoseUpColumn = this.state.lastRoseUpColumn;
+    let riseUpCols: number[] = [];
+    if (garbage && garbage.restStep === 0) {
+      riseUpCols = this.fieldHelper.riseUpLines(
+        this.rng,
+        garbage.amount,
+        this.state.lastRoseUpColumn,
+        this.state.config.riseUpRate
+      );
+
+      newLastRoseUpColumn = riseUpCols[riseUpCols.length - 1];
+    }
+
     let newCurrent: ActiveTetromino;
     if (isDead) {
       newCurrent = {
@@ -138,11 +155,41 @@ export class SimuConductor {
       isDead = this.fieldHelper.isOverlapping(newCurrent);
     }
 
+    const newGarbages = (() => {
+      if (this.state.config.generatesGarbages) {
+        const gGen = new GarbageGenerator(
+          this.rng,
+          this.state.config.generateGarbagesLevel,
+          this.state.garbages
+        );
+        return gGen.next();
+      } else {
+        return [];
+      }
+    })();
+
     this.state.isDead = isDead;
     this.state.current = newCurrent;
     this.state.field = this.fieldHelper.field;
     this.state.seed = this.rng.seed;
+    this.state.lastRoseUpColumn = newLastRoseUpColumn;
+    this.state.garbages = newGarbages;
 
+    const hardDropSkip = ((): ReplayStepHardDrop => {
+      if (riseUpCols.length > 0) {
+        return {
+          type: ReplayStepType.HardDrop,
+          attacked: {
+            cols: riseUpCols,
+            line: riseUpCols.length,
+          },
+        };
+      } else {
+        return {
+          type: ReplayStepType.HardDrop,
+        };
+      }
+    })();
     this.recordReplaySteps([
       {
         type: ReplayStepType.Drop,
@@ -150,9 +197,7 @@ export class SimuConductor {
         pos: { x: current.pos.x, y: row },
         spinType: current.spinType,
       },
-      {
-        type: ReplayStepType.HardDrop,
-      },
+      hardDropSkip,
     ]);
     this.recordHistory();
 
@@ -266,14 +311,15 @@ export class SimuConductor {
   };
 
   retry() {
-    const rgn = new RandomNumberGenerator(this.state.retryState.seed);
+    this.rng = new RandomNumberGenerator(this.state.retryState.seed);
     const initialBag: NextNote = {
       candidates: this.state.retryState.bag.candidates,
-      take: this.state.retryState.bag.take ?? Math.floor(rgn.random() * 7) + 1,
+      take:
+        this.state.retryState.bag.take ?? Math.floor(this.rng.random() * 7) + 1,
     };
 
     const gen = new NextGenerator(
-      rgn,
+      this.rng,
       this.state.retryState.unsettledNexts,
       initialBag
     );
@@ -304,20 +350,34 @@ export class SimuConductor {
       bag: lastGenNext.bag,
     };
 
+    const newGarbages = (() => {
+      if (this.state.config.generatesGarbages) {
+        const gGen = new GarbageGenerator(
+          this.rng,
+          this.state.config.generateGarbagesLevel,
+          []
+        );
+        return gGen.next();
+      } else {
+        return [];
+      }
+    })();
+
     this.state.current = newCurrent;
-    this.state.field = newField;
+    (this.state.garbages = newGarbages), (this.state.field = newField);
     this.state.isDead = false;
     this.state.histories = [
       {
         currentType: newCurrent.type,
         field: newField,
+        garbages: newGarbages,
         hold: newHold,
         isDead: false,
         lastRoseUpColumn: newLastRoseUpColumn,
         nexts: newNexts,
         replayNextStep: newNexts.settled.length,
         replayStep: 0,
-        seed: rgn.seed,
+        seed: this.rng.seed,
       },
     ];
     this.state.hold = newHold;
@@ -327,7 +387,7 @@ export class SimuConductor {
     this.state.replayNexts = newNexts.settled;
     this.state.replayStep = 0;
     this.state.replaySteps = [];
-    this.state.seed = rgn.seed;
+    this.state.seed = this.rng.seed;
     this.state.step = 0;
   }
 
@@ -360,16 +420,17 @@ export class SimuConductor {
   }
 
   superRetry() {
-    const rgn = new RandomNumberGenerator();
-    const initialSeed = rgn.seed;
+    this.rng = new RandomNumberGenerator();
+    const initialSeed = this.rng.seed;
 
     const initialBag: NextNote = {
       candidates: this.state.retryState.bag.candidates,
-      take: this.state.retryState.bag.take ?? Math.floor(rgn.random() * 7) + 1,
+      take:
+        this.state.retryState.bag.take ?? Math.floor(this.rng.random() * 7) + 1,
     };
 
     const gen = new NextGenerator(
-      rgn,
+      this.rng,
       this.state.retryState.unsettledNexts,
       initialBag
     );
@@ -418,21 +479,35 @@ export class SimuConductor {
       unsettledNexts: this.state.retryState.unsettledNexts,
       seed: initialSeed,
     };
+    const newGarbages = (() => {
+      if (this.state.config.generatesGarbages) {
+        const gGen = new GarbageGenerator(
+          this.rng,
+          this.state.config.generateGarbagesLevel,
+          []
+        );
+        return gGen.next();
+      } else {
+        return [];
+      }
+    })();
 
     this.state.current = newCurrent;
     this.state.field = newField;
+    this.state.garbages = newGarbages;
     this.state.isDead = false;
     this.state.histories = [
       {
         currentType: newCurrent.type,
         field: newField,
+        garbages: newGarbages,
         hold: newHold,
         isDead: false,
         lastRoseUpColumn: newLastRoseUpColumn,
         nexts: newNexts,
         replayNextStep: newNexts.settled.length,
         replayStep: 0,
-        seed: rgn.seed,
+        seed: this.rng.seed,
       },
     ];
     this.state.hold = newHold;
@@ -443,7 +518,7 @@ export class SimuConductor {
     this.state.replayNexts = newNexts.settled;
     this.state.replayStep = 0;
     this.state.replaySteps = [];
-    this.state.seed = rgn.seed;
+    this.state.seed = this.rng.seed;
     this.state.step = 0;
   }
 
@@ -457,7 +532,7 @@ export class SimuConductor {
         4,
         lastRoseUpColumn,
         this.state.config.riseUpRate
-      );
+      )[3];
     }
 
     return [this.fieldHelper.field, lastRoseUpColumn];

@@ -20,6 +20,7 @@ import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 export type SimuStateHistory = {
   currentType: Tetromino;
   field: FieldState;
+  garbages: GarbageInfo[];
   hold: HoldState;
   isDead: boolean;
   lastRoseUpColumn: number;
@@ -33,6 +34,11 @@ export type SimuStateHistory = {
   seed: number;
 };
 
+export type GarbageInfo = {
+  amount: number;
+  restStep: number;
+};
+
 export type SimuState = {
   config: SimuConfig;
   current: ActiveTetromino;
@@ -40,6 +46,7 @@ export type SimuState = {
     isTouchDevice: boolean;
   };
   field: FieldState;
+  garbages: GarbageInfo[];
   histories: SimuStateHistory[];
   hold: HoldState;
   isDead: boolean;
@@ -115,6 +122,8 @@ export const initialSimuState: SimuState = ((): SimuState => {
 
   const isTouchDevice = "ontouchstart" in window;
   const config: SimuConfig = {
+    generateGarbagesLevel: 5555,
+    generatesGarbages: false,
     nextNum: 5,
     playMode: PlayMode.Normal,
     riseUpRate: {
@@ -137,10 +146,12 @@ export const initialSimuState: SimuState = ((): SimuState => {
       isTouchDevice,
     },
     field,
+    garbages: [],
     histories: [
       {
         currentType: current.type,
         field,
+        garbages: [],
         hold,
         isDead: false,
         lastRoseUpColumn: -1,

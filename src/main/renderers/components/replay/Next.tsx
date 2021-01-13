@@ -5,7 +5,7 @@ import TetrominoBlocks from "../core/TetrominoBlocks";
 
 type NextProps = {
   type: Tetromino;
-  attackedLine?: number;
+  attack: number;
 };
 
 const useStyles = makeStyles(() =>
@@ -16,18 +16,17 @@ const useStyles = makeStyles(() =>
       width: "100%",
     },
 
-    attackedLine: {
+    attack: {
       background: "white",
-      border: "solid 1px white",
       borderRadius: "50%",
       fontWeight: "bold",
-      height: 20,
-      lineHeight: "20px",
+      height: 24,
+      lineHeight: "24px",
       position: "absolute",
-      right: 2,
+      right: 0,
       textAlign: "center",
-      top: 2,
-      width: 20,
+      top: 0,
+      width: 24,
     },
   })
 );
@@ -35,13 +34,15 @@ const useStyles = makeStyles(() =>
 const Next: React.FC<NextProps> = (props) => {
   const classes = useStyles();
 
+  const attack =
+    props.attack > 0 ? (
+      <div className={classes.attack}>{props.attack}</div>
+    ) : (
+      ""
+    );
   return (
     <div className={classes.root}>
-      {props.attackedLine ? (
-        <div className={classes.attackedLine}>{props.attackedLine}</div>
-      ) : (
-        ""
-      )}
+      {attack}
       <TetrominoBlocks type={props.type}></TetrominoBlocks>
     </div>
   );

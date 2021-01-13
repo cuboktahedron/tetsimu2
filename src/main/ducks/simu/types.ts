@@ -1,4 +1,4 @@
-import { SimuStateHistory } from "stores/SimuState";
+import { GarbageInfo, SimuStateHistory } from "stores/SimuState";
 import {
   Action,
   ActiveTetromino,
@@ -79,6 +79,7 @@ export type DoSimuAction = {
     | {
         current: ActiveTetromino;
         field: FieldState;
+        garbages: GarbageInfo[];
         histories: SimuStateHistory[];
         hold: HoldState;
         isDead: boolean;
@@ -106,6 +107,7 @@ export type RedoAction = {
   payload: {
     current: ActiveTetromino;
     field: FieldState;
+    garbages: GarbageInfo[];
     hold: HoldState;
     isDead: boolean;
     lastRoseUpColumn: number;
@@ -126,6 +128,7 @@ export type RetryAction = {
   payload: {
     current: ActiveTetromino;
     field: FieldState;
+    garbages: GarbageInfo[];
     isDead: boolean;
     histories: SimuStateHistory[];
     hold: HoldState;
@@ -149,6 +152,7 @@ export type SuperRetryAction = {
   payload: {
     current: ActiveTetromino;
     field: FieldState;
+    garbages: GarbageInfo[];
     isDead: boolean;
     histories: SimuStateHistory[];
     hold: HoldState;
@@ -173,6 +177,7 @@ export type UndoAction = {
   payload: {
     current: ActiveTetromino;
     field: FieldState;
+    garbages: GarbageInfo[];
     hold: HoldState;
     isDead: boolean;
     lastRoseUpColumn: number;

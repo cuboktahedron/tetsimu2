@@ -26,6 +26,7 @@ describe("simuUrl", () => {
               "NNIJLOSTZG",
               "IJLOSTZGNN"
             ),
+            garbages: [],
             hold: makeHold(Tetromino.I, false),
             isDead: false,
             lastRoseUpColumn: -1,
@@ -74,6 +75,7 @@ describe("simuUrl", () => {
           {
             currentType: Tetromino.I,
             field: makeField("NNNNNNNNNN"),
+            garbages: [],
             isDead: false,
             hold: makeHold(Tetromino.None, true),
             lastRoseUpColumn: -1,

@@ -111,6 +111,7 @@ export const editToSimuMode = (state: EditState): EditToSimuAction => {
     payload: {
       current: newCurrent,
       field: state.field,
+      garbages: [],
       hold: state.hold,
       nexts: {
         settled: newNextSettles,
@@ -267,6 +268,7 @@ const initializeSimuState = (
       {
         currentType: current.type,
         field: fragments.field,
+        garbages: [], // TODO: temporary
         hold: fragments.hold,
         isDead,
         lastRoseUpColumn: -1,
@@ -436,6 +438,7 @@ export const replayToSimuMode = (state: ReplayState): ReplayToSimuAction => {
     payload: {
       current: newCurrent,
       field: state.field,
+      garbages: [], // TODO: temporary
       hold: state.hold,
       isDead: state.isDead,
       lastRoseUpColumn: -1,

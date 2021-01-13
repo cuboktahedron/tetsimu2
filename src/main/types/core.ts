@@ -141,6 +141,7 @@ export type ReplayStepHardDrop = {
   type: typeof ReplayStepType.HardDrop;
   attacked?: {
     cols: number[];
+    line: number;
   };
 };
 

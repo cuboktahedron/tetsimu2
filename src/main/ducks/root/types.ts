@@ -1,6 +1,6 @@
 import { EditState } from "stores/EditState";
 import { ReplayState } from "stores/ReplayState";
-import { SimuState } from "stores/SimuState";
+import { GarbageInfo, SimuState } from "stores/SimuState";
 import {
   Action,
   ActiveTetromino,
@@ -51,6 +51,7 @@ export type EditToSimuAction = {
   type: typeof RootActionsType.EditToSimuMode;
   payload: {
     field: FieldState;
+    garbages: GarbageInfo[];
     hold: HoldState;
     current: ActiveTetromino;
     lastRoseUpColumn: number;
@@ -87,6 +88,7 @@ export type ReplayToSimuAction = {
   payload: {
     current: ActiveTetromino;
     field: FieldState;
+    garbages: GarbageInfo[];
     hold: HoldState;
     isDead: boolean;
     lastRoseUpColumn: number;

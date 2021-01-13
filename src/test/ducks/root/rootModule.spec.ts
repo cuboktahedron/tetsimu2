@@ -74,6 +74,7 @@ describe("rootModule", () => {
         payload: {
           current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
           field: makeField("IJLOSTZNNN"),
+          garbages: [],
           hold: makeHold(Tetromino.I, false),
           lastRoseUpColumn: -1,
           nexts: {
@@ -187,6 +188,7 @@ describe("rootModule", () => {
         payload: {
           current: makeCurrent(Direction.Up, 4, 19, Tetromino.L),
           field: makeField("IJLOSTZNNN"),
+          garbages: [], // TODO: temporary
           hold: makeHold(Tetromino.I, false),
           isDead: false,
           lastRoseUpColumn: -1,
@@ -229,6 +231,7 @@ describe("rootModule", () => {
             {
               currentType: Tetromino.T,
               field: makeField("IJLOSTZNNN"),
+              garbages: [],
               hold: makeHold(Tetromino.I, false),
               isDead: false,
               lastRoseUpColumn: -1,
@@ -347,6 +350,7 @@ describe("rootModule", () => {
           {
             currentType: Tetromino.I,
             field: makeField("IJLOSTZGNN"),
+            garbages: [],
             hold: makeHold(Tetromino.O, false),
             isDead: false,
             lastRoseUpColumn: -1,
@@ -406,6 +410,7 @@ describe("rootModule", () => {
           {
             currentType: Tetromino.I,
             field: makeField("NNNNNNNNNN"),
+            garbages: [],
             hold: makeHold(Tetromino.None, true),
             isDead: false,
             lastRoseUpColumn: -1,

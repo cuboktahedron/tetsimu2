@@ -41,10 +41,13 @@ describe("simuConductor", () => {
       const expected: SimuState = {
         ...state,
         current: makeCurrent(Direction.Up, 4, 19, Tetromino.S),
+        garbages: [],
         histories: [
           {
             currentType: Tetromino.S,
             field: state.field,
+            garbages: [],
+
             hold: makeHold(Tetromino.I, false),
             isDead: false,
             lastRoseUpColumn: -1,
@@ -98,10 +101,12 @@ describe("simuConductor", () => {
       const expected: SimuState = {
         ...state,
         current: makeCurrent(Direction.Up, 4, 19, Tetromino.L),
+        garbages: [],
         histories: [
           {
             currentType: Tetromino.L,
             field: state.field,
+            garbages: [],
             hold: makeHold(Tetromino.T, false),
             isDead: false,
             lastRoseUpColumn: -1,
@@ -186,6 +191,7 @@ describe("simuConductor", () => {
             "IIIINNNNNN",
             "IJLOSTZNNN"
           ),
+          garbages: [],
           histories: [
             {
               currentType: Tetromino.S,
@@ -195,6 +201,7 @@ describe("simuConductor", () => {
                 "IIIINNNNNN",
                 "IJLOSTZNNN"
               ),
+              garbages: [],
               hold: makeHold(Tetromino.I, true),
               isDead: false,
               lastRoseUpColumn: -1,

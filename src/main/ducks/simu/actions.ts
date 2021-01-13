@@ -99,6 +99,7 @@ export const doSimu = (
       payload: {
         current: newState.current,
         field: newState.field,
+        garbages: newState.garbages,
         histories: newState.histories,
         hold: newState.hold,
         isDead: newState.isDead,
@@ -138,6 +139,7 @@ export const redo = (
     payload: {
       current: newCurrent,
       field: history.field,
+      garbages: history.garbages,
       hold: history.hold,
       isDead: history.isDead,
       lastRoseUpColumn: history.lastRoseUpColumn,
@@ -159,6 +161,7 @@ export const retry = (conductor: SimuConductor): RetryAction => {
     payload: {
       current: newState.current,
       field: newState.field,
+      garbages: newState.garbages,
       histories: newState.histories,
       hold: newState.hold,
       isDead: newState.isDead,
@@ -183,6 +186,7 @@ export const superRetry = (conductor: SimuConductor): SuperRetryAction => {
     payload: {
       current: newState.current,
       field: newState.field,
+      garbages: newState.garbages,
       histories: newState.histories,
       isDead: newState.isDead,
       hold: newState.hold,
@@ -214,6 +218,7 @@ export const undo = (
     payload: {
       current: newCurrent,
       field: history.field,
+      garbages: history.garbages,
       hold: history.hold,
       isDead: history.isDead,
       lastRoseUpColumn: history.lastRoseUpColumn,

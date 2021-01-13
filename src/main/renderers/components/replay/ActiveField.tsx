@@ -13,6 +13,7 @@ import {
   purple,
   red,
 } from "@material-ui/core/colors";
+import { getUrgentAttack } from "ducks/replay/selectors";
 
 const blockBackground = {
   [Tetromino.None]: "transparent",
@@ -56,6 +57,22 @@ const useStyles = makeStyles(() =>
       height: "20%",
       margin: "40%",
       width: "20%",
+    },
+
+    attackNotice: {
+      background: "white",
+      border: "solid 1px black",
+      borderRadius: "50%",
+      boxSizing: "border-box",
+      fontWeight: "bold",
+      height: 24,
+      lineHeight: "24px",
+      position: "absolute",
+      top: 4,
+      right: 4,
+      textAlign: "center",
+      width: 24,
+      zIndex: 12,
     },
   })
 );
@@ -148,8 +165,18 @@ const ActiveField: React.FC<ActiveFieldProps> = () => {
     );
   });
 
+  const attacks = getUrgentAttack(state);
+  const attackNotice = (() => {
+    if (!attacks) {
+      return "";
+    }
+
+    return <div className={classes.attackNotice}>{attacks}</div>;
+  })();
+
   return (
     <div className={classes.root}>
+      <div>{attackNotice}</div>
       <div>{currentBlocks}</div>
       <div>{state.config.showsGhost ? ghostBlocks : ""}</div>
     </div>

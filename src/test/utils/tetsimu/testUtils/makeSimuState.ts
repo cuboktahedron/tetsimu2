@@ -1,5 +1,5 @@
 import merge from "deepmerge";
-import { SimuState, SimuStateHistory } from "stores/SimuState";
+import { GarbageInfo, SimuState, SimuStateHistory } from "stores/SimuState";
 import {
   ActiveTetromino,
   Direction,
@@ -8,13 +8,15 @@ import {
   NextNote,
   ReplayStep,
   TapControllerType,
-  Tetromino
+  Tetromino,
 } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
 import { makeNextNote } from "./makeNextNote";
 
 export const makeSimuState = (state: {
   config?: {
+    generateGarbagesLevel?: number;
+    generatesGarbages?: boolean;
     nextNum?: number;
     playMode?: PlayMode;
     riseUpRate?: {
@@ -24,6 +26,7 @@ export const makeSimuState = (state: {
   };
   current?: ActiveTetromino;
   field?: FieldState;
+  garbages?: GarbageInfo[];
   histories?: SimuStateHistory[];
   hold?: HoldState;
   isDead?: boolean;
@@ -45,6 +48,8 @@ export const makeSimuState = (state: {
   return merge(
     {
       config: {
+        generateGarbagesLevel: 5555,
+        generatesGarbages: false,
         nextNum: 5,
         playMode: PlayMode.Normal,
         riseUpRate: {
@@ -65,6 +70,7 @@ export const makeSimuState = (state: {
         isTouchDevice: false,
       },
       field: [],
+      garbages: [],
       histories: [],
       hold: {
         canHold: false,

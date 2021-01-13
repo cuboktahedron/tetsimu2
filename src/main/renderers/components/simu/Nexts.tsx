@@ -1,5 +1,6 @@
 import { createStyles, makeStyles } from "@material-ui/core";
 import clsx from "clsx";
+import { getNextAttacks } from "ducks/simu/selectors";
 import React from "react";
 import { MAX_NEXTS_NUM } from "types/core";
 import Next from "./Next";
@@ -15,6 +16,7 @@ const useStyles = makeStyles(() =>
       boxShadow: "0 0 0 1px grey",
       height: (props: StyleProps) =>
         Math.min(96 * props.zoom, props.height / props.nextNums),
+      position: "relative",
       width: (props: StyleProps) =>
         Math.min(96 * props.zoom, props.height / props.nextNums),
     },
@@ -48,8 +50,8 @@ const Nexts: React.FC<NextsProps> = (props) => {
   });
 
   const noOfCycleBase = (7 - (state.nexts.bag.take + (MAX_NEXTS_NUM - 7))) % 7;
-
   const visibleNexts = state.nexts.settled.slice(0, config.nextNum);
+  const attacks = getNextAttacks(state);
   const nextdives = visibleNexts.map((next, index) => {
     const noOfCycle = (noOfCycleBase + index) % 7;
     return (
@@ -60,7 +62,7 @@ const Nexts: React.FC<NextsProps> = (props) => {
           [classes.cycleEnd]: state.config.showsCycle && noOfCycle === 6,
         })}
       >
-        <Next type={next} />
+        <Next type={next} attack={attacks[index]}/>
       </div>
     );
   });
@@ -71,7 +73,6 @@ const Nexts: React.FC<NextsProps> = (props) => {
       style={{ alignItems: "center", display: "flex", flexDirection: "column" }}
     >
       <div>{nextdives}</div>
-      <div></div>
     </div>
   );
 };

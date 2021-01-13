@@ -30,15 +30,14 @@ export const makeReplayDropStep = (
   };
 };
 
-export const makeReplayHardDropStep = (
-  attackedCols?: number[]
-): ReplayStepHardDrop => {
-  if (attackedCols) {
+export const makeReplayHardDropStep = (attacked?: {
+  cols: number[];
+  line: number;
+}): ReplayStepHardDrop => {
+  if (attacked) {
     return {
       type: ReplayStepType.HardDrop,
-      attacked: {
-        cols: attackedCols,
-      },
+      attacked,
     };
   } else {
     return {

@@ -31,12 +31,14 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
             ...state.simu,
             current: action.payload.current,
             field: action.payload.field,
+            garbages: action.payload.garbages,
             hold: action.payload.hold,
             nexts: action.payload.nexts,
             histories: [
               {
                 currentType: action.payload.current.type,
                 field: action.payload.field,
+                garbages:  action.payload.garbages,
                 hold: action.payload.hold,
                 isDead: false,
                 lastRoseUpColumn: action.payload.lastRoseUpColumn,
@@ -98,6 +100,7 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
             },
             current: action.payload.current,
             field: action.payload.field,
+            garbages: action.payload.garbages,
             hold: action.payload.hold,
             isDead: action.payload.isDead,
             nexts: action.payload.nexts,
@@ -105,6 +108,7 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
               {
                 currentType: action.payload.current.type,
                 field: action.payload.field,
+                garbages: action.payload.garbages,
                 hold: action.payload.hold,
                 isDead: false,
                 lastRoseUpColumn: action.payload.lastRoseUpColumn,

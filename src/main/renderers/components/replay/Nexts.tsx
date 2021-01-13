@@ -1,5 +1,6 @@
 import { createStyles, makeStyles } from "@material-ui/core";
 import clsx from "clsx";
+import { getNextAttacks } from "ducks/replay/selectors";
 import React from "react";
 import { Tetromino } from "types/core";
 import Next from "./Next";
@@ -60,6 +61,7 @@ const Nexts: React.FC<NextsProps> = (props) => {
     }
   })();
 
+  const attacks = getNextAttacks(state);
   const nextdives = nexts.map((next, index) => {
     const noOfCycle = (state.noOfCycle - 1 + index) % 7;
     return (
@@ -70,7 +72,7 @@ const Nexts: React.FC<NextsProps> = (props) => {
           [classes.cycleEnd]: state.config.showsCycle && noOfCycle === 6,
         })}
       >
-        <Next type={next} />
+        <Next type={next} attack={attacks[index]} />
       </div>
     );
   });

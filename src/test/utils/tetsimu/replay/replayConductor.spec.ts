@@ -169,7 +169,7 @@ describe("replayConductor", () => {
         ],
         hold: makeHold(Tetromino.T, false),
         nexts: makeTetrominos("J"),
-        replaySteps: [makeReplayHardDropStep([1, 2, 3])],
+        replaySteps: [makeReplayHardDropStep({ cols: [1, 2, 3], line: 3 })],
       });
       const conductor = getReplayConductor(state);
       expect(conductor.forwardStep()).toBeTruthy();

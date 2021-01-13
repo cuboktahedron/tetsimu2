@@ -7,7 +7,7 @@ import {
   MAX_FIELD_WIDTH,
   SpinType,
   Tetromino,
-  Vector2
+  Vector2,
 } from "types/core";
 import { RandomNumberGenerator } from "./randomNumberGenerator";
 
@@ -284,15 +284,17 @@ export class FieldHelper {
     lineNum: number,
     lastRoseUpColumn: number,
     riseUpRate: { first: number; second: number }
-  ): number {
+  ): number[] {
     if (lineNum <= 0) {
-      return 0;
+      return [];
     }
 
+    const riseUpCols: number[] = [];
     for (let i = 0; i < lineNum; i++) {
       if (lastRoseUpColumn < 0 || lastRoseUpColumn >= MAX_FIELD_WIDTH) {
         lastRoseUpColumn = Math.trunc(rgn.random() * MAX_FIELD_WIDTH);
         this.riseUpLine(lastRoseUpColumn);
+        riseUpCols.push(lastRoseUpColumn);
 
         continue;
       }
@@ -300,6 +302,7 @@ export class FieldHelper {
       const rate = i === 0 ? riseUpRate.first : riseUpRate.second;
       if (rgn.random() * 100 < rate) {
         this.riseUpLine(lastRoseUpColumn);
+        riseUpCols.push(lastRoseUpColumn);
       } else {
         let riseUpColumn;
         do {
@@ -308,10 +311,11 @@ export class FieldHelper {
 
         lastRoseUpColumn = riseUpColumn;
         this.riseUpLine(lastRoseUpColumn);
+        riseUpCols.push(lastRoseUpColumn);
       }
     }
 
-    return lastRoseUpColumn;
+    return riseUpCols;
   }
 
   riseUpLine(col: number) {
