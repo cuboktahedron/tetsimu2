@@ -18,7 +18,7 @@ class GarbageGenerator {
     this.garbages = _garbages.map((garbage) => ({ ...garbage }));
   }
 
-  next(): GarbageInfo[] {
+  next(generatesGarbage: boolean): GarbageInfo[] {
     const garbage = this.garbages[0];
     if (garbage) {
       if (garbage.restStep < 0) {
@@ -28,7 +28,7 @@ class GarbageGenerator {
       }
     }
 
-    while (this.lackOfGarbages()) {
+    while (generatesGarbage && this.lackOfGarbages()) {
       const sigmaAttack = attacksSigma[Math.floor(this.level / 1000) % 10];
       const avgAttack = attacks[Math.floor(this.level / 100) % 10];
       const sigmaStep = stepsSigma[Math.floor((this.level / 10) % 10)];
@@ -44,10 +44,12 @@ class GarbageGenerator {
     }
 
     const garbage2 = this.garbages[0] as GarbageInfo;
-    this.garbages.splice(0, 1, {
-      amount: garbage2.amount,
-      restStep: garbage2.restStep - 1,
-    });
+    if (garbage2) {
+      this.garbages.splice(0, 1, {
+        amount: garbage2.amount,
+        restStep: garbage2.restStep - 1,
+      });
+    }
 
     return this.garbages;
   }

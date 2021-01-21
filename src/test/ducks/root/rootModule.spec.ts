@@ -18,11 +18,12 @@ import {
 import { initialReplayState, ReplayState } from "stores/ReplayState";
 import { initialRootState } from "stores/RootState";
 import { initialSimuState, SimuState } from "stores/SimuState";
-import { Direction, Tetromino, TetsimuMode } from "types/core";
+import { Direction, SpinType, Tetromino, TetsimuMode } from "types/core";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { makeCurrent } from "../../utils/tetsimu/testUtils/makeCurrent";
 import { makeEditState } from "../../utils/tetsimu/testUtils/makeEditState";
 import { makeField } from "../../utils/tetsimu/testUtils/makeField";
+import { makeGarbage } from "../../utils/tetsimu/testUtils/makeGarbage";
 import { makeHold } from "../../utils/tetsimu/testUtils/makeHold";
 import {
   makeNextNote,
@@ -177,6 +178,19 @@ describe("rootModule", () => {
           isDead: false,
           nexts: makeTetrominos("OSTZIZTSOLJIIJLOSTZ"),
           noOfCycle: 3,
+          replaySteps: [
+            makeReplayHoldStep(),
+            makeReplayDropStep(Direction.Up, 0, 0),
+            makeReplayHardDropStep(),
+            makeReplayDropStep(Direction.Up, 5, 0),
+            makeReplayHardDropStep({ cols: [1], line: 3 }),
+            makeReplayHoldStep(),
+            makeReplayDropStep(Direction.Up, 7, 0),
+            makeReplayHardDropStep(),
+            makeReplayDropStep(Direction.Left, 8, 20, SpinType.Spin),
+            makeReplayHardDropStep({ cols: [1, 2, 3], line: 5 }),
+          ],
+          step: 3,
           replayInfo: {
             nextNum: 12,
           },
@@ -188,7 +202,7 @@ describe("rootModule", () => {
         payload: {
           current: makeCurrent(Direction.Up, 4, 19, Tetromino.L),
           field: makeField("IJLOSTZNNN"),
-          garbages: [], // TODO: temporary
+          garbages: [makeGarbage(0, 3), makeGarbage(2, 5)],
           hold: makeHold(Tetromino.I, false),
           isDead: false,
           lastRoseUpColumn: -1,

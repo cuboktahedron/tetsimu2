@@ -70,13 +70,13 @@ describe("deserializeNexts", () => {
 
 describe("deserializeSteps", () => {
   it("should deserialize steps", function () {
-    const actual = deserializeSteps("AAAQ0G8_");
+    const actual = deserializeSteps("AAAS0GUxI-A_");
     const expected = [
       makeReplayDropStep(Direction.Up, 0, 0),
       makeReplayHardDropStep(),
       makeReplayHoldStep(),
       makeReplayDropStep(Direction.Left, 8, 20, SpinType.Spin),
-      makeReplayHardDropStep(),
+      makeReplayHardDropStep({ cols: [1, 2, 3], line: 5 }),
     ];
 
     expect(actual).toEqual(expected);

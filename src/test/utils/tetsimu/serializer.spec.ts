@@ -109,12 +109,17 @@ describe("serializeSteps", () => {
       // 0001
       makeReplayHoldStep(),
 
-      // 0000     : stepType
+      // 0010     : stepType
       // 11010000 : pos
       // 01       : dir
       // 10       : spinType
+      // 0101     : attacked line
+      // 0011     : attacked line after offsetting
+      // 0001     : col1
+      // 0010     : col2
+      // 0011     : col3
       makeReplayDropStep(Direction.Left, 8, 20, SpinType.Spin),
-      makeReplayHardDropStep(),
+      makeReplayHardDropStep({ cols: [1, 2, 3], line: 5 }),
     ]);
 
     // 0         1         2         3         4         5         6
@@ -122,10 +127,13 @@ describe("serializeSteps", () => {
     // 000000 :  0 : A
     // 000000 :  0 : A
     // 000000 :  0 : A
-    // 010000 : 16 : Q
+    // 010010 : 18 : S
     // 110100 : 52 : 0
     // 000110 :  6 : G
-    // 111100 : 60 : 8
-    expect(actual).toBe("AAAQ0G8_");
+    // 010100 : 20 : U
+    // 110001 : 49 : x
+    // 001000 :  8 : I
+    // 111111 : 63 : -
+    expect(actual).toBe("AAAS0GUxI-A_");
   });
 });

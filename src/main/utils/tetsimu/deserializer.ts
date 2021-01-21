@@ -92,7 +92,8 @@ export const deserializeSteps = (dataString: string): ReplayStep[] => {
         deserializeDropStep(reader, steps);
         break;
       case StepType.DropWithAttacked:
-        throw new DeserializeError("Not supported yet");
+        deserializeDropWithAttackedStep(reader, steps);
+        break;
       case StepType.Hold:
         deserializeHoldStep(steps);
         break;
@@ -109,6 +110,14 @@ const deserializeHoldStep = (steps: ReplayStep[]) => {
 };
 
 const deserializeDropStep = (reader: BitReader, steps: ReplayStep[]) => {
+  deserializeDropStepOnly(reader, steps);
+
+  steps.push({
+    type: ReplayStepType.HardDrop,
+  });
+};
+
+const deserializeDropStepOnly = (reader: BitReader, steps: ReplayStep[]) => {
   const posValue = reader.read(8);
   const x = posValue % MAX_FIELD_WIDTH;
   const y = Math.floor(posValue / MAX_FIELD_WIDTH);
@@ -124,9 +133,30 @@ const deserializeDropStep = (reader: BitReader, steps: ReplayStep[]) => {
     },
     spinType,
   });
+};
+
+const deserializeDropWithAttackedStep = (
+  reader: BitReader,
+  steps: ReplayStep[]
+) => {
+  deserializeDropStepOnly(reader, steps);
+
+  const attackedLine = reader.read(4);
+  const attackedLineAfterOffsetting = reader.read(4);
+  const attackedCols = (() => {
+    const cols: number[] = [];
+    for (let i = 0; i < attackedLineAfterOffsetting; i++) {
+      cols[i] = reader.read(4);
+    }
+    return cols;
+  })();
 
   steps.push({
     type: ReplayStepType.HardDrop,
+    attacked: {
+      cols: attackedCols,
+      line: attackedLine,
+    },
   });
 };
 

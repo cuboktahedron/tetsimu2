@@ -1,7 +1,8 @@
+import { getNextAttacks, getUrgentAttack } from "ducks/replay/selectors";
 import { EditState } from "stores/EditState";
 import { ReplayState } from "stores/ReplayState";
 import { RootState } from "stores/RootState";
-import { SimuState } from "stores/SimuState";
+import { GarbageInfo, SimuState } from "stores/SimuState";
 import {
   ActiveTetromino,
   Direction,
@@ -9,18 +10,18 @@ import {
   NextNote,
   SpinType,
   Tetromino,
-  TetsimuMode
+  TetsimuMode,
 } from "types/core";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 import ReplayUrl, {
-  ReplayStateFragments
+  ReplayStateFragments,
 } from "utils/tetsimu/replay/replayUrl";
 import SimuUrl, {
   SimuStateFragments,
-  UNSPECIFIED_SEED
+  UNSPECIFIED_SEED,
 } from "utils/tetsimu/simu/simuUrl";
 import {
   ChangeTetsimuModeAction,
@@ -31,7 +32,7 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction
+  SimuToReplayAction,
 } from "./types";
 
 export const changeTetsimuMode = (
@@ -268,7 +269,7 @@ const initializeSimuState = (
       {
         currentType: current.type,
         field: fragments.field,
-        garbages: [], // TODO: temporary
+        garbages: [],
         hold: fragments.hold,
         isDead,
         lastRoseUpColumn: -1,
@@ -433,12 +434,38 @@ export const replayToSimuMode = (state: ReplayState): ReplayToSimuAction => {
     type: currentGenNext.type,
   };
 
+  const newGarbages: GarbageInfo[] = (() => {
+    const topAttack = getUrgentAttack(state) ?? 0;
+
+    const newGarbages: GarbageInfo[] = [];
+    if (topAttack) {
+      newGarbages.push({ amount: topAttack, restStep: 0 });
+    }
+
+    let nextAttacks = getNextAttacks(state);
+    while (nextAttacks.length > 0) {
+      const index = nextAttacks.findIndex((value) => value > 0);
+      if (index === -1) {
+        break;
+      }
+
+      newGarbages.push({
+        amount: nextAttacks[index],
+        restStep: index + 1,
+      });
+
+      nextAttacks = nextAttacks.slice(index + 1);
+    }
+
+    return newGarbages;
+  })();
+
   return {
     type: RootActionsType.ReplayToSimuMode,
     payload: {
       current: newCurrent,
       field: state.field,
-      garbages: [], // TODO: temporary
+      garbages: newGarbages,
       hold: state.hold,
       isDead: state.isDead,
       lastRoseUpColumn: -1,

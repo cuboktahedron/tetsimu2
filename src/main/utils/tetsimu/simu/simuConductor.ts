@@ -11,7 +11,7 @@ import {
   ReplayStepHardDrop,
   ReplayStepType,
   SpinType,
-  Tetromino
+  Tetromino,
 } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
 import { FieldHelper } from "../fieldHelper";
@@ -156,16 +156,12 @@ export class SimuConductor {
     }
 
     const newGarbages = (() => {
-      if (this.state.config.generatesGarbages) {
-        const gGen = new GarbageGenerator(
-          this.rng,
-          this.state.config.generateGarbagesLevel,
-          this.state.garbages
-        );
-        return gGen.next();
-      } else {
-        return [];
-      }
+      const gGen = new GarbageGenerator(
+        this.rng,
+        this.state.config.generateGarbagesLevel,
+        this.state.garbages
+      );
+      return gGen.next(this.state.config.generatesGarbages);
     })();
 
     this.state.isDead = isDead;
@@ -351,16 +347,12 @@ export class SimuConductor {
     };
 
     const newGarbages = (() => {
-      if (this.state.config.generatesGarbages) {
-        const gGen = new GarbageGenerator(
-          this.rng,
-          this.state.config.generateGarbagesLevel,
-          []
-        );
-        return gGen.next();
-      } else {
-        return [];
-      }
+      const gGen = new GarbageGenerator(
+        this.rng,
+        this.state.config.generateGarbagesLevel,
+        []
+      );
+      return gGen.next(this.state.config.generatesGarbages);
     })();
 
     this.state.current = newCurrent;
@@ -480,16 +472,12 @@ export class SimuConductor {
       seed: initialSeed,
     };
     const newGarbages = (() => {
-      if (this.state.config.generatesGarbages) {
-        const gGen = new GarbageGenerator(
-          this.rng,
-          this.state.config.generateGarbagesLevel,
-          []
-        );
-        return gGen.next();
-      } else {
-        return [];
-      }
+      const gGen = new GarbageGenerator(
+        this.rng,
+        this.state.config.generateGarbagesLevel,
+        []
+      );
+      return gGen.next(this.state.config.generatesGarbages);
     })();
 
     this.state.current = newCurrent;

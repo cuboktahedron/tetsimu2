@@ -44,7 +44,7 @@ describe("replayUrl", () => {
           makeReplayHardDropStep(),
           makeReplayHoldStep(),
           makeReplayDropStep(Direction.Left, 8, 20, SpinType.Spin),
-          makeReplayHardDropStep(),
+          makeReplayHardDropStep({ cols: [1, 2, 3], line: 5 }),
         ],
         step: 0,
       });
@@ -55,7 +55,7 @@ describe("replayUrl", () => {
 
       const f = "EjRWeBI0VngA";
       const ns = "Kcu4";
-      const ss = "AAAQ0G8_";
+      const ss = "AAAS0GUxI-A_";
       const h = "3";
       const nc = "6";
       const nn = "12";
@@ -105,7 +105,7 @@ describe("replayUrl", () => {
     it("should generate states from url(v2.0.0)", () => {
       const f = "EjRWeBI0VngA";
       const ns = "Kcu4";
-      const ss = "AAAQ0G8_";
+      const ss = "AAAS0GUxI-A_";
       const nc = "6";
       const h = "3";
       const nn = "12";
@@ -140,7 +140,7 @@ describe("replayUrl", () => {
           makeReplayHardDropStep(),
           makeReplayHoldStep(),
           makeReplayDropStep(Direction.Left, 8, 20, SpinType.Spin),
-          makeReplayHardDropStep(),
+          makeReplayHardDropStep({ cols: [1, 2, 3], line: 5 }),
         ],
       };
 

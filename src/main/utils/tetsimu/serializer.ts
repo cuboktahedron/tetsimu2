@@ -103,7 +103,7 @@ const serializeDropStep = (
   writer: BitWriter
 ) => {
   if (hardDropStep.attacked) {
-    throw new SerializeError("Not supported yet");
+    writer.write(4, StepType.DropWithAttacked);
   } else {
     writer.write(4, StepType.Drop);
   }
@@ -114,6 +114,21 @@ const serializeDropStep = (
 
   // spin type
   writer.write(2, step.spinType);
+
+  if (!hardDropStep.attacked) {
+    return;
+  }
+
+  // attacked line
+  writer.write(4, hardDropStep.attacked.line);
+
+  // attacked line after offsetting
+  writer.write(4, hardDropStep.attacked.cols.length);
+
+  // cols of hole
+  hardDropStep.attacked.cols.forEach((value => {
+    writer.write(4, value);
+  }))
 };
 
 const bytesToBase64 = (data: Uint8Array): string => {
