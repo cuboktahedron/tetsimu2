@@ -1,5 +1,6 @@
 import {
   createStyles,
+  Divider,
   Drawer,
   List,
   ListItem,
@@ -12,15 +13,19 @@ import {
 import { blueGrey, grey } from "@material-ui/core/colors";
 import CallToActionIcon from "@material-ui/icons/CallToAction";
 import EditIcon from "@material-ui/icons/Edit";
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import clsx from "clsx";
 import React from "react";
 import { SidePanelContext } from "../App";
+import Help from "../Help";
 import Tools from "./Tools";
 
 type SidePanelStyleProps = {
   drawerWidth: number;
   maxDrawerWidth: number;
 };
+
+type IconNames = "tools" | "help";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -92,6 +97,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const mains = {
+  help: <Help />,
   tools: <Tools />,
 };
 
@@ -102,7 +108,7 @@ const SidePanel: React.FC = () => {
   const resizeHandlerRef = React.useRef<HTMLDivElement>(null);
   const [open, setOpen] = React.useContext(SidePanelContext).open;
 
-  const [selectedIconName, setSelectedIconName] = React.useState<"tools">(
+  const [selectedIconName, setSelectedIconName] = React.useState<IconNames>(
     "tools"
   );
   const [prevDragX, setPrevDragX] = React.useState<number | null>(null);
@@ -115,7 +121,7 @@ const SidePanel: React.FC = () => {
     maxDrawerWidth: window.innerWidth,
   });
 
-  const handleMenuIconClick = (iconName: "tools") => {
+  const handleMenuIconClick = (iconName: IconNames) => {
     if (iconName === selectedIconName) {
       if (!open) {
         if (small) {
@@ -253,6 +259,20 @@ const SidePanel: React.FC = () => {
                 <CallToActionIcon
                   className={clsx(classes.icon, {
                     selected: selectedIconName === "tools" && open,
+                  })}
+                />
+              </ListItemIcon>
+            </ListItem>
+            <Divider />
+            <ListItem
+              button
+              disableGutters
+              onClick={() => handleMenuIconClick("help")}
+            >
+              <ListItemIcon className={classes.listIcon}>
+                <HelpOutlineIcon
+                  className={clsx(classes.icon, {
+                    selected: selectedIconName === "help" && open,
                   })}
                 />
               </ListItemIcon>

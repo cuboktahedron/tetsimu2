@@ -1,5 +1,6 @@
 import {
   createStyles,
+  Divider,
   Drawer,
   List,
   ListItem,
@@ -11,6 +12,7 @@ import {
 } from "@material-ui/core";
 import { blueGrey, grey } from "@material-ui/core/colors";
 import CallToActionIcon from "@material-ui/icons/CallToAction";
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 import SettingsIcon from "@material-ui/icons/Settings";
 import clsx from "clsx";
@@ -19,6 +21,7 @@ import { getReplayConductor } from "ducks/replay/selectors";
 import React from "react";
 import { useValueRef } from "renderers/hooks/useValueRef";
 import { SidePanelContext } from "../App";
+import Help from "../Help";
 import { ReplayContext } from "./Replay";
 import Settings from "./Settings";
 import Tools from "./Tools";
@@ -27,6 +30,8 @@ type SidePanelStyleProps = {
   drawerWidth: number;
   maxDrawerWidth: number;
 };
+
+type IconNames = "tools" | "settings" | "help";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -98,8 +103,9 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const mains = {
-  tools: <Tools />,
+  help: <Help />,
   settings: <Settings />,
+  tools: <Tools />,
 };
 
 const SidePanel: React.FC = () => {
@@ -109,9 +115,9 @@ const SidePanel: React.FC = () => {
   const resizeHandlerRef = React.useRef<HTMLDivElement>(null);
   const [open, setOpen] = React.useContext(SidePanelContext).open;
 
-  const [selectedIconName, setSelectedIconName] = React.useState<
-    "tools" | "settings"
-  >("tools");
+  const [selectedIconName, setSelectedIconName] = React.useState<IconNames>(
+    "tools"
+  );
   const [prevDragX, setPrevDragX] = React.useState<number | null>(null);
   const [main, setMain] = React.useState(<Tools />);
 
@@ -153,7 +159,7 @@ const SidePanel: React.FC = () => {
     };
   }, [state.auto.playing, state.auto.speed]);
 
-  const handleMenuIconClick = (iconName: "tools" | "settings") => {
+  const handleMenuIconClick = (iconName: IconNames) => {
     if (iconName === selectedIconName) {
       if (!open) {
         if (small) {
@@ -304,6 +310,20 @@ const SidePanel: React.FC = () => {
                 <SettingsIcon
                   className={clsx(classes.icon, {
                     selected: selectedIconName === "settings" && open,
+                  })}
+                />
+              </ListItemIcon>
+            </ListItem>
+            <Divider />
+            <ListItem
+              button
+              disableGutters
+              onClick={() => handleMenuIconClick("help")}
+            >
+              <ListItemIcon className={classes.listIcon}>
+                <HelpOutlineIcon
+                  className={clsx(classes.icon, {
+                    selected: selectedIconName === "help" && open,
                   })}
                 />
               </ListItemIcon>
