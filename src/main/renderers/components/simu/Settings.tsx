@@ -255,69 +255,73 @@ const Settings: React.FC = () => {
               label="Dig"
             />
           </RadioGroup>
-          <div>
-            <div>Rise up rate</div>
-            <NumberTextField
-              label="first"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              numberProps={{
-                min: 0,
-                max: 100,
-                endAdornment: <InputAdornment position="end">%</InputAdornment>,
-                change: handleRiseUpRateFirstChange,
-              }}
-              value={"" + state.config.riseUpRate.first}
-              variant="outlined"
-              disabled={config.playMode !== PlayMode.Dig}
-              style={{ marginRight: 4 }}
-            />
-            <NumberTextField
-              label="second"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              numberProps={{
-                min: 0,
-                max: 100,
-                endAdornment: <InputAdornment position="end">%</InputAdornment>,
-                change: handleRiseUpRateSecondChange,
-              }}
-              value={"" + state.config.riseUpRate.second}
-              variant="outlined"
-              disabled={config.playMode !== PlayMode.Dig}
-            />
-          </div>
-
-          <div>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={config.generatesGarbages}
-                  onChange={handleGeneratesGarbagesChange}
-                />
-              }
-              label="Generates garbages"
-            />
-          </div>
-          <div>
-            <NumberTextField
-              label="level"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              numberProps={{
-                min: 0,
-                max: 9999,
-                change: handleGenerateGarbagesLevelChange,
-              }}
-              value={"" + state.config.generateGarbagesLevel}
-              variant="outlined"
-              disabled={!state.config.generatesGarbages}
-            />
-          </div>
         </FormGroup>
+
+        <Divider />
+
+        <div>
+          <FormLabel component="legend" className={classes.settingGroupTitle}>
+            Garbage Info
+          </FormLabel>
+
+          <NumberTextField
+            label="first rate"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            numberProps={{
+              min: 0,
+              max: 100,
+              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+              change: handleRiseUpRateFirstChange,
+            }}
+            value={"" + state.config.riseUpRate.first}
+            variant="outlined"
+            style={{ marginRight: 4 }}
+          />
+          <NumberTextField
+            label="second rate"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            numberProps={{
+              min: 0,
+              max: 100,
+              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+              change: handleRiseUpRateSecondChange,
+            }}
+            value={"" + state.config.riseUpRate.second}
+            variant="outlined"
+          />
+        </div>
+
+        <div>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={config.generatesGarbages}
+                onChange={handleGeneratesGarbagesChange}
+              />
+            }
+            label="Generate garbages"
+          />
+        </div>
+        <div>
+          <NumberTextField
+            label="level"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            numberProps={{
+              min: 0,
+              max: 9999,
+              change: handleGenerateGarbagesLevelChange,
+            }}
+            value={"" + state.config.generateGarbagesLevel}
+            variant="outlined"
+            disabled={!state.config.generatesGarbages}
+          />
+        </div>
       </div>
 
       <Divider />
