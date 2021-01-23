@@ -531,8 +531,26 @@ export class SimuConductor {
       new Array(MAX_FIELD_WIDTH).fill(Tetromino.None)
     );
 
+    const bag = (() => {
+      if (this.state.config.playMode === PlayMode.Dig) {
+        return {
+          candidates: [
+            Tetromino.I,
+            Tetromino.J,
+            Tetromino.L,
+            Tetromino.O,
+            Tetromino.S,
+            Tetromino.T,
+            Tetromino.Z,
+          ],
+        };
+      } else {
+        return { candidates: [], take: 0 };
+      }
+    })();
+
     this.state.retryState = {
-      bag: { candidates: [], take: 0 },
+      bag,
       field,
       hold: {
         canHold: true,
