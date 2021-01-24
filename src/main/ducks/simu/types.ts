@@ -2,6 +2,7 @@ import { GarbageInfo, SimuStateHistory } from "stores/SimuState";
 import {
   Action,
   ActiveTetromino,
+  BtbState,
   FieldState,
   HoldState,
   NextNote,
@@ -52,9 +53,10 @@ export type ChangeZoomAction = {
 export type ClearSimuAction = {
   type: typeof SimuActionsType.Clear;
   payload: {
+    btbState: BtbState;
+    current: ActiveTetromino;
     field: FieldState;
     hold: HoldState;
-    current: ActiveTetromino;
     histories: SimuStateHistory[];
     isDead: boolean;
     lastRoseUpColumn: number;
@@ -63,6 +65,7 @@ export type ClearSimuAction = {
       unsettled: NextNote[];
       bag: NextNote;
     };
+    ren: number;
     replayNexts: Tetromino[];
     replayNextStep: number;
     replayStep: number;
@@ -77,6 +80,7 @@ export type DoSimuAction = {
   type: typeof SimuActionsType.DoSimu;
   payload:
     | {
+        btbState: BtbState;
         current: ActiveTetromino;
         field: FieldState;
         garbages: GarbageInfo[];
@@ -89,6 +93,7 @@ export type DoSimuAction = {
           unsettled: NextNote[];
           bag: NextNote;
         };
+        ren: number;
         replayNexts: Tetromino[];
         replayNextStep: number;
         replayStep: number;
@@ -105,6 +110,7 @@ export type DoSimuAction = {
 export type RedoAction = {
   type: typeof SimuActionsType.Redo;
   payload: {
+    btbState: BtbState;
     current: ActiveTetromino;
     field: FieldState;
     garbages: GarbageInfo[];
@@ -116,6 +122,7 @@ export type RedoAction = {
       unsettled: NextNote[];
       bag: NextNote;
     };
+    ren: number;
     replayNextStep: number;
     replayStep: number;
     seed: number;
@@ -126,6 +133,7 @@ export type RedoAction = {
 export type RetryAction = {
   type: typeof SimuActionsType.Retry;
   payload: {
+    btbState: BtbState;
     current: ActiveTetromino;
     field: FieldState;
     garbages: GarbageInfo[];
@@ -138,6 +146,7 @@ export type RetryAction = {
       unsettled: NextNote[];
       bag: NextNote;
     };
+    ren: number;
     replayNexts: Tetromino[];
     replayNextStep: number;
     replayStep: number;
@@ -150,6 +159,7 @@ export type RetryAction = {
 export type SuperRetryAction = {
   type: typeof SimuActionsType.SuperRetry;
   payload: {
+    btbState: BtbState;
     current: ActiveTetromino;
     field: FieldState;
     garbages: GarbageInfo[];
@@ -162,6 +172,7 @@ export type SuperRetryAction = {
       unsettled: NextNote[];
       bag: NextNote;
     };
+    ren: number;
     replayNexts: Tetromino[];
     replayNextStep: number;
     replayStep: number;
@@ -175,6 +186,7 @@ export type SuperRetryAction = {
 export type UndoAction = {
   type: typeof SimuActionsType.Undo;
   payload: {
+    btbState: BtbState;
     current: ActiveTetromino;
     field: FieldState;
     garbages: GarbageInfo[];
@@ -186,6 +198,7 @@ export type UndoAction = {
       unsettled: NextNote[];
       bag: NextNote;
     };
+    ren: number;
     replayNextStep: number;
     replayStep: number;
     seed: number;

@@ -7,7 +7,7 @@ import {
   MAX_FIELD_WIDTH,
   SpinType,
   Tetromino,
-  Vector2,
+  Vector2
 } from "types/core";
 import { RandomNumberGenerator } from "./randomNumberGenerator";
 
@@ -46,7 +46,7 @@ export class FieldHelper {
     this.field.fill(new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.None));
   }
 
-  eraseLine() {
+  eraseLine(): number {
     const erasedLines = [];
 
     for (let row = 0; row < this.field.length; row++) {
@@ -354,6 +354,12 @@ export class FieldHelper {
       const row = new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.Garbage);
       this.field.unshift(row);
     }
+  }
+
+  isFieldEmpty(): boolean {
+    return this.state.every((row) =>
+      row.every((cell) => cell === FieldCellValue.None)
+    );
   }
 
   get state(): FieldCellValue[][] {

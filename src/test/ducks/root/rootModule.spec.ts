@@ -18,7 +18,13 @@ import {
 import { initialReplayState, ReplayState } from "stores/ReplayState";
 import { initialRootState } from "stores/RootState";
 import { initialSimuState, SimuState } from "stores/SimuState";
-import { Direction, SpinType, Tetromino, TetsimuMode } from "types/core";
+import {
+  BtbState,
+  Direction,
+  SpinType,
+  Tetromino,
+  TetsimuMode
+} from "types/core";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { makeCurrent } from "../../utils/tetsimu/testUtils/makeCurrent";
 import { makeEditState } from "../../utils/tetsimu/testUtils/makeEditState";
@@ -238,11 +244,13 @@ describe("rootModule", () => {
       const takeOfBag = 5;
       const actual = simuToReplayMode(
         makeSimuState({
+          btbState: BtbState.None,
           config: {
             nextNum: 12,
           },
           histories: [
             {
+              btbState: BtbState.None,
               currentType: Tetromino.T,
               field: makeField("IJLOSTZNNN"),
               garbages: [],
@@ -254,11 +262,13 @@ describe("rootModule", () => {
                 settled: [Tetromino.Z],
                 unsettled: [],
               },
+              ren: -1,
               replayNextStep: 12,
               replayStep: 1,
               seed: 1,
             },
           ],
+          ren: -1,
           replayNexts: makeTetrominos("ZTSOLJIIJLOS"),
           replayNextStep: 12,
           replayStep: 1,
@@ -357,11 +367,13 @@ describe("rootModule", () => {
       );
       const expectedSimu: SimuState = {
         ...initialSimuState,
+        btbState: BtbState.None,
         current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
         field: makeField("IJLOSTZGNN"),
         hold: makeHold(Tetromino.O, false),
         histories: [
           {
+            btbState: BtbState.None,
             currentType: Tetromino.I,
             field: makeField("IJLOSTZGNN"),
             garbages: [],
@@ -373,6 +385,7 @@ describe("rootModule", () => {
               settled: makeTetrominos("JLOSIJLOSTZI"),
               unsettled: [],
             },
+            ren: -1,
             replayNextStep: 12,
             replayStep: 0,
             seed: actual.payload.simu.seed,
@@ -385,6 +398,7 @@ describe("rootModule", () => {
           settled: makeTetrominos("JLOSIJLOSTZI"),
           unsettled: [],
         },
+        ren: -1,
         replayNexts: makeTetrominos("JLOSIJLOSTZI"),
         replayNextStep: 12,
         replayStep: 0,
@@ -417,11 +431,13 @@ describe("rootModule", () => {
       const actual = initializeApp("ns=Kcu5TlwA&m=0&v=2.00", initialRootState);
       const expectedSimu: SimuState = {
         ...initialSimuState,
+        btbState: BtbState.None,
         current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
         field: makeField("NNNNNNNNNN"),
         hold: makeHold(Tetromino.None, true),
         histories: [
           {
+            btbState: BtbState.None,
             currentType: Tetromino.I,
             field: makeField("NNNNNNNNNN"),
             garbages: [],
@@ -433,6 +449,7 @@ describe("rootModule", () => {
               settled: makeTetrominos("JLOSTZIJLOST"),
               unsettled: [],
             },
+            ren: -1,
             replayNextStep: 12,
             replayStep: 0,
             seed: actual.payload.simu.seed,
@@ -445,6 +462,7 @@ describe("rootModule", () => {
           settled: makeTetrominos("JLOSTZIJLOST"),
           unsettled: [],
         },
+        ren: -1,
         replayNexts: makeTetrominos("JLOSTZIJLOST"),
         replayNextStep: 12,
         replayStep: 0,

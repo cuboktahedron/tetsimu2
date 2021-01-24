@@ -5,6 +5,7 @@ import { RootState } from "stores/RootState";
 import { GarbageInfo, SimuState } from "stores/SimuState";
 import {
   ActiveTetromino,
+  BtbState,
   Direction,
   MAX_NEXTS_NUM,
   NextNote,
@@ -263,10 +264,12 @@ const initializeSimuState = (
 
   return {
     ...state,
+    btbState: BtbState.None,
     current,
     field: fragments.field,
     histories: [
       {
+        btbState: BtbState.None,
         currentType: current.type,
         field: fragments.field,
         garbages: [],
@@ -278,6 +281,7 @@ const initializeSimuState = (
           settled: nexts,
           unsettled: lastGenNext.nextNotes,
         },
+        ren: -1,
         replayNextStep: nexts.length,
         replayStep: 0,
         seed: rng.seed,
@@ -291,6 +295,7 @@ const initializeSimuState = (
       settled: nexts,
       unsettled: lastGenNext.nextNotes,
     },
+    ren: -1,
     retryState: {
       bag: retryStateBag,
       field: fragments.field,

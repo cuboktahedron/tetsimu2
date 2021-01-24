@@ -1,5 +1,6 @@
 import {
   ActiveTetromino,
+  BtbState,
   Direction,
   FieldState,
   HoldState,
@@ -10,7 +11,7 @@ import {
   ReplayStep,
   SpinType,
   TapControllerType,
-  Tetromino,
+  Tetromino
 } from "types/core";
 import { PlayMode, SimuConfig, SimuRetryState } from "types/simu";
 import { makeFullNextNote } from "utils/tetsimu/functions";
@@ -18,6 +19,7 @@ import NextGenerator from "utils/tetsimu/nextGenerator";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 
 export type SimuStateHistory = {
+  btbState: BtbState;
   currentType: Tetromino;
   field: FieldState;
   garbages: GarbageInfo[];
@@ -29,6 +31,7 @@ export type SimuStateHistory = {
     unsettled: NextNote[];
     bag: NextNote;
   };
+  ren: number;
   replayNextStep: number;
   replayStep: number;
   seed: number;
@@ -40,6 +43,7 @@ export type GarbageInfo = {
 };
 
 export type SimuState = {
+  btbState: BtbState;
   config: SimuConfig;
   current: ActiveTetromino;
   env: {
@@ -56,6 +60,7 @@ export type SimuState = {
     unsettled: NextNote[];
     bag: NextNote;
   };
+  ren: number;
   replayNextStep: number;
   replayNexts: Tetromino[];
   replayStep: number;
@@ -140,6 +145,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
 
   const replayNexts = nexts;
   return {
+    btbState: BtbState.None,
     config,
     current,
     env: {
@@ -149,6 +155,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
     garbages: [],
     histories: [
       {
+        btbState: BtbState.None,
         currentType: current.type,
         field,
         garbages: [],
@@ -156,6 +163,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
         isDead: false,
         lastRoseUpColumn: -1,
         nexts: nextsInfo,
+        ren: -1,
         replayNextStep: replayNexts.length,
         replayStep: 0,
         seed: rng.seed,
@@ -165,6 +173,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
     isDead: false,
     lastRoseUpColumn: -1,
     nexts: nextsInfo,
+    ren: -1,
     replayNextStep: replayNexts.length,
     replayNexts: replayNexts,
     replayStep: 0,

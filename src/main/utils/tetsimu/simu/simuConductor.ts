@@ -1,6 +1,7 @@
 import { SimuState } from "stores/SimuState";
 import {
   ActiveTetromino,
+  BtbState,
   Direction,
   FieldState,
   MAX_FIELD_HEIGHT,
@@ -11,11 +12,12 @@ import {
   ReplayStepHardDrop,
   ReplayStepType,
   SpinType,
-  Tetromino,
+  Tetromino
 } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
 import { FieldHelper } from "../fieldHelper";
 import NextGenerator from "../nextGenerator";
+import { Pytt2Strategy } from "../putt2Strategy";
 import { RandomNumberGenerator } from "../randomNumberGenerator";
 import GarbageGenerator from "./garbageGenerator";
 
@@ -60,6 +62,7 @@ export class SimuConductor {
   recordHistory = () => {
     const newHistories = this.state.histories.slice(0, this.state.step + 1);
     newHistories.push({
+      btbState: this.state.btbState,
       currentType: this.state.current.type,
       field: this.state.field,
       garbages: this.state.garbages,
@@ -67,6 +70,7 @@ export class SimuConductor {
       isDead: this.state.isDead,
       lastRoseUpColumn: this.state.lastRoseUpColumn,
       nexts: this.state.nexts,
+      ren: this.state.ren,
       replayNextStep: this.state.replayNexts.length,
       replayStep: this.state.replayStep,
       seed: this.state.seed,
@@ -127,32 +131,54 @@ export class SimuConductor {
       this.state.hold = { ...this.state.hold, canHold: true };
     }
 
+    let attackLine = 0;
+    let newRen = -1;
+    let newBtbState: BtbState =
+      this.state.btbState === BtbState.Btb
+        ? BtbState.preBtb
+        : this.state.btbState;
+    let newCurrent: ActiveTetromino;
+
+    if (!isDead) {
+      const erasedLine = this.fieldHelper.eraseLine();
+      if (erasedLine > 0) {
+        newRen = this.state.ren + 1;
+      }
+
+      if (erasedLine >= 4 || current.spinType !== SpinType.None) {
+        if (newBtbState === BtbState.None) {
+          newBtbState = BtbState.preBtb;
+        } else if (newBtbState === BtbState.preBtb) {
+          newBtbState = BtbState.Btb;
+        }
+      } else if (erasedLine > 0) {
+        newBtbState = BtbState.None;
+      }
+
+      const storategy = new Pytt2Strategy();
+      attackLine = storategy.calculateAttack(
+        erasedLine,
+        current.spinType,
+        newRen,
+        newBtbState != BtbState.None,
+        this.fieldHelper.isFieldEmpty()
+      );
+    }
+
     const garbage = this.state.garbages[0];
     let newLastRoseUpColumn = this.state.lastRoseUpColumn;
     let riseUpCols: number[] = [];
     if (garbage && garbage.restStep === 0) {
       riseUpCols = this.fieldHelper.riseUpLines(
         this.rng,
-        garbage.amount,
+        garbage.amount - attackLine,
         this.state.lastRoseUpColumn,
         this.state.config.riseUpRate
       );
 
-      newLastRoseUpColumn = riseUpCols[riseUpCols.length - 1];
-    }
-
-    let newCurrent: ActiveTetromino;
-    if (isDead) {
-      newCurrent = {
-        direction: Direction.Up,
-        pos: { x: 0, y: 0 },
-        spinType: SpinType.None,
-        type: Tetromino.None,
-      };
-    } else {
-      this.fieldHelper.eraseLine();
-      newCurrent = this.fieldHelper.makeActiveTetromino(newCurrentType);
-      isDead = this.fieldHelper.isOverlapping(newCurrent);
+      if (riseUpCols.length > 0) {
+        newLastRoseUpColumn = riseUpCols[riseUpCols.length - 1];
+      }
     }
 
     const newGarbages = (() => {
@@ -164,20 +190,34 @@ export class SimuConductor {
       return gGen.next(this.state.config.generatesGarbages);
     })();
 
-    this.state.isDead = isDead;
+    if (isDead) {
+      newCurrent = {
+        direction: Direction.Up,
+        pos: { x: 0, y: 0 },
+        spinType: SpinType.None,
+        type: Tetromino.None,
+      };
+    } else {
+      newCurrent = this.fieldHelper.makeActiveTetromino(newCurrentType);
+      isDead = this.fieldHelper.isOverlapping(newCurrent);
+    }
+
+    this.state.btbState = newBtbState;
     this.state.current = newCurrent;
     this.state.field = this.fieldHelper.field;
-    this.state.seed = this.rng.seed;
-    this.state.lastRoseUpColumn = newLastRoseUpColumn;
     this.state.garbages = newGarbages;
+    this.state.isDead = isDead;
+    this.state.lastRoseUpColumn = newLastRoseUpColumn;
+    this.state.ren = newRen;
+    this.state.seed = this.rng.seed;
 
-    const hardDropSkip = ((): ReplayStepHardDrop => {
+    const hardDropStep = ((): ReplayStepHardDrop => {
       if (riseUpCols.length > 0) {
         return {
           type: ReplayStepType.HardDrop,
           attacked: {
             cols: riseUpCols,
-            line: riseUpCols.length,
+            line: garbage.amount,
           },
         };
       } else {
@@ -193,7 +233,7 @@ export class SimuConductor {
         pos: { x: current.pos.x, y: row },
         spinType: current.spinType,
       },
-      hardDropSkip,
+      hardDropStep,
     ]);
     this.recordHistory();
 
@@ -360,6 +400,7 @@ export class SimuConductor {
     this.state.isDead = false;
     this.state.histories = [
       {
+        btbState: BtbState.None,
         currentType: newCurrent.type,
         field: newField,
         garbages: newGarbages,
@@ -367,6 +408,7 @@ export class SimuConductor {
         isDead: false,
         lastRoseUpColumn: newLastRoseUpColumn,
         nexts: newNexts,
+        ren: -1,
         replayNextStep: newNexts.settled.length,
         replayStep: 0,
         seed: this.rng.seed,
@@ -486,6 +528,7 @@ export class SimuConductor {
     this.state.isDead = false;
     this.state.histories = [
       {
+        btbState: BtbState.None,
         currentType: newCurrent.type,
         field: newField,
         garbages: newGarbages,
@@ -493,6 +536,7 @@ export class SimuConductor {
         isDead: false,
         lastRoseUpColumn: newLastRoseUpColumn,
         nexts: newNexts,
+        ren: -1,
         replayNextStep: newNexts.settled.length,
         replayStep: 0,
         seed: this.rng.seed,

@@ -2,6 +2,7 @@ import merge from "deepmerge";
 import { GarbageInfo, SimuState, SimuStateHistory } from "stores/SimuState";
 import {
   ActiveTetromino,
+  BtbState,
   Direction,
   FieldState,
   HoldState,
@@ -14,6 +15,7 @@ import { PlayMode, SimuRetryState } from "types/simu";
 import { makeNextNote } from "./makeNextNote";
 
 export const makeSimuState = (state: {
+  btbState?: BtbState;
   config?: {
     generateGarbagesLevel?: number;
     generatesGarbages?: boolean;
@@ -36,6 +38,7 @@ export const makeSimuState = (state: {
     unsettled?: NextNote[];
     bag?: NextNote;
   };
+  ren?: number;
   replayNexts?: Tetromino[];
   replayNextStep?: number;
   replayStep?: number;
@@ -47,6 +50,7 @@ export const makeSimuState = (state: {
 }): SimuState => {
   return merge(
     {
+      btbState: BtbState.None,
       config: {
         generateGarbagesLevel: 5555,
         generatesGarbages: false,
@@ -83,6 +87,7 @@ export const makeSimuState = (state: {
         unsettled: [],
         bag: makeNextNote("", 0),
       },
+      ren: -1,
       replayNexts: [],
       replayNextStep: 0,
       replayStep: 0,

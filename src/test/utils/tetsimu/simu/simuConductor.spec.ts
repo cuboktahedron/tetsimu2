@@ -1,6 +1,6 @@
 import { getSimuConductor } from "ducks/simu/selectors";
 import { SimuState } from "stores/SimuState";
-import { Direction, SpinType, Tetromino } from "types/core";
+import { BtbState, Direction, SpinType, Tetromino } from "types/core";
 import { makeCurrent } from "../../../utils/tetsimu/testUtils/makeCurrent";
 import { makeField } from "../../../utils/tetsimu/testUtils/makeField";
 import { makeHold } from "../../../utils/tetsimu/testUtils/makeHold";
@@ -21,6 +21,7 @@ describe("simuConductor", () => {
   describe("holdTetrimino", () => {
     it("should hold", () => {
       const state = makeSimuState({
+        btbState: BtbState.Btb,
         current: makeCurrent(Direction.Down, 1, 5, Tetromino.I),
         field: makeField("NNNNNNNNNN"),
         hold: makeHold(Tetromino.None, true),
@@ -29,6 +30,7 @@ describe("simuConductor", () => {
           settled: makeTetrominos("SZ"),
           unsettled: makeNextNotes("J I"),
         },
+        ren: 3,
         replayNexts: makeTetrominos("SZ"),
         replayNextStep: 2,
         seed: makeSeed(1),
@@ -40,14 +42,15 @@ describe("simuConductor", () => {
 
       const expected: SimuState = {
         ...state,
+        btbState: BtbState.Btb,
         current: makeCurrent(Direction.Up, 4, 19, Tetromino.S),
         garbages: [],
         histories: [
           {
+            btbState: BtbState.Btb,
             currentType: Tetromino.S,
             field: state.field,
             garbages: [],
-
             hold: makeHold(Tetromino.I, false),
             isDead: false,
             lastRoseUpColumn: -1,
@@ -56,6 +59,7 @@ describe("simuConductor", () => {
               settled: makeTetrominos("ZJ"),
               unsettled: makeNextNotes("I"),
             },
+            ren: 3,
             replayNextStep: 3,
             replayStep: 1,
             seed: makeSeed(41702199),
@@ -68,6 +72,7 @@ describe("simuConductor", () => {
           settled: makeTetrominos("ZJ"),
           unsettled: makeNextNotes("I"),
         },
+        ren: 3,
         replayNexts: makeTetrominos("SZJ"),
         replayNextStep: 3,
         replayStep: 1,
@@ -81,6 +86,7 @@ describe("simuConductor", () => {
 
     it("should exchange current and hold", () => {
       const state = makeSimuState({
+        btbState: BtbState.preBtb,
         current: makeCurrent(Direction.Down, 1, 5, Tetromino.T),
         field: makeField("NNNNNNNNNN"),
         hold: makeHold(Tetromino.L, true),
@@ -89,6 +95,7 @@ describe("simuConductor", () => {
           settled: makeTetrominos("SZ"),
           unsettled: makeNextNotes("J I"),
         },
+        ren: 5,
         replayNexts: makeTetrominos("SZ"),
         replayNextStep: 2,
         seed: makeSeed(2),
@@ -100,10 +107,12 @@ describe("simuConductor", () => {
 
       const expected: SimuState = {
         ...state,
+        btbState: BtbState.preBtb,
         current: makeCurrent(Direction.Up, 4, 19, Tetromino.L),
         garbages: [],
         histories: [
           {
+            btbState: BtbState.preBtb,
             currentType: Tetromino.L,
             field: state.field,
             garbages: [],
@@ -115,6 +124,7 @@ describe("simuConductor", () => {
               settled: makeTetrominos("SZ"),
               unsettled: makeNextNotes("J I"),
             },
+            ren: 5,
             replayNextStep: 2,
             replayStep: 1,
             seed: makeSeed(2),
@@ -127,6 +137,7 @@ describe("simuConductor", () => {
           settled: makeTetrominos("SZ"),
           unsettled: makeNextNotes("J I"),
         },
+        ren: 5,
         replayNexts: makeTetrominos("SZ"),
         replayNextStep: 2,
         replayStep: 1,
@@ -160,6 +171,7 @@ describe("simuConductor", () => {
     describe("hardDropTetrimino", () => {
       it("should drop and generate next", () => {
         const state = makeSimuState({
+          btbState: BtbState.Btb,
           current: makeCurrent(Direction.Up, 1, 3, Tetromino.I),
           // prettier-ignore
           field: makeField(
@@ -173,6 +185,7 @@ describe("simuConductor", () => {
             settled: makeTetrominos("SZ"),
             unsettled: makeNextNotes("J I"),
           },
+          ren: 3,
           replayNexts: makeTetrominos("SZ"),
           replayNextStep: 2,
           seed: makeSeed(3),
@@ -184,6 +197,7 @@ describe("simuConductor", () => {
 
         const expected: SimuState = {
           ...state,
+          btbState: BtbState.preBtb,
           current: makeCurrent(Direction.Up, 4, 19, Tetromino.S),
           // prettier-ignore
           field: makeField(
@@ -194,6 +208,7 @@ describe("simuConductor", () => {
           garbages: [],
           histories: [
             {
+              btbState: BtbState.preBtb,
               currentType: Tetromino.S,
               // prettier-ignore
               field: makeField(
@@ -210,6 +225,7 @@ describe("simuConductor", () => {
                 settled: makeTetrominos("ZJ"),
                 unsettled: makeNextNotes("I"),
               },
+              ren: -1,
               replayNextStep: 3,
               replayStep: 2,
               seed: makeSeed(55079790),
@@ -222,6 +238,7 @@ describe("simuConductor", () => {
             settled: makeTetrominos("ZJ"),
             unsettled: makeNextNotes("I"),
           },
+          ren: -1,
           replayNexts: makeTetrominos("SZJ"),
           replayNextStep: 3,
           replayStep: 2,

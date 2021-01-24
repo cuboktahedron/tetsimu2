@@ -64,7 +64,6 @@ class GarbageGenerator {
 
   private normalizeUntilSucceeded(sigma: number, avg: number, min: number) {
     while (true) {
-      debugger;
       const v = Math.round(this.normalize(sigma, avg));
       if (min <= v) {
         return v;

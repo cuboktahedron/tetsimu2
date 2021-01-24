@@ -1,5 +1,14 @@
-import { Direction, SpinType, Tetromino, TetsimuMode } from "types/core";
-import SimuUrl, { SimuStateFragments, UNSPECIFIED_SEED } from "utils/tetsimu/simu/simuUrl";
+import {
+  BtbState,
+  Direction,
+  SpinType,
+  Tetromino,
+  TetsimuMode,
+} from "types/core";
+import SimuUrl, {
+  SimuStateFragments,
+  UNSPECIFIED_SEED,
+} from "utils/tetsimu/simu/simuUrl";
 import { makeField } from "../testUtils/makeField";
 import { makeHold } from "../testUtils/makeHold";
 import { makeNextNote, makeNextNotes } from "../testUtils/makeNextNote";
@@ -15,11 +24,13 @@ describe("simuUrl", () => {
   describe("fromState", () => {
     it("should generate url(v2.00) of states", () => {
       const state = makeSimuState({
+        btbState: BtbState.None,
         config: {
           nextNum: 12,
         },
         histories: [
           {
+            btbState: BtbState.None,
             currentType: Tetromino.I,
             field: makeField(
               // prettier-ignore
@@ -35,6 +46,7 @@ describe("simuUrl", () => {
               settled: [],
               unsettled: [],
             },
+            ren: -1,
             replayNextStep: 5,
             replayStep: 3,
             seed: 0,
@@ -73,6 +85,7 @@ describe("simuUrl", () => {
         },
         histories: [
           {
+            btbState: BtbState.None,
             currentType: Tetromino.I,
             field: makeField("NNNNNNNNNN"),
             garbages: [],
@@ -84,6 +97,7 @@ describe("simuUrl", () => {
               settled: [],
               unsettled: [],
             },
+            ren: -1,
             replayNextStep: 0,
             replayStep: 0,
             seed: 0,

@@ -40,6 +40,7 @@ export const clearSimu = (conductor: SimuConductor): ClearSimuAction => {
   return {
     type: SimuActionsType.Clear,
     payload: {
+      btbState: newState.btbState,
       current: newState.current,
       field: newState.field,
       histories: newState.histories,
@@ -47,6 +48,7 @@ export const clearSimu = (conductor: SimuConductor): ClearSimuAction => {
       isDead: newState.isDead,
       nexts: newState.nexts,
       lastRoseUpColumn: newState.lastRoseUpColumn,
+      ren: newState.ren,
       replayNextStep: newState.replayNextStep,
       replayNexts: newState.replayNexts,
       replayStep: newState.replayStep,
@@ -97,6 +99,7 @@ export const doSimu = (
     return {
       type: SimuActionsType.DoSimu,
       payload: {
+        btbState: newState.btbState,
         current: newState.current,
         field: newState.field,
         garbages: newState.garbages,
@@ -105,6 +108,7 @@ export const doSimu = (
         isDead: newState.isDead,
         lastRoseUpColumn: newState.lastRoseUpColumn,
         nexts: newState.nexts,
+        ren: newState.ren,
         replayNextStep: newState.replayNextStep,
         replayNexts: newState.replayNexts,
         replayStep: newState.replayStep,
@@ -137,6 +141,7 @@ export const redo = (
   return {
     type: SimuActionsType.Redo,
     payload: {
+      btbState: history.btbState,
       current: newCurrent,
       field: history.field,
       garbages: history.garbages,
@@ -144,6 +149,7 @@ export const redo = (
       isDead: history.isDead,
       lastRoseUpColumn: history.lastRoseUpColumn,
       nexts: history.nexts,
+      ren: history.ren,
       replayNextStep: history.replayNextStep,
       replayStep: history.replayStep,
       seed: history.seed,
@@ -159,6 +165,7 @@ export const retry = (conductor: SimuConductor): RetryAction => {
   return {
     type: SimuActionsType.Retry,
     payload: {
+      btbState: newState.btbState,
       current: newState.current,
       field: newState.field,
       garbages: newState.garbages,
@@ -167,6 +174,7 @@ export const retry = (conductor: SimuConductor): RetryAction => {
       isDead: newState.isDead,
       lastRoseUpColumn: newState.lastRoseUpColumn,
       nexts: newState.nexts,
+      ren: newState.ren,
       replayNextStep: newState.replayNextStep,
       replayNexts: newState.replayNexts,
       replayStep: newState.replayStep,
@@ -184,6 +192,7 @@ export const superRetry = (conductor: SimuConductor): SuperRetryAction => {
   return {
     type: SimuActionsType.SuperRetry,
     payload: {
+      btbState: newState.btbState,
       current: newState.current,
       field: newState.field,
       garbages: newState.garbages,
@@ -192,6 +201,7 @@ export const superRetry = (conductor: SimuConductor): SuperRetryAction => {
       hold: newState.hold,
       nexts: newState.nexts,
       lastRoseUpColumn: newState.lastRoseUpColumn,
+      ren: newState.ren,
       retryState: newState.retryState,
       replayNextStep: newState.replayNextStep,
       replayNexts: newState.replayNexts,
@@ -216,6 +226,7 @@ export const undo = (
   return {
     type: SimuActionsType.Undo,
     payload: {
+      btbState: history.btbState,
       current: newCurrent,
       field: history.field,
       garbages: history.garbages,
@@ -223,6 +234,7 @@ export const undo = (
       isDead: history.isDead,
       lastRoseUpColumn: history.lastRoseUpColumn,
       nexts: history.nexts,
+      ren: history.ren,
       replayNextStep: history.replayNextStep,
       replayStep: history.replayStep,
       seed: history.seed,

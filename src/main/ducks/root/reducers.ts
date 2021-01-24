@@ -2,7 +2,7 @@ import editReducer from "ducks/edit";
 import replayReducer from "ducks/replay";
 import simuReducer from "ducks/simu";
 import { RootState } from "stores/RootState";
-import { Action, FieldCellValue, TetsimuMode } from "types/core";
+import { Action, BtbState, FieldCellValue, TetsimuMode } from "types/core";
 import { PlayMode } from "types/simu";
 import { RootActions, RootActionsType } from "./types";
 
@@ -29,6 +29,7 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
           mode: TetsimuMode.Simu,
           simu: {
             ...state.simu,
+            btbState: BtbState.None,
             current: action.payload.current,
             field: action.payload.field,
             garbages: action.payload.garbages,
@@ -36,19 +37,22 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
             nexts: action.payload.nexts,
             histories: [
               {
+                btbState: BtbState.None,
                 currentType: action.payload.current.type,
                 field: action.payload.field,
-                garbages:  action.payload.garbages,
+                garbages: action.payload.garbages,
                 hold: action.payload.hold,
                 isDead: false,
                 lastRoseUpColumn: action.payload.lastRoseUpColumn,
                 nexts: action.payload.nexts,
+                ren: -1,
                 replayNextStep: action.payload.nexts.settled.length,
                 replayStep: 0,
                 seed: action.payload.seed,
               },
             ],
             isDead: false,
+            ren: -1,
             replayNexts: action.payload.nexts.settled,
             replayNextStep: action.payload.nexts.settled.length,
             replayStep: 0,
@@ -93,6 +97,7 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
           mode: TetsimuMode.Simu,
           simu: {
             ...state.simu,
+            btbState: BtbState.None,
             config: {
               ...state.simu.config,
               nextNum: action.payload.nexts.nextNum,
@@ -101,11 +106,9 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
             current: action.payload.current,
             field: action.payload.field,
             garbages: action.payload.garbages,
-            hold: action.payload.hold,
-            isDead: action.payload.isDead,
-            nexts: action.payload.nexts,
             histories: [
               {
+                btbState: BtbState.None,
                 currentType: action.payload.current.type,
                 field: action.payload.field,
                 garbages: action.payload.garbages,
@@ -113,11 +116,16 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
                 isDead: false,
                 lastRoseUpColumn: action.payload.lastRoseUpColumn,
                 nexts: action.payload.nexts,
+                ren: -1,
                 replayNextStep: action.payload.nexts.settled.length,
                 replayStep: 0,
                 seed: action.payload.seed,
               },
             ],
+            hold: action.payload.hold,
+            isDead: action.payload.isDead,
+            nexts: action.payload.nexts,
+            ren: -1,
             replayNexts: action.payload.nexts.settled,
             replayNextStep: action.payload.nexts.settled.length,
             replayStep: 0,
