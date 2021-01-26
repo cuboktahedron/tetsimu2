@@ -12,7 +12,11 @@ import {
   RadioGroup,
   Select
 } from "@material-ui/core";
-import { changeConfig, clearSimu } from "ducks/simu/actions";
+import {
+  changeConfig,
+  changeGarbageLevel,
+  clearSimu
+} from "ducks/simu/actions";
 import { getSimuConductor } from "ducks/simu/selectors";
 import React, { useEffect } from "react";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
@@ -77,17 +81,33 @@ const Settings: React.FC = () => {
     dispatch(
       changeConfig({
         ...config,
-        generatesGarbages: e.target.checked,
+        garbage: {
+          ...state.config.garbage,
+          generates: e.target.checked,
+        },
       })
     );
   };
 
   const handleGenerateGarbagesLevelChange = (value: number): void => {
-    if (value !== state.config.generateGarbagesLevel) {
+    if (value !== state.config.garbage.level) {
+      dispatch(changeGarbageLevel(value));
+    }
+  };
+
+  const handleGenerateGarbageFactorChange = (
+    paramName: keyof typeof config.garbage,
+    value: number
+  ): void => {
+    if (value !== state.config.garbage[paramName]) {
       dispatch(
         changeConfig({
           ...config,
-          generateGarbagesLevel: value,
+          garbage: {
+            ...config.garbage,
+            level: null,
+            [paramName]: value,
+          },
         })
       );
     }
@@ -256,9 +276,11 @@ const Settings: React.FC = () => {
             />
           </RadioGroup>
         </FormGroup>
+      </div>
 
-        <Divider />
+      <Divider />
 
+      <div>
         <div>
           <FormLabel component="legend" className={classes.settingGroupTitle}>
             Garbage Info
@@ -294,19 +316,18 @@ const Settings: React.FC = () => {
             variant="outlined"
           />
         </div>
-
         <div>
           <FormControlLabel
             control={
               <Checkbox
-                checked={config.generatesGarbages}
+                checked={config.garbage.generates}
                 onChange={handleGeneratesGarbagesChange}
               />
             }
             label="Generate garbages"
           />
         </div>
-        <div>
+        <div className={classes.section}>
           <NumberTextField
             label="level"
             InputLabelProps={{
@@ -314,12 +335,78 @@ const Settings: React.FC = () => {
             }}
             numberProps={{
               min: 0,
-              max: 9999,
+              max: 100,
               change: handleGenerateGarbagesLevelChange,
             }}
-            value={"" + state.config.generateGarbagesLevel}
+            value={
+              state.config.garbage.level !== null
+                ? "" + state.config.garbage.level
+                : ""
+            }
             variant="outlined"
-            disabled={!state.config.generatesGarbages}
+            disabled={!state.config.garbage.generates}
+          />
+        </div>
+        <div>factors</div>
+        <div className={classes.section}>
+          <NumberTextField
+            label="a1"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            numberProps={{
+              min: 0,
+              max: 150,
+              change: (value) => handleGenerateGarbageFactorChange("a1", value),
+            }}
+            value={"" + state.config.garbage.a1}
+            variant="outlined"
+            disabled={!state.config.garbage.generates}
+            style={{ marginRight: 4 }}
+          />
+          <NumberTextField
+            label="a2"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            numberProps={{
+              min: 1,
+              max: 100,
+              change: (value) => handleGenerateGarbageFactorChange("a2", value),
+            }}
+            value={"" + state.config.garbage.a2}
+            variant="outlined"
+            disabled={!state.config.garbage.generates}
+            style={{ marginRight: 4 }}
+          />
+          <NumberTextField
+            label="b1"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            numberProps={{
+              min: 0,
+              max: 150,
+              change: (value) => handleGenerateGarbageFactorChange("b1", value),
+            }}
+            value={"" + state.config.garbage.b1}
+            variant="outlined"
+            disabled={!state.config.garbage.generates}
+            style={{ marginRight: 4 }}
+          />
+          <NumberTextField
+            label="b2"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            numberProps={{
+              min: 1,
+              max: 100,
+              change: (value) => handleGenerateGarbageFactorChange("b2", value),
+            }}
+            value={"" + state.config.garbage.b2}
+            variant="outlined"
+            disabled={!state.config.garbage.generates}
           />
         </div>
       </div>

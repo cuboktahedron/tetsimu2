@@ -127,8 +127,14 @@ export const initialSimuState: SimuState = ((): SimuState => {
 
   const isTouchDevice = "ontouchstart" in window;
   const config: SimuConfig = {
-    generateGarbagesLevel: 5555,
-    generatesGarbages: false,
+    garbage: {
+      a1: 30,
+      a2: 20,
+      b1: 90,
+      b2: 20,
+      generates: false,
+      level: 0,
+    },
     nextNum: 5,
     playMode: PlayMode.Normal,
     riseUpRate: {

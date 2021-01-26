@@ -5,6 +5,7 @@ import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import { SimuConductor } from "utils/tetsimu/simu/simuConductor";
 import {
   ChangeConfigAction,
+  ChangeGarbageLevelAction,
   ChangeZoomAction,
   ClearSimuAction,
   DoSimuAction,
@@ -20,6 +21,32 @@ export const changeConfig = (config: SimuConfig): ChangeConfigAction => {
     type: SimuActionsType.ChangeConfig,
     payload: {
       config,
+    },
+  };
+};
+
+export const changeGarbageLevel = (level: number): ChangeGarbageLevelAction => {
+  // a1: 30 -> 70
+  // a2: 20 -> 40
+  // b1: 90 -> 40
+  // b2: 20 -> 50
+  const a1Coefficient = (70 - 30) / 100;
+  const a2Coefficient = (40 - 20) / 100;
+  const b1Coefficient = (90 - 40) / 100;
+  const b2Coefficient = (50 - 20) / 100;
+  const a1 = Math.round(a1Coefficient * level + 30);
+  const a2 = Math.round(a2Coefficient * level + 20);
+  const b1 = Math.round(90 - b1Coefficient * level);
+  const b2 = Math.round(b2Coefficient * level + 20);
+
+  return {
+    type: SimuActionsType.ChangeGarbageLevelAction,
+    payload: {
+      a1,
+      a2,
+      b1,
+      b2,
+      level,
     },
   };
 };

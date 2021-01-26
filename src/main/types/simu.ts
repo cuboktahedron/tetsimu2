@@ -3,7 +3,7 @@ import {
   FieldState,
   HoldState,
   NextNote,
-  TapControllerType,
+  TapControllerType
 } from "./core";
 
 export const PlayMode = {
@@ -13,9 +13,17 @@ export const PlayMode = {
 
 export type PlayMode = typeof PlayMode[keyof typeof PlayMode];
 
+export type GarbageConfig = {
+  a1: number;
+  a2: number;
+  b1: number;
+  b2: number;
+  generates: boolean;
+  level: number | null;
+};
+
 export type SimuConfig = {
-  generateGarbagesLevel: number;
-  generatesGarbages: boolean;
+  garbage: GarbageConfig;
   nextNum: number;
   playMode: PlayMode;
   riseUpRate: {

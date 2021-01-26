@@ -4,27 +4,45 @@ import GarbageGenerator from "utils/tetsimu/simu/garbageGenerator";
 describe("garbageGenerator", () => {
   describe("next", () => {
     it("should not generate more", function () {
-      const gen = new GarbageGenerator(new RandomNumberGenerator(1), 100, []);
+      const gen = new GarbageGenerator(
+        new RandomNumberGenerator(1),
+        {
+          a1: 150,
+          a2: 100,
+          b1: 150,
+          b2: 100,
+        },
+        []
+      );
 
       const actual = gen.next(false);
       expect(actual).toEqual([]);
     });
 
     it("should generate garbages info", function () {
-      const gen = new GarbageGenerator(new RandomNumberGenerator(1), 9990, []);
+      const gen = new GarbageGenerator(
+        new RandomNumberGenerator(1),
+        {
+          a1: 150,
+          a2: 100,
+          b1: 50,
+          b2: 100,
+        },
+        []
+      );
 
       const actual = gen.next(true);
       expect(actual).toEqual([
         {
-          amount: 5,
+          amount: 15,
           restStep: 4,
         },
         {
-          amount: 5,
+          amount: 15,
           restStep: 5,
         },
         {
-          amount: 5,
+          amount: 15,
           restStep: 5,
         },
       ]);

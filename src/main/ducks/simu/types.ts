@@ -13,6 +13,7 @@ import { SimuConfig, SimuRetryState } from "types/simu";
 
 export const SimuActionsType = {
   ChangeConfig: "simu/changeConfig",
+  ChangeGarbageLevelAction: "simu/ChangeGarbageLevelAction",
   ChangeZoom: "simu/changeZoom",
   Clear: "simu/clear",
   DoSimu: "simu/doSimu",
@@ -28,6 +29,7 @@ export const SimuActionsType = {
 
 export type SimuActions =
   | ChangeConfigAction
+  | ChangeGarbageLevelAction
   | ChangeZoomAction
   | ClearSimuAction
   | DoSimuAction
@@ -40,6 +42,17 @@ export type ChangeConfigAction = {
   type: typeof SimuActionsType.ChangeConfig;
   payload: {
     config: SimuConfig;
+  };
+} & Action;
+
+export type ChangeGarbageLevelAction = {
+  type: typeof SimuActionsType.ChangeGarbageLevelAction;
+  payload: {
+    a1: number;
+    a2: number;
+    b1: number;
+    b2: number;
+    level: number;
   };
 } & Action;
 

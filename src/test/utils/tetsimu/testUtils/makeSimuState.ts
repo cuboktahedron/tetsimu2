@@ -9,16 +9,15 @@ import {
   NextNote,
   ReplayStep,
   TapControllerType,
-  Tetromino,
+  Tetromino
 } from "types/core";
-import { PlayMode, SimuRetryState } from "types/simu";
+import { GarbageConfig, PlayMode, SimuRetryState } from "types/simu";
 import { makeNextNote } from "./makeNextNote";
 
 export const makeSimuState = (state: {
   btbState?: BtbState;
   config?: {
-    generateGarbagesLevel?: number;
-    generatesGarbages?: boolean;
+    garbage?: GarbageConfig;
     nextNum?: number;
     playMode?: PlayMode;
     riseUpRate?: {
@@ -52,7 +51,15 @@ export const makeSimuState = (state: {
     {
       btbState: BtbState.None,
       config: {
-        generateGarbagesLevel: 5555,
+        garbage: {
+          a1: 0,
+          a2: 1,
+          b1: 0,
+          b2: 1,
+          level: 1,
+          generates: false,
+        },
+        generateGarbagesLevel: 1,
         generatesGarbages: false,
         nextNum: 5,
         playMode: PlayMode.Normal,

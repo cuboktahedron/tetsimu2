@@ -2,17 +2,21 @@ import { GarbageInfo } from "stores/SimuState";
 import { MAX_NEXTS_NUM } from "types/core";
 import { RandomNumberGenerator } from "../randomNumberGenerator";
 
-const attacksSigma = [4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5, 0];
-const attacks = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5];
-const stepsSigma = [4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5, 0];
-const steps = [5, 5, 4, 4, 3, 3, 2, 2, 1, 1];
+const fibs = [1, 1, 2, 3, 5, 8, 13];
+
+export type GarbageGenerationFactor = {
+  a1: number;
+  a2: number;
+  b1: number;
+  b2: number;
+};
 
 class GarbageGenerator {
   private garbages: GarbageInfo[];
 
   constructor(
     private rng: RandomNumberGenerator,
-    private level: number,
+    private factors: GarbageGenerationFactor,
     _garbages: GarbageInfo[]
   ) {
     this.garbages = _garbages.map((garbage) => ({ ...garbage }));
@@ -29,13 +33,8 @@ class GarbageGenerator {
     }
 
     while (generatesGarbage && this.lackOfGarbages()) {
-      const sigmaAttack = attacksSigma[Math.floor(this.level / 1000) % 10];
-      const avgAttack = attacks[Math.floor(this.level / 100) % 10];
-      const sigmaStep = stepsSigma[Math.floor((this.level / 10) % 10)];
-      const avgStep = steps[this.level % 10];
-
-      const amount = this.normalizeUntilSucceeded(sigmaAttack, avgAttack, 0);
-      const restStep = this.normalizeUntilSucceeded(sigmaStep, avgStep, 1);
+      const amount = this.generateAmount();
+      const restStep = this.generateRestStep();
 
       this.garbages.push({
         amount,
@@ -62,22 +61,77 @@ class GarbageGenerator {
     return totalStep <= MAX_NEXTS_NUM;
   }
 
-  private normalizeUntilSucceeded(sigma: number, avg: number, min: number) {
-    while (true) {
-      const v = Math.round(this.normalize(sigma, avg));
-      if (min <= v) {
-        return v;
+  generateAmount(): number {
+    const maxAttack = (() => {
+      const attack = Math.floor(this.factors.a1 / 10);
+      const attackMod = this.factors.a1 % 10;
+      if (this.rng.random() * 10 <= attackMod) {
+        return attack + 1;
+      } else {
+        return attack;
       }
+    })();
+
+    const probableHit = this.factors.a2 / 100;
+    const probableNotHit = 1 - probableHit;
+    let value = maxAttack;
+    let loopNum = 0;
+    while (value > 0) {
+      let probable: number;
+      if (fibs[loopNum]) {
+        probable = 1 - Math.pow(probableNotHit, fibs[loopNum]);
+      } else {
+        probable = 1 - Math.pow(probableNotHit, fibs.slice(-1)[0]);
+      }
+
+      if (this.rng.random() <= probable) {
+        return value;
+      }
+
+      value--;
+      loopNum++;
     }
+
+    return 0;
   }
 
-  private normalize(sigma: number, avg: number) {
-    const x = this.rng.random();
-    const y = this.rng.random();
-    const coefficient = Math.sqrt(-2 * Math.log(x));
-    const radian = 2 * y * Math.PI;
-    const z = coefficient * Math.cos(radian);
-    return sigma * z + avg;
+  generateRestStep(): number {
+    const minStep = (() => {
+      const step = Math.floor(this.factors.b1 / 10);
+      const stepMod = this.factors.b1 % 10;
+      if (this.rng.random() * 10 <= stepMod) {
+        return step + 1;
+      } else {
+        return step;
+      }
+    })();
+
+    const maxStep = 14;
+    const probableHit = this.factors.b2 / 100;
+    const probableNotHit = 1 - probableHit;
+    let value = minStep;
+    let loopNum = 0;
+    while (value < maxStep) {
+      let probable: number;
+      if (fibs[loopNum]) {
+        probable = 1 - Math.pow(probableNotHit, fibs[loopNum]);
+      } else {
+        probable = 1 - Math.pow(probableNotHit, fibs.slice(-1)[0]);
+      }
+
+      if (this.rng.random() <= probable) {
+        if (value === 0) {
+          return 1;
+        } else {
+          return value;
+        }
+      }
+
+      value++;
+      loopNum++;
+    }
+
+    return maxStep;
   }
 }
 

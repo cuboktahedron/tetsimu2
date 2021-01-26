@@ -11,6 +11,21 @@ const reducer = (state: SimuState, anyAction: Action): SimuState => {
         ...state,
         config: action.payload.config,
       };
+    case SimuActionsType.ChangeGarbageLevelAction:
+      return {
+        ...state,
+        config: {
+          ...state.config,
+          garbage: {
+            ...state.config.garbage,
+            a1: action.payload.a1,
+            a2: action.payload.a2,
+            b1: action.payload.b1,
+            b2: action.payload.b2,
+            level: action.payload.level,
+          }
+        }
+      };
     case SimuActionsType.ChangeZoom:
       return {
         ...state,

@@ -2,11 +2,12 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core";
 import {
   ClassNameMap,
   StyleRules,
-  Styles,
+  Styles
 } from "@material-ui/core/styles/withStyles";
 
 type SidePanelProperties =
   | "root"
+  | "section"
   | "buttons"
   | "settingGroupTitle"
   | "longTapButton";
@@ -29,6 +30,12 @@ export const useSidePanelStyles = <
           marginTop: theme.spacing(1),
         },
 
+        "& > div": {
+          marginBottom: theme.spacing(1),
+        },
+      },
+
+      section: {
         "& > div": {
           marginBottom: theme.spacing(1),
         },

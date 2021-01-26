@@ -184,10 +184,10 @@ export class SimuConductor {
     const newGarbages = (() => {
       const gGen = new GarbageGenerator(
         this.rng,
-        this.state.config.generateGarbagesLevel,
+        this.state.config.garbage,
         this.state.garbages
       );
-      return gGen.next(this.state.config.generatesGarbages);
+      return gGen.next(this.state.config.garbage.generates);
     })();
 
     if (isDead) {
@@ -389,10 +389,10 @@ export class SimuConductor {
     const newGarbages = (() => {
       const gGen = new GarbageGenerator(
         this.rng,
-        this.state.config.generateGarbagesLevel,
+        this.state.config.garbage,
         []
       );
-      return gGen.next(this.state.config.generatesGarbages);
+      return gGen.next(this.state.config.garbage.generates);
     })();
 
     this.state.current = newCurrent;
@@ -516,10 +516,10 @@ export class SimuConductor {
     const newGarbages = (() => {
       const gGen = new GarbageGenerator(
         this.rng,
-        this.state.config.generateGarbagesLevel,
+        this.state.config.garbage,
         []
       );
-      return gGen.next(this.state.config.generatesGarbages);
+      return gGen.next(this.state.config.garbage.generates);
     })();
 
     this.state.current = newCurrent;
