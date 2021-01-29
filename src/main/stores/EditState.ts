@@ -59,7 +59,7 @@ export const initialEditState: EditState = ((): EditState => {
     tools: {
       isCellValueMultiSelection: false,
       nextBaseNo: 1,
-      nextsPattern: "[IJLOST]p6",
+      nextsPattern: "",
       noOfCycle: 1,
       selectedCellValues: [FieldCellValue.I],
     },
