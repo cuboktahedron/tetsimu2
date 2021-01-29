@@ -362,12 +362,17 @@ describe("rootModule", () => {
 
     it("should initialize simu state with np", () => {
       const actual = initializeApp(
-        "f=EjRWeAA_&np=I_J.p1LOSIJLOSTq1I&h=9&nc=3&nn=5&m=0&v=2.00",
+        "f=EjRWeAA_&np=I_J.p1LOSIJLOSTq1I&h=9&nc=3&nn=12&m=0&v=2.00",
         initialRootState
       );
       const expectedSimu: SimuState = {
         ...initialSimuState,
         btbState: BtbState.None,
+        config: {
+          ...initialSimuState.config,
+          garbage: initialSimuState.config.garbage,
+          nextNum: 12,
+        },
         current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
         field: makeField("IJLOSTZGNN"),
         hold: makeHold(Tetromino.O, false),

@@ -11,18 +11,18 @@ import {
   NextNote,
   SpinType,
   Tetromino,
-  TetsimuMode,
+  TetsimuMode
 } from "types/core";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 import ReplayUrl, {
-  ReplayStateFragments,
+  ReplayStateFragments
 } from "utils/tetsimu/replay/replayUrl";
 import SimuUrl, {
   SimuStateFragments,
-  UNSPECIFIED_SEED,
+  UNSPECIFIED_SEED
 } from "utils/tetsimu/simu/simuUrl";
 import {
   ChangeTetsimuModeAction,
@@ -33,7 +33,7 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction,
+  SimuToReplayAction
 } from "./types";
 
 export const changeTetsimuMode = (
@@ -265,6 +265,13 @@ const initializeSimuState = (
   return {
     ...state,
     btbState: BtbState.None,
+    config: {
+      ...state.config,
+      garbage: {
+        ...state.config.garbage,
+      },
+      nextNum: fragments.nextNum,
+    },
     current,
     field: fragments.field,
     histories: [
