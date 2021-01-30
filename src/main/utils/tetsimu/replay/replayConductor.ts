@@ -23,24 +23,6 @@ export class ReplayConductor {
     return this._state;
   }
 
-  changeStep(step: number): boolean {
-    if (step > this.state.step) {
-      while (step !== this.state.step) {
-        if (!this.forwardStep()) {
-          return false;
-        }
-      }
-    } else if (step < this.state.step) {
-      while (step !== this.state.step) {
-        if (!this.backwardStep()) {
-          return false;
-        }
-      }
-    }
-
-    return true;
-  }
-
   forwardStep = (): boolean => {
     const step = this.state.replaySteps[this.state.step];
     if (step === undefined) {

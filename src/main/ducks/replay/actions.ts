@@ -1,5 +1,6 @@
 import { ReplayConfig } from "types/replay";
 import { ReplayConductor } from "utils/tetsimu/replay/replayConductor";
+import { getReplayConductor } from "./selectors";
 import {
   BackwardStepAction,
   ChangeAutoPlayingAction,
@@ -100,10 +101,24 @@ const changeReplaySpeed = (speed: number): ChangeReplaySpeedAction => {
 
 export const changeStep = (
   conductor: ReplayConductor,
-  step: number
+  toStep: number
 ): ChangeStepAction => {
-  if (conductor.changeStep(step)) {
-    const newState = conductor.state;
+  let lastConductor: ReplayConductor | null;
+  if (conductor.state.step > toStep) {
+    lastConductor = changeStepBackward(conductor, toStep);
+  } else if (conductor.state.step < toStep) {
+    lastConductor = changeStepForward(conductor, toStep);
+  } else {
+    return {
+      type: ReplayActionsType.ChangeStep,
+      payload: {
+        succeeded: false,
+      },
+    };
+  }
+
+  if (lastConductor !== null) {
+    const newState = lastConductor.state;
     return {
       type: ReplayActionsType.ChangeStep,
       payload: {
@@ -126,6 +141,34 @@ export const changeStep = (
       },
     };
   }
+};
+
+const changeStepBackward = (
+  conductor: ReplayConductor,
+  toStep: number
+): ReplayConductor | null => {
+  while (conductor.state.step > toStep) {
+    if (!conductor.backwardStep()) {
+      return null;
+    }
+    conductor = getReplayConductor(conductor.state);
+  }
+
+  return conductor;
+};
+
+const changeStepForward = (
+  conductor: ReplayConductor,
+  toStep: number
+): ReplayConductor | null => {
+  while (conductor.state.step < toStep) {
+    if (!conductor.forwardStep()) {
+      return null;
+    }
+    conductor = getReplayConductor(conductor.state);
+  }
+
+  return conductor;
 };
 
 export const changeZoom = (zoom: number): ChangeZoomAction => {
