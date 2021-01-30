@@ -109,7 +109,8 @@ const serializeDropStep = (
   }
 
   // drop point
-  writer.write(8, step.pos.y * MAX_FIELD_WIDTH + step.pos.x);
+  // pos.x range is -1 to 9. pos.x + 1 corrects value to be greater than or equal to 0
+  writer.write(8, step.pos.y * (MAX_FIELD_WIDTH + 1) + (step.pos.x + 1)); 
   writer.write(2, step.dir);
 
   // spin type

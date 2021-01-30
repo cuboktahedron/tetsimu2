@@ -100,7 +100,7 @@ describe("serializeSteps", () => {
   it("should serialize steps", function () {
     const actual = serializeSteps([
       // 0000     : stepType
-      // 00000000 : pos
+      // 00000001 : pos
       // 00       : dir
       // 00       : spinType
       makeReplayDropStep(Direction.Up, 0, 0),
@@ -110,7 +110,7 @@ describe("serializeSteps", () => {
       makeReplayHoldStep(),
 
       // 0010     : stepType
-      // 11010000 : pos
+      // 11100101 : pos
       // 01       : dir
       // 10       : spinType
       // 0101     : attacked line
@@ -125,15 +125,15 @@ describe("serializeSteps", () => {
     // 0         1         2         3         4         5         6
     // ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.-_
     // 000000 :  0 : A
-    // 000000 :  0 : A
+    // 000001 :  1 : B
     // 000000 :  0 : A
     // 010010 : 18 : S
-    // 110100 : 52 : 0
-    // 000110 :  6 : G
+    // 111001 : 57 : 5
+    // 010110 : 22 : W
     // 010100 : 20 : U
     // 110001 : 49 : x
     // 001000 :  8 : I
     // 111111 : 63 : -
-    expect(actual).toBe("AAAS0GUxI-A_");
+    expect(actual).toBe("ABAS5WUxI-A_");
   });
 });

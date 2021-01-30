@@ -70,7 +70,7 @@ describe("deserializeNexts", () => {
 
 describe("deserializeSteps", () => {
   it("should deserialize steps", function () {
-    const actual = deserializeSteps("AAAS0GUxI-A_");
+    const actual = deserializeSteps("ABAS5WUxI-A_");
     const expected = [
       makeReplayDropStep(Direction.Up, 0, 0),
       makeReplayHardDropStep(),

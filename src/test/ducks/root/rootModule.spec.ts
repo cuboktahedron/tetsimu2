@@ -313,7 +313,7 @@ describe("rootModule", () => {
   describe("initializeApp", () => {
     it("should initialize replay state", () => {
       const actual = initializeApp(
-        "f=EjRWeAA_&ns=sOZa0vPY&ss=ALAAgB8_&h=b&nc=3&nn=7&m=1&v=2.00",
+        "f=EjRWeAA_&ns=sOZa0vPY&ss=ABAS5WUxI-A_&h=b&nc=3&nn=7&m=1&v=2.00",
         initialRootState
       );
 
@@ -339,11 +339,11 @@ describe("rootModule", () => {
           nextNum: 7,
         },
         replaySteps: [
-          makeReplayDropStep(Direction.Up, 1, 1),
-          makeReplayHardDropStep(),
-          makeReplayDropStep(Direction.Up, 8, 0),
+          makeReplayDropStep(Direction.Up, 0, 0),
           makeReplayHardDropStep(),
           makeReplayHoldStep(),
+          makeReplayDropStep(Direction.Left, 8, 20, SpinType.Spin),
+          makeReplayHardDropStep({ cols: [1, 2, 3], line: 5 }),
         ],
         step: 0,
       };

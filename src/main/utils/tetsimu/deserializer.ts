@@ -119,8 +119,8 @@ const deserializeDropStep = (reader: BitReader, steps: ReplayStep[]) => {
 
 const deserializeDropStepOnly = (reader: BitReader, steps: ReplayStep[]) => {
   const posValue = reader.read(8);
-  const x = posValue % MAX_FIELD_WIDTH;
-  const y = Math.floor(posValue / MAX_FIELD_WIDTH);
+  const x = posValue % (MAX_FIELD_WIDTH + 1) - 1;
+  const y = Math.floor(posValue / (MAX_FIELD_WIDTH + 1));
   const dir = reader.read(2) as Direction;
   const spinType = reader.read(2) as SpinType;
 

@@ -68,7 +68,7 @@ describe("simuUrl", () => {
 
       const f = "EjRWeBI0VngA";
       const ns = "Kcu4";
-      const ss = "AAAS0GUxI-A_";
+      const ss = "ABAS5WUxI-A_";
       const h = "3";
       const nc = "7";
       const nn = "12";
