@@ -313,7 +313,7 @@ describe("rootModule", () => {
   describe("initializeApp", () => {
     it("should initialize replay state", () => {
       const actual = initializeApp(
-        "f=EjRWeAA_&ns=sOZa0vPY&ss=ABAS5WUxI-A_&h=b&nc=3&nn=7&m=1&v=2.00",
+        "f=EjRWeAA_&ns=sOZa0vPY&ss=ABAS5WUxI-A_&h=b&nc=3&nn=7&m=1&v=2.01",
         initialRootState
       );
 
@@ -362,7 +362,7 @@ describe("rootModule", () => {
 
     it("should initialize simu state with np", () => {
       const actual = initializeApp(
-        "f=EjRWeAA_&np=I_J.p1LOSIJLOSTq1I&h=9&nc=3&nn=12&m=0&v=2.00",
+        "f=EjRWeAA_&np=I_J.p1LOSIJLOSTq1I&h=9&nc=3&nn=12&m=0&v=2.01",
         initialRootState
       );
       const expectedSimu: SimuState = {
@@ -433,7 +433,7 @@ describe("rootModule", () => {
     });
 
     it("should initialize simu state with ns", () => {
-      const actual = initializeApp("ns=Kcu5TlwA&m=0&v=2.00", initialRootState);
+      const actual = initializeApp("ns=Kcu5TlwA&m=0&v=2.01", initialRootState);
       const expectedSimu: SimuState = {
         ...initialSimuState,
         btbState: BtbState.None,
@@ -497,9 +497,9 @@ describe("rootModule", () => {
     });
 
     it("should initialize simu state with s + nc=0", () => {
-      const actual1 = initializeApp("s=1&nc=0&m=0&v=2.00", initialRootState);
-      const actual2 = initializeApp("s=1&nc=0&m=0&v=2.00", initialRootState);
-      const actual3 = initializeApp("s=2&nc=0&m=0&v=2.00", initialRootState);
+      const actual1 = initializeApp("s=1&nc=0&m=0&v=2.01", initialRootState);
+      const actual2 = initializeApp("s=1&nc=0&m=0&v=2.01", initialRootState);
+      const actual3 = initializeApp("s=2&nc=0&m=0&v=2.01", initialRootState);
 
       expect(actual1).toEqual(actual2);
       expect(actual1.payload.simu.nexts).not.toEqual(

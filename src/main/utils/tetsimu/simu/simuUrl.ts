@@ -3,15 +3,16 @@ import { FieldState, HoldState, NextNote, TetsimuMode } from "types/core";
 import {
   deserializeField,
   deserializeHold,
-  deserializeNexts,
+  deserializeNexts
 } from "../deserializer";
 import NextNotesInterpreter from "../nextNotesInterpreter";
 import {
   serializeField,
   serializeHold,
   serializeNexts,
-  serializeSteps,
+  serializeSteps
 } from "../serializer";
+import { UnsupportedUrlError } from "../unsupportedUrlError";
 
 export const UNSPECIFIED_SEED = -1;
 
@@ -25,10 +26,10 @@ export type SimuStateFragments = {
 };
 
 class SimuUrl {
-  private static DefaultVersion = "2.00";
+  private static DefaultVersion = "2.01";
 
   fromState(state: SimuState): string {
-    const gen = new SimuUrl200();
+    const gen = new SimuUrl201();
     return gen.fromState(state);
   }
 
@@ -36,15 +37,18 @@ class SimuUrl {
     const v = urlParams.v ?? SimuUrl.DefaultVersion;
 
     switch (v) {
+      case "2.00":
+        throw new UnsupportedUrlError(
+          `Url parameter version(${v}) is no longer supported.`
+        );
       default:
-        return new SimuUrl200().toState(urlParams);
+        return new SimuUrl201().toState(urlParams);
     }
   }
 }
 
-class SimuUrl200 {
-  public static Version = "2.00";
-  public static VersionNum = 200;
+class SimuUrl201 {
+  public static Version = "2.01";
 
   toState(params: { [key: string]: string }): SimuStateFragments {
     const f = params.f ?? "";
@@ -118,7 +122,7 @@ class SimuUrl200 {
     const nc = ((7 - firstState.nexts.bag.take + 1) % 7) + 1;
     const nn = state.config.nextNum;
     const m = TetsimuMode.Replay;
-    const v = SimuUrl200.Version;
+    const v = SimuUrl201.Version;
 
     const params = [];
     if (f) {

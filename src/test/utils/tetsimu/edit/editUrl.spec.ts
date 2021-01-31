@@ -6,7 +6,7 @@ import { makeHold } from "../testUtils/makeHold";
 
 describe("editUrl", () => {
   describe("fromState", () => {
-    it("should generate url(v2.00) of states", () => {
+    it("should generate url(v2.01) of states", () => {
       // 0         1         2         3         4         5         6
       // ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.-_
       const state = makeEditState({
@@ -42,12 +42,12 @@ describe("editUrl", () => {
       const nc = "3";
       const nn = "5";
       const m = TetsimuMode.Simu;
-      const v = "2.00";
+      const v = "2.01";
       const expected = `${loc}?f=${f}&np=${np}&h=${h}&nc=${nc}&nn=${nn}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
 
-    it("should generate url(v2.00) of states", () => {
+    it("should generate url(v2.01) of states", () => {
       const state = makeEditState({
         field: makeField("NNNNNNNNNN"),
         hold: makeHold(Tetromino.None, true),
@@ -68,7 +68,7 @@ describe("editUrl", () => {
       const loc = location.href.replace(/\?.*$/, "");
       const nn = "5";
       const m = TetsimuMode.Simu;
-      const v = "2.00";
+      const v = "2.01";
       const expected = `${loc}?nn=${nn}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });

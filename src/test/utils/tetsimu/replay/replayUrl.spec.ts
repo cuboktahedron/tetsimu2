@@ -14,7 +14,7 @@ import { makeTetrominos } from "../testUtils/makeTetrominos";
 
 describe("replayUrl", () => {
   describe("fromState", () => {
-    it("should generate url(v2.0.0) of states", () => {
+    it("should generate url(v2.01) of states", () => {
       const state = makeReplayState({
         histories: [
           {
@@ -60,12 +60,12 @@ describe("replayUrl", () => {
       const nc = "6";
       const nn = "12";
       const m = TetsimuMode.Replay;
-      const v = "2.00";
+      const v = "2.01";
       const expected = `${loc}?f=${f}&ns=${ns}&ss=${ss}&h=${h}&nc=${nc}&nn=${nn}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
 
-    it("should generate url(v2.0.0) of minimum states", () => {
+    it("should generate url(v2.01) of minimum states", () => {
       const state = makeReplayState({
         histories: [
           {
@@ -95,14 +95,14 @@ describe("replayUrl", () => {
       const loc = location.href.replace(/\?.*$/, "");
       const ns = "IA__";
       const m = TetsimuMode.Replay;
-      const v = "2.00";
+      const v = "2.01";
       const expected = `${loc}?ns=${ns}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
   });
 
   describe("toState", () => {
-    it("should generate states from url(v2.0.0)", () => {
+    it("should generate states from url(v2.01)", () => {
       const f = "EjRWeBI0VngA";
       const ns = "Kcu4";
       const ss = "ABAS5WUxI-A_";
@@ -110,7 +110,7 @@ describe("replayUrl", () => {
       const h = "3";
       const nn = "12";
       const m = `${TetsimuMode.Replay}`;
-      const v = "2.00";
+      const v = "2.01";
 
       const params = {
         f,
@@ -147,7 +147,7 @@ describe("replayUrl", () => {
       expect(actual).toEqual(expected);
     });
 
-    it("should generate states from url(v2.0.0) with no params", () => {
+    it("should generate states from url(v2.01) with no params", () => {
       const gen = new ReplayUrl();
       const actual = gen.toState({});
 

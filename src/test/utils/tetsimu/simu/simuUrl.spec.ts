@@ -22,7 +22,7 @@ import { makeTetrominos } from "../testUtils/makeTetrominos";
 
 describe("simuUrl", () => {
   describe("fromState", () => {
-    it("should generate url(v2.00) of states", () => {
+    it("should generate url(v2.01) of states", () => {
       const state = makeSimuState({
         btbState: BtbState.None,
         config: {
@@ -73,12 +73,12 @@ describe("simuUrl", () => {
       const nc = "7";
       const nn = "12";
       const m = TetsimuMode.Replay;
-      const v = "2.00";
+      const v = "2.01";
       const expected = `${loc}?f=${f}&ns=${ns}&ss=${ss}&h=${h}&nc=${nc}&nn=${nn}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
 
-    it("should generate url(v2.00) of minimum states", () => {
+    it("should generate url(v2.01) of minimum states", () => {
       const state = makeSimuState({
         config: {
           nextNum: 5,
@@ -112,14 +112,14 @@ describe("simuUrl", () => {
       const loc = location.href.replace(/\?.*$/, "");
       const ns = "IA__";
       const m = TetsimuMode.Replay;
-      const v = "2.00";
+      const v = "2.01";
       const expected = `${loc}?ns=${ns}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
   });
 
   describe("toState", () => {
-    it("should generate states from url(v2.00) with ns", () => {
+    it("should generate states from url(v2.01) with ns", () => {
       const f = "EjRWeBI0VngA";
       const ns = "Kcu4";
       const h = "3";
@@ -127,7 +127,7 @@ describe("simuUrl", () => {
       const nn = "12";
       const s = "1";
       const m = `${TetsimuMode.Simu}`;
-      const v = "2.00";
+      const v = "2.01";
 
       const params = {
         f,
@@ -158,11 +158,11 @@ describe("simuUrl", () => {
       expect(actual).toEqual(expected);
     });
 
-    it("should generate states from url(v2.00) with np", () => {
+    it("should generate states from url(v2.01) with np", () => {
       const ns = "Kcu4";
       const np = "q2_IJ.p2LOS";
       const m = `${TetsimuMode.Simu}`;
-      const v = "2.00";
+      const v = "2.01";
 
       const params = {
         ns,
@@ -185,7 +185,7 @@ describe("simuUrl", () => {
       expect(actual).toEqual(expected);
     });
 
-    it("should generate states from url(v2.00) with no params", () => {
+    it("should generate states from url(v2.01) with no params", () => {
       const gen = new SimuUrl();
       const actual = gen.toState({});
 

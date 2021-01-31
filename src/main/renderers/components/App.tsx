@@ -1,19 +1,20 @@
 import {
   createMuiTheme,
   MuiThemeProvider,
-  useMediaQuery
+  useMediaQuery,
 } from "@material-ui/core";
 import reducer from "ducks/root";
 import {
   changeTetsimuMode,
   clearError,
   error,
-  initializeApp
+  initializeApp,
 } from "ducks/root/actions";
 import React from "react";
 import { initialRootState } from "stores/RootState";
 import { Action, TetsimuMode } from "types/core";
 import { reducerLogger } from "utils/reducerLogger";
+import { UnsupportedUrlError } from "utils/tetsimu/unsupportedUrlError";
 import ErrorDialog from "./core/ErrorDialog";
 import Edit from "./edit/Edit";
 import Replay from "./replay/Replay";
@@ -54,13 +55,17 @@ const App: React.FC = () => {
   React.useEffect(() => {
     try {
       dispatch(initializeApp(location.search.replace(/^\?/, ""), state));
-    } catch {
-      dispatch(
-        error(
-          "Initialization failed",
-          "This is maybe invalid url parameters passed."
-        )
-      );
+    } catch (e) {
+      if (e instanceof UnsupportedUrlError) {
+        dispatch(error("Initialization failed", e.message));
+      } else {
+        dispatch(
+          error(
+            "Initialization failed",
+            "This is maybe invalid url parameters passed."
+          )
+        );
+      }
 
       dispatch(changeTetsimuMode(TetsimuMode.Simu));
     }

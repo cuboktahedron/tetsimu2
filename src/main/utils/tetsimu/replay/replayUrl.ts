@@ -4,20 +4,21 @@ import {
   HoldState,
   ReplayStep,
   Tetromino,
-  TetsimuMode,
+  TetsimuMode
 } from "types/core";
 import {
   deserializeField,
   deserializeHold,
   deserializeNexts,
-  deserializeSteps,
+  deserializeSteps
 } from "../deserializer";
 import {
   serializeField,
   serializeHold,
   serializeNexts,
-  serializeSteps,
+  serializeSteps
 } from "../serializer";
+import { UnsupportedUrlError } from "../unsupportedUrlError";
 
 export type ReplayStateFragments = {
   hold: HoldState;
@@ -29,10 +30,10 @@ export type ReplayStateFragments = {
 };
 
 class ReplayUrl {
-  private static DefaultVersion = "2.00";
+  private static DefaultVersion = "2.01";
 
   fromState(state: ReplayState): string {
-    const gen = new ReplayUrl200();
+    const gen = new ReplayUrl201();
     return gen.fromState(state);
   }
 
@@ -40,15 +41,19 @@ class ReplayUrl {
     const v = urlParams.v ?? ReplayUrl.DefaultVersion;
 
     switch (v) {
+      case "2.00":
+        throw new UnsupportedUrlError(
+          `Url parameter version(${v}) is no longer supported.`
+        );
       default:
-        return new ReplayUrl200().toState(urlParams);
+        return new ReplayUrl201().toState(urlParams);
     }
   }
 }
 
-class ReplayUrl200 {
-  public static Version = "2.00";
-  public static VersionNum = 200;
+class ReplayUrl201 {
+  public static Version = "2.01";
+  public static VersionNum = 201;
 
   toState(params: { [key: string]: string }): ReplayStateFragments {
     const f = params.f ?? "";
@@ -99,7 +104,7 @@ class ReplayUrl200 {
     const nc = ((firstState.noOfCycle + 5) % 7) + 1;
     const nn = state.replayInfo.nextNum;
     const m = TetsimuMode.Replay;
-    const v = ReplayUrl200.Version;
+    const v = ReplayUrl201.Version;
 
     const params = [];
     if (f) {

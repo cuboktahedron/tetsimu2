@@ -19,14 +19,13 @@ export type EditStateFragments = {
 
 class EditUrl {
   fromState(state: EditState): string {
-    const gen = new EditUrl200();
+    const gen = new EditUrl201();
     return gen.fromState(state);
   }
 }
 
-class EditUrl200 {
-  public static Version = "2.00";
-  public static VersionNum = 200;
+class EditUrl201 {
+  public static Version = "2.01";
 
   fromState(state: EditState): string {
     const f = serializeField(state.field);
@@ -38,7 +37,7 @@ class EditUrl200 {
     const nc = state.tools.noOfCycle;
     const nn = 5;
     const m = TetsimuMode.Simu;
-    const v = EditUrl200.Version;
+    const v = EditUrl201.Version;
 
     const params = [];
     if (f) {
