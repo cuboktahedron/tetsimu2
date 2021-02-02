@@ -149,30 +149,30 @@ export type ReplayStep = ReplayStepDrop | ReplayStepHold | ReplayStepHardDrop;
 
 export type Storategy = "pytt2";
 
-export type AttackType =
-  | "none"
-  | "single"
-  | "double"
-  | "triple"
-  | "tetris"
-  | "tsm"
-  | "tsdm"
-  | "tss"
-  | "tsd"
-  | "tst"
-  | "btbTetris"
-  | "btbTsm"
-  | "btbTsdm"
-  | "btbTss"
-  | "btbTsd"
-  | "btbTst"
-  | "pc"
-  | "ren";
+export const AttackType = {
+  Single: 1,
+  Double: 2,
+  Triple: 3,
+  Tetris: 4,
+  Tsm: 5,
+  Tsdm: 6,
+  Tss: 7,
+  Tsd: 8,
+  Tst: 9,
+  BtbTetris: 10,
+  BtbTsm: 11,
+  BtbTsdm: 12,
+  BtbTss: 13,
+  BtbTsd: 14,
+  BtbTst: 15,
+  PerfectClear: 16,
+} as const;
+
+export type AttackType = typeof AttackType[keyof typeof AttackType];
 
 export const BtbState = {
   None: 0,
-  preBtb: 1,
-  Btb: 2,
+  Btb: 1,
 } as const;
 
 export type BtbState = typeof BtbState[keyof typeof BtbState];

@@ -2,6 +2,8 @@ import merge from "deepmerge";
 import { ReplayState } from "stores/ReplayState";
 import {
   ActiveTetromino,
+  AttackType,
+  BtbState,
   Direction,
   FieldState,
   HoldState,
@@ -11,10 +13,12 @@ import {
 import { ReplayInfo, ReplayStateHistory } from "types/replay";
 
 export const makeReplayState = (state: {
+  attackTypes?: AttackType[];
   auto?: {
     playing: boolean;
     speed: number;
   };
+  btbState?: BtbState;
   current?: ActiveTetromino;
   field?: FieldState;
   histories?: ReplayStateHistory[];
@@ -22,16 +26,19 @@ export const makeReplayState = (state: {
   isDead?: boolean;
   nexts?: Tetromino[];
   noOfCycle?: number;
+  ren?: number;
   replayInfo?: ReplayInfo;
   replaySteps?: ReplayStep[];
   step?: number;
 }): ReplayState => {
   return merge(
     {
+      attackTypes: [],
       auto: {
         playing: false,
         speed: 1,
       },
+      btbState: BtbState.None,
       config: {
         showsCycle: false,
         showsGhost: false,
@@ -50,6 +57,7 @@ export const makeReplayState = (state: {
       isDead: false,
       nexts: [],
       noOfCycle: 1,
+      ren: -1,
       replayInfo: {
         nextNum: 5,
       },

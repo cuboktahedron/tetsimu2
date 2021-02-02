@@ -1,5 +1,6 @@
 import {
   ActiveTetromino,
+  AttackType,
   BtbState,
   Direction,
   FieldState,
@@ -11,7 +12,7 @@ import {
   ReplayStep,
   SpinType,
   TapControllerType,
-  Tetromino
+  Tetromino,
 } from "types/core";
 import { PlayMode, SimuConfig, SimuRetryState } from "types/simu";
 import { makeFullNextNote } from "utils/tetsimu/functions";
@@ -19,6 +20,7 @@ import NextGenerator from "utils/tetsimu/nextGenerator";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 
 export type SimuStateHistory = {
+  attackTypes: AttackType[];
   btbState: BtbState;
   currentType: Tetromino;
   field: FieldState;
@@ -43,6 +45,7 @@ export type GarbageInfo = {
 };
 
 export type SimuState = {
+  attackTypes: AttackType[];
   btbState: BtbState;
   config: SimuConfig;
   current: ActiveTetromino;
@@ -151,6 +154,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
 
   const replayNexts = nexts;
   return {
+    attackTypes: [],
     btbState: BtbState.None,
     config,
     current,
@@ -161,6 +165,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
     garbages: [],
     histories: [
       {
+        attackTypes: [],
         btbState: BtbState.None,
         currentType: current.type,
         field,

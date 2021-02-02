@@ -30,6 +30,7 @@ describe("simuUrl", () => {
         },
         histories: [
           {
+            attackTypes: [],
             btbState: BtbState.None,
             currentType: Tetromino.I,
             field: makeField(
@@ -85,6 +86,7 @@ describe("simuUrl", () => {
         },
         histories: [
           {
+            attackTypes: [],
             btbState: BtbState.None,
             currentType: Tetromino.I,
             field: makeField("NNNNNNNNNN"),

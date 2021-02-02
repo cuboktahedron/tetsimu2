@@ -1,6 +1,12 @@
 import { getSimuConductor } from "ducks/simu/selectors";
 import { SimuState } from "stores/SimuState";
-import { BtbState, Direction, SpinType, Tetromino } from "types/core";
+import {
+  AttackType,
+  BtbState,
+  Direction,
+  SpinType,
+  Tetromino,
+} from "types/core";
 import { makeCurrent } from "../../../utils/tetsimu/testUtils/makeCurrent";
 import { makeField } from "../../../utils/tetsimu/testUtils/makeField";
 import { makeHold } from "../../../utils/tetsimu/testUtils/makeHold";
@@ -21,6 +27,7 @@ describe("simuConductor", () => {
   describe("holdTetrimino", () => {
     it("should hold", () => {
       const state = makeSimuState({
+        attackTypes: [AttackType.BtbTetris],
         btbState: BtbState.Btb,
         current: makeCurrent(Direction.Down, 1, 5, Tetromino.I),
         field: makeField("NNNNNNNNNN"),
@@ -42,11 +49,13 @@ describe("simuConductor", () => {
 
       const expected: SimuState = {
         ...state,
+        attackTypes: [AttackType.BtbTetris],
         btbState: BtbState.Btb,
         current: makeCurrent(Direction.Up, 4, 19, Tetromino.S),
         garbages: [],
         histories: [
           {
+            attackTypes: [AttackType.BtbTetris],
             btbState: BtbState.Btb,
             currentType: Tetromino.S,
             field: state.field,
@@ -86,7 +95,8 @@ describe("simuConductor", () => {
 
     it("should exchange current and hold", () => {
       const state = makeSimuState({
-        btbState: BtbState.preBtb,
+        attackTypes: [AttackType.Tsd],
+        btbState: BtbState.Btb,
         current: makeCurrent(Direction.Down, 1, 5, Tetromino.T),
         field: makeField("NNNNNNNNNN"),
         hold: makeHold(Tetromino.L, true),
@@ -107,12 +117,14 @@ describe("simuConductor", () => {
 
       const expected: SimuState = {
         ...state,
-        btbState: BtbState.preBtb,
+        attackTypes: [AttackType.Tsd],
+        btbState: BtbState.Btb,
         current: makeCurrent(Direction.Up, 4, 19, Tetromino.L),
         garbages: [],
         histories: [
           {
-            btbState: BtbState.preBtb,
+            attackTypes: [AttackType.Tsd],
+            btbState: BtbState.Btb,
             currentType: Tetromino.L,
             field: state.field,
             garbages: [],
@@ -171,6 +183,7 @@ describe("simuConductor", () => {
     describe("hardDropTetrimino", () => {
       it("should drop and generate next", () => {
         const state = makeSimuState({
+          attackTypes: [AttackType.PerfectClear, AttackType.Single],
           btbState: BtbState.Btb,
           current: makeCurrent(Direction.Up, 1, 3, Tetromino.I),
           // prettier-ignore
@@ -197,7 +210,8 @@ describe("simuConductor", () => {
 
         const expected: SimuState = {
           ...state,
-          btbState: BtbState.preBtb,
+          attackTypes: [],
+          btbState: BtbState.Btb,
           current: makeCurrent(Direction.Up, 4, 19, Tetromino.S),
           // prettier-ignore
           field: makeField(
@@ -208,7 +222,8 @@ describe("simuConductor", () => {
           garbages: [],
           histories: [
             {
-              btbState: BtbState.preBtb,
+              attackTypes: [],
+              btbState: BtbState.Btb,
               currentType: Tetromino.S,
               // prettier-ignore
               field: makeField(

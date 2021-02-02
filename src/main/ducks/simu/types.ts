@@ -2,6 +2,7 @@ import { GarbageInfo, SimuStateHistory } from "stores/SimuState";
 import {
   Action,
   ActiveTetromino,
+  AttackType,
   BtbState,
   FieldState,
   HoldState,
@@ -66,6 +67,7 @@ export type ChangeZoomAction = {
 export type ClearSimuAction = {
   type: typeof SimuActionsType.Clear;
   payload: {
+    attackTypes: AttackType[];
     btbState: BtbState;
     current: ActiveTetromino;
     field: FieldState;
@@ -93,6 +95,7 @@ export type DoSimuAction = {
   type: typeof SimuActionsType.DoSimu;
   payload:
     | {
+        attackTypes: AttackType[];
         btbState: BtbState;
         current: ActiveTetromino;
         field: FieldState;
@@ -123,6 +126,7 @@ export type DoSimuAction = {
 export type RedoAction = {
   type: typeof SimuActionsType.Redo;
   payload: {
+    attackTypes: AttackType[];
     btbState: BtbState;
     current: ActiveTetromino;
     field: FieldState;
@@ -146,6 +150,7 @@ export type RedoAction = {
 export type RetryAction = {
   type: typeof SimuActionsType.Retry;
   payload: {
+    attackTypes: AttackType[];
     btbState: BtbState;
     current: ActiveTetromino;
     field: FieldState;
@@ -172,6 +177,7 @@ export type RetryAction = {
 export type SuperRetryAction = {
   type: typeof SimuActionsType.SuperRetry;
   payload: {
+    attackTypes: AttackType[];
     btbState: BtbState;
     current: ActiveTetromino;
     field: FieldState;
@@ -199,6 +205,7 @@ export type SuperRetryAction = {
 export type UndoAction = {
   type: typeof SimuActionsType.Undo;
   payload: {
+    attackTypes: AttackType[];
     btbState: BtbState;
     current: ActiveTetromino;
     field: FieldState;

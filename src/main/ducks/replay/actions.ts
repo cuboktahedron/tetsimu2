@@ -21,12 +21,15 @@ export const backwardStep = (
     return {
       type: ReplayActionsType.BackwardStep,
       payload: {
+        attackTypes: newState.attackTypes,
+        btbState: newState.btbState,
         current: newState.current,
         field: newState.field,
         hold: newState.hold,
         isDead: newState.isDead,
         nexts: newState.nexts,
         noOfCycle: newState.noOfCycle,
+        ren: newState.ren,
         step: newState.step,
         succeeded: true,
       },
@@ -122,6 +125,8 @@ export const changeStep = (
     return {
       type: ReplayActionsType.ChangeStep,
       payload: {
+        attackTypes: newState.attackTypes,
+        btbState: newState.btbState,
         current: newState.current,
         field: newState.field,
         histories: newState.histories,
@@ -129,6 +134,7 @@ export const changeStep = (
         isDead: newState.isDead,
         nexts: newState.nexts,
         noOfCycle: newState.noOfCycle,
+        ren: newState.ren,
         step: newState.step,
         succeeded: true,
       },
@@ -148,6 +154,7 @@ const changeStepBackward = (
   toStep: number
 ): ReplayConductor | null => {
   while (conductor.state.step > toStep) {
+    // TODO: Change to target step at once
     if (!conductor.backwardStep()) {
       return null;
     }
@@ -162,6 +169,7 @@ const changeStepForward = (
   toStep: number
 ): ReplayConductor | null => {
   while (conductor.state.step < toStep) {
+    // TODO: Use histories if they are exists
     if (!conductor.forwardStep()) {
       return null;
     }
@@ -186,6 +194,8 @@ export const forwardStep = (conductor: ReplayConductor): ForwardStepAction => {
     return {
       type: ReplayActionsType.ForwardStep,
       payload: {
+        attackTypes: newState.attackTypes,
+        btbState: newState.btbState,
         current: newState.current,
         field: newState.field,
         histories: newState.histories,
@@ -193,6 +203,7 @@ export const forwardStep = (conductor: ReplayConductor): ForwardStepAction => {
         isDead: newState.isDead,
         nexts: newState.nexts,
         noOfCycle: newState.noOfCycle,
+        ren: newState.ren,
         step: newState.step,
         succeeded: true,
       },
@@ -217,6 +228,8 @@ export const forwardStepAuto = (
     return {
       type: ReplayActionsType.ForwardStepAuto,
       payload: {
+        attackTypes: newState.attackTypes,
+        btbState: newState.btbState,
         current: newState.current,
         field: newState.field,
         histories: newState.histories,
@@ -225,6 +238,7 @@ export const forwardStepAuto = (
         nexts: newState.nexts,
         noOfCycle: newState.noOfCycle,
         playing,
+        ren: newState.ren,
         step: newState.step,
         succeeded: true,
       },

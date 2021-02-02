@@ -1,13 +1,17 @@
 import { ReplayState } from "stores/ReplayState";
 import {
   ActiveTetromino,
+  AttackType,
+  BtbState,
   ReplayStepDrop,
   ReplayStepHardDrop,
   ReplayStepType,
+  SpinType,
   Tetromino,
 } from "types/core";
 import { ReplayStateHistory } from "types/replay";
 import { FieldHelper } from "../fieldHelper";
+import { Pytt2Strategy } from "../putt2Strategy";
 
 export class ReplayConductor {
   private _state: ReplayState;
@@ -54,12 +58,15 @@ export class ReplayConductor {
     };
     const newStep = this.state.step + 1;
     const newHistory: ReplayStateHistory = {
+      attackTypes: this.state.attackTypes,
+      btbState: this.state.btbState,
       current: newCurrent,
       field: this.state.field,
       hold: this.state.hold,
       isDead: this.state.isDead,
       nexts: this.state.nexts,
       noOfCycle: this.state.noOfCycle,
+      ren: this.state.ren,
     };
 
     const newHistories = [...this.state.histories];
@@ -92,7 +99,7 @@ export class ReplayConductor {
       }
 
       newCurrentType = type;
-      newNoOfCycle = newNoOfCycle % 7 + 1;
+      newNoOfCycle = (newNoOfCycle % 7) + 1;
     } else {
       newCurrentType = this.state.hold.type;
     }
@@ -105,12 +112,15 @@ export class ReplayConductor {
     const isDead = this.fieldHelper.isOverlapping(newCurrent);
 
     const newHistory: ReplayStateHistory = {
+      attackTypes: this.state.attackTypes,
+      btbState: this.state.btbState,
       current: newCurrent,
       field: this.state.field,
       hold: newHold,
       isDead,
       nexts: newNexts,
       noOfCycle: newNoOfCycle,
+      ren: this.state.ren,
     };
 
     const newStep = this.state.step + 1;
@@ -133,6 +143,7 @@ export class ReplayConductor {
       return false;
     }
 
+    let isDead = this.fieldHelper.isOverDeadline(this.state.current);
     this.fieldHelper.settleTetromino(this.state.current);
     if (step.attacked) {
       step.attacked.cols.forEach((col) => {
@@ -144,7 +155,35 @@ export class ReplayConductor {
       this.state.hold = { ...this.state.hold, canHold: true };
     }
 
-    this.fieldHelper.eraseLine();
+    let attackTypes: AttackType[] = [];
+    let newRen = -1;
+    let newBtbState: BtbState = this.state.btbState;
+
+    if (!isDead) {
+      const erasedLine = this.fieldHelper.eraseLine();
+      if (erasedLine > 0) {
+        newRen = this.state.ren + 1;
+      }
+
+      if (
+        erasedLine >= 4 ||
+        (erasedLine > 0 && this.state.current.spinType !== SpinType.None)
+      ) {
+        newBtbState = BtbState.Btb;
+      } else if (erasedLine > 0) {
+        newBtbState = BtbState.None;
+      }
+
+      const storategy = new Pytt2Strategy();
+      const attack = storategy.calculateAttack(
+        erasedLine,
+        this.state.current.spinType,
+        newRen,
+        this.state.btbState === BtbState.Btb,
+        this.fieldHelper.isFieldEmpty()
+      );
+      attackTypes = attack.attackTypes;
+    }
 
     const newStep = this.state.step + 1;
     const newNexts = [...this.state.nexts];
@@ -157,28 +196,36 @@ export class ReplayConductor {
       nextCurrentType
     );
 
-    const isDead = this.fieldHelper.isOverlapping(newCurrent);
+    if (!isDead) {
+      isDead = this.fieldHelper.isOverlapping(newCurrent);
+    }
     const newField = this.fieldHelper.field;
     const newHold = this.state.hold;
-    const newNoOfCycle = this.state.noOfCycle % 7 + 1;
+    const newNoOfCycle = (this.state.noOfCycle % 7) + 1;
     const newHistory: ReplayStateHistory = {
+      attackTypes,
+      btbState: newBtbState,
       current: newCurrent,
       field: newField,
       hold: newHold,
       isDead,
       nexts: newNexts,
       noOfCycle: newNoOfCycle,
+      ren: newRen,
     };
 
     const newHistories = [...this.state.histories];
     newHistories[newStep] = newHistory;
 
+    this.state.attackTypes = attackTypes;
+    this.state.btbState = newBtbState;
     this.state.current = newCurrent;
     this.state.field = newField;
     this.state.histories = newHistories;
     this.state.isDead = isDead;
     this.state.nexts = newNexts;
     this.state.noOfCycle = newNoOfCycle;
+    this.state.ren = newRen;
     this.state.step = newStep;
 
     return true;
@@ -192,12 +239,15 @@ export class ReplayConductor {
     const newStep = this.state.step - 1;
     const history = this.state.histories[newStep];
 
+    this.state.attackTypes = history.attackTypes;
+    this.state.btbState = history.btbState;
     this.state.current = history.current;
     this.state.field = history.field;
     this.state.hold = history.hold;
     this.state.isDead = history.isDead;
     this.state.nexts = history.nexts;
     this.state.noOfCycle = history.noOfCycle;
+    this.state.ren = history.ren;
     this.state.step = newStep;
 
     return true;

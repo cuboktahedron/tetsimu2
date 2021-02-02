@@ -11,18 +11,18 @@ import {
   NextNote,
   SpinType,
   Tetromino,
-  TetsimuMode
+  TetsimuMode,
 } from "types/core";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 import ReplayUrl, {
-  ReplayStateFragments
+  ReplayStateFragments,
 } from "utils/tetsimu/replay/replayUrl";
 import SimuUrl, {
   SimuStateFragments,
-  UNSPECIFIED_SEED
+  UNSPECIFIED_SEED,
 } from "utils/tetsimu/simu/simuUrl";
 import {
   ChangeTetsimuModeAction,
@@ -33,7 +33,7 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction
+  SimuToReplayAction,
 } from "./types";
 
 export const changeTetsimuMode = (
@@ -276,6 +276,7 @@ const initializeSimuState = (
     field: fragments.field,
     histories: [
       {
+        attackTypes: [],
         btbState: BtbState.None,
         currentType: current.type,
         field: fragments.field,
@@ -350,6 +351,8 @@ const initializeReplayState = (
 
   return {
     ...state,
+    attackTypes: [],
+    btbState: BtbState.None,
     current,
     field: fragments.field,
     hold: fragments.hold,
@@ -361,15 +364,19 @@ const initializeReplayState = (
     },
     histories: [
       {
+        attackTypes: [],
+        btbState: BtbState.None,
         current,
         field: fragments.field,
         hold: fragments.hold,
         isDead,
         nexts,
         noOfCycle,
+        ren: -1,
       },
     ],
     nexts,
+    ren: -1,
     replaySteps: fragments.replaySteps,
   };
 };
@@ -475,6 +482,8 @@ export const replayToSimuMode = (state: ReplayState): ReplayToSimuAction => {
   return {
     type: RootActionsType.ReplayToSimuMode,
     payload: {
+      attackTypes: state.attackTypes,
+      btbState: state.btbState,
       current: newCurrent,
       field: state.field,
       garbages: newGarbages,
@@ -487,6 +496,7 @@ export const replayToSimuMode = (state: ReplayState): ReplayToSimuAction => {
         settled: newNextSettles,
         unsettled: lastGenNext.nextNotes,
       },
+      ren: state.ren,
       retryState: {
         bag: initialBag,
         field: state.field,
@@ -554,9 +564,11 @@ export const simuToReplayMode = (state: SimuState): SimuToReplayAction => {
   return {
     type: RootActionsType.SimuToReplayMode,
     payload: {
+      attackTypes: [],
       auto: {
         playing: false,
       },
+      btbState: BtbState.None,
       current,
       field: history.field,
       isDead: history.isDead,
@@ -565,14 +577,18 @@ export const simuToReplayMode = (state: SimuState): SimuToReplayAction => {
       hold: history.hold,
       histories: [
         {
+          attackTypes: [],
+          btbState: BtbState.None,
           current,
           field: history.field,
           hold: history.hold,
           isDead: history.isDead,
           nexts: nexts,
           noOfCycle,
+          ren: -1,
         },
       ],
+      ren: -1,
       replaySteps: state.replaySteps,
       replayInfo: {
         nextNum: state.config.nextNum,

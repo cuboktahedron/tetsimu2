@@ -4,7 +4,7 @@ import {
   initializeApp,
   replayToSimuMode,
   simuToEditMode,
-  simuToReplayMode
+  simuToReplayMode,
 } from "ducks/root/actions";
 import {
   ChangeTetsimuModeAction,
@@ -13,17 +13,18 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction
+  SimuToReplayAction,
 } from "ducks/root/types";
 import { initialReplayState, ReplayState } from "stores/ReplayState";
 import { initialRootState } from "stores/RootState";
 import { initialSimuState, SimuState } from "stores/SimuState";
 import {
+  AttackType,
   BtbState,
   Direction,
   SpinType,
   Tetromino,
-  TetsimuMode
+  TetsimuMode,
 } from "types/core";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { makeCurrent } from "../../utils/tetsimu/testUtils/makeCurrent";
@@ -33,13 +34,13 @@ import { makeGarbage } from "../../utils/tetsimu/testUtils/makeGarbage";
 import { makeHold } from "../../utils/tetsimu/testUtils/makeHold";
 import {
   makeNextNote,
-  makeNextNotes
+  makeNextNotes,
 } from "../../utils/tetsimu/testUtils/makeNextNote";
 import { makeReplayState } from "../../utils/tetsimu/testUtils/makeReplayState";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
-  makeReplayHoldStep
+  makeReplayHoldStep,
 } from "../../utils/tetsimu/testUtils/makeReplayStep";
 import { makeSimuState } from "../../utils/tetsimu/testUtils/makeSimuState";
 import { makeTetrominos } from "../../utils/tetsimu/testUtils/makeTetrominos";
@@ -150,51 +151,98 @@ describe("rootModule", () => {
 
   describe("replayToSimuMode", () => {
     it("should change mode and take over state", () => {
-      const historyBase = {
-        field: [],
-        hold: makeHold(Tetromino.I, false),
-        isDead: false,
-      };
-
       const actual = replayToSimuMode(
         makeReplayState({
-          current: makeCurrent(Direction.Down, 4, 19, Tetromino.L),
-          field: makeField("IJLOSTZNNN"),
+          attackTypes: [AttackType.BtbTsd],
+          btbState: BtbState.Btb,
+          current: makeCurrent(Direction.Down, 4, 19, Tetromino.Z),
+          field: makeField(
+            // prettier-ignore
+            "NNNSZZNNNN",
+            "LNNSSZZNNN"
+          ),
           histories: [
             {
-              ...historyBase,
-              current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
-              nexts: makeTetrominos("JLOSTZIZTSOLJIIJLOSTZ"),
+              attackTypes: [],
+              btbState: BtbState.None,
+              current: makeCurrent(Direction.Up, 8, 1, Tetromino.O),
+              field: makeField(
+                // prettier-ignore
+                "NNNSZZNNNN",
+                "LNNSSZZNNN",
+                "LNNNSJJJOO",
+                "LLNIIIIJOO"
+              ),
+              nexts: makeTetrominos("TZIJLOSZTSOLJIIJLO"),
               noOfCycle: 1,
+              hold: makeHold(Tetromino.I, true),
+              isDead: false,
+              ren: -1,
             },
             {
-              ...historyBase,
-              current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
-              nexts: makeTetrominos("LOSTZIZTSOLJIIJLOSTZ"),
+              attackTypes: [],
+              btbState: BtbState.None,
+              current: makeCurrent(Direction.Down, 4, 19, Tetromino.T),
+              field: makeField(
+                // prettier-ignore
+                "NNNSZZNNNN",
+                "LNNSSZZNNN",
+                "LNNNSJJJOO",
+                "LLNIIIIJOO"
+              ),
+              nexts: makeTetrominos("ZIJLOSZTSOLJIIJLO"),
               noOfCycle: 2,
+              hold: makeHold(Tetromino.I, true),
+              isDead: false,
+              ren: -1,
             },
             {
-              ...historyBase,
-              current: makeCurrent(Direction.Up, 4, 19, Tetromino.L),
-              nexts: makeTetrominos("OSTZIZTSOLJIIJLOSTZ"),
+              attackTypes: [],
+              btbState: BtbState.None,
+              current: makeCurrent(Direction.Down, 2, 1, Tetromino.T),
+              field: makeField(
+                // prettier-ignore
+                "NNNSZZNNNN",
+                "LNNSSZZNNN",
+                "LTTTSJJJOO",
+                "LLTIIIIJOO"
+              ),
+              nexts: makeTetrominos("ZIJLOSZTSOLJIIJLO"),
+              noOfCycle: 2,
+              hold: makeHold(Tetromino.I, true),
+              isDead: false,
+              ren: -1,
+            },
+            {
+              attackTypes: [AttackType.BtbTsd],
+              btbState: BtbState.Btb,
+              current: makeCurrent(Direction.Down, 4, 19, Tetromino.Z),
+              field: makeField(
+                // prettier-ignore
+                "NNNSZZNNNN",
+                "LNNSSZZNNN"
+              ),
+              nexts: makeTetrominos("IJLOSZTSOLJIIJLO"),
               noOfCycle: 3,
+              hold: makeHold(Tetromino.I, true),
+              isDead: false,
+              ren: 0,
             },
           ],
-          hold: makeHold(Tetromino.I, false),
+          hold: makeHold(Tetromino.I, true),
           isDead: false,
-          nexts: makeTetrominos("OSTZIZTSOLJIIJLOSTZ"),
+          nexts: makeTetrominos("IJLOSZTSOLJIIJLO"),
           noOfCycle: 3,
+          ren: 0,
           replaySteps: [
-            makeReplayHoldStep(),
-            makeReplayDropStep(Direction.Up, 0, 0),
             makeReplayHardDropStep(),
-            makeReplayDropStep(Direction.Up, 5, 0),
-            makeReplayHardDropStep({ cols: [1], line: 3 }),
+            makeReplayDropStep(Direction.Down, 2, 1, SpinType.Spin),
+            makeReplayHardDropStep({ cols: [], line: 2 }),
+            makeReplayDropStep(Direction.Up, 1, 2, SpinType.None),
+            makeReplayHardDropStep({ cols: [], line: 2 }),
             makeReplayHoldStep(),
-            makeReplayDropStep(Direction.Up, 7, 0),
-            makeReplayHardDropStep(),
-            makeReplayDropStep(Direction.Left, 8, 20, SpinType.Spin),
-            makeReplayHardDropStep({ cols: [1, 2, 3], line: 5 }),
+            makeReplayDropStep(Direction.Up, 1, 2, SpinType.None),
+            makeReplayHardDropStep({ cols: [1, 2, 3], line: 3 }),
           ],
           step: 3,
           replayInfo: {
@@ -206,29 +254,40 @@ describe("rootModule", () => {
       const expected: ReplayToSimuAction = {
         type: RootActionsType.ReplayToSimuMode,
         payload: {
-          current: makeCurrent(Direction.Up, 4, 19, Tetromino.L),
-          field: makeField("IJLOSTZNNN"),
-          garbages: [makeGarbage(0, 3), makeGarbage(2, 5)],
-          hold: makeHold(Tetromino.I, false),
+          attackTypes: [AttackType.BtbTsd],
+          btbState: BtbState.Btb,
+          current: makeCurrent(Direction.Up, 4, 19, Tetromino.Z),
+          field: makeField(
+            // prettier-ignore
+            "NNNSZZNNNN",
+            "LNNSSZZNNN"
+          ),
+          garbages: [makeGarbage(0, 2), makeGarbage(1, 3)],
+          hold: makeHold(Tetromino.I, true),
           isDead: false,
           lastRoseUpColumn: -1,
           nexts: {
             bag: makeNextNote("", 0),
             nextNum: 12,
-            settled: makeTetrominos("OSTZIZTSOLJI"),
+            settled: makeTetrominos("IJLOSZTSOLJI"),
             unsettled: [],
           },
+          ren: 0,
           retryState: {
             bag: {
-              candidates: makeTetrominos("ILOSTZ"),
+              candidates: makeTetrominos("IJLOSZ"),
               take: 6,
             },
-            field: makeField("IJLOSTZNNN"),
-            hold: makeHold(Tetromino.I, false),
+            field: makeField(
+              // prettier-ignore
+              "NNNSZZNNNN",
+              "LNNSSZZNNN"
+            ),
+            hold: makeHold(Tetromino.I, true),
             lastRoseUpColumn: -1,
             seed: actual.payload.retryState.seed,
             unsettledNexts: new NextNotesInterpreter().interpret(
-              "LOSTZIZTSOLJI"
+              "ZIJLOSZTSOLJI"
             ),
           },
           seed: actual.payload.seed,
@@ -244,12 +303,14 @@ describe("rootModule", () => {
       const takeOfBag = 5;
       const actual = simuToReplayMode(
         makeSimuState({
-          btbState: BtbState.None,
+          attackTypes: [AttackType.BtbTetris],
+          btbState: BtbState.Btb,
           config: {
             nextNum: 12,
           },
           histories: [
             {
+              attackTypes: [],
               btbState: BtbState.None,
               currentType: Tetromino.T,
               field: makeField("IJLOSTZNNN"),
@@ -268,7 +329,7 @@ describe("rootModule", () => {
               seed: 1,
             },
           ],
-          ren: -1,
+          ren: 3,
           replayNexts: makeTetrominos("ZTSOLJIIJLOS"),
           replayNextStep: 12,
           replayStep: 1,
@@ -279,25 +340,31 @@ describe("rootModule", () => {
       const expected: SimuToReplayAction = {
         type: RootActionsType.SimuToReplayMode,
         payload: {
+          attackTypes: [],
           auto: {
             playing: false,
           },
+          btbState: BtbState.None,
           current: makeCurrent(Direction.Up, 4, 19, Tetromino.T),
           field: makeField("IJLOSTZNNN"),
           histories: [
             {
+              attackTypes: [],
+              btbState: BtbState.None,
               current: makeCurrent(Direction.Up, 4, 19, Tetromino.T),
               field: makeField("IJLOSTZNNN"),
               hold: makeHold(Tetromino.I, false),
               isDead: false,
               nexts: makeTetrominos("ZTSOLJIIJLOS"),
               noOfCycle: 5,
+              ren: -1,
             },
           ],
           hold: makeHold(Tetromino.I, false),
           isDead: false,
           nexts: makeTetrominos("ZTSOLJIIJLOS"),
           noOfCycle: 5,
+          ren: -1,
           replayInfo: {
             nextNum: 12,
           },
@@ -319,22 +386,28 @@ describe("rootModule", () => {
 
       const expectedReplay: ReplayState = {
         ...initialReplayState,
+        attackTypes: [],
+        btbState: BtbState.None,
         current: makeCurrent(Direction.Up, 4, 19, Tetromino.S),
         field: makeField("IJLOSTZGNN"),
         hold: makeHold(Tetromino.S, false),
         histories: [
           {
+            attackTypes: [],
+            btbState: BtbState.None,
             current: makeCurrent(Direction.Up, 4, 19, Tetromino.S),
             field: makeField("IJLOSTZGNN"),
             hold: makeHold(Tetromino.S, false),
             isDead: false,
             nexts: makeTetrominos("OITLILJTOSZIZL"),
             noOfCycle: 4,
+            ren: -1,
           },
         ],
         isDead: false,
         nexts: makeTetrominos("OITLILJTOSZIZL"),
         noOfCycle: 4,
+        ren: -1,
         replayInfo: {
           nextNum: 7,
         },
@@ -367,6 +440,7 @@ describe("rootModule", () => {
       );
       const expectedSimu: SimuState = {
         ...initialSimuState,
+        attackTypes: [],
         btbState: BtbState.None,
         config: {
           ...initialSimuState.config,
@@ -378,6 +452,7 @@ describe("rootModule", () => {
         hold: makeHold(Tetromino.O, false),
         histories: [
           {
+            attackTypes: [],
             btbState: BtbState.None,
             currentType: Tetromino.I,
             field: makeField("IJLOSTZGNN"),
@@ -436,12 +511,14 @@ describe("rootModule", () => {
       const actual = initializeApp("ns=Kcu5TlwA&m=0&v=2.01", initialRootState);
       const expectedSimu: SimuState = {
         ...initialSimuState,
+        attackTypes: [],
         btbState: BtbState.None,
         current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
         field: makeField("NNNNNNNNNN"),
         hold: makeHold(Tetromino.None, true),
         histories: [
           {
+            attackTypes: [],
             btbState: BtbState.None,
             currentType: Tetromino.I,
             field: makeField("NNNNNNNNNN"),

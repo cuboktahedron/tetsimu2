@@ -9,7 +9,7 @@ import {
   ChangeStepAction,
   ReplayActionsType,
 } from "ducks/replay/types";
-import { Direction, Tetromino } from "types/core";
+import { AttackType, BtbState, Direction, Tetromino } from "types/core";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
@@ -65,16 +65,21 @@ describe("replayModule", () => {
   describe("changeStep", () => {
     it("should be change forward without histories", () => {
       const state = makeReplayState({
+        attackTypes: [AttackType.Single],
+        btbState: BtbState.Btb,
         current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
         field: makeField("NNNNNNNNNN"),
         histories: [
           {
+            attackTypes: [AttackType.Single],
+            btbState: BtbState.Btb,
             current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
             nexts: makeTetrominos("JO"),
             noOfCycle: 1,
+            ren: 1,
           },
         ],
         hold: makeHold(Tetromino.T, false),
@@ -85,6 +90,7 @@ describe("replayModule", () => {
           makeReplayHardDropStep(),
         ],
         step: 0,
+        ren: 1,
       });
 
       const conductor = getReplayConductor(state);
@@ -93,6 +99,8 @@ describe("replayModule", () => {
       const expected: ChangeStepAction = {
         type: ReplayActionsType.ChangeStep,
         payload: {
+          attackTypes: [],
+          btbState: BtbState.Btb,
           current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
           field: makeField("IIIINNNNNN"),
           hold: makeHold(Tetromino.T, true),
@@ -106,14 +114,18 @@ describe("replayModule", () => {
               current: makeCurrent(Direction.Down, 1, 1, Tetromino.I),
             },
             {
+              attackTypes: [],
+              btbState: BtbState.Btb,
               current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
               field: makeField("IIIINNNNNN"),
               hold: makeHold(Tetromino.T, true),
               isDead: false,
               nexts: makeTetrominos("O"),
               noOfCycle: 2,
+              ren: -1,
             },
           ],
+          ren: -1,
           step: 2,
           succeeded: true,
         },
@@ -124,37 +136,49 @@ describe("replayModule", () => {
 
     it("should be change forward with histories", () => {
       const state = makeReplayState({
+        attackTypes: [],
+        btbState: BtbState.Btb,
         current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
         field: makeField("NNNNNNNNNN"),
         histories: [
           {
+            attackTypes: [],
+            btbState: BtbState.Btb,
             current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
             nexts: makeTetrominos("JO"),
             noOfCycle: 1,
+            ren: 0,
           },
           {
+            attackTypes: [],
+            btbState: BtbState.Btb,
             current: makeCurrent(Direction.Down, 1, 1, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
             nexts: makeTetrominos("JO"),
             noOfCycle: 1,
+            ren: 0,
           },
           {
+            attackTypes: [],
+            btbState: BtbState.Btb,
             current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
             field: makeField("IIIINNNNNN"),
             hold: makeHold(Tetromino.T, true),
             isDead: false,
             nexts: makeTetrominos("O"),
             noOfCycle: 2,
+            ren: -1,
           },
         ],
         hold: makeHold(Tetromino.T, false),
         nexts: makeTetrominos("JO"),
         noOfCycle: 1,
+        ren: 0,
         replaySteps: [
           makeReplayDropStep(Direction.Down, 1, 1),
           makeReplayHardDropStep(),
@@ -188,38 +212,50 @@ describe("replayModule", () => {
 
     it("should be change backward", () => {
       const state = makeReplayState({
+        attackTypes: [],
+        btbState: BtbState.Btb,
         current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
         field: makeField("IIIINNNNNN"),
         histories: [
           {
+            attackTypes: [AttackType.Tetris],
+            btbState: BtbState.Btb,
             current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
             nexts: makeTetrominos("JO"),
             noOfCycle: 1,
+            ren: 1,
           },
           {
+            attackTypes: [AttackType.BtbTsd],
+            btbState: BtbState.Btb,
             current: makeCurrent(Direction.Down, 1, 1, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.T, false),
             isDead: false,
             nexts: makeTetrominos("JO"),
             noOfCycle: 1,
+            ren: 2,
           },
           {
+            attackTypes: [],
+            btbState: BtbState.Btb,
             current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
             field: makeField("IIIINNNNNN"),
             hold: makeHold(Tetromino.T, true),
             isDead: false,
             nexts: makeTetrominos("O"),
             noOfCycle: 2,
+            ren: -1,
           },
         ],
         hold: makeHold(Tetromino.T, true),
         isDead: false,
         nexts: makeTetrominos("O"),
         noOfCycle: 2,
+        ren: 0,
         replaySteps: [
           makeReplayDropStep(Direction.Down, 1, 1),
           makeReplayHardDropStep(),

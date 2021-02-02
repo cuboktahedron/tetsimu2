@@ -1,5 +1,7 @@
 import {
   ActiveTetromino,
+  AttackType,
+  BtbState,
   Direction,
   FieldState,
   HoldState,
@@ -7,7 +9,7 @@ import {
   MAX_FIELD_WIDTH,
   ReplayStep,
   SpinType,
-  Tetromino
+  Tetromino,
 } from "types/core";
 import { ReplayConfig, ReplayInfo, ReplayStateHistory } from "types/replay";
 
@@ -16,6 +18,8 @@ export type ReplayState = {
     playing: boolean;
     speed: number;
   };
+  attackTypes: AttackType[];
+  btbState: BtbState;
   config: ReplayConfig;
   current: ActiveTetromino;
   env: {
@@ -27,6 +31,7 @@ export type ReplayState = {
   isDead: boolean;
   nexts: Tetromino[];
   noOfCycle: number;
+  ren: number;
   replayInfo: ReplayInfo;
   replaySteps: ReplayStep[];
   step: number;
@@ -63,10 +68,12 @@ export const initialReplayState: ReplayState = ((): ReplayState => {
     showsPivot: true,
   };
   return {
+    attackTypes: [],
     auto: {
       playing: false,
       speed: 1,
     },
+    btbState: BtbState.None,
     config,
     current,
     env: {
@@ -75,18 +82,22 @@ export const initialReplayState: ReplayState = ((): ReplayState => {
     field,
     histories: [
       {
+        attackTypes: [],
+        btbState: BtbState.None,
         current,
         field,
         hold,
         isDead: false,
         nexts: nexts,
         noOfCycle: 2,
+        ren: -1,
       },
     ],
     hold,
     isDead: false,
     nexts: nexts,
     noOfCycle: 1,
+    ren: -1,
     replayInfo: {
       nextNum: 5,
     },

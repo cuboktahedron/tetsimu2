@@ -67,6 +67,7 @@ export const clearSimu = (conductor: SimuConductor): ClearSimuAction => {
   return {
     type: SimuActionsType.Clear,
     payload: {
+      attackTypes: newState.attackTypes,
       btbState: newState.btbState,
       current: newState.current,
       field: newState.field,
@@ -126,6 +127,7 @@ export const doSimu = (
     return {
       type: SimuActionsType.DoSimu,
       payload: {
+        attackTypes: newState.attackTypes,
         btbState: newState.btbState,
         current: newState.current,
         field: newState.field,
@@ -168,6 +170,7 @@ export const redo = (
   return {
     type: SimuActionsType.Redo,
     payload: {
+      attackTypes: history.attackTypes,
       btbState: history.btbState,
       current: newCurrent,
       field: history.field,
@@ -192,6 +195,7 @@ export const retry = (conductor: SimuConductor): RetryAction => {
   return {
     type: SimuActionsType.Retry,
     payload: {
+      attackTypes: newState.attackTypes,
       btbState: newState.btbState,
       current: newState.current,
       field: newState.field,
@@ -219,6 +223,7 @@ export const superRetry = (conductor: SimuConductor): SuperRetryAction => {
   return {
     type: SimuActionsType.SuperRetry,
     payload: {
+      attackTypes: newState.attackTypes,
       btbState: newState.btbState,
       current: newState.current,
       field: newState.field,
@@ -253,6 +258,7 @@ export const undo = (
   return {
     type: SimuActionsType.Undo,
     payload: {
+      attackTypes: history.attackTypes,
       btbState: history.btbState,
       current: newCurrent,
       field: history.field,

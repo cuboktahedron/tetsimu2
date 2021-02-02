@@ -1,9 +1,11 @@
 import {
   ActiveTetromino,
+  AttackType,
+  BtbState,
   FieldState,
   HoldState,
   NextNote,
-  Tetromino,
+  Tetromino
 } from "./core";
 
 export type ReplayConfig = {
@@ -19,12 +21,15 @@ export type ReplayRetryState = {
 };
 
 export type ReplayStateHistory = {
+  attackTypes: AttackType[];
+  btbState: BtbState;
   current: ActiveTetromino;
   field: FieldState;
   hold: HoldState;
   isDead: boolean;
   nexts: Tetromino[];
   noOfCycle: number;
+  ren: number;
 };
 
 export type ReplayInfo = {

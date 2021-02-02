@@ -1,6 +1,7 @@
 import { createStyles, makeStyles } from "@material-ui/core";
 import React from "react";
 import Hold from "./Hold";
+import PlayLog from "./PlayLog";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -26,6 +27,9 @@ const FieldLeft: React.FC = () => {
     <div className={classes.root}>
       <div className={classes.hold}>
         <Hold />
+      </div>
+      <div>
+        <PlayLog />
       </div>
     </div>
   );

@@ -1,9 +1,11 @@
 import {
   Action,
   ActiveTetromino,
+  AttackType,
+  BtbState,
   FieldState,
   HoldState,
-  Tetromino,
+  Tetromino
 } from "types/core";
 import { ReplayConfig, ReplayStateHistory } from "types/replay";
 
@@ -32,12 +34,15 @@ export type BackwardStepAction = {
   type: typeof ReplayActionsType.BackwardStep;
   payload:
     | {
+        attackTypes: AttackType[];
+        btbState: BtbState;
         current: ActiveTetromino;
         field: FieldState;
         hold: HoldState;
         isDead: boolean;
         nexts: Tetromino[];
         noOfCycle: number;
+        ren: number;
         step: number;
         succeeded: true;
       }
@@ -71,6 +76,8 @@ export type ChangeStepAction = {
   type: typeof ReplayActionsType.ChangeStep;
   payload:
     | {
+        attackTypes: AttackType[];
+        btbState: BtbState;
         current: ActiveTetromino;
         field: FieldState;
         histories: ReplayStateHistory[];
@@ -78,6 +85,7 @@ export type ChangeStepAction = {
         isDead: boolean;
         nexts: Tetromino[];
         noOfCycle: number;
+        ren: number;
         step: number;
         succeeded: true;
       }
@@ -97,6 +105,8 @@ export type ForwardStepAction = {
   type: typeof ReplayActionsType.ForwardStep;
   payload:
     | {
+        attackTypes: AttackType[];
+        btbState: BtbState;
         current: ActiveTetromino;
         field: FieldState;
         histories: ReplayStateHistory[];
@@ -104,6 +114,7 @@ export type ForwardStepAction = {
         isDead: boolean;
         nexts: Tetromino[];
         noOfCycle: number;
+        ren: number;
         step: number;
         succeeded: true;
       }
@@ -116,6 +127,8 @@ export type ForwardStepAutoAction = {
   type: typeof ReplayActionsType.ForwardStepAuto;
   payload:
     | {
+        attackTypes: AttackType[];
+        btbState: BtbState;
         current: ActiveTetromino;
         field: FieldState;
         histories: ReplayStateHistory[];
@@ -124,6 +137,7 @@ export type ForwardStepAutoAction = {
         nexts: Tetromino[];
         noOfCycle: number;
         playing: boolean;
+        ren: number;
         step: number;
         succeeded: true;
       }

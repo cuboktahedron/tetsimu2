@@ -4,6 +4,8 @@ import { GarbageInfo, SimuState } from "stores/SimuState";
 import {
   Action,
   ActiveTetromino,
+  AttackType,
+  BtbState,
   FieldState,
   HoldState,
   NextNote,
@@ -86,6 +88,8 @@ export type InitializeAppAction = {
 export type ReplayToSimuAction = {
   type: typeof RootActionsType.ReplayToSimuMode;
   payload: {
+    attackTypes: AttackType[];
+    btbState: BtbState;
     current: ActiveTetromino;
     field: FieldState;
     garbages: GarbageInfo[];
@@ -98,6 +102,7 @@ export type ReplayToSimuAction = {
       settled: Tetromino[];
       unsettled: NextNote[];
     };
+    ren: number;
     retryState: SimuRetryState;
     seed: number;
   };
@@ -121,9 +126,11 @@ export type SimuToEditAction = {
 export type SimuToReplayAction = {
   type: typeof RootActionsType.SimuToReplayMode;
   payload: {
+    attackTypes: AttackType[];
     auto: {
       playing: boolean;
-    },
+    };
+    btbState: BtbState;
     current: ActiveTetromino;
     field: FieldState;
     histories: ReplayStateHistory[];
@@ -135,6 +142,7 @@ export type SimuToReplayAction = {
       nextNum: number;
     };
     replaySteps: ReplayStep[];
+    ren: number;
     step: number;
   };
 } & Action;

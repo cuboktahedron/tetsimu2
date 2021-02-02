@@ -29,6 +29,7 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
           mode: TetsimuMode.Simu,
           simu: {
             ...state.simu,
+            attackTypes: [],
             btbState: BtbState.None,
             current: action.payload.current,
             field: action.payload.field,
@@ -37,6 +38,7 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
             nexts: action.payload.nexts,
             histories: [
               {
+                attackTypes: [],
                 btbState: BtbState.None,
                 currentType: action.payload.current.type,
                 field: action.payload.field,
@@ -97,7 +99,8 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
           mode: TetsimuMode.Simu,
           simu: {
             ...state.simu,
-            btbState: BtbState.None,
+            attackTypes: action.payload.attackTypes,
+            btbState: action.payload.btbState,
             config: {
               ...state.simu.config,
               nextNum: action.payload.nexts.nextNum,
@@ -108,7 +111,8 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
             garbages: action.payload.garbages,
             histories: [
               {
-                btbState: BtbState.None,
+                attackTypes: action.payload.attackTypes,
+                btbState: action.payload.btbState,
                 currentType: action.payload.current.type,
                 field: action.payload.field,
                 garbages: action.payload.garbages,
@@ -116,7 +120,7 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
                 isDead: false,
                 lastRoseUpColumn: action.payload.lastRoseUpColumn,
                 nexts: action.payload.nexts,
-                ren: -1,
+                ren: action.payload.ren,
                 replayNextStep: action.payload.nexts.settled.length,
                 replayStep: 0,
                 seed: action.payload.seed,
@@ -125,7 +129,7 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
             hold: action.payload.hold,
             isDead: action.payload.isDead,
             nexts: action.payload.nexts,
-            ren: -1,
+            ren: action.payload.ren,
             replayNexts: action.payload.nexts.settled,
             replayNextStep: action.payload.nexts.settled.length,
             replayStep: 0,
@@ -160,10 +164,12 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
           mode: TetsimuMode.Replay,
           replay: {
             ...state.replay,
+            attackTypes: action.payload.attackTypes,
             auto: {
               ...state.replay.auto,
               playing: action.payload.auto.playing,
             },
+            btbState: action.payload.btbState,
             current: action.payload.current,
             field: action.payload.field,
             histories: action.payload.histories,
@@ -171,6 +177,7 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
             isDead: action.payload.isDead,
             nexts: action.payload.nexts,
             noOfCycle: action.payload.noOfCycle,
+            ren: action.payload.ren,
             replayInfo: action.payload.replayInfo,
             replaySteps: action.payload.replaySteps,
             step: action.payload.step,

@@ -2,6 +2,7 @@ import merge from "deepmerge";
 import { GarbageInfo, SimuState, SimuStateHistory } from "stores/SimuState";
 import {
   ActiveTetromino,
+  AttackType,
   BtbState,
   Direction,
   FieldState,
@@ -15,6 +16,7 @@ import { GarbageConfig, PlayMode, SimuRetryState } from "types/simu";
 import { makeNextNote } from "./makeNextNote";
 
 export const makeSimuState = (state: {
+  attackTypes?: AttackType[],
   btbState?: BtbState;
   config?: {
     garbage?: GarbageConfig;
@@ -49,6 +51,7 @@ export const makeSimuState = (state: {
 }): SimuState => {
   return merge(
     {
+      attackTypes: [],
       btbState: BtbState.None,
       config: {
         garbage: {

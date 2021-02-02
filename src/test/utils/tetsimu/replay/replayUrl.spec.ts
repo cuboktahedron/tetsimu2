@@ -1,6 +1,12 @@
-import { Direction, SpinType, Tetromino, TetsimuMode } from "types/core";
+import {
+  BtbState,
+  Direction,
+  SpinType,
+  Tetromino,
+  TetsimuMode,
+} from "types/core";
 import ReplayUrl, {
-  ReplayStateFragments
+  ReplayStateFragments,
 } from "utils/tetsimu/replay/replayUrl";
 import { makeField } from "../testUtils/makeField";
 import { makeHold } from "../testUtils/makeHold";
@@ -8,7 +14,7 @@ import { makeReplayState } from "../testUtils/makeReplayState";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
-  makeReplayHoldStep
+  makeReplayHoldStep,
 } from "../testUtils/makeReplayStep";
 import { makeTetrominos } from "../testUtils/makeTetrominos";
 
@@ -18,6 +24,8 @@ describe("replayUrl", () => {
       const state = makeReplayState({
         histories: [
           {
+            attackTypes: [],
+            btbState: BtbState.None,
             current: {
               direction: Direction.Up,
               pos: { x: 4, y: 19 },
@@ -33,6 +41,7 @@ describe("replayUrl", () => {
             isDead: false,
             nexts: makeTetrominos("JLOSTZ"),
             noOfCycle: 7,
+            ren: -1,
           },
         ],
         nexts: makeTetrominos("JLOSTZ"),
@@ -69,6 +78,8 @@ describe("replayUrl", () => {
       const state = makeReplayState({
         histories: [
           {
+            attackTypes: [],
+            btbState: BtbState.None,
             current: {
               type: Tetromino.I,
               direction: Direction.Up,
@@ -80,6 +91,7 @@ describe("replayUrl", () => {
             hold: makeHold(Tetromino.None, true),
             nexts: [],
             noOfCycle: 2,
+            ren: -1,
           },
         ],
         nexts: [],

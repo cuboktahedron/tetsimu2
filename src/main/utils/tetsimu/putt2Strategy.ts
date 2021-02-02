@@ -1,25 +1,25 @@
 import { AttackType, SpinType } from "types/core";
 
 const attackTable = {
-  none: 0,
-  single: 0,
-  double: 1,
-  triple: 2,
-  tetris: 4,
-  tsm: 0,
-  tsdm: 1,
-  tss: 2,
-  tsd: 4,
-  tst: 6,
-  btbTetris: 5,
-  btbTsm: 1,
-  btbTsdm: 2,
-  btbTss: 3,
-  btbTsd: 5,
-  btbTst: 7,
-  pc: 10,
-  ren: [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 5],
+  [AttackType.Single]: 0,
+  [AttackType.Double]: 1,
+  [AttackType.Triple]: 2,
+  [AttackType.Tetris]: 4,
+  [AttackType.Tsm]: 0,
+  [AttackType.Tsdm]: 1,
+  [AttackType.Tss]: 2,
+  [AttackType.Tsd]: 4,
+  [AttackType.Tst]: 6,
+  [AttackType.BtbTetris]: 5,
+  [AttackType.BtbTsm]: 1,
+  [AttackType.BtbTsdm]: 2,
+  [AttackType.BtbTss]: 3,
+  [AttackType.BtbTsd]: 5,
+  [AttackType.BtbTst]: 7,
+  [AttackType.PerfectClear]: 10,
 };
+
+const renTable = [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 5];
 
 export class Pytt2Strategy {
   calculateAttack(
@@ -28,7 +28,10 @@ export class Pytt2Strategy {
     ren: number,
     isBtb: boolean,
     isPerfectClear: boolean
-  ) {
+  ): {
+    attack: number;
+    attackTypes: AttackType[];
+  } {
     const attackTypes = this.decideAttackTypes(
       erasedLine,
       spinType,
@@ -36,18 +39,24 @@ export class Pytt2Strategy {
       isPerfectClear
     );
 
-    if (attackTypes.includes("pc")) {
-      return attackTable.pc;
+    if (attackTypes.includes(AttackType.PerfectClear)) {
+      return {
+        attack: attackTable[AttackType.PerfectClear],
+        attackTypes,
+      };
     } else {
-      return attackTypes
-        .map((type: AttackType) => {
-          if (type === "ren") {
-            return attackTable.ren[Math.min(ren, attackTable.ren.length - 1)];
-          } else {
-            return attackTable[type];
-          }
-        })
-        .reduce((acc, cur) => acc + cur, 0);
+      const attackElements = attackTypes.map((type: AttackType) => {
+        return attackTable[type];
+      });
+
+      if (ren >= 0) {
+        attackElements.push(renTable[Math.min(ren, renTable.length - 1)]);
+      }
+
+      return {
+        attack: attackElements.reduce((acc, cur) => acc + cur, 0),
+        attackTypes,
+      };
     }
   }
 
@@ -60,62 +69,57 @@ export class Pytt2Strategy {
     const attackTypes: AttackType[] = [];
 
     if (erasedLine === 0) {
-      attackTypes.push("none");
       return attackTypes;
     }
 
     if (isPerfectClear) {
-      attackTypes.push("pc");
-    }
-
-    if (erasedLine > 0) {
-      attackTypes.push("ren");
+      attackTypes.push(AttackType.PerfectClear);
     }
 
     if (spinType === SpinType.Mini) {
       if (isBtb) {
         if (erasedLine === 1) {
-          attackTypes.push("btbTsm");
+          attackTypes.push(AttackType.BtbTsm);
         } else if (erasedLine === 2) {
-          attackTypes.push("btbTsdm");
+          attackTypes.push(AttackType.BtbTsdm);
         }
       } else {
         if (erasedLine === 1) {
-          attackTypes.push("tsm");
+          attackTypes.push(AttackType.Tsm);
         } else if (erasedLine === 2) {
-          attackTypes.push("tsdm");
+          attackTypes.push(AttackType.Tsdm);
         }
       }
     } else if (spinType === SpinType.Spin) {
       if (isBtb) {
         if (erasedLine === 1) {
-          attackTypes.push("btbTss");
+          attackTypes.push(AttackType.BtbTss);
         } else if (erasedLine === 2) {
-          attackTypes.push("btbTsd");
+          attackTypes.push(AttackType.BtbTsd);
         } else if (erasedLine === 3) {
-          attackTypes.push("btbTst");
+          attackTypes.push(AttackType.BtbTst);
         }
       } else {
         if (erasedLine === 1) {
-          attackTypes.push("tss");
+          attackTypes.push(AttackType.Tss);
         } else if (erasedLine === 2) {
-          attackTypes.push("tsd");
+          attackTypes.push(AttackType.Tsd);
         } else if (erasedLine === 3) {
-          attackTypes.push("tst");
+          attackTypes.push(AttackType.Tst);
         }
       }
     } else {
       if (erasedLine === 1) {
-        attackTypes.push("single");
+        attackTypes.push(AttackType.Single);
       } else if (erasedLine === 2) {
-        attackTypes.push("double");
+        attackTypes.push(AttackType.Double);
       } else if (erasedLine === 3) {
-        attackTypes.push("triple");
+        attackTypes.push(AttackType.Triple);
       } else if (erasedLine >= 4) {
         if (isBtb) {
-          attackTypes.push("btbTetris");
+          attackTypes.push(AttackType.BtbTetris);
         } else {
-          attackTypes.push("tetris");
+          attackTypes.push(AttackType.Tetris);
         }
       }
     }

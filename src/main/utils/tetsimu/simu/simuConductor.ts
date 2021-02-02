@@ -1,6 +1,7 @@
 import { SimuState } from "stores/SimuState";
 import {
   ActiveTetromino,
+  AttackType,
   BtbState,
   Direction,
   FieldState,
@@ -62,6 +63,7 @@ export class SimuConductor {
   recordHistory = () => {
     const newHistories = this.state.histories.slice(0, this.state.step + 1);
     newHistories.push({
+      attackTypes: this.state.attackTypes,
       btbState: this.state.btbState,
       currentType: this.state.current.type,
       field: this.state.field,
@@ -132,11 +134,9 @@ export class SimuConductor {
     }
 
     let attackLine = 0;
+    let attackTypes: AttackType[] = [];
     let newRen = -1;
-    let newBtbState: BtbState =
-      this.state.btbState === BtbState.Btb
-        ? BtbState.preBtb
-        : this.state.btbState;
+    let newBtbState: BtbState = this.state.btbState;
     let newCurrent: ActiveTetromino;
 
     if (!isDead) {
@@ -145,24 +145,25 @@ export class SimuConductor {
         newRen = this.state.ren + 1;
       }
 
-      if (erasedLine >= 4 || current.spinType !== SpinType.None) {
-        if (newBtbState === BtbState.None) {
-          newBtbState = BtbState.preBtb;
-        } else if (newBtbState === BtbState.preBtb) {
-          newBtbState = BtbState.Btb;
-        }
+      if (
+        erasedLine >= 4 ||
+        (erasedLine > 0 && current.spinType !== SpinType.None)
+      ) {
+        newBtbState = BtbState.Btb;
       } else if (erasedLine > 0) {
         newBtbState = BtbState.None;
       }
 
       const storategy = new Pytt2Strategy();
-      attackLine = storategy.calculateAttack(
+      const attack = storategy.calculateAttack(
         erasedLine,
         current.spinType,
         newRen,
-        newBtbState != BtbState.None,
+        this.state.btbState === BtbState.Btb,
         this.fieldHelper.isFieldEmpty()
       );
+      attackLine = attack.attack;
+      attackTypes = attack.attackTypes;
     }
 
     const garbage = this.state.garbages[0];
@@ -202,6 +203,7 @@ export class SimuConductor {
       isDead = this.fieldHelper.isOverlapping(newCurrent);
     }
 
+    this.state.attackTypes = attackTypes;
     this.state.btbState = newBtbState;
     this.state.current = newCurrent;
     this.state.field = this.fieldHelper.field;
@@ -395,11 +397,14 @@ export class SimuConductor {
       return gGen.next(this.state.config.garbage.generates);
     })();
 
+    this.state.attackTypes = [];
+    this.state.btbState = BtbState.None;
     this.state.current = newCurrent;
     (this.state.garbages = newGarbages), (this.state.field = newField);
     this.state.isDead = false;
     this.state.histories = [
       {
+        attackTypes: [],
         btbState: BtbState.None,
         currentType: newCurrent.type,
         field: newField,
@@ -417,6 +422,7 @@ export class SimuConductor {
     this.state.hold = newHold;
     this.state.lastRoseUpColumn = newLastRoseUpColumn;
     this.state.nexts = newNexts;
+    this.state.ren = -1;
     this.state.replayNextStep = newNexts.settled.length;
     this.state.replayNexts = newNexts.settled;
     this.state.replayStep = 0;
@@ -522,12 +528,15 @@ export class SimuConductor {
       return gGen.next(this.state.config.garbage.generates);
     })();
 
+    this.state.attackTypes = [];
+    this.state.btbState = BtbState.None;
     this.state.current = newCurrent;
     this.state.field = newField;
     this.state.garbages = newGarbages;
     this.state.isDead = false;
     this.state.histories = [
       {
+        attackTypes: [],
         btbState: BtbState.None,
         currentType: newCurrent.type,
         field: newField,
@@ -545,6 +554,7 @@ export class SimuConductor {
     this.state.hold = newHold;
     this.state.lastRoseUpColumn = newLastRoseUpColumn;
     this.state.nexts = newNexts;
+    this.state.ren = -1;
     this.state.retryState = newRetryState;
     this.state.replayNextStep = newNexts.settled.length;
     this.state.replayNexts = newNexts.settled;
