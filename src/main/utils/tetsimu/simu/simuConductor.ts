@@ -13,7 +13,7 @@ import {
   ReplayStepHardDrop,
   ReplayStepType,
   SpinType,
-  Tetromino
+  Tetromino,
 } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
 import { FieldHelper } from "../fieldHelper";
@@ -61,7 +61,7 @@ export class SimuConductor {
   };
 
   recordHistory = () => {
-    const newHistories = this.state.histories.slice(0, this.state.step + 1);
+    const newHistories = this.state.histories.slice(0, this.state.step);
     newHistories.push({
       attackTypes: this.state.attackTypes,
       btbState: this.state.btbState,
@@ -78,7 +78,6 @@ export class SimuConductor {
       seed: this.state.seed,
     });
 
-    this.state.step++;
     this.state.histories = newHistories;
   };
 
@@ -212,6 +211,7 @@ export class SimuConductor {
     this.state.lastRoseUpColumn = newLastRoseUpColumn;
     this.state.ren = newRen;
     this.state.seed = this.rng.seed;
+    this.state.step++;
 
     const hardDropStep = ((): ReplayStepHardDrop => {
       if (riseUpCols.length > 0) {
@@ -290,6 +290,7 @@ export class SimuConductor {
     this.state.isDead = isDead;
     this.state.nexts = newNexts;
     this.state.seed = this.rng.seed;
+    this.state.step++;
 
     this.recordReplaySteps([
       {
@@ -400,25 +401,10 @@ export class SimuConductor {
     this.state.attackTypes = [];
     this.state.btbState = BtbState.None;
     this.state.current = newCurrent;
-    (this.state.garbages = newGarbages), (this.state.field = newField);
+    this.state.garbages = newGarbages;
+    this.state.field = newField;
     this.state.isDead = false;
-    this.state.histories = [
-      {
-        attackTypes: [],
-        btbState: BtbState.None,
-        currentType: newCurrent.type,
-        field: newField,
-        garbages: newGarbages,
-        hold: newHold,
-        isDead: false,
-        lastRoseUpColumn: newLastRoseUpColumn,
-        nexts: newNexts,
-        ren: -1,
-        replayNextStep: newNexts.settled.length,
-        replayStep: 0,
-        seed: this.rng.seed,
-      },
-    ];
+    this.state.histories = [];
     this.state.hold = newHold;
     this.state.lastRoseUpColumn = newLastRoseUpColumn;
     this.state.nexts = newNexts;
@@ -429,6 +415,8 @@ export class SimuConductor {
     this.state.replaySteps = [];
     this.state.seed = this.rng.seed;
     this.state.step = 0;
+
+    this.recordHistory();
   }
 
   rotateTetrominoLeft(): boolean {
@@ -534,23 +522,7 @@ export class SimuConductor {
     this.state.field = newField;
     this.state.garbages = newGarbages;
     this.state.isDead = false;
-    this.state.histories = [
-      {
-        attackTypes: [],
-        btbState: BtbState.None,
-        currentType: newCurrent.type,
-        field: newField,
-        garbages: newGarbages,
-        hold: newHold,
-        isDead: false,
-        lastRoseUpColumn: newLastRoseUpColumn,
-        nexts: newNexts,
-        ren: -1,
-        replayNextStep: newNexts.settled.length,
-        replayStep: 0,
-        seed: this.rng.seed,
-      },
-    ];
+    this.state.histories = [];
     this.state.hold = newHold;
     this.state.lastRoseUpColumn = newLastRoseUpColumn;
     this.state.nexts = newNexts;
@@ -562,6 +534,8 @@ export class SimuConductor {
     this.state.replaySteps = [];
     this.state.seed = this.rng.seed;
     this.state.step = 0;
+
+    this.recordHistory();
   }
 
   private resetFieldWithDigModeSuperRetry(): [FieldState, number] {

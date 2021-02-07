@@ -9,7 +9,6 @@ import {
   SpinType,
   Tetromino,
 } from "types/core";
-import { ReplayStateHistory } from "types/replay";
 import { FieldHelper } from "../fieldHelper";
 import { Pytt2Strategy } from "../putt2Strategy";
 
@@ -57,24 +56,11 @@ export class ReplayConductor {
       type: this.state.current.type,
     };
     const newStep = this.state.step + 1;
-    const newHistory: ReplayStateHistory = {
-      attackTypes: this.state.attackTypes,
-      btbState: this.state.btbState,
-      current: newCurrent,
-      field: this.state.field,
-      hold: this.state.hold,
-      isDead: this.state.isDead,
-      nexts: this.state.nexts,
-      noOfCycle: this.state.noOfCycle,
-      ren: this.state.ren,
-    };
-
-    const newHistories = [...this.state.histories];
-    newHistories[newStep] = newHistory;
 
     this.state.current = newCurrent;
-    this.state.histories = newHistories;
     this.state.step = newStep;
+
+    this.recordHistory();
 
     return true;
   }
@@ -110,30 +96,16 @@ export class ReplayConductor {
     };
     const newCurrent = this.fieldHelper.makeActiveTetromino(newCurrentType);
     const isDead = this.fieldHelper.isOverlapping(newCurrent);
-
-    const newHistory: ReplayStateHistory = {
-      attackTypes: this.state.attackTypes,
-      btbState: this.state.btbState,
-      current: newCurrent,
-      field: this.state.field,
-      hold: newHold,
-      isDead,
-      nexts: newNexts,
-      noOfCycle: newNoOfCycle,
-      ren: this.state.ren,
-    };
-
     const newStep = this.state.step + 1;
-    const newHistories = [...this.state.histories];
-    newHistories[newStep] = newHistory;
 
     this.state.current = newCurrent;
     this.state.hold = newHold;
-    this.state.histories = newHistories;
     this.state.isDead = isDead;
     this.state.nexts = newNexts;
     this.state.noOfCycle = newNoOfCycle;
     this.state.step = newStep;
+
+    this.recordHistory();
 
     return true;
   }
@@ -151,8 +123,9 @@ export class ReplayConductor {
       });
     }
 
+    let newHold = this.state.hold;
     if (!this.state.hold.canHold) {
-      this.state.hold = { ...this.state.hold, canHold: true };
+      newHold = { ...this.state.hold, canHold: true };
     }
 
     let attackTypes: AttackType[] = [];
@@ -200,33 +173,20 @@ export class ReplayConductor {
       isDead = this.fieldHelper.isOverlapping(newCurrent);
     }
     const newField = this.fieldHelper.field;
-    const newHold = this.state.hold;
     const newNoOfCycle = (this.state.noOfCycle % 7) + 1;
-    const newHistory: ReplayStateHistory = {
-      attackTypes,
-      btbState: newBtbState,
-      current: newCurrent,
-      field: newField,
-      hold: newHold,
-      isDead,
-      nexts: newNexts,
-      noOfCycle: newNoOfCycle,
-      ren: newRen,
-    };
-
-    const newHistories = [...this.state.histories];
-    newHistories[newStep] = newHistory;
 
     this.state.attackTypes = attackTypes;
     this.state.btbState = newBtbState;
     this.state.current = newCurrent;
     this.state.field = newField;
-    this.state.histories = newHistories;
+    this.state.hold = newHold;
     this.state.isDead = isDead;
     this.state.nexts = newNexts;
     this.state.noOfCycle = newNoOfCycle;
     this.state.ren = newRen;
     this.state.step = newStep;
+
+    this.recordHistory();
 
     return true;
   }
@@ -252,4 +212,21 @@ export class ReplayConductor {
 
     return true;
   }
+
+  recordHistory = () => {
+    const newHistories = this.state.histories.slice(0, this.state.step);
+    newHistories.push({
+      attackTypes: this.state.attackTypes,
+      btbState: this.state.btbState,
+      current: this.state.current,
+      field: this.state.field,
+      hold: this.state.hold,
+      isDead: this.state.isDead,
+      nexts: this.state.nexts,
+      noOfCycle: this.state.noOfCycle,
+      ren: this.state.ren,
+    });
+
+    this.state.histories = newHistories;
+  };
 }
