@@ -4,7 +4,7 @@ import {
   List,
   ListItem,
   makeStyles,
-  Theme,
+  Theme
 } from "@material-ui/core";
 import CachedIcon from "@material-ui/icons/Cached";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";

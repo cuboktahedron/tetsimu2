@@ -39,11 +39,15 @@ export class Pytt2Strategy {
       isPerfectClear
     );
 
+    return {
+      attack: this.calculateAttackBy(attackTypes, ren),
+      attackTypes,
+    };
+  }
+
+  calculateAttackBy(attackTypes: AttackType[], ren: number): number {
     if (attackTypes.includes(AttackType.PerfectClear)) {
-      return {
-        attack: attackTable[AttackType.PerfectClear],
-        attackTypes,
-      };
+      return attackTable[AttackType.PerfectClear];
     } else {
       const attackElements = attackTypes.map((type: AttackType) => {
         return attackTable[type];
@@ -53,10 +57,7 @@ export class Pytt2Strategy {
         attackElements.push(renTable[Math.min(ren, renTable.length - 1)]);
       }
 
-      return {
-        attack: attackElements.reduce((acc, cur) => acc + cur, 0),
-        attackTypes,
-      };
+      return attackElements.reduce((acc, cur) => acc + cur, 0);
     }
   }
 

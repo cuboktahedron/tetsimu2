@@ -176,3 +176,41 @@ export const BtbState = {
 } as const;
 
 export type BtbState = typeof BtbState[keyof typeof BtbState];
+
+export type PlayStats = {
+  [AttackType.Single]: number;
+  [AttackType.Double]: number;
+  [AttackType.Triple]: number;
+  [AttackType.Tetris]: number;
+  [AttackType.Tsm]: number;
+  [AttackType.Tsdm]: number;
+  [AttackType.Tss]: number;
+  [AttackType.Tsd]: number;
+  [AttackType.Tst]: number;
+  [AttackType.BtbTetris]: number;
+  [AttackType.BtbTsm]: number;
+  [AttackType.BtbTsdm]: number;
+  [AttackType.BtbTss]: number;
+  [AttackType.BtbTsd]: number;
+  [AttackType.BtbTst]: number;
+  [AttackType.PerfectClear]: number;
+  attacks: number[];
+  drops: number;
+  garbages: number[];
+  lines: number;
+  maxRen: number;
+  totalBtb: number;
+  totalHold: number;
+  // attackMovingAvg1Cycle: number[];
+  // attackMovingAvg2Cycle: number[];
+  // attackMovingAvg3Cycle: number[];
+  // garbageMovingAvg1Cycle: number[];
+  // garbageMovingAvg2Cycle: number[];
+  // garbageMovingAvg3Cycle: number[];
+  // lineMovingAvg1Cycle: number[];
+  // lineMovingAvg2Cycle: number[];
+  // lineMovingAvg3Cycle: number[];
+  // totalAttack: number;
+  // totalGarbage: number;
+  // totalLine: number;
+};
