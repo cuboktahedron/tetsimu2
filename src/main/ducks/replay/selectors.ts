@@ -2,6 +2,7 @@ import { ReplayState } from "stores/ReplayState";
 import {
   AttackType,
   PlayStats,
+  ReplayStep,
   ReplayStepHardDrop,
   ReplayStepType,
 } from "types/core";
@@ -76,7 +77,7 @@ export const getStats = (state: ReplayState): PlayStats => {
     [AttackType.BtbTsd]: 0,
     [AttackType.BtbTst]: 0,
     [AttackType.PerfectClear]: 0,
-    attacks: [],
+    attacks: [0],
     drops: 0,
     garbages: [],
     lines: 0,
@@ -85,6 +86,10 @@ export const getStats = (state: ReplayState): PlayStats => {
     totalHold: 0,
   };
   let lines = 0;
+
+  const garbage = getGarbage(0, state.replaySteps);
+  stats.garbages.push(garbage);
+
   const storategy = new Pytt2Strategy();
   for (let step = 0; step <= state.step; step++) {
     const history = state.histories[step];
@@ -115,25 +120,8 @@ export const getStats = (state: ReplayState): PlayStats => {
 
     stats.attacks.push(attack);
 
-    let nextHardDropStep: ReplayStepHardDrop | null = null;
-    for (let i = step; i < state.replaySteps.length; i++) {
-      if (
-        state.replaySteps[i] &&
-        state.replaySteps[i].type === ReplayStepType.HardDrop
-      ) {
-        nextHardDropStep = state.replaySteps[i] as ReplayStepHardDrop;
-        break;
-      }
-    }
-
-    if (
-      nextHardDropStep &&
-      nextHardDropStep.attacked &&
-      nextHardDropStep.attacked.line > 0
-    ) {
-      stats.garbages.push(nextHardDropStep.attacked.line);
-      console.log(stats.garbages);
-    }
+    const garbage = getGarbage(step, state.replaySteps);
+    stats.garbages.push(garbage);
 
     if (stats.maxRen < history.ren) {
       stats.maxRen = history.ren;
@@ -153,6 +141,26 @@ export const getStats = (state: ReplayState): PlayStats => {
 
 const isBtb = (type: AttackType) => {
   return AttackType.BtbTetris <= type && type <= AttackType.BtbTst;
+};
+
+const getGarbage = (step: number, replaySteps: ReplayStep[]): number => {
+  let nextHardDropStep: ReplayStepHardDrop | null = null;
+  for (let i = step; i < replaySteps.length; i++) {
+    if (replaySteps[i] && replaySteps[i].type === ReplayStepType.HardDrop) {
+      nextHardDropStep = replaySteps[i] as ReplayStepHardDrop;
+      break;
+    }
+  }
+
+  if (
+    nextHardDropStep &&
+    nextHardDropStep.attacked &&
+    nextHardDropStep.attacked.line > 0
+  ) {
+    return nextHardDropStep.attacked.line;
+  } else {
+    return 0;
+  }
 };
 
 const attackTypeToLine: { [key in AttackType]: number } = {
