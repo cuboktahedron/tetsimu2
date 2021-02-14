@@ -11,6 +11,7 @@ import {
   useTheme
 } from "@material-ui/core";
 import { blueGrey, grey } from "@material-ui/core/colors";
+import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
 import CallToActionIcon from "@material-ui/icons/CallToAction";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
@@ -24,6 +25,7 @@ import { SidePanelContext } from "../App";
 import Help from "../Help";
 import { ReplayContext } from "./Replay";
 import Settings from "./Settings";
+import Stats from "./Stats";
 import Tools from "./Tools";
 
 type SidePanelStyleProps = {
@@ -31,7 +33,7 @@ type SidePanelStyleProps = {
   maxDrawerWidth: number;
 };
 
-type IconNames = "tools" | "settings" | "help";
+type IconNames = "tools" | "settings" | "stats" | "help";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -105,6 +107,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const mains = {
   help: <Help />,
   settings: <Settings />,
+  stats: <Stats />,
   tools: <Tools />,
 };
 
@@ -310,6 +313,19 @@ const SidePanel: React.FC = () => {
                 <SettingsIcon
                   className={clsx(classes.icon, {
                     selected: selectedIconName === "settings" && open,
+                  })}
+                />
+              </ListItemIcon>
+            </ListItem>
+            <ListItem
+              button
+              disableGutters
+              onClick={() => handleMenuIconClick("stats")}
+            >
+              <ListItemIcon className={classes.listIcon}>
+                <AssessmentOutlinedIcon
+                  className={clsx(classes.icon, {
+                    selected: selectedIconName === "stats" && open,
                   })}
                 />
               </ListItemIcon>
