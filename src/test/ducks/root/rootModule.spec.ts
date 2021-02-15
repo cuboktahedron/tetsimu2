@@ -4,7 +4,7 @@ import {
   initializeApp,
   replayToSimuMode,
   simuToEditMode,
-  simuToReplayMode,
+  simuToReplayMode
 } from "ducks/root/actions";
 import {
   ChangeTetsimuModeAction,
@@ -13,8 +13,9 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction,
+  SimuToReplayAction
 } from "ducks/root/types";
+import { EditState, initialEditState } from "stores/EditState";
 import { initialReplayState, ReplayState } from "stores/ReplayState";
 import { initialRootState } from "stores/RootState";
 import { initialSimuState, SimuState } from "stores/SimuState";
@@ -24,7 +25,7 @@ import {
   Direction,
   SpinType,
   Tetromino,
-  TetsimuMode,
+  TetsimuMode
 } from "types/core";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { makeCurrent } from "../../utils/tetsimu/testUtils/makeCurrent";
@@ -34,13 +35,13 @@ import { makeGarbage } from "../../utils/tetsimu/testUtils/makeGarbage";
 import { makeHold } from "../../utils/tetsimu/testUtils/makeHold";
 import {
   makeNextNote,
-  makeNextNotes,
+  makeNextNotes
 } from "../../utils/tetsimu/testUtils/makeNextNote";
 import { makeReplayState } from "../../utils/tetsimu/testUtils/makeReplayState";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
-  makeReplayHoldStep,
+  makeReplayHoldStep
 } from "../../utils/tetsimu/testUtils/makeReplayStep";
 import { makeSimuState } from "../../utils/tetsimu/testUtils/makeSimuState";
 import { makeTetrominos } from "../../utils/tetsimu/testUtils/makeTetrominos";
@@ -585,6 +586,37 @@ describe("rootModule", () => {
       expect(actual1.payload.simu.retryState).not.toEqual(
         actual3.payload.simu.retryState
       );
+    });
+
+    it("should initialize edit state", () => {
+      const actual = initializeApp(
+        "f=EjRWeAA_&np=I_J.p1LOSIJLOSTq1I&h=9&nc=3&m=2&v=2.01",
+        initialRootState
+      );
+      const expectedEdit: EditState = {
+        ...initialEditState,
+        field: makeField("IJLOSTZGNN"),
+        hold: makeHold(Tetromino.O, false),
+        tools: {
+          ...initialEditState.tools,
+          nextsPattern: "I[J]p1LOSIJLOSTq1I",
+          noOfCycle: 3,
+        },
+        nexts: {
+          nextNotes: makeNextNotes("I[J]p1LOSIJLOSTq1I"),
+        }
+      };
+
+      const expected: InitializeAppAction = {
+        type: RootActionsType.InitializeApp,
+        payload: {
+          ...initialRootState,
+          edit: { ...expectedEdit },
+          mode: TetsimuMode.Edit,
+        },
+      };
+
+      expect(actual).toEqual(expected);
     });
   });
 });

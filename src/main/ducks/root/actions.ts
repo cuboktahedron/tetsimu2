@@ -13,6 +13,7 @@ import {
   Tetromino,
   TetsimuMode,
 } from "types/core";
+import EditUrl, { EditStateFragments } from "utils/tetsimu/edit/editUrl";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
@@ -175,6 +176,17 @@ export const initializeApp = (
         },
       };
     }
+    case TetsimuMode.Edit: {
+      const fragments = new EditUrl().toState(paramsObj);
+      return {
+        type: RootActionsType.InitializeApp,
+        payload: {
+          ...state,
+          mode: TetsimuMode.Edit,
+          edit: initializeEditState(state.edit, fragments),
+        },
+      };
+    }
     case TetsimuMode.Replay: {
       const fragments = new ReplayUrl().toState(paramsObj);
       return {
@@ -318,6 +330,28 @@ const initializeSimuState = (
     replaySteps: [],
     step: 0,
     seed: rng.seed,
+  };
+};
+
+const initializeEditState = (
+  state: EditState,
+  fragments: EditStateFragments
+): EditState => {
+  const interpreter = new NextNotesInterpreter();
+  const nextNotes = interpreter.interpret(fragments.nextsPattern);
+
+  return {
+    ...state,
+    field: fragments.field,
+    hold: fragments.hold,
+    nexts: {
+      nextNotes,
+    },
+    tools: {
+      ...state.tools,
+      nextsPattern: fragments.nextsPattern,
+      noOfCycle: fragments.numberOfCycle,
+    },
   };
 };
 

@@ -1,5 +1,5 @@
 import { FieldCellValue, Tetromino, TetsimuMode } from "types/core";
-import EditUrl from "utils/tetsimu/edit/editUrl";
+import EditUrl, { EditStateFragments } from "utils/tetsimu/edit/editUrl";
 import { makeEditState } from "../testUtils/makeEditState";
 import { makeField } from "../testUtils/makeField";
 import { makeHold } from "../testUtils/makeHold";
@@ -71,6 +71,55 @@ describe("editUrl", () => {
       const v = "2.01";
       const expected = `${loc}?nn=${nn}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
+    });
+  });
+
+  describe("toState", () => {
+    it("should generate states from url(v2.01)", () => {
+      const f = "EjRWeBI0VngA";
+      const h = "3";
+      const nc = "6";
+      const np = "q2_IJ.p2LOS";
+      const m = `${TetsimuMode.Edit}`;
+      const v = "2.01";
+
+      const params = {
+        f,
+        h,
+        nc,
+        np,
+        m,
+        v,
+      };
+      const gen = new EditUrl();
+      const actual = gen.toState(params);
+
+      const expected: EditStateFragments = {
+        field: makeField(
+          // prettier-ignore
+          "NNIJLOSTZG",
+          "IJLOSTZGNN"
+        ),
+        hold: makeHold(Tetromino.I, false),
+        nextsPattern: "q2[IJ]p2LOS",
+        numberOfCycle: 6,
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should generate states from url(v2.01) with no params", () => {
+      const gen = new EditUrl();
+      const actual = gen.toState({});
+
+      const expected: EditStateFragments = {
+        field: makeField("NNNNNNNNNN"),
+        hold: makeHold(Tetromino.None, true),
+        nextsPattern: "",
+        numberOfCycle: 1,
+      };
+
+      expect(actual).toEqual(expected);
     });
   });
 });
