@@ -214,7 +214,7 @@ export class SimuConductor {
     this.state.step++;
 
     const hardDropStep = ((): ReplayStepHardDrop => {
-      if (riseUpCols.length > 0) {
+      if (garbage && garbage.restStep === 0 && garbage.amount > 0) {
         return {
           type: ReplayStepType.HardDrop,
           attacked: {
