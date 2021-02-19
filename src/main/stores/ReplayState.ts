@@ -13,6 +13,12 @@ import {
 } from "types/core";
 import { ReplayConfig, ReplayInfo, ReplayStateHistory } from "types/replay";
 
+export type GarbageInfo = {
+  amount: number;
+  offset: number;
+  restStep: number;
+};
+
 export type ReplayState = {
   auto: {
     playing: boolean;
@@ -26,6 +32,7 @@ export type ReplayState = {
     isTouchDevice: boolean;
   };
   field: FieldState;
+  garbages: GarbageInfo[];
   histories: ReplayStateHistory[];
   hold: HoldState;
   isDead: boolean;
@@ -80,12 +87,14 @@ export const initialReplayState: ReplayState = ((): ReplayState => {
       isTouchDevice,
     },
     field,
+    garbages: [],
     histories: [
       {
         attackTypes: [],
         btbState: BtbState.None,
         current,
         field,
+        garbages: [],
         hold,
         isDead: false,
         nexts: nexts,
@@ -100,6 +109,7 @@ export const initialReplayState: ReplayState = ((): ReplayState => {
     ren: -1,
     replayInfo: {
       nextNum: 5,
+      offsetRange: 2,
     },
     replaySteps: steps,
     step: 0,

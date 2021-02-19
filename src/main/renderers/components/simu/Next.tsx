@@ -1,11 +1,14 @@
 import { createStyles, makeStyles } from "@material-ui/core";
+import { red } from "@material-ui/core/colors";
+import clsx from "clsx";
 import React from "react";
 import { Tetromino } from "types/core";
 import TetrominoBlocks from "../core/TetrominoBlocks";
 
 type NextProps = {
-  type: Tetromino;
   attack: number;
+  inOffsetRange: boolean;
+  type: Tetromino;
 };
 
 const useStyles = makeStyles(() =>
@@ -17,7 +20,6 @@ const useStyles = makeStyles(() =>
     },
 
     attack: {
-      background: "white",
       borderRadius: "50%",
       fontWeight: "bold",
       height: 24,
@@ -28,6 +30,16 @@ const useStyles = makeStyles(() =>
       top: 0,
       width: 24,
     },
+
+    inOffsetRange: {
+      background: red[700],
+      color: "white",
+    },
+
+    outOffsetRange: {
+      background: "white",
+      color: "black",
+    },
   })
 );
 
@@ -36,7 +48,14 @@ const Next: React.FC<NextProps> = (props) => {
 
   const attack =
     props.attack > 0 ? (
-      <div className={classes.attack}>{props.attack}</div>
+      <div
+        className={clsx(classes.attack, {
+          [classes.inOffsetRange]: props.inOffsetRange,
+          [classes.outOffsetRange]: !props.inOffsetRange,
+        })}
+      >
+        {props.attack}
+      </div>
     ) : (
       ""
     );

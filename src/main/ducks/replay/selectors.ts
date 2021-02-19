@@ -22,19 +22,15 @@ export const canBackward = (state: ReplayState) => {
 };
 
 export const getNextAttacks = (state: ReplayState): number[] => {
-  const attacks: number[] = [];
-  const steps = state.replaySteps.slice(state.step);
-
-  for (let step of steps) {
-    if (attacks.length > state.replayInfo.nextNum) {
-      break;
-    }
-    if (step.type === ReplayStepType.HardDrop) {
-      attacks.push(step.attacked?.line ?? 0);
-    }
+  const attacks = state.garbages.flatMap((garbage) => {
+    if (garbage.restStep === 0) {
+      return [];
   }
 
-  attacks.shift();
+    const attacks: number[] = new Array(garbage.restStep - 1).fill(0);
+    attacks.push(garbage.amount - garbage.offset);
+    return attacks;
+  });
 
   if (attacks.length < state.replayInfo.nextNum) {
     const extras: number[] = new Array(
@@ -43,20 +39,17 @@ export const getNextAttacks = (state: ReplayState): number[] => {
 
     return attacks.concat(extras);
   } else {
-    return attacks;
+    return attacks.slice(0, state.replayInfo.nextNum);
   }
 };
 
 export const getUrgentAttack = (state: ReplayState): number | null => {
-  const steps = state.replaySteps.slice(state.step);
-
-  for (let step of steps) {
-    if (step.type === ReplayStepType.HardDrop) {
-      return step.attacked?.line ?? null;
+  const garbage = state.garbages[0];
+  if (garbage && garbage.restStep === 0 && garbage.amount > 0) {
+    return garbage.amount - garbage.offset;
+  } else {
+    return null;
     }
-  }
-
-  return null;
 };
 
 export const getStats = (state: ReplayState): PlayStats => {

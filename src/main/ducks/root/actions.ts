@@ -9,6 +9,7 @@ import {
   Direction,
   MAX_NEXTS_NUM,
   NextNote,
+  ReplayStepType,
   SpinType,
   Tetromino,
   TetsimuMode,
@@ -389,6 +390,7 @@ const initializeReplayState = (
     btbState: BtbState.None,
     current,
     field: fragments.field,
+    garbages: [], // TODO: make garbages from hardrop steps
     hold: fragments.hold,
     isDead,
     noOfCycle,
@@ -402,6 +404,7 @@ const initializeReplayState = (
         btbState: BtbState.None,
         current,
         field: fragments.field,
+        garbages: [],
         hold: fragments.hold,
         isDead,
         nexts,
@@ -492,7 +495,7 @@ export const replayToSimuMode = (state: ReplayState): ReplayToSimuAction => {
 
     const newGarbages: GarbageInfo[] = [];
     if (topAttack) {
-      newGarbages.push({ amount: topAttack, restStep: 0 });
+      newGarbages.push({ amount: topAttack, offset: 0, restStep: 0 });
     }
 
     let nextAttacks = getNextAttacks(state);
@@ -504,6 +507,7 @@ export const replayToSimuMode = (state: ReplayState): ReplayToSimuAction => {
 
       newGarbages.push({
         amount: nextAttacks[index],
+        offset: 0,
         restStep: index + 1,
       });
 
@@ -530,6 +534,7 @@ export const replayToSimuMode = (state: ReplayState): ReplayToSimuAction => {
         settled: newNextSettles,
         unsettled: lastGenNext.nextNotes,
       },
+      offsetRange: state.replayInfo.offsetRange,
       ren: state.ren,
       retryState: {
         bag: initialBag,
@@ -595,6 +600,23 @@ export const simuToReplayMode = (state: SimuState): SimuToReplayAction => {
   const nexts = state.replayNexts;
   const noOfCycle = ((7 - history.nexts.bag.take + 2) % 7) + 1;
 
+  let restStep = 0;
+  const garbages: GarbageInfo[] = [];
+  state.replaySteps.forEach((step) => {
+    if (step.type === ReplayStepType.HardDrop) {
+      if (step.attacked) {
+        garbages.push({
+          amount: step.attacked.line,
+          offset: 0,
+          restStep,
+        });
+        restStep = 1;
+      } else {
+        restStep++;
+      }
+    }
+  });
+
   return {
     type: RootActionsType.SimuToReplayMode,
     payload: {
@@ -605,6 +627,7 @@ export const simuToReplayMode = (state: SimuState): SimuToReplayAction => {
       btbState: BtbState.None,
       current,
       field: history.field,
+      garbages,
       isDead: history.isDead,
       nexts: nexts,
       noOfCycle,
@@ -615,6 +638,7 @@ export const simuToReplayMode = (state: SimuState): SimuToReplayAction => {
           btbState: BtbState.None,
           current,
           field: history.field,
+          garbages,
           hold: history.hold,
           isDead: history.isDead,
           nexts: nexts,
@@ -626,6 +650,7 @@ export const simuToReplayMode = (state: SimuState): SimuToReplayAction => {
       replaySteps: state.replaySteps,
       replayInfo: {
         nextNum: state.config.nextNum,
+        offsetRange: state.config.offsetRange,
       },
       step: 0,
     },

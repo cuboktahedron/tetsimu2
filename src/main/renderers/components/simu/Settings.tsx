@@ -75,6 +75,15 @@ const Settings: React.FC = () => {
     }
   };
 
+  const handleOffsetRangeChange = (value: number) => {
+    dispatch(
+      changeConfig({
+        ...config,
+        offsetRange: value,
+      })
+    );
+  };
+
   const handleGeneratesGarbagesChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -283,37 +292,56 @@ const Settings: React.FC = () => {
       <div>
         <div>
           <FormLabel component="legend" className={classes.settingGroupTitle}>
-            Garbage Info
+            Garbage
           </FormLabel>
 
+          <div className={classes.section}>
+            <NumberTextField
+              label="first rate"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              numberProps={{
+                min: 0,
+                max: 100,
+                endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                change: handleRiseUpRateFirstChange,
+              }}
+              value={"" + state.config.riseUpRate.first}
+              variant="outlined"
+              style={{ marginRight: 4 }}
+            />
+            <NumberTextField
+              label="second rate"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              numberProps={{
+                min: 0,
+                max: 100,
+                endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                change: handleRiseUpRateSecondChange,
+              }}
+              value={"" + state.config.riseUpRate.second}
+              variant="outlined"
+            />
+          </div>
+        </div>
+        <div className={classes.section}>
           <NumberTextField
-            label="first rate"
+            className={classes.formControl}
+            label="offset range"
             InputLabelProps={{
               shrink: true,
             }}
             numberProps={{
               min: 0,
-              max: 100,
-              endAdornment: <InputAdornment position="end">%</InputAdornment>,
-              change: handleRiseUpRateFirstChange,
+              max: 12,
+              change: handleOffsetRangeChange,
             }}
-            value={"" + state.config.riseUpRate.first}
+            value={"" + state.config.offsetRange}
             variant="outlined"
-            style={{ marginRight: 4 }}
-          />
-          <NumberTextField
-            label="second rate"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            numberProps={{
-              min: 0,
-              max: 100,
-              endAdornment: <InputAdornment position="end">%</InputAdornment>,
-              change: handleRiseUpRateSecondChange,
-            }}
-            value={"" + state.config.riseUpRate.second}
-            variant="outlined"
+            style={{ minWidth: 120 }}
           />
         </div>
         <div>

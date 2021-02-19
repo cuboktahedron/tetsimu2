@@ -9,6 +9,9 @@ import { ReplayContext } from "./Replay";
 const useStyles = makeStyles(() =>
   createStyles({
     root: {
+      alignItems: "center",
+      display: "flex",
+      flexDirection: "column",
       height: "100%",
     },
 
@@ -72,16 +75,17 @@ const Nexts: React.FC<NextsProps> = (props) => {
           [classes.cycleEnd]: state.config.showsCycle && noOfCycle === 6,
         })}
       >
-        <Next type={next} attack={attacks[index]} />
+        <Next
+          attack={attacks[index]}
+          inOffsetRange={index < state.replayInfo.offsetRange}
+          type={next}
+        />
       </div>
     );
   });
 
   return (
-    <div
-      className={classes.root}
-      style={{ alignItems: "center", display: "flex", flexDirection: "column" }}
-    >
+    <div className={classes.root}>
       <div>{nextdives}</div>
       <div></div>
     </div>

@@ -21,6 +21,7 @@ export const makeSimuState = (state: {
   config?: {
     garbage?: GarbageConfig;
     nextNum?: number;
+    offsetRange?: number;
     playMode?: PlayMode;
     riseUpRate?: {
       first: number;
@@ -65,6 +66,7 @@ export const makeSimuState = (state: {
         generateGarbagesLevel: 1,
         generatesGarbages: false,
         nextNum: 5,
+        offsetRange: 2,
         playMode: PlayMode.Normal,
         riseUpRate: {
           first: 10,

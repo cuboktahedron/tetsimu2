@@ -16,6 +16,7 @@ import {
 } from "../../../utils/tetsimu/testUtils/makeNextNote";
 import { makeSeed } from "../../../utils/tetsimu/testUtils/makeSeed";
 import { makeSimuState } from "../../../utils/tetsimu/testUtils/makeSimuState";
+import { makeGarbage } from "../testUtils/makeGarbage";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
@@ -185,20 +186,33 @@ describe("simuConductor", () => {
         const state = makeSimuState({
           attackTypes: [AttackType.PerfectClear, AttackType.Single],
           btbState: BtbState.Btb,
-          current: makeCurrent(Direction.Up, 1, 3, Tetromino.I),
+          current: makeCurrent(
+            Direction.Down,
+            7,
+            1,
+            Tetromino.T,
+            SpinType.Spin
+          ),
           // prettier-ignore
           field: makeField(
             "NNNNNNNNNN",
             "NNNNNNNNNN",
-            "IJLOSTZNNN"
+            "NNNNNGGNNG",
+            "GGGGGGNNNG",
+            "IJLOSTZNGG"
           ),
+          garbages: [
+            makeGarbage(0, 3, 1),
+            makeGarbage(2, 5, 0),
+            makeGarbage(1, 5, 0),
+          ],
           hold: makeHold(Tetromino.I, false),
           nexts: {
             bag: makeNextNote("JI", 2),
             settled: makeTetrominos("SZ"),
             unsettled: makeNextNotes("J I"),
           },
-          ren: 3,
+          ren: 2,
           replayNexts: makeTetrominos("SZ"),
           replayNextStep: 2,
           seed: makeSeed(3),
@@ -210,28 +224,28 @@ describe("simuConductor", () => {
 
         const expected: SimuState = {
           ...state,
-          attackTypes: [],
+          attackTypes: [AttackType.BtbTsd],
           btbState: BtbState.Btb,
           current: makeCurrent(Direction.Up, 4, 19, Tetromino.S),
           // prettier-ignore
           field: makeField(
             "NNNNNNNNNN",
-            "IIIINNNNNN",
-            "IJLOSTZNNN"
+            "NNNNNNNNNN",
+            "NNNNNGGNNG",
           ),
-          garbages: [],
+          garbages: [makeGarbage(1, 5, 4), makeGarbage(1, 5, 0)],
           histories: [
             {
-              attackTypes: [],
+              attackTypes: [AttackType.BtbTsd],
               btbState: BtbState.Btb,
               currentType: Tetromino.S,
               // prettier-ignore
               field: makeField(
                 "NNNNNNNNNN",
-                "IIIINNNNNN",
-                "IJLOSTZNNN"
-              ),
-              garbages: [],
+                "NNNNNNNNNN",
+                "NNNNNGGNNG",
+               ),
+              garbages: [makeGarbage(1, 5, 4), makeGarbage(1, 5, 0)],
               hold: makeHold(Tetromino.I, true),
               isDead: false,
               lastRoseUpColumn: -1,
@@ -240,7 +254,7 @@ describe("simuConductor", () => {
                 settled: makeTetrominos("ZJ"),
                 unsettled: makeNextNotes("I"),
               },
-              ren: -1,
+              ren: 3,
               replayNextStep: 3,
               replayStep: 2,
               seed: makeSeed(55079790),
@@ -253,15 +267,18 @@ describe("simuConductor", () => {
             settled: makeTetrominos("ZJ"),
             unsettled: makeNextNotes("I"),
           },
-          ren: -1,
+          ren: 3,
           replayNexts: makeTetrominos("SZJ"),
           replayNextStep: 3,
           replayStep: 2,
           replaySteps: [
-            makeReplayDropStep(Direction.Up, 1, 1),
-            makeReplayHardDropStep(),
+            makeReplayDropStep(Direction.Down, 7, 1, SpinType.Spin),
+            makeReplayHardDropStep({
+              cols: [],
+              line: 3,
+            }),
           ],
-          seed: makeSeed(55079790),
+          seed: makeSeed(actual.seed),
           step: 1,
         };
 

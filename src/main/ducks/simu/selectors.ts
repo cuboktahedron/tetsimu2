@@ -22,7 +22,7 @@ export const getNextAttacks = (state: SimuState): number[] => {
     }
 
     const attacks: number[] = new Array(garbage.restStep - 1).fill(0);
-    attacks.push(garbage.amount);
+    attacks.push(garbage.amount - garbage.offset);
     return attacks;
   });
 
@@ -40,7 +40,7 @@ export const getNextAttacks = (state: SimuState): number[] => {
 export const getUrgentAttack = (state: SimuState): number | null => {
   const garbage = state.garbages[0];
   if (garbage && garbage.restStep === 0 && garbage.amount > 0) {
-    return garbage.amount;
+    return garbage.amount - garbage.offset;
   } else {
     return null;
   }

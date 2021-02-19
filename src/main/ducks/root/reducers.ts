@@ -104,6 +104,7 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
             config: {
               ...state.simu.config,
               nextNum: action.payload.nexts.nextNum,
+              offsetRange: action.payload.offsetRange,
               playMode: PlayMode.Normal,
             },
             current: action.payload.current,
@@ -172,6 +173,7 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
             btbState: action.payload.btbState,
             current: action.payload.current,
             field: action.payload.field,
+            garbages: action.payload.garbages,
             histories: action.payload.histories,
             hold: action.payload.hold,
             isDead: action.payload.isDead,

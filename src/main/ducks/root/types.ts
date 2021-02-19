@@ -102,6 +102,7 @@ export type ReplayToSimuAction = {
       settled: Tetromino[];
       unsettled: NextNote[];
     };
+    offsetRange: number;
     ren: number;
     retryState: SimuRetryState;
     seed: number;
@@ -133,6 +134,7 @@ export type SimuToReplayAction = {
     btbState: BtbState;
     current: ActiveTetromino;
     field: FieldState;
+    garbages: GarbageInfo[];
     histories: ReplayStateHistory[];
     hold: HoldState;
     isDead: boolean;
@@ -140,6 +142,7 @@ export type SimuToReplayAction = {
     noOfCycle: number;
     replayInfo: {
       nextNum: number;
+      offsetRange: number;
     };
     replaySteps: ReplayStep[];
     ren: number;

@@ -1,3 +1,4 @@
+import { GarbageInfo } from "stores/ReplayState";
 import {
   Action,
   ActiveTetromino,
@@ -5,7 +6,7 @@ import {
   BtbState,
   FieldState,
   HoldState,
-  Tetromino
+  Tetromino,
 } from "types/core";
 import { ReplayConfig, ReplayStateHistory } from "types/replay";
 
@@ -38,6 +39,7 @@ export type BackwardStepAction = {
         btbState: BtbState;
         current: ActiveTetromino;
         field: FieldState;
+        garbages: GarbageInfo[];
         hold: HoldState;
         isDead: boolean;
         nexts: Tetromino[];
@@ -80,6 +82,7 @@ export type ChangeStepAction = {
         btbState: BtbState;
         current: ActiveTetromino;
         field: FieldState;
+        garbages: GarbageInfo[];
         histories: ReplayStateHistory[];
         hold: HoldState;
         isDead: boolean;
@@ -109,6 +112,7 @@ export type ForwardStepAction = {
         btbState: BtbState;
         current: ActiveTetromino;
         field: FieldState;
+        garbages: GarbageInfo[];
         histories: ReplayStateHistory[];
         hold: HoldState;
         isDead: boolean;
@@ -131,6 +135,7 @@ export type ForwardStepAutoAction = {
         btbState: BtbState;
         current: ActiveTetromino;
         field: FieldState;
+        garbages: GarbageInfo[];
         histories: ReplayStateHistory[];
         hold: HoldState;
         isDead: boolean;

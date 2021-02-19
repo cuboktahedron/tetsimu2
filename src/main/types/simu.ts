@@ -24,6 +24,7 @@ export type GarbageConfig = {
 
 export type SimuConfig = {
   garbage: GarbageConfig;
+  offsetRange: number;
   nextNum: number;
   playMode: PlayMode;
   riseUpRate: {

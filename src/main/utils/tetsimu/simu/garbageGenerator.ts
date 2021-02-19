@@ -38,6 +38,7 @@ class GarbageGenerator {
 
       this.garbages.push({
         amount,
+        offset: 0,
         restStep,
       });
     }
@@ -46,6 +47,7 @@ class GarbageGenerator {
     if (garbage2) {
       this.garbages.splice(0, 1, {
         amount: garbage2.amount,
+        offset: garbage2.offset,
         restStep: garbage2.restStep - 1,
       });
     }

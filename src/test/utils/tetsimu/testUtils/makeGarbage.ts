@@ -1,8 +1,13 @@
 import { GarbageInfo } from "stores/SimuState";
 
-export const makeGarbage = (restStep: number, amount: number): GarbageInfo => {
+export const makeGarbage = (
+  restStep: number,
+  amount: number,
+  offset?: number
+): GarbageInfo => {
   return {
-    restStep,
     amount,
+    restStep,
+    offset: offset ?? 0,
   };
 };

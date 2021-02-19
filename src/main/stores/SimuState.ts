@@ -12,7 +12,7 @@ import {
   ReplayStep,
   SpinType,
   TapControllerType,
-  Tetromino,
+  Tetromino
 } from "types/core";
 import { PlayMode, SimuConfig, SimuRetryState } from "types/simu";
 import { makeFullNextNote } from "utils/tetsimu/functions";
@@ -41,6 +41,7 @@ export type SimuStateHistory = {
 
 export type GarbageInfo = {
   amount: number;
+  offset: number;
   restStep: number;
 };
 
@@ -130,6 +131,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
 
   const isTouchDevice = "ontouchstart" in window;
   const config: SimuConfig = {
+    offsetRange: 2,
     garbage: {
       a1: 30,
       a2: 20,

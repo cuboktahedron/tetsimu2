@@ -65,13 +65,12 @@ const useStyles = makeStyles(() =>
     },
 
     attackNotice: {
-      background: "white",
-      border: "solid 1px black",
+      background: red[700],
       borderRadius: "50%",
       boxSizing: "border-box",
+      color: "white",
       fontWeight: "bold",
       height: 24,
-      lineHeight: "24px",
       position: "absolute",
       top: 4,
       right: 4,

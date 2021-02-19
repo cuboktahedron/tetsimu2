@@ -1,3 +1,4 @@
+import { GarbageInfo } from "stores/ReplayState";
 import {
   ActiveTetromino,
   AttackType,
@@ -25,6 +26,7 @@ export type ReplayStateHistory = {
   btbState: BtbState;
   current: ActiveTetromino;
   field: FieldState;
+  garbages: GarbageInfo[];
   hold: HoldState;
   isDead: boolean;
   nexts: Tetromino[];
@@ -34,4 +36,5 @@ export type ReplayStateHistory = {
 
 export type ReplayInfo = {
   nextNum: number;
+  offsetRange: number;
 };

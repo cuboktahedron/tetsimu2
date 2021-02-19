@@ -35,14 +35,17 @@ describe("garbageGenerator", () => {
       expect(actual).toEqual([
         {
           amount: 15,
+          offset: 0,
           restStep: 4,
         },
         {
           amount: 15,
+          offset: 0,
           restStep: 5,
         },
         {
           amount: 15,
+          offset: 0,
           restStep: 5,
         },
       ]);

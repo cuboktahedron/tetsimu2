@@ -162,6 +162,11 @@ describe("rootModule", () => {
             "NNNSZZNNNN",
             "LNNSSZZNNN"
           ),
+          garbages: [
+            makeGarbage(0, 3, 2),
+            makeGarbage(12, 5, 0),
+            makeGarbage(1, 5, 0),
+          ],
           histories: [
             {
               attackTypes: [],
@@ -174,6 +179,7 @@ describe("rootModule", () => {
                 "LNNNSJJJOO",
                 "LLNIIIIJOO"
               ),
+              garbages: [],
               nexts: makeTetrominos("TZIJLOSZTSOLJIIJLO"),
               noOfCycle: 1,
               hold: makeHold(Tetromino.I, true),
@@ -191,6 +197,7 @@ describe("rootModule", () => {
                 "LNNNSJJJOO",
                 "LLNIIIIJOO"
               ),
+              garbages: [],
               nexts: makeTetrominos("ZIJLOSZTSOLJIIJLO"),
               noOfCycle: 2,
               hold: makeHold(Tetromino.I, true),
@@ -208,6 +215,7 @@ describe("rootModule", () => {
                 "LTTTSJJJOO",
                 "LLTIIIIJOO"
               ),
+              garbages: [],
               nexts: makeTetrominos("ZIJLOSZTSOLJIIJLO"),
               noOfCycle: 2,
               hold: makeHold(Tetromino.I, true),
@@ -223,6 +231,11 @@ describe("rootModule", () => {
                 "NNNSZZNNNN",
                 "LNNSSZZNNN"
               ),
+              garbages: [
+                makeGarbage(0, 3, 2),
+                makeGarbage(12, 5, 0),
+                makeGarbage(1, 5, 0),
+              ],
               nexts: makeTetrominos("IJLOSZTSOLJIIJLO"),
               noOfCycle: 3,
               hold: makeHold(Tetromino.I, true),
@@ -241,13 +254,11 @@ describe("rootModule", () => {
             makeReplayHardDropStep({ cols: [], line: 2 }),
             makeReplayDropStep(Direction.Up, 1, 2, SpinType.None),
             makeReplayHardDropStep({ cols: [], line: 2 }),
-            makeReplayHoldStep(),
-            makeReplayDropStep(Direction.Up, 1, 2, SpinType.None),
-            makeReplayHardDropStep({ cols: [1, 2, 3], line: 3 }),
           ],
           step: 3,
           replayInfo: {
             nextNum: 12,
+            offsetRange: 5,
           },
         })
       );
@@ -263,7 +274,7 @@ describe("rootModule", () => {
             "NNNSZZNNNN",
             "LNNSSZZNNN"
           ),
-          garbages: [makeGarbage(0, 2), makeGarbage(1, 3)],
+          garbages: [makeGarbage(0, 1, 0), makeGarbage(12, 5, 0)],
           hold: makeHold(Tetromino.I, true),
           isDead: false,
           lastRoseUpColumn: -1,
@@ -273,6 +284,7 @@ describe("rootModule", () => {
             settled: makeTetrominos("IJLOSZTSOLJI"),
             unsettled: [],
           },
+          offsetRange: 5,
           ren: 0,
           retryState: {
             bag: {
@@ -308,6 +320,7 @@ describe("rootModule", () => {
           btbState: BtbState.Btb,
           config: {
             nextNum: 12,
+            offsetRange: 5,
           },
           histories: [
             {
@@ -334,7 +347,15 @@ describe("rootModule", () => {
           replayNexts: makeTetrominos("ZTSOLJIIJLOS"),
           replayNextStep: 12,
           replayStep: 1,
-          replaySteps: [makeReplayHoldStep()],
+          replaySteps: [
+            makeReplayHoldStep(),
+            makeReplayDropStep(Direction.Up, 5, 0),
+            makeReplayHardDropStep({ cols: [1, 2], line: 5 }),
+            makeReplayDropStep(Direction.Up, 5, 0),
+            makeReplayHardDropStep(),
+            makeReplayDropStep(Direction.Up, 5, 0),
+            makeReplayHardDropStep({ cols: [1], line: 3 }),
+          ],
         })
       );
 
@@ -348,12 +369,14 @@ describe("rootModule", () => {
           btbState: BtbState.None,
           current: makeCurrent(Direction.Up, 4, 19, Tetromino.T),
           field: makeField("IJLOSTZNNN"),
+          garbages: [makeGarbage(0, 5), makeGarbage(2, 3)],
           histories: [
             {
               attackTypes: [],
               btbState: BtbState.None,
               current: makeCurrent(Direction.Up, 4, 19, Tetromino.T),
               field: makeField("IJLOSTZNNN"),
+              garbages: [makeGarbage(0, 5), makeGarbage(2, 3)],
               hold: makeHold(Tetromino.I, false),
               isDead: false,
               nexts: makeTetrominos("ZTSOLJIIJLOS"),
@@ -368,8 +391,17 @@ describe("rootModule", () => {
           ren: -1,
           replayInfo: {
             nextNum: 12,
+            offsetRange: 5,
           },
-          replaySteps: [makeReplayHoldStep()],
+          replaySteps: [
+            makeReplayHoldStep(),
+            makeReplayDropStep(Direction.Up, 5, 0),
+            makeReplayHardDropStep({ cols: [1, 2], line: 5 }),
+            makeReplayDropStep(Direction.Up, 5, 0),
+            makeReplayHardDropStep(),
+            makeReplayDropStep(Direction.Up, 5, 0),
+            makeReplayHardDropStep({ cols: [1], line: 3 }),
+          ],
           step: 0,
         },
       };
@@ -398,6 +430,7 @@ describe("rootModule", () => {
             btbState: BtbState.None,
             current: makeCurrent(Direction.Up, 4, 19, Tetromino.S),
             field: makeField("IJLOSTZGNN"),
+            garbages: [], // TODO: temporary
             hold: makeHold(Tetromino.S, false),
             isDead: false,
             nexts: makeTetrominos("OITLILJTOSZIZL"),
@@ -411,6 +444,7 @@ describe("rootModule", () => {
         ren: -1,
         replayInfo: {
           nextNum: 7,
+          offsetRange: 2, // TODO: temporary
         },
         replaySteps: [
           makeReplayDropStep(Direction.Up, 0, 0),
@@ -604,7 +638,7 @@ describe("rootModule", () => {
         },
         nexts: {
           nextNotes: makeNextNotes("I[J]p1LOSIJLOSTq1I"),
-        }
+        },
       };
 
       const expected: InitializeAppAction = {

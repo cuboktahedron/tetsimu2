@@ -1,4 +1,4 @@
-import { SimuState } from "stores/SimuState";
+import { GarbageInfo, SimuState } from "stores/SimuState";
 import {
   ActiveTetromino,
   AttackType,
@@ -13,7 +13,7 @@ import {
   ReplayStepHardDrop,
   ReplayStepType,
   SpinType,
-  Tetromino,
+  Tetromino
 } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
 import { FieldHelper } from "../fieldHelper";
@@ -137,6 +137,7 @@ export class SimuConductor {
     let newRen = -1;
     let newBtbState: BtbState = this.state.btbState;
     let newCurrent: ActiveTetromino;
+    let garbages = this.state.garbages;
 
     if (!isDead) {
       const erasedLine = this.fieldHelper.eraseLine();
@@ -163,15 +164,16 @@ export class SimuConductor {
       );
       attackLine = attack.attack;
       attackTypes = attack.attackTypes;
+      garbages = this.offsetGarbage(attackLine, garbages);
     }
 
-    const garbage = this.state.garbages[0];
+    const garbage = garbages[0];
     let newLastRoseUpColumn = this.state.lastRoseUpColumn;
     let riseUpCols: number[] = [];
     if (garbage && garbage.restStep === 0) {
       riseUpCols = this.fieldHelper.riseUpLines(
         this.rng,
-        garbage.amount - attackLine,
+        garbage.amount - garbage.offset,
         this.state.lastRoseUpColumn,
         this.state.config.riseUpRate
       );
@@ -185,7 +187,7 @@ export class SimuConductor {
       const gGen = new GarbageGenerator(
         this.rng,
         this.state.config.garbage,
-        this.state.garbages
+        garbages
       );
       return gGen.next(this.state.config.garbage.generates);
     })();
@@ -241,6 +243,38 @@ export class SimuConductor {
 
     return true;
   };
+
+  private offsetGarbage(
+    attackLine: number,
+    garbages: GarbageInfo[]
+  ): GarbageInfo[] {
+    const newGarbages = [...garbages];
+    let rest = 0;
+    for (let i = 0; i < newGarbages.length; i++) {
+      if (attackLine === 0) {
+        return newGarbages;
+      }
+
+      const garbage = newGarbages[i];
+      if (this.state.config.offsetRange < rest + garbage.restStep) {
+        return newGarbages;
+      }
+
+      if (garbage.offset < garbage.amount) {
+        const restAmount = garbage.amount - garbage.offset;
+        const offset = Math.min(attackLine, restAmount);
+        newGarbages[i] = {
+          ...garbage,
+          offset: garbage.offset + offset,
+        };
+        attackLine -= offset;
+      }
+
+      rest += garbage.restStep;
+    }
+
+    return newGarbages;
+  }
 
   holdTetromino = (): boolean => {
     if (this.state.isDead) {

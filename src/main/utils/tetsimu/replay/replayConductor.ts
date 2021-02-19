@@ -1,4 +1,4 @@
-import { ReplayState } from "stores/ReplayState";
+import { GarbageInfo, ReplayState } from "stores/ReplayState";
 import {
   ActiveTetromino,
   AttackType,
@@ -128,9 +128,11 @@ export class ReplayConductor {
       newHold = { ...this.state.hold, canHold: true };
     }
 
+    let attackLine = 0;
     let attackTypes: AttackType[] = [];
     let newRen = -1;
     let newBtbState: BtbState = this.state.btbState;
+    let garbages = this.state.garbages;
 
     if (!isDead) {
       const erasedLine = this.fieldHelper.eraseLine();
@@ -155,9 +157,12 @@ export class ReplayConductor {
         this.state.btbState === BtbState.Btb,
         this.fieldHelper.isFieldEmpty()
       );
+      attackLine = attack.attack;
       attackTypes = attack.attackTypes;
+      garbages = this.offsetGarbage(attackLine, garbages);
     }
 
+    const newGarbages = this.nextGarbages(garbages);
     const newStep = this.state.step + 1;
     const newNexts = [...this.state.nexts];
     const nextCurrentType = newNexts.shift();
@@ -179,6 +184,7 @@ export class ReplayConductor {
     this.state.btbState = newBtbState;
     this.state.current = newCurrent;
     this.state.field = newField;
+    this.state.garbages = newGarbages;
     this.state.hold = newHold;
     this.state.isDead = isDead;
     this.state.nexts = newNexts;
@@ -189,6 +195,61 @@ export class ReplayConductor {
     this.recordHistory();
 
     return true;
+  }
+
+  private offsetGarbage(
+    attackLine: number,
+    garbages: GarbageInfo[]
+  ): GarbageInfo[] {
+    const newGarbages = [...garbages];
+    let rest = 0;
+    for (let i = 0; i < newGarbages.length; i++) {
+      if (attackLine === 0) {
+        return newGarbages;
+      }
+
+      const garbage = newGarbages[i];
+      if (this.state.replayInfo.offsetRange < rest + garbage.restStep) {
+        return newGarbages;
+      }
+
+      if (garbage.offset < garbage.amount) {
+        const restAmount = garbage.amount - garbage.offset;
+        const offset = Math.min(attackLine, restAmount);
+        newGarbages[i] = {
+          ...garbage,
+          offset: garbage.offset + offset,
+        };
+        attackLine -= offset;
+      }
+
+      rest += garbage.restStep;
+    }
+
+    return newGarbages;
+  }
+
+  private nextGarbages(garbages: GarbageInfo[]) {
+    const newGarbages = [...garbages];
+    const garbage = newGarbages[0];
+    if (garbage) {
+      if (garbage.restStep < 0) {
+        return newGarbages;
+      } else if (garbage.restStep === 0) {
+        newGarbages.shift();
+      }
+    }
+
+    const garbage2 = newGarbages[0] as GarbageInfo;
+    if (garbage2) {
+      newGarbages.splice(0, 1, {
+        amount: garbage2.amount,
+        offset: garbage2.offset,
+        restStep: garbage2.restStep - 1,
+      });
+    }
+
+    return newGarbages;
   }
 
   backwardStep(): boolean {
@@ -203,6 +264,7 @@ export class ReplayConductor {
     this.state.btbState = history.btbState;
     this.state.current = history.current;
     this.state.field = history.field;
+    this.state.garbages = history.garbages;
     this.state.hold = history.hold;
     this.state.isDead = history.isDead;
     this.state.nexts = history.nexts;
@@ -220,6 +282,7 @@ export class ReplayConductor {
       btbState: this.state.btbState,
       current: this.state.current,
       field: this.state.field,
+      garbages: this.state.garbages,
       hold: this.state.hold,
       isDead: this.state.isDead,
       nexts: this.state.nexts,

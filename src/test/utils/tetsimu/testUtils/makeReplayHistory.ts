@@ -1,4 +1,5 @@
 import merge from "deepmerge";
+import { GarbageInfo } from "stores/ReplayState";
 import {
   ActiveTetromino,
   AttackType,
@@ -15,6 +16,7 @@ export const makeReplayHistory = (replayHistory: {
   btbState?: BtbState;
   current?: ActiveTetromino;
   field?: FieldState;
+  garbages?: GarbageInfo[];
   hold?: HoldState;
   isDead?: boolean;
   nexts?: Tetromino[];
@@ -32,6 +34,7 @@ export const makeReplayHistory = (replayHistory: {
         type: Tetromino.None,
       },
       field: [],
+      garbages: [],
       hold: {
         canHold: false,
         type: Tetromino.None,

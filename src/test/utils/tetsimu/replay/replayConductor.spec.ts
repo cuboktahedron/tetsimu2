@@ -3,6 +3,7 @@ import { ReplayState } from "stores/ReplayState";
 import { AttackType, BtbState, Direction, Tetromino } from "types/core";
 import { makeCurrent } from "../testUtils/makeCurrent";
 import { makeField } from "../testUtils/makeField";
+import { makeGarbage } from "../testUtils/makeGarbage";
 import { makeHold } from "../testUtils/makeHold";
 import { makeReplayState } from "../testUtils/makeReplayState";
 import {
@@ -20,12 +21,14 @@ describe("replayConductor", () => {
         btbState: BtbState.Btb,
         current: makeCurrent(Direction.Up, 1, 19, Tetromino.I),
         field: makeField("NNNNNNNNNN"),
+        garbages: [makeGarbage(3, 2, 1)],
         histories: [
           {
             attackTypes: [AttackType.BtbTst],
             btbState: BtbState.Btb,
             current: makeCurrent(Direction.Up, 1, 19, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
+            garbages: [makeGarbage(3, 2, 1)],
             hold: makeHold(Tetromino.None, true),
             isDead: false,
             nexts: makeTetrominos("J"),
@@ -70,12 +73,14 @@ describe("replayConductor", () => {
         btbState: BtbState.Btb,
         current: makeCurrent(Direction.Up, 1, 19, Tetromino.I),
         field: makeField("NNNNNNNNNN"),
+        garbages: [makeGarbage(3, 2, 1)],
         histories: [
           {
             attackTypes: [AttackType.BtbTsd],
             btbState: BtbState.Btb,
             current: makeCurrent(Direction.Up, 1, 19, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
+            garbages: [makeGarbage(3, 2, 1)],
             hold: makeHold(Tetromino.None, true),
             isDead: false,
             nexts: makeTetrominos("J"),
@@ -104,15 +109,12 @@ describe("replayConductor", () => {
             ...state.histories[0],
           },
           {
-            attackTypes: [AttackType.BtbTsd],
-            btbState: BtbState.Btb,
+            ...state.histories[0],
             current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
-            field: makeField("NNNNNNNNNN"),
             hold: makeHold(Tetromino.I, false),
             isDead: false,
             nexts: makeTetrominos(""),
             noOfCycle: 2,
-            ren: 3,
           },
         ],
         hold: makeHold(Tetromino.I, false),
@@ -131,12 +133,14 @@ describe("replayConductor", () => {
         btbState: BtbState.None,
         current: makeCurrent(Direction.Up, 1, 0, Tetromino.I),
         field: makeField("NNNNNNNNNN"),
+        garbages: [makeGarbage(3, 2, 1), makeGarbage(3, 5, 0)],
         histories: [
           {
             attackTypes: [],
             btbState: BtbState.None,
             current: makeCurrent(Direction.Up, 1, 0, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
+            garbages: [makeGarbage(3, 2, 1), makeGarbage(3, 5, 0)],
             hold: makeHold(Tetromino.None, true),
             isDead: false,
             nexts: makeTetrominos("J"),
@@ -148,6 +152,7 @@ describe("replayConductor", () => {
         nexts: makeTetrominos("J"),
         ren: -1,
         replaySteps: [makeReplayHardDropStep()],
+        step: 0,
       });
       const conductor = getReplayConductor(state);
       expect(conductor.forwardStep()).toBeTruthy();
@@ -160,6 +165,7 @@ describe("replayConductor", () => {
         btbState: BtbState.None,
         current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
         field: makeField("IIIINNNNNN"),
+        garbages: [makeGarbage(2, 2, 1), makeGarbage(3, 5, 0)],
         histories: [
           {
             ...state.histories[0],
@@ -169,6 +175,7 @@ describe("replayConductor", () => {
             btbState: BtbState.None,
             current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
             field: makeField("IIIINNNNNN"),
+            garbages: [makeGarbage(2, 2, 1), makeGarbage(3, 5, 0)],
             hold: makeHold(Tetromino.None, true),
             isDead: false,
             nexts: makeTetrominos(""),
@@ -192,12 +199,14 @@ describe("replayConductor", () => {
         btbState: BtbState.Btb,
         current: makeCurrent(Direction.Up, 1, 0, Tetromino.I),
         field: makeField("NNNNNNNNNN"),
+        garbages: [makeGarbage(0, 5, 2), makeGarbage(3, 5, 0)],
         histories: [
           {
             attackTypes: [AttackType.BtbTetris],
             btbState: BtbState.Btb,
             current: makeCurrent(Direction.Up, 1, 0, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
+            garbages: [makeGarbage(0, 5, 2), makeGarbage(3, 5, 0)],
             hold: makeHold(Tetromino.T, false),
             isDead: false,
             nexts: makeTetrominos("J"),
@@ -227,6 +236,7 @@ describe("replayConductor", () => {
           "GGNGGGGGGG",
           "GGGNGGGGGG"
         ),
+        garbages: [makeGarbage(2, 5, 0)],
         hold: makeHold(Tetromino.T, true),
         histories: [
           {
@@ -243,6 +253,7 @@ describe("replayConductor", () => {
               "GGNGGGGGGG",
               "GGGNGGGGGG"
             ),
+            garbages: [makeGarbage(2, 5, 0)],
             hold: makeHold(Tetromino.T, true),
             isDead: false,
             nexts: makeTetrominos(""),
@@ -267,12 +278,14 @@ describe("replayConductor", () => {
         btbState: BtbState.Btb,
         current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
         field: makeField("IIIINNNNNN"),
+        garbages: [makeGarbage(2, 2, 1), makeGarbage(3, 5, 0)],
         histories: [
           {
             attackTypes: [AttackType.Tetris],
             btbState: BtbState.Btb,
             current: makeCurrent(Direction.Up, 1, 0, Tetromino.I),
             field: makeField("NNNNNNNNNN"),
+            garbages: [makeGarbage(3, 2, 1), makeGarbage(3, 5, 0)],
             hold: makeHold(Tetromino.T, false),
             isDead: false,
             nexts: makeTetrominos("J"),
@@ -284,6 +297,7 @@ describe("replayConductor", () => {
             btbState: BtbState.Btb,
             current: makeCurrent(Direction.Up, 4, 19, Tetromino.J),
             field: makeField("IIIINNNNNN"),
+            garbages: [makeGarbage(2, 2, 1), makeGarbage(3, 5, 0)],
             hold: makeHold(Tetromino.T, true),
             isDead: false,
             nexts: makeTetrominos(""),

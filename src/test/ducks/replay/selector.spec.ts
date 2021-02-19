@@ -4,6 +4,7 @@ import {
   getUrgentAttack,
 } from "ducks/replay/selectors";
 import { AttackType, Direction, PlayStats } from "types/core";
+import { makeGarbage } from "../../utils/tetsimu/testUtils/makeGarbage";
 import { makeReplayHistory } from "../../utils/tetsimu/testUtils/makeReplayHistory";
 import { makeReplayState } from "../../utils/tetsimu/testUtils/makeReplayState";
 import {
@@ -14,42 +15,33 @@ import {
 
 describe("selector", () => {
   describe("getNextAttacks", () => {
-    it("should return amount of each next(hardDropSteps < nextNum)", () => {
+    it("should return amount of each next(steps < nextNum)", () => {
       const actual = getNextAttacks(
         makeReplayState({
           replayInfo: {
-            nextNum: 3,
+            nextNum: 8,
+            offsetRange: 2,
           },
-
-          replaySteps: [],
-          step: 0,
+          garbages: [makeGarbage(0, 3), makeGarbage(5, 2)],
         })
       );
-      const expected = [0, 0, 0];
+
+      const expected = [0, 0, 0, 0, 2, 0, 0, 0];
       expect(actual).toEqual(expected);
     });
 
-    it("should return amount of each next(hardDropSteps >= nextNum)", () => {
+    it("should return amount of each next(step >= nextNum)", () => {
       const actual = getNextAttacks(
         makeReplayState({
           replayInfo: {
-            nextNum: 3,
+            nextNum: 4,
+            offsetRange: 2,
           },
-
-          replaySteps: [
-            makeReplayHardDropStep(),
-            makeReplayDropStep(Direction.Up, 1, 1),
-            makeReplayHardDropStep({ cols: [1], line: 2 }),
-            makeReplayHoldStep(),
-            makeReplayHardDropStep(),
-            makeReplayHardDropStep({ cols: [1], line: 3 }),
-            makeReplayHardDropStep({ cols: [1], line: 4 }),
-            makeReplayHardDropStep({ cols: [1], line: 5 }),
-          ],
-          step: 1,
+          garbages: [makeGarbage(1, 3), makeGarbage(4, 2)],
         })
       );
-      const expected = [0, 3, 4];
+
+      const expected = [3, 0, 0, 0];
       expect(actual).toEqual(expected);
     });
   });
@@ -57,37 +49,21 @@ describe("selector", () => {
   describe("getUrgentAttack", () => {
     it("should return top of gargabe", () => {
       const actual = getUrgentAttack(
-        makeReplayState({
-          replaySteps: [
-            makeReplayHardDropStep(),
-            makeReplayHoldStep(),
-            makeReplayDropStep(Direction.Up, 1, 1),
-            makeReplayHardDropStep({ cols: [1, 2], line: 3 }),
-          ],
-          step: 1,
-        })
+        makeReplayState({ garbages: [makeGarbage(0, 5)] })
       );
 
-      expect(actual).toBe(3);
+      expect(actual).toBe(5);
     });
 
     it("should return null", () => {
-      const actual = getUrgentAttack(
-        makeReplayState({
-          replaySteps: [
-            makeReplayHardDropStep(),
-            makeReplayHoldStep(),
-            makeReplayDropStep(Direction.Up, 1, 1),
-            makeReplayHardDropStep({ cols: [1, 2], line: 3 }),
-          ],
-          step: 0,
-        })
-      );
+      expect(
+        getUrgentAttack(makeReplayState({ garbages: [makeGarbage(1, 5)] }))
+      ).toBeNull();
 
-      expect(actual).toBeNull();
+      expect(getUrgentAttack(makeReplayState({ garbages: [] }))).toBeNull();
 
       expect(
-        getUrgentAttack(makeReplayState({ replaySteps: [], step: 0 }))
+        getUrgentAttack(makeReplayState({ garbages: [makeGarbage(0, 0)] }))
       ).toBeNull();
     });
   });

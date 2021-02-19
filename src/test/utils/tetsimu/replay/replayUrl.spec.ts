@@ -37,6 +37,7 @@ describe("replayUrl", () => {
               "NNIJLOSTZG",
               "IJLOSTZGNN"
             ),
+            garbages: [], // TODO: temporary
             hold: makeHold(Tetromino.I, false),
             isDead: false,
             nexts: makeTetrominos("JLOSTZ"),
@@ -47,6 +48,7 @@ describe("replayUrl", () => {
         nexts: makeTetrominos("JLOSTZ"),
         replayInfo: {
           nextNum: 12,
+          offsetRange: 2,
         },
         replaySteps: [
           makeReplayDropStep(Direction.Up, 0, 0),
@@ -76,6 +78,7 @@ describe("replayUrl", () => {
 
     it("should generate url(v2.01) of minimum states", () => {
       const state = makeReplayState({
+        garbages: [],
         histories: [
           {
             attackTypes: [],
@@ -87,6 +90,7 @@ describe("replayUrl", () => {
               spinType: SpinType.None,
             },
             field: makeField("NNNNNNNNNN"),
+            garbages: [],
             isDead: false,
             hold: makeHold(Tetromino.None, true),
             nexts: [],
@@ -97,6 +101,7 @@ describe("replayUrl", () => {
         nexts: [],
         replayInfo: {
           nextNum: 5,
+          offsetRange: 2,
         },
         replaySteps: [],
         step: 0,
