@@ -66,22 +66,12 @@ export const getStats = (state: SimuState): PlayStats => {
     [AttackType.PerfectClear]: 0,
     attacks: [0],
     drops: 0,
-    garbages: [],
     lines: 0,
     maxRen: 0,
     totalBtb: 0,
     totalHold: 0,
   };
   let lines = 0;
-
-  if (
-    state.histories[0].garbages[0] &&
-    state.histories[0].garbages[0].restStep === 0
-  ) {
-    stats.garbages.push(state.histories[0].garbages[0].amount);
-  } else {
-    stats.garbages.push(0);
-  }
 
   const storategy = new Pytt2Strategy();
   for (let step = 0; step <= state.step; step++) {
@@ -112,12 +102,6 @@ export const getStats = (state: SimuState): PlayStats => {
     );
 
     stats.attacks.push(attack);
-
-    if (history.garbages[0] && history.garbages[0].restStep === 0) {
-      stats.garbages.push(history.garbages[0].amount);
-    } else {
-      stats.garbages.push(0);
-    }
 
     if (stats.maxRen < history.ren) {
       stats.maxRen = history.ren;

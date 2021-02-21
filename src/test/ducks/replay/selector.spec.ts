@@ -88,7 +88,6 @@ describe("selector", () => {
       [AttackType.PerfectClear]: 0,
       attacks: [],
       drops: 0,
-      garbages: [],
       lines: 0,
       maxRen: 0,
       totalBtb: 0,
@@ -115,7 +114,6 @@ describe("selector", () => {
         ...statsBase,
         attacks: [0, 0],
         drops: 1,
-        garbages: [0, 0],
       };
       expect(actual).toEqual(expected);
     });
@@ -163,7 +161,6 @@ describe("selector", () => {
         [attackType]: 1,
         attacks: [0, attack],
         drops: 1,
-        garbages: [0, 0],
         lines: line,
         totalBtb,
       };
@@ -194,7 +191,6 @@ describe("selector", () => {
         [AttackType.PerfectClear]: 1,
         attacks: [0, 10],
         drops: 1,
-        garbages: [0, 0],
         lines: 2,
         totalBtb: 1,
       };
@@ -213,7 +209,6 @@ describe("selector", () => {
       const expected = {
         ...statsBase,
         attacks: [0],
-        garbages: [0],
         totalHold: 1,
       };
       expect(actual).toEqual(expected);
@@ -243,7 +238,6 @@ describe("selector", () => {
         ...statsBase,
         attacks: [0, 0, 0],
         drops: 2,
-        garbages: [3, 5, 0],
       };
       expect(actual).toEqual(expected);
     });
@@ -272,7 +266,6 @@ describe("selector", () => {
         ...statsBase,
         attacks: [0, 1, 0],
         drops: 2,
-        garbages: [0, 0, 0],
         maxRen: 2,
       };
       expect(actual).toEqual(expected);

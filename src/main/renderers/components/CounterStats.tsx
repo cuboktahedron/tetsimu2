@@ -1,5 +1,5 @@
 import { Grid } from "@material-ui/core";
-import { blue, red } from "@material-ui/core/colors";
+import { blue } from "@material-ui/core/colors";
 import React from "react";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { AttackType, PlayStats } from "types/core";
@@ -18,17 +18,7 @@ const useStyles = useSidePanelStyles({
       marginBottom: 4,
       textAlign: "right",
     },
-
-    "& > .passive:nth-child(odd)": {
-      background: red[700],
-    },
-
-    "& > .passive:nth-child(even)": {
-      background: red[300],
-    },
   },
-
-  pasive: {},
 });
 
 export type CounterStatsProps = {
@@ -40,7 +30,6 @@ const CounterStats: React.FC<CounterStatsProps> = (props) => {
   const classes = useStyles();
 
   const attacks = stats.attacks.reduce((acc, cur) => acc + cur, 0);
-  const garbages = stats.garbages.reduce((acc, cur) => acc + cur, 0);
 
   return (
     <div className={classes.root}>
@@ -158,18 +147,6 @@ const CounterStats: React.FC<CounterStatsProps> = (props) => {
           {stats.drops === 0
             ? "-"
             : (stats.totalHold / stats.drops).toLocaleString()}
-        </Grid>
-        <Grid item xs={6} className="passive">
-          Total Garbage
-        </Grid>
-        <Grid item xs={6} className="passive">
-          {garbages.toLocaleString()}
-        </Grid>
-        <Grid item xs={6} className="passive">
-          Garbage per Drop
-        </Grid>
-        <Grid item xs={6} className="passive">
-          {stats.drops === 0 ? "-" : (garbages / stats.drops).toLocaleString()}
         </Grid>
       </Grid>
     </div>
