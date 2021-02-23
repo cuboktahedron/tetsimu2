@@ -16,7 +16,7 @@ export type EditStateFragments = {
 };
 
 class EditUrl {
-  private static DefaultVersion = "2.01";
+  private static DefaultVersion = "2.02";
 
   fromState(state: EditState): string {
     const gen = new EditUrl201();
@@ -25,20 +25,20 @@ class EditUrl {
 
   toState(urlParams: { [key: string]: string }): EditStateFragments {
     const v = urlParams.v ?? EditUrl.DefaultVersion;
-
-    switch (v) {
-      case "2.00":
-        throw new UnsupportedUrlError(
-          `Url parameter version(${v}) is no longer supported.`
-        );
-      default:
-        return new EditUrl201().toState(urlParams);
+    if (v === "2.00") {
+      throw new UnsupportedUrlError(
+        `Url parameter version(${v}) is no longer supported.`
+      );
+    } else if (v >= "2.01") {
+      return new EditUrl201().toState(urlParams);
+    } else {
+      return new EditUrl201().toState(urlParams);
     }
   }
 }
 
 class EditUrl201 {
-  public static Version = "2.01";
+  public static Version = "2.02";
 
   toState(params: { [key: string]: string }): EditStateFragments {
     const f = params.f ?? "";

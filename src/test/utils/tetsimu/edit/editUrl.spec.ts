@@ -6,7 +6,7 @@ import { makeHold } from "../testUtils/makeHold";
 
 describe("editUrl", () => {
   describe("fromState", () => {
-    it("should generate url(v2.01) of states", () => {
+    it("should generate url of states", () => {
       // 0         1         2         3         4         5         6
       // ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.-_
       const state = makeEditState({
@@ -42,12 +42,12 @@ describe("editUrl", () => {
       const nc = "3";
       const nn = "5";
       const m = TetsimuMode.Simu;
-      const v = "2.01";
+      const v = "2.02";
       const expected = `${loc}?f=${f}&np=${np}&h=${h}&nc=${nc}&nn=${nn}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
 
-    it("should generate url(v2.01) of states", () => {
+    it("should generate url of states", () => {
       const state = makeEditState({
         field: makeField("NNNNNNNNNN"),
         hold: makeHold(Tetromino.None, true),
@@ -68,20 +68,20 @@ describe("editUrl", () => {
       const loc = location.href.replace(/\?.*$/, "");
       const nn = "5";
       const m = TetsimuMode.Simu;
-      const v = "2.01";
+      const v = "2.02";
       const expected = `${loc}?nn=${nn}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
   });
 
   describe("toState", () => {
-    it("should generate states from url(v2.01)", () => {
+    it("should generate states from url(v2.01 <= v)", () => {
       const f = "EjRWeBI0VngA";
       const h = "3";
       const nc = "6";
       const np = "q2_IJ.p2LOS";
       const m = `${TetsimuMode.Edit}`;
-      const v = "2.01";
+      const v = "2.02";
 
       const params = {
         f,
@@ -108,7 +108,7 @@ describe("editUrl", () => {
       expect(actual).toEqual(expected);
     });
 
-    it("should generate states from url(v2.01) with no params", () => {
+    it("should generate states from url", () => {
       const gen = new EditUrl();
       const actual = gen.toState({});
 
