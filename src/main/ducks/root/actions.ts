@@ -284,6 +284,7 @@ const initializeSimuState = (
         ...state.config.garbage,
       },
       nextNum: fragments.nextNum,
+      offsetRange: fragments.offsetRange,
     },
     current,
     field: fragments.field,
@@ -397,6 +398,7 @@ const initializeReplayState = (
     replayInfo: {
       ...state.replayInfo,
       nextNum: fragments.nextNum,
+      offsetRange: fragments.offsetRange,
     },
     histories: [
       {

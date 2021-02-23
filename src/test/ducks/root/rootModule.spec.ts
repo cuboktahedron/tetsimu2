@@ -4,7 +4,7 @@ import {
   initializeApp,
   replayToSimuMode,
   simuToEditMode,
-  simuToReplayMode
+  simuToReplayMode,
 } from "ducks/root/actions";
 import {
   ChangeTetsimuModeAction,
@@ -13,7 +13,7 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction
+  SimuToReplayAction,
 } from "ducks/root/types";
 import { EditState, initialEditState } from "stores/EditState";
 import { initialReplayState, ReplayState } from "stores/ReplayState";
@@ -25,7 +25,7 @@ import {
   Direction,
   SpinType,
   Tetromino,
-  TetsimuMode
+  TetsimuMode,
 } from "types/core";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { makeCurrent } from "../../utils/tetsimu/testUtils/makeCurrent";
@@ -35,13 +35,13 @@ import { makeGarbage } from "../../utils/tetsimu/testUtils/makeGarbage";
 import { makeHold } from "../../utils/tetsimu/testUtils/makeHold";
 import {
   makeNextNote,
-  makeNextNotes
+  makeNextNotes,
 } from "../../utils/tetsimu/testUtils/makeNextNote";
 import { makeReplayState } from "../../utils/tetsimu/testUtils/makeReplayState";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
-  makeReplayHoldStep
+  makeReplayHoldStep,
 } from "../../utils/tetsimu/testUtils/makeReplayStep";
 import { makeSimuState } from "../../utils/tetsimu/testUtils/makeSimuState";
 import { makeTetrominos } from "../../utils/tetsimu/testUtils/makeTetrominos";
@@ -413,7 +413,7 @@ describe("rootModule", () => {
   describe("initializeApp", () => {
     it("should initialize replay state", () => {
       const actual = initializeApp(
-        "f=EjRWeAA_&ns=sOZa0vPY&ss=ABAS5WUxI-A_&h=b&nc=3&nn=7&m=1&v=2.01",
+        "f=EjRWeAA_&ns=sOZa0vPY&ss=ABAS5WUxI-A_&h=b&nc=3&nn=7&or=3&m=1&v=2.02",
         initialRootState
       );
 
@@ -444,7 +444,7 @@ describe("rootModule", () => {
         ren: -1,
         replayInfo: {
           nextNum: 7,
-          offsetRange: 2, // TODO: temporary
+          offsetRange: 3,
         },
         replaySteps: [
           makeReplayDropStep(Direction.Up, 0, 0),
@@ -470,7 +470,7 @@ describe("rootModule", () => {
 
     it("should initialize simu state with np", () => {
       const actual = initializeApp(
-        "f=EjRWeAA_&np=I_J.p1LOSIJLOSTq1I&h=9&nc=3&nn=12&m=0&v=2.01",
+        "f=EjRWeAA_&np=I_J.p1LOSIJLOSTq1I&h=9&nc=3&nn=12&or=3&m=0&v=2.01",
         initialRootState
       );
       const expectedSimu: SimuState = {
@@ -481,6 +481,7 @@ describe("rootModule", () => {
           ...initialSimuState.config,
           garbage: initialSimuState.config.garbage,
           nextNum: 12,
+          offsetRange: 3,
         },
         current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
         field: makeField("IJLOSTZGNN"),

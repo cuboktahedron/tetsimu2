@@ -20,7 +20,7 @@ import { makeTetrominos } from "../testUtils/makeTetrominos";
 
 describe("replayUrl", () => {
   describe("fromState", () => {
-    it("should generate url(v2.01) of states", () => {
+    it("should generate url of states", () => {
       const state = makeReplayState({
         histories: [
           {
@@ -48,7 +48,7 @@ describe("replayUrl", () => {
         nexts: makeTetrominos("JLOSTZ"),
         replayInfo: {
           nextNum: 12,
-          offsetRange: 2,
+          offsetRange: 3,
         },
         replaySteps: [
           makeReplayDropStep(Direction.Up, 0, 0),
@@ -70,13 +70,14 @@ describe("replayUrl", () => {
       const h = "3";
       const nc = "6";
       const nn = "12";
+      const or = "3";
       const m = TetsimuMode.Replay;
-      const v = "2.01";
-      const expected = `${loc}?f=${f}&ns=${ns}&ss=${ss}&h=${h}&nc=${nc}&nn=${nn}&m=${m}&v=${v}`;
+      const v = "2.02";
+      const expected = `${loc}?f=${f}&ns=${ns}&ss=${ss}&h=${h}&nc=${nc}&nn=${nn}&or=${or}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
 
-    it("should generate url(v2.01) of minimum states", () => {
+    it("should generate url of minimum states", () => {
       const state = makeReplayState({
         garbages: [],
         histories: [
@@ -112,22 +113,23 @@ describe("replayUrl", () => {
       const loc = location.href.replace(/\?.*$/, "");
       const ns = "IA__";
       const m = TetsimuMode.Replay;
-      const v = "2.01";
+      const v = "2.02";
       const expected = `${loc}?ns=${ns}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
   });
 
   describe("toState", () => {
-    it("should generate states from url(v2.01)", () => {
+    it("should generate states from url(v2.01 <= v)", () => {
       const f = "EjRWeBI0VngA";
       const ns = "Kcu4";
       const ss = "ABAS5WUxI-A_";
       const nc = "6";
       const h = "3";
       const nn = "12";
+      const or = "3";
       const m = `${TetsimuMode.Replay}`;
-      const v = "2.01";
+      const v = "2.02";
 
       const params = {
         f,
@@ -136,6 +138,7 @@ describe("replayUrl", () => {
         h,
         nc,
         nn,
+        or,
         m,
         v,
       };
@@ -143,13 +146,14 @@ describe("replayUrl", () => {
       const actual = gen.toState(params);
 
       const expected: ReplayStateFragments = {
-        nextNum: 12,
         field: makeField(
           // prettier-ignore
           "NNIJLOSTZG",
           "IJLOSTZGNN"
         ),
         hold: makeHold(Tetromino.I, false),
+        nextNum: 12,
+        offsetRange: 3,
         numberOfCycle: 6,
         replayNexts: makeTetrominos("IJLOSTZ"),
         replaySteps: [
@@ -164,14 +168,15 @@ describe("replayUrl", () => {
       expect(actual).toEqual(expected);
     });
 
-    it("should generate states from url(v2.01) with no params", () => {
+    it("should generate states from url with no params", () => {
       const gen = new ReplayUrl();
       const actual = gen.toState({});
 
       const expected: ReplayStateFragments = {
-        nextNum: 5,
         field: makeField("NNNNNNNNNN"),
         hold: makeHold(Tetromino.None, true),
+        nextNum: 5,
+        offsetRange: 2,
         numberOfCycle: 1,
         replayNexts: makeTetrominos(""),
         replaySteps: [],

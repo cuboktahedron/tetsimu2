@@ -4,25 +4,26 @@ import {
   HoldState,
   ReplayStep,
   Tetromino,
-  TetsimuMode
+  TetsimuMode,
 } from "types/core";
 import {
   deserializeField,
   deserializeHold,
   deserializeNexts,
-  deserializeSteps
+  deserializeSteps,
 } from "../deserializer";
 import {
   serializeField,
   serializeHold,
   serializeNexts,
-  serializeSteps
+  serializeSteps,
 } from "../serializer";
 import { UnsupportedUrlError } from "../unsupportedUrlError";
 
 export type ReplayStateFragments = {
   hold: HoldState;
   field: FieldState;
+  offsetRange: number;
   nextNum: number;
   numberOfCycle: number;
   replayNexts: Tetromino[];
@@ -30,7 +31,7 @@ export type ReplayStateFragments = {
 };
 
 class ReplayUrl {
-  private static DefaultVersion = "2.01";
+  private static DefaultVersion = "2.02";
 
   fromState(state: ReplayState): string {
     const gen = new ReplayUrl201();
@@ -39,21 +40,20 @@ class ReplayUrl {
 
   toState(urlParams: { [key: string]: string }): ReplayStateFragments {
     const v = urlParams.v ?? ReplayUrl.DefaultVersion;
-
-    switch (v) {
-      case "2.00":
-        throw new UnsupportedUrlError(
-          `Url parameter version(${v}) is no longer supported.`
-        );
-      default:
-        return new ReplayUrl201().toState(urlParams);
+    if (v === "2.00") {
+      throw new UnsupportedUrlError(
+        `Url parameter version(${v}) is no longer supported.`
+      );
+    } else if (v >= "2.01") {
+      return new ReplayUrl201().toState(urlParams);
+    } else {
+      return new ReplayUrl201().toState(urlParams);
     }
   }
 }
 
 class ReplayUrl201 {
-  public static Version = "2.01";
-  public static VersionNum = 201;
+  public static Version = "2.02";
 
   toState(params: { [key: string]: string }): ReplayStateFragments {
     const f = params.f ?? "";
@@ -61,24 +61,23 @@ class ReplayUrl201 {
     const ss = params.ss ?? "";
     const h = params.h ?? "0";
 
-    const numberOfCycle = (() => {
-      const nc = parseInt(params.nc);
-      if (isNaN(nc) || nc < 1 || nc > 7) {
-        return 1;
+    const paramToNumber = (
+      param: string,
+      min: number,
+      max: number,
+      defaultValue: number
+    ) => {
+      const value = parseInt(param);
+      if (isNaN(value) || value < min || value > max) {
+        return defaultValue;
       } else {
-        return nc;
+        return value;
       }
-    })();
+    };
 
-    const nextNum = (() => {
-      const nn = parseInt(params.nn);
-      if (isNaN(nn) || nn < 1 || nn > 12) {
-        return 5;
-      } else {
-        return nn;
-      }
-    })();
-
+    const numberOfCycle = paramToNumber(params.nc, 1, 7, 1);
+    const nextNum = paramToNumber(params.nn, 1, 12, 5);
+    const offsetRange = paramToNumber(params.or, 0, 12, 2);
     const field = deserializeField(f);
     const hold = deserializeHold(h);
     const replayNexts = deserializeNexts(ns);
@@ -88,6 +87,7 @@ class ReplayUrl201 {
       field,
       hold,
       nextNum,
+      offsetRange,
       numberOfCycle,
       replayNexts,
       replaySteps,
@@ -103,6 +103,7 @@ class ReplayUrl201 {
     const h = serializeHold(firstState.hold);
     const nc = ((firstState.noOfCycle + 5) % 7) + 1;
     const nn = state.replayInfo.nextNum;
+    const or = state.replayInfo.offsetRange;
     const m = TetsimuMode.Replay;
     const v = ReplayUrl201.Version;
 
@@ -124,6 +125,9 @@ class ReplayUrl201 {
     }
     if (nn !== 5) {
       params.push(`nn=${nn}`);
+    }
+    if (or !== 2) {
+      params.push(`or=${or}`);
     }
     params.push(`m=${m}`);
     params.push(`v=${v}`);

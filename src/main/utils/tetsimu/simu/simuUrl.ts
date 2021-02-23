@@ -3,14 +3,14 @@ import { FieldState, HoldState, NextNote, TetsimuMode } from "types/core";
 import {
   deserializeField,
   deserializeHold,
-  deserializeNexts
+  deserializeNexts,
 } from "../deserializer";
 import NextNotesInterpreter from "../nextNotesInterpreter";
 import {
   serializeField,
   serializeHold,
   serializeNexts,
-  serializeSteps
+  serializeSteps,
 } from "../serializer";
 import { UnsupportedUrlError } from "../unsupportedUrlError";
 
@@ -19,6 +19,7 @@ export const UNSPECIFIED_SEED = -1;
 export type SimuStateFragments = {
   hold: HoldState;
   field: FieldState;
+  offsetRange: number;
   nextNum: number;
   numberOfCycle: number;
   nextNotes: NextNote[];
@@ -26,7 +27,7 @@ export type SimuStateFragments = {
 };
 
 class SimuUrl {
-  private static DefaultVersion = "2.01";
+  private static DefaultVersion = "2.02";
 
   fromState(state: SimuState): string {
     const gen = new SimuUrl201();
@@ -35,20 +36,20 @@ class SimuUrl {
 
   toState(urlParams: { [key: string]: string }): SimuStateFragments {
     const v = urlParams.v ?? SimuUrl.DefaultVersion;
-
-    switch (v) {
-      case "2.00":
-        throw new UnsupportedUrlError(
-          `Url parameter version(${v}) is no longer supported.`
-        );
-      default:
-        return new SimuUrl201().toState(urlParams);
+    if (v === "2.00") {
+      throw new UnsupportedUrlError(
+        `Url parameter version(${v}) is no longer supported.`
+      );
+    } else if (v >= "2.01") {
+      return new SimuUrl201().toState(urlParams);
+    } else {
+      return new SimuUrl201().toState(urlParams);
     }
   }
 }
 
 class SimuUrl201 {
-  public static Version = "2.01";
+  public static Version = "2.02";
 
   toState(params: { [key: string]: string }): SimuStateFragments {
     const f = params.f ?? "";
@@ -65,24 +66,23 @@ class SimuUrl201 {
       }
     })();
 
-    const nextNum = (() => {
-      const nn = parseInt(params.nn);
-      if (isNaN(nn) || nn < 1 || nn > 12) {
-        return 5;
+    const paramToNumber = (
+      param: string,
+      min: number,
+      max: number,
+      defaultValue: number
+    ) => {
+      const value = parseInt(param);
+      if (isNaN(value) || value < min || value > max) {
+        return defaultValue;
       } else {
-        return nn;
+        return value;
       }
-    })();
+    };
 
-    const seed = (() => {
-      const seed = parseInt(params.s);
-      if (isNaN(seed) || seed < 0 || seed >= 100_000_000) {
-        return -1;
-      } else {
-        return seed;
-      }
-    })();
-
+    const nextNum = paramToNumber(params.nn, 1, 12, 5);
+    const offsetRange = paramToNumber(params.or, 0, 12, 2);
+    const seed = paramToNumber(params.s, 0, 100_000_000, -1);
     const field = deserializeField(f);
     const hold = deserializeHold(h);
     const nextNotes: NextNote[] = (() => {
@@ -102,6 +102,7 @@ class SimuUrl201 {
     return {
       field,
       hold,
+      offsetRange,
       nextNum,
       numberOfCycle,
       nextNotes,
@@ -121,6 +122,7 @@ class SimuUrl201 {
     const h = serializeHold(firstState.hold);
     const nc = ((7 - firstState.nexts.bag.take + 1) % 7) + 1;
     const nn = state.config.nextNum;
+    const or = state.config.offsetRange;
     const m = TetsimuMode.Replay;
     const v = SimuUrl201.Version;
 
@@ -142,6 +144,9 @@ class SimuUrl201 {
     }
     if (nn !== 5) {
       params.push(`nn=${nn}`);
+    }
+    if (or !== 2) {
+      params.push(`or=${or}`);
     }
     params.push(`m=${m}`);
     params.push(`v=${v}`);
