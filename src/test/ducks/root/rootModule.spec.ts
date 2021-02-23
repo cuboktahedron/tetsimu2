@@ -413,7 +413,7 @@ describe("rootModule", () => {
   describe("initializeApp", () => {
     it("should initialize replay state", () => {
       const actual = initializeApp(
-        "f=EjRWeAA_&ns=sOZa0vPY&ss=ABAS5WUxI-A_&h=b&nc=3&nn=7&or=3&m=1&v=2.02",
+        "f=EjRWeAA_&ns=sOZa0vPY&ss=IBAiExLlZTEj8A__&h=b&nc=3&nn=7&or=3&m=1&v=2.02",
         initialRootState
       );
 
@@ -423,6 +423,7 @@ describe("rootModule", () => {
         btbState: BtbState.None,
         current: makeCurrent(Direction.Up, 4, 19, Tetromino.S),
         field: makeField("IJLOSTZGNN"),
+        garbages: [makeGarbage(0, 2), makeGarbage(1, 5)],
         hold: makeHold(Tetromino.S, false),
         histories: [
           {
@@ -430,7 +431,7 @@ describe("rootModule", () => {
             btbState: BtbState.None,
             current: makeCurrent(Direction.Up, 4, 19, Tetromino.S),
             field: makeField("IJLOSTZGNN"),
-            garbages: [], // TODO: temporary
+            garbages: [makeGarbage(0, 2), makeGarbage(1, 5)],
             hold: makeHold(Tetromino.S, false),
             isDead: false,
             nexts: makeTetrominos("OITLILJTOSZIZL"),
@@ -448,7 +449,7 @@ describe("rootModule", () => {
         },
         replaySteps: [
           makeReplayDropStep(Direction.Up, 0, 0),
-          makeReplayHardDropStep(),
+          makeReplayHardDropStep({ cols: [1, 3], line: 2 }),
           makeReplayHoldStep(),
           makeReplayDropStep(Direction.Left, 8, 20, SpinType.Spin),
           makeReplayHardDropStep({ cols: [1, 2, 3], line: 5 }),

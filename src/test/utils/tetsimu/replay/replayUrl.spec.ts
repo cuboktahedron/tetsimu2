@@ -9,6 +9,7 @@ import ReplayUrl, {
   ReplayStateFragments,
 } from "utils/tetsimu/replay/replayUrl";
 import { makeField } from "../testUtils/makeField";
+import { makeGarbage } from "../testUtils/makeGarbage";
 import { makeHold } from "../testUtils/makeHold";
 import { makeReplayState } from "../testUtils/makeReplayState";
 import {
@@ -37,7 +38,7 @@ describe("replayUrl", () => {
               "NNIJLOSTZG",
               "IJLOSTZGNN"
             ),
-            garbages: [], // TODO: temporary
+            garbages: [makeGarbage(0, 2), makeGarbage(1, 5)],
             hold: makeHold(Tetromino.I, false),
             isDead: false,
             nexts: makeTetrominos("JLOSTZ"),
@@ -52,7 +53,7 @@ describe("replayUrl", () => {
         },
         replaySteps: [
           makeReplayDropStep(Direction.Up, 0, 0),
-          makeReplayHardDropStep(),
+          makeReplayHardDropStep({ cols: [1, 3], line: 2 }),
           makeReplayHoldStep(),
           makeReplayDropStep(Direction.Left, 8, 20, SpinType.Spin),
           makeReplayHardDropStep({ cols: [1, 2, 3], line: 5 }),
@@ -66,7 +67,7 @@ describe("replayUrl", () => {
 
       const f = "EjRWeBI0VngA";
       const ns = "Kcu4";
-      const ss = "ABAS5WUxI-A_";
+      const ss = "IBAiExLlZTEj8A__";
       const h = "3";
       const nc = "6";
       const nn = "12";

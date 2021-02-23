@@ -12,7 +12,7 @@ import {
   ReplayStepType,
   SpinType,
   Tetromino,
-  TetsimuMode,
+  TetsimuMode
 } from "types/core";
 import EditUrl, { EditStateFragments } from "utils/tetsimu/edit/editUrl";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
@@ -20,11 +20,11 @@ import NextGenerator from "utils/tetsimu/nextGenerator";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 import ReplayUrl, {
-  ReplayStateFragments,
+  ReplayStateFragments
 } from "utils/tetsimu/replay/replayUrl";
 import SimuUrl, {
   SimuStateFragments,
-  UNSPECIFIED_SEED,
+  UNSPECIFIED_SEED
 } from "utils/tetsimu/simu/simuUrl";
 import {
   ChangeTetsimuModeAction,
@@ -35,7 +35,7 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction,
+  SimuToReplayAction
 } from "./types";
 
 export const changeTetsimuMode = (
@@ -385,13 +385,30 @@ const initializeReplayState = (
     nexts.shift();
   }
 
+  let restStep = 0;
+  const garbages: GarbageInfo[] = [];
+  fragments.replaySteps.forEach((step) => {
+    if (step.type === ReplayStepType.HardDrop) {
+      if (step.attacked) {
+        garbages.push({
+          amount: step.attacked.line,
+          offset: 0,
+          restStep,
+        });
+        restStep = 1;
+      } else {
+        restStep++;
+      }
+    }
+  });
+
   return {
     ...state,
     attackTypes: [],
     btbState: BtbState.None,
     current,
     field: fragments.field,
-    garbages: [], // TODO: make garbages from hardrop steps
+    garbages,
     hold: fragments.hold,
     isDead,
     noOfCycle,
@@ -406,7 +423,7 @@ const initializeReplayState = (
         btbState: BtbState.None,
         current,
         field: fragments.field,
-        garbages: [],
+        garbages,
         hold: fragments.hold,
         isDead,
         nexts,
