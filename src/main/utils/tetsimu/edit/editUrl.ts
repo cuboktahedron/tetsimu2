@@ -1,9 +1,10 @@
 import { EditState } from "stores/EditState";
+import { FieldState, HoldState, Tetromino, TetsimuMode } from "types/core";
 import {
-  FieldState,
-  HoldState,
-  TetsimuMode
-} from "types/core";
+  deserializeField as deserializeField097,
+  deserializeHold as deserializeHold097,
+  deserializeNexts as deserializeNexts097
+} from "../097/deserializer";
 import { deserializeField, deserializeHold } from "../deserializer";
 import { serializeField, serializeHold } from "../serializer";
 import { UnsupportedUrlError } from "../unsupportedUrlError";
@@ -25,7 +26,9 @@ class EditUrl {
 
   toState(urlParams: { [key: string]: string }): EditStateFragments {
     const v = urlParams.v ?? EditUrl.DefaultVersion;
-    if (v === "2.00") {
+    if (v === "0.97") {
+      return new EditUrl097().toState(urlParams);
+    } else if (v === "2.00") {
       throw new UnsupportedUrlError(
         `Url parameter version(${v}) is no longer supported.`
       );
@@ -97,6 +100,38 @@ class EditUrl201 {
 
     const loc = location.href.replace(/\?.*$/, "");
     return `${loc}?${params.join("&")}`;
+  }
+}
+
+class EditUrl097 {
+  toState(params: { [key: string]: string }): EditStateFragments {
+    const f = params.f ?? "";
+    const ns = params.ns ?? "";
+    const h = params.h ?? "0";
+
+    const field = deserializeField097(f);
+    const hold = deserializeHold097(h);
+    const nextsPattern = (() => {
+      const nexts = deserializeNexts097(ns);
+      const valueToKey = Object.fromEntries(
+        Object.entries(Tetromino).map(([key, value]) => {
+          if (value === Tetromino.None) {
+            return [value, "q1"];
+          } else {
+            return [value, key];
+          }
+        })
+      );
+
+      return nexts.map((type) => valueToKey[type]).join("");
+    })();
+
+    return {
+      field,
+      hold,
+      nextsPattern,
+      numberOfCycle: 1,
+    };
   }
 }
 

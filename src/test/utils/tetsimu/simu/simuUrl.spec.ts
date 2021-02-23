@@ -3,11 +3,11 @@ import {
   Direction,
   SpinType,
   Tetromino,
-  TetsimuMode,
+  TetsimuMode
 } from "types/core";
 import SimuUrl, {
   SimuStateFragments,
-  UNSPECIFIED_SEED,
+  UNSPECIFIED_SEED
 } from "utils/tetsimu/simu/simuUrl";
 import { makeField } from "../testUtils/makeField";
 import { makeHold } from "../testUtils/makeHold";
@@ -15,7 +15,7 @@ import { makeNextNote, makeNextNotes } from "../testUtils/makeNextNote";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
-  makeReplayHoldStep,
+  makeReplayHoldStep
 } from "../testUtils/makeReplayStep";
 import { makeSimuState } from "../testUtils/makeSimuState";
 import { makeTetrominos } from "../testUtils/makeTetrominos";
@@ -209,5 +209,41 @@ describe("simuUrl", () => {
 
       expect(actual).toEqual(expected);
     });
+  });
+
+  it("should generate states from url(v = 0.97)", () => {
+    const f = "04zhmu918QlDyg";
+    const ns = "a0s6E";
+    const h = "5";
+    const s = "3";
+    const m = `${TetsimuMode.Simu}`;
+    const v = "0.97";
+
+    const params = {
+      f,
+      ns,
+      h,
+      m,
+      s,
+      v,
+    };
+    const gen = new SimuUrl();
+    const actual = gen.toState(params);
+
+    const expected: SimuStateFragments = {
+      field: makeField(
+        // prettier-ignore
+        "NIJLOSTZGG",
+        "IJLOSTZGGN"
+      ),
+      hold: makeHold(Tetromino.J, false),
+      offsetRange: 2,
+      nextNum: 5,
+      numberOfCycle: 1,
+      nextNotes: makeNextNotes("IJq1q1LOq1TS"),
+      seed: 3,
+    };
+
+    expect(actual).toEqual(expected);
   });
 });

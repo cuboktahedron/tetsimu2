@@ -121,5 +121,38 @@ describe("editUrl", () => {
 
       expect(actual).toEqual(expected);
     });
+
+    it("should generate states from url(v = 0.97)", () => {
+      const f = "04zhmu918QlDyg";
+      const ns = "a0s6E";
+      const h = "5";
+      const s = "3";
+      const m = `${TetsimuMode.Edit}`;
+      const v = "0.97";
+
+      const params = {
+        f,
+        ns,
+        h,
+        m,
+        s,
+        v,
+      };
+      const gen = new EditUrl();
+      const actual = gen.toState(params);
+
+      const expected: EditStateFragments = {
+        field: makeField(
+          // prettier-ignore
+          "NIJLOSTZGG",
+          "IJLOSTZGGN"
+        ),
+        hold: makeHold(Tetromino.J, false),
+        numberOfCycle: 1,
+        nextsPattern: "IJq1q1LOq1TS",
+      };
+
+      expect(actual).toEqual(expected);
+    });
   });
 });

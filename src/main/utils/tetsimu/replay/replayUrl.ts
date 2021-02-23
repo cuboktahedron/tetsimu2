@@ -40,7 +40,9 @@ class ReplayUrl {
 
   toState(urlParams: { [key: string]: string }): ReplayStateFragments {
     const v = urlParams.v ?? ReplayUrl.DefaultVersion;
-    if (v === "2.00") {
+    if (v === "0.97") {
+      throw new UnsupportedUrlError("v0.97 url format is not supported yet.");
+    } else if (v === "2.00") {
       throw new UnsupportedUrlError(
         `Url parameter version(${v}) is no longer supported.`
       );

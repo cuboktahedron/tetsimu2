@@ -1,5 +1,16 @@
 import { SimuState } from "stores/SimuState";
-import { FieldState, HoldState, NextNote, TetsimuMode } from "types/core";
+import {
+  FieldState,
+  HoldState,
+  NextNote,
+  Tetromino,
+  TetsimuMode,
+} from "types/core";
+import {
+  deserializeField as deserializeField097,
+  deserializeHold as deserializeHold097,
+  deserializeNexts as deserializeNexts097,
+} from "../097/deserializer";
 import {
   deserializeField,
   deserializeHold,
@@ -36,7 +47,9 @@ class SimuUrl {
 
   toState(urlParams: { [key: string]: string }): SimuStateFragments {
     const v = urlParams.v ?? SimuUrl.DefaultVersion;
-    if (v === "2.00") {
+    if (v === "0.97") {
+      return new SimuUrl097().toState(urlParams);
+    } else if (v === "2.00") {
       throw new UnsupportedUrlError(
         `Url parameter version(${v}) is no longer supported.`
       );
@@ -153,6 +166,58 @@ class SimuUrl201 {
 
     const loc = location.href.replace(/\?.*$/, "");
     return `${loc}?${params.join("&")}`;
+  }
+}
+
+class SimuUrl097 {
+  toState(params: { [key: string]: string }): SimuStateFragments {
+    const f = params.f ?? "";
+    const ns = params.ns ?? "";
+    const h = params.h ?? "0";
+
+    const paramToNumber = (
+      param: string,
+      min: number,
+      max: number,
+      defaultValue: number
+    ) => {
+      const value = parseInt(param);
+      if (isNaN(value) || value < min || value > max) {
+        return defaultValue;
+      } else {
+        return value;
+      }
+    };
+
+    const seed = paramToNumber(params.s, 0, 100_000_000, -1);
+    const field = deserializeField097(f);
+    const hold = deserializeHold097(h);
+    const nextNotes: NextNote[] = (() => {
+      const replayNexts = deserializeNexts097(ns);
+      return replayNexts.map((type) => {
+        if (type === Tetromino.None) {
+          return {
+            candidates: [],
+            take: 1,
+          };
+        } else {
+          return {
+            candidates: [type],
+            take: 1,
+          };
+        }
+      });
+    })();
+
+    return {
+      field,
+      hold,
+      offsetRange: 2,
+      nextNum: 5,
+      numberOfCycle: 1,
+      nextNotes,
+      seed,
+    };
   }
 }
 
