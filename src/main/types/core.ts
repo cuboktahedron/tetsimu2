@@ -122,6 +122,7 @@ export const ReplayStepType = {
   Drop: 1,
   Hold: 2,
   HardDrop: 3,
+  HardDrop097: 4,
 } as const;
 
 export type ReplayStepType = typeof ReplayStepType[keyof typeof ReplayStepType];
@@ -145,7 +146,17 @@ export type ReplayStepHardDrop = {
   };
 };
 
-export type ReplayStep = ReplayStepDrop | ReplayStepHold | ReplayStepHardDrop;
+export type ReplayStepHardDrop097 = {
+  type: typeof ReplayStepType.HardDrop097;
+  dir: Direction;
+  posX: number;
+};
+
+export type ReplayStep =
+  | ReplayStepDrop
+  | ReplayStepHold
+  | ReplayStepHardDrop
+  | ReplayStepHardDrop097;
 
 export type Storategy = "pytt2";
 

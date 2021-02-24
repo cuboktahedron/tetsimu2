@@ -1,4 +1,8 @@
-import { getNextAttacks, getUrgentAttack } from "ducks/replay/selectors";
+import {
+  getNextAttacks,
+  getReplayConductor,
+  getUrgentAttack
+} from "ducks/replay/selectors";
 import { EditState } from "stores/EditState";
 import { ReplayState } from "stores/ReplayState";
 import { RootState } from "stores/RootState";
@@ -9,6 +13,9 @@ import {
   Direction,
   MAX_NEXTS_NUM,
   NextNote,
+  ReplayStep,
+  ReplayStepDrop,
+  ReplayStepHardDrop,
   ReplayStepType,
   SpinType,
   Tetromino,
@@ -19,6 +26,7 @@ import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
+import { ReplayConductor } from "utils/tetsimu/replay/replayConductor";
 import ReplayUrl, {
   ReplayStateFragments
 } from "utils/tetsimu/replay/replayUrl";
@@ -385,30 +393,13 @@ const initializeReplayState = (
     nexts.shift();
   }
 
-  let restStep = 0;
-  const garbages: GarbageInfo[] = [];
-  fragments.replaySteps.forEach((step) => {
-    if (step.type === ReplayStepType.HardDrop) {
-      if (step.attacked) {
-        garbages.push({
-          amount: step.attacked.line,
-          offset: 0,
-          restStep,
-        });
-        restStep = 1;
-      } else {
-        restStep++;
-      }
-    }
-  });
-
-  return {
+  const newState = {
     ...state,
     attackTypes: [],
     btbState: BtbState.None,
     current,
     field: fragments.field,
-    garbages,
+    garbages: [] as GarbageInfo[],
     hold: fragments.hold,
     isDead,
     noOfCycle,
@@ -423,7 +414,7 @@ const initializeReplayState = (
         btbState: BtbState.None,
         current,
         field: fragments.field,
-        garbages,
+        garbages: [] as GarbageInfo[],
         hold: fragments.hold,
         isDead,
         nexts,
@@ -435,6 +426,88 @@ const initializeReplayState = (
     ren: -1,
     replaySteps: fragments.replaySteps,
   };
+
+  const replaySteps = fragments.replaySteps;
+  if (
+    fragments.replaySteps.some(
+      (replayStep) => replayStep.type === ReplayStepType.HardDrop097
+    )
+  ) {
+    newState.replaySteps = convertReplaySteps(getReplayConductor(newState));
+  }
+
+  let restStep = 0;
+  const garbages: GarbageInfo[] = [];
+  replaySteps.forEach((step) => {
+    if (step.type === ReplayStepType.HardDrop) {
+      if (step.attacked) {
+        garbages.push({
+          amount: step.attacked.line,
+          offset: 0,
+          restStep,
+        });
+        restStep = 1;
+      } else {
+        restStep++;
+      }
+    }
+  });
+
+  newState.garbages = garbages;
+  newState.histories[0].garbages = garbages;
+
+  return newState;
+};
+
+const convertReplaySteps = (conductor: ReplayConductor): ReplayStep[] => {
+  conductor.state.replaySteps = [...conductor.state.replaySteps];
+
+  while (conductor.state.step < conductor.state.replaySteps.length) {
+    const state = conductor.state;
+    const replayStep = state.replaySteps[state.step];
+    if (replayStep.type === ReplayStepType.HardDrop097) {
+      const fieldHelper = new FieldHelper(state.field);
+      let row = state.current.pos.y;
+      const checkCurrent: ActiveTetromino = {
+        direction: replayStep.dir,
+        pos: {
+          x: replayStep.posX,
+          y: state.current.pos.y,
+        },
+        spinType: SpinType.None,
+        type: state.current.type,
+      };
+      for (; row >= 1; row--) {
+        checkCurrent.pos.y = row - 1;
+
+        if (fieldHelper.isOverlapping(checkCurrent)) {
+          break;
+        }
+      }
+
+      const dropStep: ReplayStepDrop = {
+        type: ReplayStepType.Drop,
+        dir: replayStep.dir,
+        pos: {
+          x: replayStep.posX,
+          y: row,
+        },
+        spinType: SpinType.None,
+      };
+      const hardDropStep: ReplayStepHardDrop = {
+        type: ReplayStepType.HardDrop,
+      };
+      state.replaySteps.splice(state.step, 1, dropStep, hardDropStep);
+    } else {
+      if (!conductor.forwardStep()) {
+        throw new Error(
+          "Can't forward replay step. This is maybe invalid url parameters passed."
+        );
+      }
+    }
+  }
+
+  return conductor.state.replaySteps;
 };
 
 export const replayToSimuMode = (state: ReplayState): ReplayToSimuAction => {

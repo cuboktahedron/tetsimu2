@@ -2,6 +2,7 @@ import {
   Direction,
   ReplayStepDrop,
   ReplayStepHardDrop,
+  ReplayStepHardDrop097,
   ReplayStepHold,
   ReplayStepType,
   SpinType,
@@ -44,4 +45,15 @@ export const makeReplayHardDropStep = (attacked?: {
       type: ReplayStepType.HardDrop,
     };
   }
+};
+
+export const makeReplayHardDrop097Step = (
+  dir: Direction,
+  posX: number
+): ReplayStepHardDrop097 => {
+  return {
+    type: ReplayStepType.HardDrop097,
+    dir,
+    posX,
+  };
 };

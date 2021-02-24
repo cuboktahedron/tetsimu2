@@ -14,6 +14,7 @@ import { makeHold } from "../testUtils/makeHold";
 import { makeReplayState } from "../testUtils/makeReplayState";
 import {
   makeReplayDropStep,
+  makeReplayHardDrop097Step,
   makeReplayHardDropStep,
   makeReplayHoldStep,
 } from "../testUtils/makeReplayStep";
@@ -181,6 +182,48 @@ describe("replayUrl", () => {
         numberOfCycle: 1,
         replayNexts: makeTetrominos(""),
         replaySteps: [],
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should generate states from url(v = 0.97)", () => {
+      const f = "307s000300tM003c14h00";
+      const ns = "IOvbg";
+      const ss = "1x6gwSw00";
+      const h = "0";
+      const m = `${TetsimuMode.Replay}`;
+      const v = "0.97";
+
+      const params = {
+        f,
+        ns,
+        ss,
+        h,
+        m,
+        v,
+      };
+      const gen = new ReplayUrl();
+      const actual = gen.toState(params);
+
+      const expected: ReplayStateFragments = {
+        field: makeField(
+          // prettier-ignore
+          "LNNZZNNNNN",
+          "LNNNZZNNNN",
+          "LLNIIIINNN"
+        ),
+        hold: makeHold(Tetromino.None, true),
+        offsetRange: 2,
+        nextNum: 5,
+        numberOfCycle: 1,
+        replayNexts: makeTetrominos("SOTJLZILJ"),
+        replaySteps: [
+          makeReplayHardDrop097Step(Direction.Left, 7),
+          makeReplayHardDrop097Step(Direction.Up, 8),
+          makeReplayDropStep(Direction.Down, 2, 1, SpinType.Spin),
+          makeReplayHardDropStep(),
+        ],
       };
 
       expect(actual).toEqual(expected);

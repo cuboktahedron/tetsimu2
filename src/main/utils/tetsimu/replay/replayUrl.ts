@@ -7,6 +7,12 @@ import {
   TetsimuMode,
 } from "types/core";
 import {
+  deserializeField as deserializeField097,
+  deserializeHold as deserializeHold097,
+  deserializeNexts as deserializeNexts097,
+  deserializeSteps as deserializeSteps097,
+} from "../097/deserializer";
+import {
   deserializeField,
   deserializeHold,
   deserializeNexts,
@@ -41,7 +47,7 @@ class ReplayUrl {
   toState(urlParams: { [key: string]: string }): ReplayStateFragments {
     const v = urlParams.v ?? ReplayUrl.DefaultVersion;
     if (v === "0.97") {
-      throw new UnsupportedUrlError("v0.97 url format is not supported yet.");
+      return new ReplayUrl097().toState(urlParams);
     } else if (v === "2.00") {
       throw new UnsupportedUrlError(
         `Url parameter version(${v}) is no longer supported.`
@@ -136,6 +142,30 @@ class ReplayUrl201 {
 
     const loc = location.href.replace(/\?.*$/, "");
     return `${loc}?${params.join("&")}`;
+  }
+}
+
+class ReplayUrl097 {
+  toState(params: { [key: string]: string }): ReplayStateFragments {
+    const f = params.f ?? "";
+    const ns = params.ns ?? "";
+    const ss = params.ss ?? "";
+    const h = params.h ?? "0";
+
+    const field = deserializeField097(f);
+    const hold = deserializeHold097(h);
+    const replayNexts = deserializeNexts097(ns);
+    const replaySteps = deserializeSteps097(ss);
+
+    return {
+      field,
+      hold,
+      nextNum: 5,
+      offsetRange: 2,
+      numberOfCycle: 1,
+      replayNexts,
+      replaySteps,
+    };
   }
 }
 
