@@ -174,17 +174,6 @@ export const initializeApp = (
   );
 
   switch (+paramsObj.m) {
-    case TetsimuMode.Simu: {
-      const fragments = new SimuUrl().toState(paramsObj);
-      return {
-        type: RootActionsType.InitializeApp,
-        payload: {
-          ...state,
-          mode: TetsimuMode.Simu,
-          simu: initializeSimuState(state.simu, fragments),
-        },
-      };
-    }
     case TetsimuMode.Edit: {
       const fragments = new EditUrl().toState(paramsObj);
       return {
@@ -208,11 +197,13 @@ export const initializeApp = (
       };
     }
     default: {
+      const fragments = new SimuUrl().toState(paramsObj);
       return {
         type: RootActionsType.InitializeApp,
         payload: {
           ...state,
           mode: TetsimuMode.Simu,
+          simu: initializeSimuState(state.simu, fragments),
         },
       };
     }
