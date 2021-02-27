@@ -10,7 +10,7 @@ const useStyles = useSidePanelStyles();
 const Stats: React.FC = () => {
   const { state } = React.useContext(SimuContext);
 
-  const stats = React.useMemo(() => getStats(state), [state.histories]);
+  const stats = React.useMemo(() => getStats(state), [state.step]);
   const classes = useStyles();
   return (
     <div className={classes.root}>
