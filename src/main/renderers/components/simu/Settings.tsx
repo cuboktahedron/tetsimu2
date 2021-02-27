@@ -181,7 +181,7 @@ const Settings: React.FC = () => {
     if (state.env.isTouchDevice) {
       return (
         <FormControl className={classes.formControl}>
-          <InputLabel id="tap-controller-type-label">Tap Controller</InputLabel>
+          <InputLabel id="tap-controller-type-label">tap controller</InputLabel>
           <Select
             labelId="tap-controller-type-label"
             id="tap-controller-type"
@@ -197,7 +197,7 @@ const Settings: React.FC = () => {
     } else {
       return (
         <FormControl className={classes.formControl}>
-          <InputLabel id="tap-controller-type-label">Tap Controller</InputLabel>
+          <InputLabel id="tap-controller-type-label">tap controller</InputLabel>
           <Select
             labelId="tap-controller-type-label"
             id="tap-controller-type"
@@ -218,7 +218,7 @@ const Settings: React.FC = () => {
           Display
         </FormLabel>
         <NumberTextField
-          label="Nexts"
+          label="nexts"
           numberProps={{
             min: 1,
             max: MAX_NEXTS_NUM,

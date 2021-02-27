@@ -141,7 +141,7 @@ const Tools: React.FC = () => {
         <TextFieldEx
           error={!!nextsPattern.errorText}
           fullWidth
-          label="Nexts pattern"
+          label="nexts pattern"
           InputLabelProps={{
             shrink: true,
           }}
@@ -154,7 +154,7 @@ const Tools: React.FC = () => {
       <div>
         <FormControl>
           <NumberTextField
-            label="Next"
+            label="nexts"
             numberProps={{
               min: 1,
               max: MAX_NEXT_BASE_NO,
@@ -172,7 +172,7 @@ const Tools: React.FC = () => {
       <div>
         <FormControl>
           <NumberTextField
-            label="No of cycle"
+            label="no of cycle"
             numberProps={{
               min: 0,
               max: 7,

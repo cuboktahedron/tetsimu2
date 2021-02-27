@@ -140,7 +140,7 @@ const Tools: React.FC = () => {
         </div>
         <FormControl>
           <NumberTextField
-            label="Step"
+            label="step"
             numberProps={{
               min: 0,
               max: state.replaySteps.length,
