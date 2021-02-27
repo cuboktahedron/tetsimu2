@@ -469,6 +469,81 @@ describe("rootModule", () => {
       expect(actual).toEqual(expected);
     });
 
+    it("should initialize replay state(v0.97)", () => {
+      const actual = initializeApp(
+        "f=307s000300tM003c14h00&ns=IOvbg&ss=1x6gwSw00&h=0&m=1&v=0.97",
+        initialRootState
+      );
+
+      const expectedReplay: ReplayState = {
+        ...initialReplayState,
+        attackTypes: [],
+        btbState: BtbState.None,
+        current: makeCurrent(Direction.Up, 4, 19, Tetromino.S, SpinType.None),
+        field: makeField(
+          // prettier-ignore
+          "LNNZZNNNNN",
+          "LNNNZZNNNN",
+          "LLNIIIINNN"
+        ),
+        garbages: [],
+        hold: makeHold(Tetromino.None, true),
+        histories: [
+          {
+            attackTypes: [],
+            btbState: BtbState.None,
+            current: makeCurrent(
+              Direction.Up,
+              4,
+              19,
+              Tetromino.S,
+              SpinType.None
+            ),
+            field: makeField(
+              // prettier-ignore
+              "LNNZZNNNNN",
+              "LNNNZZNNNN",
+              "LLNIIIINNN"
+            ),
+            garbages: [],
+            hold: makeHold(Tetromino.None, true),
+            isDead: false,
+            nexts: makeTetrominos("OTJLZILJ"),
+            noOfCycle: 2,
+            ren: -1,
+          },
+        ],
+        isDead: false,
+        nexts: makeTetrominos("OTJLZILJ"),
+        noOfCycle: 2,
+        ren: -1,
+        replayInfo: {
+          nextNum: 5,
+          offsetRange: 2,
+        },
+        replaySteps: [
+          makeReplayDropStep(Direction.Left, 7, 1),
+          makeReplayHardDropStep(),
+          makeReplayDropStep(Direction.Up, 8, 0),
+          makeReplayHardDropStep(),
+          makeReplayDropStep(Direction.Down, 2, 1, SpinType.Spin),
+          makeReplayHardDropStep(),
+        ],
+        step: 0,
+      };
+
+      const expected: InitializeAppAction = {
+        type: RootActionsType.InitializeApp,
+        payload: {
+          ...initialRootState,
+          replay: { ...expectedReplay },
+          mode: TetsimuMode.Replay,
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
     it("should initialize simu state with np", () => {
       const actual = initializeApp(
         "f=EjRWeAA_&np=I_J.p1LOSIJLOSTq1I&h=9&nc=3&nn=12&or=3&m=0&v=2.01",
@@ -624,6 +699,93 @@ describe("rootModule", () => {
       );
     });
 
+    it("should initialize simu state(v0.97)", () => {
+      const actual = initializeApp(
+        "f=04zhmu918QlDyg&ns=asK_Rzh&h=5&s=3&m=0&v=0.97",
+        initialRootState
+      );
+      const expectedSimu: SimuState = {
+        ...initialSimuState,
+        attackTypes: [],
+        btbState: BtbState.None,
+        config: {
+          ...initialSimuState.config,
+          garbage: initialSimuState.config.garbage,
+          nextNum: 5,
+          offsetRange: 2,
+        },
+        current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
+        field: makeField(
+          // prettier-ignore
+          "NIJLOSTZGG",
+          "IJLOSTZGGN"
+        ),
+        hold: makeHold(Tetromino.J, false),
+        histories: [
+          {
+            attackTypes: [],
+            btbState: BtbState.None,
+            currentType: Tetromino.I,
+            field: makeField(
+              // prettier-ignore
+              "NIJLOSTZGG",
+              "IJLOSTZGGN"
+            ),
+            garbages: [],
+            hold: makeHold(Tetromino.J, false),
+            isDead: false,
+            lastRoseUpColumn: -1,
+            nexts: {
+              bag: makeNextNote("I", 1),
+              settled: makeTetrominos("JLOSTZZTSOLJ"),
+              unsettled: makeNextNotes("I"),
+            },
+            ren: -1,
+            replayNextStep: 12,
+            replayStep: 0,
+            seed: actual.payload.simu.seed,
+          },
+        ],
+        isDead: false,
+        lastRoseUpColumn: -1,
+        nexts: {
+          bag: makeNextNote("I", 1),
+          settled: makeTetrominos("JLOSTZZTSOLJ"),
+          unsettled: makeNextNotes("I"),
+        },
+        ren: -1,
+        replayNexts: makeTetrominos("JLOSTZZTSOLJ"),
+        replayNextStep: 12,
+        replayStep: 0,
+        replaySteps: [],
+        retryState: {
+          bag: makeNextNote("IJLOSTZ", 7),
+          field: makeField(
+            // prettier-ignore
+            "NIJLOSTZGG",
+            "IJLOSTZGGN"
+          ),
+          hold: makeHold(Tetromino.J, false),
+          lastRoseUpColumn: -1,
+          seed: 3,
+          unsettledNexts: makeNextNotes("IJLOSTZZTSOLJI"),
+        },
+        seed: actual.payload.simu.seed,
+        step: 0,
+      };
+
+      const expected: InitializeAppAction = {
+        type: RootActionsType.InitializeApp,
+        payload: {
+          ...initialRootState,
+          simu: { ...expectedSimu },
+          mode: TetsimuMode.Simu,
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
     it("should initialize edit state", () => {
       const actual = initializeApp(
         "f=EjRWeAA_&np=I_J.p1LOSIJLOSTq1I&h=9&nc=3&m=2&v=2.01",
@@ -640,6 +802,41 @@ describe("rootModule", () => {
         },
         nexts: {
           nextNotes: makeNextNotes("I[J]p1LOSIJLOSTq1I"),
+        },
+      };
+
+      const expected: InitializeAppAction = {
+        type: RootActionsType.InitializeApp,
+        payload: {
+          ...initialRootState,
+          edit: { ...expectedEdit },
+          mode: TetsimuMode.Edit,
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should initialize edit state(v0.97)", () => {
+      const actual = initializeApp(
+        "f=04zhmu918QlDyg&ns=a0s6E&h=5&s=3&m=2&v=0.97",
+        initialRootState
+      );
+      const expectedEdit: EditState = {
+        ...initialEditState,
+        field: makeField(
+          // prettier-ignore
+          "NIJLOSTZGG",
+          "IJLOSTZGGN"
+        ),
+        hold: makeHold(Tetromino.J, false),
+        tools: {
+          ...initialEditState.tools,
+          nextsPattern: "IJq1q1LOq1TS",
+          noOfCycle: 1,
+        },
+        nexts: {
+          nextNotes: makeNextNotes("IJq1q1LOq1TS"),
         },
       };
 
