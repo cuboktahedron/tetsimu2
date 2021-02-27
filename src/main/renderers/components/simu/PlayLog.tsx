@@ -41,15 +41,17 @@ const PlayLog: React.FC = () => {
 
   const classes = useStyles();
 
-  const logContents = [...state.attackTypes].map(
-    (attackType) => attackLogs[attackType]
-  );
-  if (state.ren >= 1) {
-    logContents.push(`${state.ren} Ren`);
-  }
+  const logContents: string[] = [];
   if (state.btbState !== BtbState.None) {
     logContents.push("BtB: ON");
   }
+  if (state.ren >= 1) {
+    logContents.push(`${state.ren} Ren`);
+  }
+
+  logContents.push(
+    ...state.attackTypes.map((attackType) => attackLogs[attackType])
+  );
 
   const playLogs = logContents.map((logContent, index) => (
     <p className={classes.playLog} key={index}>
