@@ -79,6 +79,15 @@ const Settings: React.FC = () => {
           label="Show cycle"
         />
       </div>
+      <div>
+        <FormLabel component="legend" className={classes.settingGroupTitle}>
+          Replay Info
+        </FormLabel>
+      </div>
+      <ul>
+        <li>Nexts: {state.replayInfo.nextNum}</li>
+        <li>Offset range: {state.replayInfo.offsetRange}</li>
+      </ul>
     </div>
   );
 };
