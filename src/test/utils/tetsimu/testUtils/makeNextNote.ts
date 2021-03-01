@@ -1,13 +1,13 @@
-import { Tetromino } from "types/core";
+import { NextNote, Tetromino } from "types/core";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 
 const interpreter = new NextNotesInterpreter();
 
-export const makeNextNotes = (pattern: string) => {
+export const makeNextNotes = (pattern: string): NextNote[] => {
   return interpreter.interpret(pattern);
 };
 
-export const makeNextNote = (types: string, take: number) => {
+export const makeNextNote = (types: string, take: number): NextNote => {
   const candidates = types.split("").map((type) => {
     switch (type) {
       case "I":
@@ -32,5 +32,13 @@ export const makeNextNote = (types: string, take: number) => {
   return {
     candidates,
     take,
+  };
+};
+
+export const makeTerminalNote = (): NextNote => {
+  return {
+    candidates: [],
+    endNote: true,
+    take: 0,
   };
 };

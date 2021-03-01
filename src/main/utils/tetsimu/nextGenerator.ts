@@ -24,38 +24,31 @@ export default class NextGenerator {
     this.nextNotes = new NextNotes(_nextNotes);
   }
 
-  next(options?: {
-    endless?: boolean;
-  }): {
+  next(): {
     type: Tetromino;
     nextNotes: NextNote[];
     bag: NextNote;
   } {
-    options = Object.assign(
-      {},
-      {
-        endless: true,
-      },
-      options
-    );
-
     this.bag.refillIfNeeded();
 
     if (this.nextNotes.isEmpty()) {
-      if (!options.endless) {
-        return {
-          type: Tetromino.None,
-          nextNotes: [],
-          bag: this.bag,
-        };
-      } else {
-        this.nextNotes = new NextNotes([
-          {
-            candidates: [...this.bag.candidates],
-            take: this.bag.take,
-          },
-        ]);
-      }
+      this.nextNotes = new NextNotes([
+        {
+          candidates: [...this.bag.candidates],
+          take: this.bag.take,
+        },
+      ]);
+    } else if (this.nextNotes.headNote.endNote) {
+      this.bag.consump(Tetromino.None);
+
+      return {
+        type: Tetromino.None,
+        nextNotes: [this.nextNotes.headNote],
+        bag: {
+          candidates: this.bag.candidates,
+          take: this.bag.take,
+        },
+      };
     }
 
     let decidedCandidates: Tetromino[] = this.decideNextCandidates(
@@ -205,10 +198,14 @@ class NextNotes {
 
   constructor(_notes: NextNote[]) {
     this._notes = _notes.map((note) => {
-      return {
-        candidates: [...note.candidates],
-        take: note.take,
-      };
+      if (note.endNote) {
+        return { ...note };
+      } else {
+        return {
+          candidates: [...note.candidates],
+          take: note.take,
+        };
+      }
     });
   }
 
@@ -240,6 +237,10 @@ class NextNotes {
         candidates: [...fullBag],
         take: fullBag.length,
       };
+    } else if (note.endNote) {
+      return {
+        ...note,
+      };
     } else if (note.candidates.length === 0) {
       return {
         candidates: [...fullBag],
@@ -255,10 +256,14 @@ class NextNotes {
 
   get notes(): NextNote[] {
     return this._notes.map((note) => {
-      return {
-        candidates: [...note.candidates],
-        take: note.take,
-      };
+      if (note.endNote) {
+        return { ...note };
+      } else {
+        return {
+          candidates: [...note.candidates],
+          take: note.take,
+        };
+      }
     });
   }
 

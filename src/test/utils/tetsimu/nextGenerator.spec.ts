@@ -3,7 +3,11 @@ import { makeFullNextNote } from "utils/tetsimu/functions";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
-import { makeNextNote, makeNextNotes } from "./testUtils/makeNextNote";
+import {
+  makeNextNote,
+  makeNextNotes,
+  makeTerminalNote,
+} from "./testUtils/makeNextNote";
 
 describe("nextGenerator", () => {
   it("should generate 7 types per cycle", () => {
@@ -215,5 +219,27 @@ describe("nextGenerator", () => {
 
     const actual = gen.next();
     expect(actual.type).not.toBe(Tetromino.I);
+  });
+
+  it("should generate subsequent tetromino (I $)", () => {
+    const gen = new NextGenerator(
+      new RandomNumberGenerator(),
+      makeNextNotes("I $"),
+      makeNextNote("IJLOSTZ", 7)
+    );
+
+    const genNext1 = gen.next();
+    expect(genNext1).toEqual({
+      type: Tetromino.I,
+      nextNotes: [makeTerminalNote()],
+      bag: makeNextNote("JLOSTZ", 6),
+    });
+
+    const genNext2 = gen.next();
+    expect(genNext2).toEqual({
+      type: Tetromino.None,
+      nextNotes: [makeTerminalNote()],
+      bag: makeNextNote("JLOSTZ", 5),
+    });
   });
 });

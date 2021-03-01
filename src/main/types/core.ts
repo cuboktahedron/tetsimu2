@@ -83,7 +83,9 @@ export type HoldState = {
 
 export type NextNote = {
   candidates: Tetromino[];
+  endNote?: boolean;
   take: number;
+  
 };
 
 export type CycleBag = {

@@ -2,7 +2,7 @@ import { NextNote } from "types/core";
 import NextNotesInterpreter, {
   NextNotesSyntaxError,
 } from "utils/tetsimu/nextNotesInterpreter";
-import { makeNextNote, makeNextNotes } from "./testUtils/makeNextNote";
+import { makeNextNote, makeNextNotes, makeTerminalNote } from "./testUtils/makeNextNote";
 
 describe("NextNotesInterpreter", () => {
   describe("should interpret", () => {
@@ -81,6 +81,30 @@ describe("NextNotesInterpreter", () => {
       const actual = interpreter.interpret("q20");
       const expected: NextNote[] = [makeNextNote("", 20)];
 
+      expect(actual).toEqual(expected);
+    });
+
+    it("IJ$ ", () => {
+      const interpreter = new NextNotesInterpreter();
+      const actual = interpreter.interpret("IJ$");
+      const expected: NextNote[] = [
+        makeNextNote("I", 1),
+        makeNextNote("J", 1),
+        makeTerminalNote(),
+      ];
+  
+      expect(actual).toEqual(expected);
+    });
+
+    it("I J $ ", () => {
+      const interpreter = new NextNotesInterpreter();
+      const actual = interpreter.interpret("I J $");
+      const expected: NextNote[] = [
+        makeNextNote("I", 1),
+        makeNextNote("J", 1),
+        makeTerminalNote(),
+      ];
+  
       expect(actual).toEqual(expected);
     });
   });

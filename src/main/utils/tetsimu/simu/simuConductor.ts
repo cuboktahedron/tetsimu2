@@ -277,6 +277,11 @@ export class SimuConductor {
   }
 
   holdTetromino = (): boolean => {
+    const current = this.state.current;
+    if (current.type === Tetromino.None) {
+      return false;
+    }
+
     if (this.state.isDead) {
       return false;
     }
@@ -298,7 +303,7 @@ export class SimuConductor {
       this.state.nexts.bag
     );
     if (this.state.hold.type === Tetromino.None) {
-      const genNext = nextGen.next({ endless: true });
+      const genNext = nextGen.next();
 
       newCurrentType = this.state.nexts.settled[0];
       newNexts = {
@@ -337,6 +342,11 @@ export class SimuConductor {
   };
 
   moveTetromino = (direction: Direction): boolean => {
+    const current = this.state.current;
+    if (current.type === Tetromino.None) {
+      return false;
+    }
+
     if (this.state.isDead) {
       return false;
     }
@@ -362,11 +372,6 @@ export class SimuConductor {
           return 0;
       }
     })();
-
-    const current = this.state.current;
-    if (current.type === Tetromino.None) {
-      throw new Error(`Specified invalid tetromino value(${current.type})`);
-    }
 
     const failed = this.fieldHelper.isOverlapping({
       ...current,
@@ -454,6 +459,11 @@ export class SimuConductor {
   }
 
   rotateTetrominoLeft(): boolean {
+    const current = this.state.current;
+    if (current.type === Tetromino.None) {
+      return false;
+    }
+
     if (this.state.isDead) {
       return false;
     }
@@ -468,6 +478,11 @@ export class SimuConductor {
   }
 
   rotateTetrominoRight(): boolean {
+    const current = this.state.current;
+    if (current.type === Tetromino.None) {
+      return false;
+    }
+
     if (this.state.isDead) {
       return false;
     }

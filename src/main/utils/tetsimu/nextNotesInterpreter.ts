@@ -1,10 +1,11 @@
-import { string, StringParser } from "typed-loquat";
+import { Maybe, string, StringParser } from "typed-loquat";
 import { NextNote, Tetromino } from "types/core";
 
-// tetromino   = "I" | "J" | "L" | "O" | "S" | "T" | "Z"
-// cadidates   = "[" tetromino , { [ "," ] tetromino } , "]"
-// pattern     = tetromino | candidates , [ "p" , <digits> ] | "q" , <digits>
-// patterns    = pattern , { [ "," ] , pattern } <eof> | <eof>
+// tetromino    = "I" | "J" | "L" | "O" | "S" | "T" | "Z"
+// cadidates    = "[" tetromino , { [ "," ] tetromino } , "]"
+// pattern      = tetromino | candidates , [ "p" , <digits> ] | "q" , <digits>
+// patterns     = pattern , { [ "," ] , pattern }
+// nextPatterns = patterns , { "$" } , <eof>
 
 type P<T> = StringParser<T>;
 const p = string();
@@ -96,7 +97,11 @@ class PTNones {
   constructor(readonly take: number) {}
 }
 
-type Pattern = PTTetromino | PTCandidates | PTNones;
+class PTEnd {
+  constructor() {}
+}
+
+type Pattern = PTTetromino | PTCandidates | PTNones | PTEnd;
 
 const patternsP: P<Pattern[]> = p
   .do<Pattern[]>(function* () {
@@ -114,7 +119,21 @@ const patternsP: P<Pattern[]> = p
   )
   .label("patterns");
 
-const parser: P<Pattern[]> = p.spaces.and(patternsP).skip(p.eof);
+const nextPatternsP: P<Pattern[]> = p
+  .do<Pattern[]>(function* () 
+  {
+    yield p.spaces;
+    const _patterns = yield lexeme(patternsP);
+    const patterns = (_patterns as unknown) as Pattern[];
+    const _endNote = yield lexeme(p.char("$").optionMaybe());
+    const endNote = (_endNote as unknown) as Maybe<String>;
+    if (!endNote.empty) {
+      patterns.push(new PTEnd());
+    }
+    yield p.eof;
+    return patterns;
+  })
+  .label("nextPatterns");
 
 export default class NextNotesInterpreter {
   interpret(patterns: string): NextNote[] {
@@ -127,16 +146,24 @@ export default class NextNotesInterpreter {
         };
       } else if (pattern instanceof PTCandidates) {
         if (pattern.candidates.length < pattern.take) {
-          throw new NextNotesSyntaxError("Number of selection must be less or equal number of options");
+          throw new NextNotesSyntaxError(
+            "Number of selection must be less or equal number of options"
+          );
         }
         return {
           candidates: pattern.candidates,
           take: pattern.take,
         };
-      } else {
+      } else if (pattern instanceof PTNones) {
         return {
           candidates: [],
           take: pattern.take,
+        };
+      } else {
+        return {
+          candidates: [],
+          endNote: true,
+          take: 0,
         };
       }
     });
@@ -145,7 +172,7 @@ export default class NextNotesInterpreter {
   }
 
   parse(patterns: string): Pattern[] {
-    const result = parser.parse("", patterns);
+    const result = nextPatternsP.parse("", patterns);
     if (result.success) {
       return result.value;
     } else {
