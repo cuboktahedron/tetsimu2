@@ -35,7 +35,8 @@ import { makeGarbage } from "../../utils/tetsimu/testUtils/makeGarbage";
 import { makeHold } from "../../utils/tetsimu/testUtils/makeHold";
 import {
   makeNextNote,
-  makeNextNotes
+  makeNextNotes,
+  makeTerminalNote
 } from "../../utils/tetsimu/testUtils/makeNextNote";
 import { makeReplayState } from "../../utils/tetsimu/testUtils/makeReplayState";
 import {
@@ -549,7 +550,7 @@ describe("rootModule", () => {
     describe("simu mode", () => {
       it("should initialize simu state with np", () => {
         const actual = initializeApp(
-          "f=EjRWeAA_&np=I_J.p1LOSIJLOSTq1I&h=9&nc=3&nn=12&or=3&m=0&v=2.01",
+          "f=EjRWeAA_&np=I_J.p1LOSIJLOSTq1I-&h=9&nc=3&nn=12&or=3&m=0&v=2.01",
           initialRootState
         );
         const expectedSimu: SimuState = {
@@ -578,7 +579,7 @@ describe("rootModule", () => {
               nexts: {
                 bag: makeNextNote("JLOSTZ", 6),
                 settled: makeTetrominos("JLOSIJLOSTZI"),
-                unsettled: [],
+                unsettled: [makeTerminalNote()],
               },
               ren: -1,
               replayNextStep: 12,
@@ -591,7 +592,7 @@ describe("rootModule", () => {
           nexts: {
             bag: makeNextNote("JLOSTZ", 6),
             settled: makeTetrominos("JLOSIJLOSTZI"),
-            unsettled: [],
+            unsettled: [makeTerminalNote()],
           },
           ren: -1,
           replayNexts: makeTetrominos("JLOSIJLOSTZI"),
@@ -604,7 +605,7 @@ describe("rootModule", () => {
             hold: makeHold(Tetromino.O, false),
             lastRoseUpColumn: -1,
             seed: actual.payload.simu.retryState.seed,
-            unsettledNexts: makeNextNotes("I[J]p1LOS IJLOSTq1 I"),
+            unsettledNexts: makeNextNotes("I[J]p1LOS IJLOSTq1 I $"),
           },
           seed: actual.payload.simu.seed,
           step: 0,
@@ -796,7 +797,7 @@ describe("rootModule", () => {
     describe("edit mode", () => {
       it("should initialize edit state", () => {
         const actual = initializeApp(
-          "f=EjRWeAA_&np=I_J.p1LOSIJLOSTq1I&h=9&nc=3&m=2&v=2.01",
+          "f=EjRWeAA_&np=I_J.p1LOSIJLOSTq1I-&h=9&nc=3&m=2&v=2.03",
           initialRootState
         );
         const expectedEdit: EditState = {
@@ -805,11 +806,11 @@ describe("rootModule", () => {
           hold: makeHold(Tetromino.O, false),
           tools: {
             ...initialEditState.tools,
-            nextsPattern: "I[J]p1LOSIJLOSTq1I",
+            nextsPattern: "I[J]p1LOSIJLOSTq1I$",
             noOfCycle: 3,
           },
           nexts: {
-            nextNotes: makeNextNotes("I[J]p1LOSIJLOSTq1I"),
+            nextNotes: makeNextNotes("I[J]p1LOSIJLOSTq1I$"),
           },
         };
 

@@ -3,7 +3,7 @@ import { FieldState, HoldState, Tetromino, TetsimuMode } from "types/core";
 import {
   deserializeField as deserializeField097,
   deserializeHold as deserializeHold097,
-  deserializeNexts as deserializeNexts097
+  deserializeNexts as deserializeNexts097,
 } from "../097/deserializer";
 import { deserializeField, deserializeHold } from "../deserializer";
 import { serializeField, serializeHold } from "../serializer";
@@ -17,7 +17,7 @@ export type EditStateFragments = {
 };
 
 class EditUrl {
-  private static DefaultVersion = "2.02";
+  private static DefaultVersion = "2.03";
 
   fromState(state: EditState): string {
     const gen = new EditUrl201();
@@ -41,7 +41,7 @@ class EditUrl {
 }
 
 class EditUrl201 {
-  public static Version = "2.02";
+  public static Version = "2.03";
 
   toState(params: { [key: string]: string }): EditStateFragments {
     const f = params.f ?? "";
@@ -59,7 +59,10 @@ class EditUrl201 {
 
     const field = deserializeField(f);
     const hold = deserializeHold(h);
-    const nextsPattern = np.replace(/_/g, "[").replace(/\./g, "]");
+    const nextsPattern = np
+      .replace(/_/g, "[")
+      .replace(/\./g, "]")
+      .replace(/-/g, "$");
 
     return {
       field,
@@ -74,7 +77,8 @@ class EditUrl201 {
     const np = state.tools.nextsPattern
       .replace(/[\s,]*/g, "")
       .replace(/\[/g, "_")
-      .replace(/\]/g, ".");
+      .replace(/\]/g, ".")
+      .replace(/\$/g, "-");
     const h = serializeHold(state.hold);
     const nc = state.tools.noOfCycle;
     const nn = 5;

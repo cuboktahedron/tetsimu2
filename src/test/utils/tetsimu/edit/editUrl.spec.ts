@@ -25,7 +25,7 @@ describe("editUrl", () => {
         hold: makeHold(Tetromino.L, false),
         tools: {
           isCellValueMultiSelection: false,
-          nextsPattern: "q2 [IJLOSTZ]p3, IJO",
+          nextsPattern: "q2 [IJLOSTZ]p3, IJO$",
           nextBaseNo: 2,
           noOfCycle: 3,
           selectedCellValues: [FieldCellValue.None],
@@ -37,17 +37,17 @@ describe("editUrl", () => {
       const loc = location.href.replace(/\?.*$/, "");
 
       const f = "cAAAAAc_";
-      const np = "q2_IJLOSTZ.p3IJO";
+      const np = "q2_IJLOSTZ.p3IJO-";
       const h = "7";
       const nc = "3";
       const nn = "5";
       const m = TetsimuMode.Simu;
-      const v = "2.02";
+      const v = "2.03";
       const expected = `${loc}?f=${f}&np=${np}&h=${h}&nc=${nc}&nn=${nn}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
 
-    it("should generate url of states", () => {
+    it("should generate url of minimum states", () => {
       const state = makeEditState({
         field: makeField("NNNNNNNNNN"),
         hold: makeHold(Tetromino.None, true),
@@ -68,7 +68,7 @@ describe("editUrl", () => {
       const loc = location.href.replace(/\?.*$/, "");
       const nn = "5";
       const m = TetsimuMode.Simu;
-      const v = "2.02";
+      const v = "2.03";
       const expected = `${loc}?nn=${nn}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
@@ -79,9 +79,9 @@ describe("editUrl", () => {
       const f = "EjRWeBI0VngA";
       const h = "3";
       const nc = "6";
-      const np = "q2_IJ.p2LOS";
+      const np = "q2_IJ.p2LOS-";
       const m = `${TetsimuMode.Edit}`;
-      const v = "2.02";
+      const v = "2.03";
 
       const params = {
         f,
@@ -101,14 +101,14 @@ describe("editUrl", () => {
           "IJLOSTZGNN"
         ),
         hold: makeHold(Tetromino.I, false),
-        nextsPattern: "q2[IJ]p2LOS",
+        nextsPattern: "q2[IJ]p2LOS$",
         numberOfCycle: 6,
       };
 
       expect(actual).toEqual(expected);
     });
 
-    it("should generate states from url", () => {
+    it("should generate states from url with no params", () => {
       const gen = new EditUrl();
       const actual = gen.toState({});
 

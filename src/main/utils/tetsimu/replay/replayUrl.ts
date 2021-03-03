@@ -37,7 +37,7 @@ export type ReplayStateFragments = {
 };
 
 class ReplayUrl {
-  private static DefaultVersion = "2.02";
+  private static DefaultVersion = "2.03";
 
   fromState(state: ReplayState): string {
     const gen = new ReplayUrl201();
@@ -61,7 +61,7 @@ class ReplayUrl {
 }
 
 class ReplayUrl201 {
-  public static Version = "2.02";
+  public static Version = "2.03";
 
   toState(params: { [key: string]: string }): ReplayStateFragments {
     const f = params.f ?? "";

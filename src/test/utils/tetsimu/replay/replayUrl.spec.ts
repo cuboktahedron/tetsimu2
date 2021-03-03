@@ -74,7 +74,7 @@ describe("replayUrl", () => {
       const nn = "12";
       const or = "3";
       const m = TetsimuMode.Replay;
-      const v = "2.02";
+      const v = "2.03";
       const expected = `${loc}?f=${f}&ns=${ns}&ss=${ss}&h=${h}&nc=${nc}&nn=${nn}&or=${or}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
@@ -115,7 +115,7 @@ describe("replayUrl", () => {
       const loc = location.href.replace(/\?.*$/, "");
       const ns = "IA__";
       const m = TetsimuMode.Replay;
-      const v = "2.02";
+      const v = "2.03";
       const expected = `${loc}?ns=${ns}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });

@@ -101,7 +101,10 @@ class SimuUrl201 {
     const nextNotes: NextNote[] = (() => {
       if (np) {
         const interpreter = new NextNotesInterpreter();
-        const pattern = np.replace(/_/g, "[").replace(/\./g, "]");
+        const pattern = np
+          .replace(/_/g, "[")
+          .replace(/\./g, "]")
+          .replace(/-/g, "$");
         return interpreter.interpret(pattern);
       } else {
         const replayNexts = deserializeNexts(ns);

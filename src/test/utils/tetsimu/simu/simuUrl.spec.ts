@@ -3,11 +3,11 @@ import {
   Direction,
   SpinType,
   Tetromino,
-  TetsimuMode
+  TetsimuMode,
 } from "types/core";
 import SimuUrl, {
   SimuStateFragments,
-  UNSPECIFIED_SEED
+  UNSPECIFIED_SEED,
 } from "utils/tetsimu/simu/simuUrl";
 import { makeField } from "../testUtils/makeField";
 import { makeHold } from "../testUtils/makeHold";
@@ -15,7 +15,7 @@ import { makeNextNote, makeNextNotes } from "../testUtils/makeNextNote";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
-  makeReplayHoldStep
+  makeReplayHoldStep,
 } from "../testUtils/makeReplayStep";
 import { makeSimuState } from "../testUtils/makeSimuState";
 import { makeTetrominos } from "../testUtils/makeTetrominos";
@@ -167,9 +167,9 @@ describe("simuUrl", () => {
 
     it("should generate states from url(v2.01 <= v) with np", () => {
       const ns = "Kcu4";
-      const np = "q2_IJ.p2LOS";
+      const np = "q2_IJ.p2LOS-";
       const m = `${TetsimuMode.Simu}`;
-      const v = "2.01";
+      const v = "2.03";
 
       const params = {
         ns,
@@ -186,7 +186,7 @@ describe("simuUrl", () => {
         offsetRange: 2,
         nextNum: 5,
         numberOfCycle: 1,
-        nextNotes: makeNextNotes("q2 [IJ]p2 LOS"),
+        nextNotes: makeNextNotes("q2 [IJ]p2 LOS $"),
         seed: UNSPECIFIED_SEED,
       };
 
