@@ -18,7 +18,7 @@ export const makeTetrominos = (types: string): Tetromino[] => {
       case "Z":
         return Tetromino.Z;
       default:
-        throw new Error(`Specified invalid letter of field tetromino(${type})`);
+        return Tetromino.None;
     }
   });
 

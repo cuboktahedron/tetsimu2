@@ -1,4 +1,10 @@
-import { Button, Divider, FormControl } from "@material-ui/core";
+import {
+  Button,
+  Checkbox,
+  Divider,
+  FormControl,
+  FormControlLabel,
+} from "@material-ui/core";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import {
   buildUpField,
@@ -7,7 +13,7 @@ import {
   changeNoOfCycle,
   clearEdit,
   flipField,
-  slideField
+  slideField,
 } from "ducks/edit/actions";
 import { changeTetsimuMode, editToSimuMode } from "ducks/root/actions";
 import React, { useEffect } from "react";
@@ -80,22 +86,41 @@ const Tools: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
     const value = e.currentTarget.value;
+    innerChangeNextsPattern(value);
+  };
+
+  const innerChangeNextsPattern = (nextsPattern: string): void => {
     const interpreter = new NextNotesInterpreter();
     try {
-      interpreter.interpret(value);
+      interpreter.interpret(nextsPattern);
       setNextsPattern({
         errorText: "",
-        value,
+        value: nextsPattern,
       });
 
-      dispatch(changeNextsPattern(value));
+      dispatch(changeNextsPattern(nextsPattern));
     } catch (error) {
       const errorText = error.message ?? "ParseError";
       setNextsPattern({
         errorText,
-        value,
+        value: nextsPattern,
       });
     }
+  };
+
+  const handleEndlessChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    const trimgedNextsPattern = nextsPattern.value.trimRight();
+    let newNextsPattern;
+    if (checked) {
+      newNextsPattern = trimgedNextsPattern
+        .substring(0, trimgedNextsPattern.length - 1)
+        .trimRight();
+    } else {
+      newNextsPattern = trimgedNextsPattern + " $";
+    }
+
+    innerChangeNextsPattern(newNextsPattern);
   };
 
   const handleNextBaseNoChange = (value: number): void => {
@@ -149,6 +174,17 @@ const Tools: React.FC = () => {
           helperText={nextsPattern.errorText}
           variant="outlined"
           onChange={handleNextsPatternChange}
+        />
+      </div>
+      <div>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={!nextsPattern.value.trimRight().endsWith("$")}
+              onChange={handleEndlessChange}
+            />
+          }
+          label="Generate nexts endlessly"
         />
       </div>
       <div>

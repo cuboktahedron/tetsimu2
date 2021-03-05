@@ -1,7 +1,7 @@
 import {
   getNextAttacks,
   getReplayConductor,
-  getUrgentAttack
+  getUrgentAttack,
 } from "ducks/replay/selectors";
 import { EditState } from "stores/EditState";
 import { ReplayState } from "stores/ReplayState";
@@ -19,7 +19,7 @@ import {
   ReplayStepType,
   SpinType,
   Tetromino,
-  TetsimuMode
+  TetsimuMode,
 } from "types/core";
 import EditUrl, { EditStateFragments } from "utils/tetsimu/edit/editUrl";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
@@ -28,11 +28,11 @@ import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 import { ReplayConductor } from "utils/tetsimu/replay/replayConductor";
 import ReplayUrl, {
-  ReplayStateFragments
+  ReplayStateFragments,
 } from "utils/tetsimu/replay/replayUrl";
 import SimuUrl, {
   SimuStateFragments,
-  UNSPECIFIED_SEED
+  UNSPECIFIED_SEED,
 } from "utils/tetsimu/simu/simuUrl";
 import {
   ChangeTetsimuModeAction,
@@ -43,7 +43,7 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction
+  SimuToReplayAction,
 } from "./types";
 
 export const changeTetsimuMode = (
@@ -633,22 +633,29 @@ export const replayToSimuMode = (state: ReplayState): ReplayToSimuAction => {
 };
 
 export const simuToEditMode = (state: SimuState): SimuToEditAction => {
-  const valueToKey = Object.fromEntries(
-    Object.entries(Tetromino).map(([key, value]) => [value, key])
+  const tetrominoToPattern = Object.fromEntries(
+    Object.entries(Tetromino).map(([key, value]) => {
+      if (value === Tetromino.None) {
+        return [value, "$"];
+      } else {
+        return [value, key];
+      }
+    })
   );
 
   const settled = [
     state.current.type,
     ...state.nexts.settled.slice(0, state.config.nextNum),
   ];
+  const indexOfNone = settled.indexOf(Tetromino.None);
+  const sliceEnd = indexOfNone === -1 ? settled.length : indexOfNone + 1;
 
-  const nextsPattern = settled.map((type) => valueToKey[type]).join(" ");
-  const nextNotes = settled.map((type) => {
-    return {
-      candidates: [type],
-      take: 1,
-    };
-  });
+  const nextsPattern = settled
+    .slice(0, sliceEnd)
+    .map((type) => tetrominoToPattern[type])
+    .join(" ");
+  const interpreter = new NextNotesInterpreter();
+  const nextNotes = interpreter.interpret(nextsPattern);
 
   let noOfCycle = (7 - (state.nexts.bag.take + (MAX_NEXTS_NUM - 7))) % 7;
   if (noOfCycle < 1) {

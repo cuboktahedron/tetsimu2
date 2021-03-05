@@ -115,7 +115,7 @@ describe("rootModule", () => {
   });
 
   describe("simuToEditMode", () => {
-    it("should change mode and take over state", () => {
+    it("should change mode and take over state with endless notes", () => {
       const actual = simuToEditMode(
         makeSimuState({
           config: {
@@ -143,6 +143,41 @@ describe("rootModule", () => {
           tools: {
             nextsPattern: "I J L O S T",
             noOfCycle: 6,
+          },
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should change mode and take over state with not endless", () => {
+      const actual = simuToEditMode(
+        makeSimuState({
+          config: {
+            nextNum: 5,
+          },
+          current: makeCurrent(Direction.Up, 4, 19, Tetromino.T),
+          field: makeField("NNNNNNNNNN"),
+          hold: makeHold(Tetromino.O, true),
+          nexts: {
+            bag: makeNextNote("IJ", 2),
+            settled: makeTetrominos("JL__________"),
+            unsettled: makeNextNotes("$"),
+          },
+        })
+      );
+
+      const expected: SimuToEditAction = {
+        type: RootActionsType.SimuToEditMode,
+        payload: {
+          field: makeField("NNNNNNNNNN"),
+          hold: makeHold(Tetromino.O, true),
+          nexts: {
+            nextNotes: new NextNotesInterpreter().interpret("TJL$"),
+          },
+          tools: {
+            nextsPattern: "T J L $",
+            noOfCycle: 7,
           },
         },
       };
