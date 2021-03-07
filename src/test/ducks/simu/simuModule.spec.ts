@@ -6,6 +6,7 @@ import { PlayMode, SimuRetryState } from "types/simu";
 import { sleep } from "utils/function";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { makeField } from "../../utils/tetsimu/testUtils/makeField";
+import { makeGarbage } from "../../utils/tetsimu/testUtils/makeGarbage";
 import { makeHold } from "../../utils/tetsimu/testUtils/makeHold";
 import { makeNextNote } from "../../utils/tetsimu/testUtils/makeNextNote";
 import { makeReplayHoldStep } from "../../utils/tetsimu/testUtils/makeReplayStep";
@@ -15,10 +16,21 @@ import { makeSimuState } from "../../utils/tetsimu/testUtils/makeSimuState";
 describe("simuModule", () => {
   describe("retry", () => {
     it("should retry from initial state", () => {
-      const config = { nextNum: 3 };
+      const config = {
+        nextNum: 3,
+        garbage: {
+          a1: 10,
+          a2: 100,
+          b1: 10,
+          b2: 100,
+          generates: true,
+          level: 100,
+        },
+      };
       const retryState: SimuRetryState = {
         bag: makeNextNote("IOT", 3),
         field: makeField("IJLOSTZNNN"),
+        garbages: [makeGarbage(0, 2), makeGarbage(8, 5)],
         hold: makeHold(Tetromino.T, false),
         lastRoseUpColumn: 3,
         unsettledNexts: new NextNotesInterpreter().interpret("I"),
@@ -29,7 +41,6 @@ describe("simuModule", () => {
         getSimuConductor(
           makeSimuState({
             config,
-            isDead: true,
             retryState,
             replayNexts: [Tetromino.I],
             replayNextStep: 10,
@@ -57,6 +68,15 @@ describe("simuModule", () => {
       expect(actual1.type).toBe(SimuActionsType.Retry);
       expect(actual1.payload.current.type).toEqual(Tetromino.I);
       expect(actual1.payload.field).toEqual(retryState.field);
+      expect(actual1.payload.garbages).toEqual(
+        retryState.garbages.concat([
+          makeGarbage(1, 1),
+          makeGarbage(1, 1),
+          makeGarbage(1, 1),
+          makeGarbage(1, 1),
+          makeGarbage(1, 1),
+        ])
+      );
       expect(actual1.payload.hold).toEqual(retryState.hold);
       expect(actual1.payload.isDead).toBeFalsy();
       expect(actual1.payload.lastRoseUpColumn).toEqual(
@@ -73,10 +93,21 @@ describe("simuModule", () => {
 
   describe("superRetry", () => {
     it("should retry from initial state with another seed", async () => {
-      const config = { nextNum: 3 };
+      const config = {
+        nextNum: 3,
+        garbage: {
+          a1: 150,
+          a2: 5,
+          b1: 10,
+          b2: 100,
+          generates: true,
+          level: 100,
+        },
+      };
       const retryState: SimuRetryState = {
         bag: makeNextNote("IOT", 3),
         field: makeField("IJLOSTZNNN"),
+        garbages: [makeGarbage(0, 1), makeGarbage(1, 1)],
         hold: makeHold(Tetromino.T, false),
         lastRoseUpColumn: 3,
         unsettledNexts: new NextNotesInterpreter().interpret("[IJL]p3"),
@@ -108,6 +139,10 @@ describe("simuModule", () => {
 
       expect(actual1).not.toEqual(actual2);
       expect(actual1.type).toBe(SimuActionsType.SuperRetry);
+      expect(actual1.payload.garbages.slice(0, 2)).toEqual(
+        actual2.payload.garbages.slice(0, 2)
+      );
+      expect(actual1.payload.garbages).not.toEqual(actual2.payload.garbages);
       expect(actual1.payload.current.type).toEqual(Tetromino.I);
       expect(actual1.payload.field).toEqual(actual2.payload.field);
       expect(actual1.payload.hold).toEqual(actual2.payload.hold);
@@ -149,6 +184,7 @@ describe("simuModule", () => {
       const retryState: SimuRetryState = {
         bag: makeNextNote("IOT", 3),
         field: makeField("IJLOSTZNNN"),
+        garbages: [],
         hold: {
           canHold: false,
           type: Tetromino.T,
@@ -201,6 +237,7 @@ describe("simuModule", () => {
       const retryState: SimuRetryState = {
         bag: makeNextNote("IOT", 3),
         field: makeField("IJLOSTZNNN"),
+        garbages: [],
         hold: {
           canHold: false,
           type: Tetromino.T,

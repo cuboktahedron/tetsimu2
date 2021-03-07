@@ -1,3 +1,4 @@
+import { GarbageInfo } from "stores/ReplayState";
 import {
   CycleBag,
   FieldState,
@@ -40,6 +41,7 @@ export type SimuConfig = {
 export type SimuRetryState = {
   bag: CycleBag;
   field: FieldState;
+  garbages: GarbageInfo[];
   hold: HoldState;
   lastRoseUpColumn: number;
   unsettledNexts: NextNote[];

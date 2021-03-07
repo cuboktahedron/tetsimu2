@@ -427,14 +427,17 @@ export class SimuConductor {
       unsettled: lastGenNext.nextNotes,
       bag: lastGenNext.bag,
     };
-
     const newGarbages = (() => {
-      const gGen = new GarbageGenerator(
-        this.rng,
-        this.state.config.garbage,
-        []
-      );
-      return gGen.next(this.state.config.garbage.generates);
+      if (this.state.config.garbage.generates) {
+        const gGen = new GarbageGenerator(
+          this.rng,
+          this.state.config.garbage,
+          this.state.retryState.garbages,
+        );
+        return gGen.generateGarbages();
+      } else {
+        return this.state.garbages;
+      }
     })();
 
     this.state.attackTypes = [];
@@ -548,22 +551,28 @@ export class SimuConductor {
       unsettled: lastGenNext.nextNotes,
       bag: lastGenNext.bag,
     };
+    const newGarbages = (() => {
+      if (this.state.config.garbage.generates) {
+        const gGen = new GarbageGenerator(
+          this.rng,
+          this.state.config.garbage,
+          this.state.retryState.garbages,
+        );
+        return gGen.generateGarbages();
+      } else {
+        return this.state.garbages;
+      }
+    })();
+
     const newRetryState: SimuRetryState = {
       bag: this.state.retryState.bag,
       field: newField,
+      garbages: this.state.retryState.garbages,
       hold: newHold,
       lastRoseUpColumn: this.state.retryState.lastRoseUpColumn,
       unsettledNexts: this.state.retryState.unsettledNexts,
       seed: initialSeed,
     };
-    const newGarbages = (() => {
-      const gGen = new GarbageGenerator(
-        this.rng,
-        this.state.config.garbage,
-        []
-      );
-      return gGen.next(this.state.config.garbage.generates);
-    })();
 
     this.state.attackTypes = [];
     this.state.btbState = BtbState.None;
@@ -633,6 +642,7 @@ export class SimuConductor {
         canHold: true,
         type: Tetromino.None,
       },
+      garbages: [],
       lastRoseUpColumn: -1,
       seed: this.rng.seed,
       unsettledNexts: [],

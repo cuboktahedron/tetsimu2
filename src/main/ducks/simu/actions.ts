@@ -71,6 +71,7 @@ export const clearSimu = (conductor: SimuConductor): ClearSimuAction => {
       btbState: newState.btbState,
       current: newState.current,
       field: newState.field,
+      garbages: newState.garbages,
       histories: newState.histories,
       hold: newState.hold,
       isDead: newState.isDead,

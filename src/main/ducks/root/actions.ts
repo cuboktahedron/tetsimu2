@@ -1,7 +1,7 @@
 import {
   getNextAttacks,
   getReplayConductor,
-  getUrgentAttack,
+  getUrgentAttack
 } from "ducks/replay/selectors";
 import { EditState } from "stores/EditState";
 import { ReplayState } from "stores/ReplayState";
@@ -19,7 +19,7 @@ import {
   ReplayStepType,
   SpinType,
   Tetromino,
-  TetsimuMode,
+  TetsimuMode
 } from "types/core";
 import EditUrl, { EditStateFragments } from "utils/tetsimu/edit/editUrl";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
@@ -28,11 +28,12 @@ import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 import { ReplayConductor } from "utils/tetsimu/replay/replayConductor";
 import ReplayUrl, {
-  ReplayStateFragments,
+  ReplayStateFragments
 } from "utils/tetsimu/replay/replayUrl";
+import GarbageGenerator from "utils/tetsimu/simu/garbageGenerator";
 import SimuUrl, {
   SimuStateFragments,
-  UNSPECIFIED_SEED,
+  UNSPECIFIED_SEED
 } from "utils/tetsimu/simu/simuUrl";
 import {
   ChangeTetsimuModeAction,
@@ -43,7 +44,7 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction,
+  SimuToReplayAction
 } from "./types";
 
 export const changeTetsimuMode = (
@@ -134,6 +135,7 @@ export const editToSimuMode = (state: EditState): EditToSimuAction => {
       retryState: {
         bag: retryStateBag,
         field: state.field,
+        garbages: [],
         hold: state.hold,
         lastRoseUpColumn: -1,
         unsettledNexts: nextNotes,
@@ -320,6 +322,7 @@ const initializeSimuState = (
     retryState: {
       bag: retryStateBag,
       field: fragments.field,
+      garbages: [],
       hold: fragments.hold,
       lastRoseUpColumn: -1,
       seed: initialSeed,
@@ -501,9 +504,12 @@ const convertReplaySteps = (conductor: ReplayConductor): ReplayStep[] => {
   return conductor.state.replaySteps;
 };
 
-export const replayToSimuMode = (state: ReplayState): ReplayToSimuAction => {
-  const rgn = new RandomNumberGenerator();
-  const initialSeed = rgn.seed;
+export const replayToSimuMode = (
+  state: ReplayState,
+  simuState: SimuState
+): ReplayToSimuAction => {
+  const rng = new RandomNumberGenerator();
+  const initialSeed = rng.seed;
 
   const history = (() => {
     const reverseHistories = state.histories.concat().reverse();
@@ -540,20 +546,26 @@ export const replayToSimuMode = (state: ReplayState): ReplayToSimuAction => {
     take: (7 - (state.noOfCycle - 1) + 1) % 7,
   };
 
-  const nextNotes: NextNote[] = [
-    {
-      candidates: [state.current.type],
-      take: 1,
-    },
-    ...state.nexts
-      .map((next) => ({
+  const nextNotes: NextNote[] = (() => {
+    let nextNotes = [
+      {
+        candidates: [state.current.type],
+        take: 1,
+      },
+      ...state.nexts.map((next) => ({
         candidates: [next],
         take: 1,
-      }))
-      .slice(0, state.replayInfo.nextNum),
-  ];
+      })),
+    ];
 
-  const gen = new NextGenerator(rgn, nextNotes, initialBag);
+    if (!state.config.passesAllToSimu) {
+      nextNotes = nextNotes.slice(0, state.replayInfo.nextNum + 1);
+    }
+
+    return nextNotes;
+  })();
+
+  const gen = new NextGenerator(rng, nextNotes, initialBag);
   const currentGenNext = gen.next();
   let lastGenNext = currentGenNext;
 
@@ -573,22 +585,35 @@ export const replayToSimuMode = (state: ReplayState): ReplayToSimuAction => {
     type: currentGenNext.type,
   };
 
-  const newGarbages: GarbageInfo[] = (() => {
+  const fixedGarbages: GarbageInfo[] = (() => {
     const topAttack = getUrgentAttack(state) ?? 0;
 
-    const newGarbages: GarbageInfo[] = [];
+    const fixedGarbages: GarbageInfo[] = [];
     if (topAttack) {
-      newGarbages.push({ amount: topAttack, offset: 0, restStep: 0 });
+      fixedGarbages.push({ amount: topAttack, offset: 0, restStep: 0 });
     }
 
     let nextAttacks = getNextAttacks(state);
+    if (state.config.passesAllToSimu) {
+      nextAttacks = state.garbages.flatMap((garbage) => {
+        if (garbage.restStep === 0) {
+          return [];
+        }
+
+        const attacks: number[] = new Array(garbage.restStep - 1).fill(0);
+        attacks.push(garbage.amount - garbage.offset);
+        return attacks;
+      });
+    } else {
+      nextAttacks = getNextAttacks(state);
+    }
     while (nextAttacks.length > 0) {
       const index = nextAttacks.findIndex((value) => value > 0);
       if (index === -1) {
         break;
       }
 
-      newGarbages.push({
+      fixedGarbages.push({
         amount: nextAttacks[index],
         offset: 0,
         restStep: index + 1,
@@ -597,7 +622,20 @@ export const replayToSimuMode = (state: ReplayState): ReplayToSimuAction => {
       nextAttacks = nextAttacks.slice(index + 1);
     }
 
-    return newGarbages;
+    return fixedGarbages;
+  })();
+
+  const newGarbages = (() => {
+    if (simuState.config.garbage.generates) {
+      const gGen = new GarbageGenerator(
+        rng,
+        simuState.config.garbage,
+        fixedGarbages
+      );
+      return gGen.generateGarbages();
+    } else {
+      return fixedGarbages;
+    }
   })();
 
   return {
@@ -622,12 +660,13 @@ export const replayToSimuMode = (state: ReplayState): ReplayToSimuAction => {
       retryState: {
         bag: initialBag,
         field: state.field,
+        garbages: fixedGarbages,
         hold: state.hold,
         lastRoseUpColumn: -1,
         unsettledNexts: nextNotes,
         seed: initialSeed,
       },
-      seed: rgn.seed,
+      seed: rng.seed,
     },
   };
 };

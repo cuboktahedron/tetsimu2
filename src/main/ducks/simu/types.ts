@@ -8,7 +8,7 @@ import {
   HoldState,
   NextNote,
   ReplayStep,
-  Tetromino,
+  Tetromino
 } from "types/core";
 import { SimuConfig, SimuRetryState } from "types/simu";
 
@@ -71,6 +71,7 @@ export type ClearSimuAction = {
     btbState: BtbState;
     current: ActiveTetromino;
     field: FieldState;
+    garbages: GarbageInfo[];
     hold: HoldState;
     histories: SimuStateHistory[];
     isDead: boolean;

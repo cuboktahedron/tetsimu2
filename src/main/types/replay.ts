@@ -10,6 +10,7 @@ import {
 } from "./core";
 
 export type ReplayConfig = {
+  passesAllToSimu: boolean;
   showsCycle: boolean;
   showsGhost: boolean;
   showsPivot: boolean;

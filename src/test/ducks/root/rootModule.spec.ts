@@ -98,6 +98,7 @@ describe("rootModule", () => {
               take: 2,
             },
             field: makeField("IJLOSTZNNN"),
+            garbages: [],
             hold: makeHold(Tetromino.I, false),
             lastRoseUpColumn: -1,
             seed: actual.payload.retryState.seed,
@@ -187,117 +188,126 @@ describe("rootModule", () => {
   });
 
   describe("replayToSimuMode", () => {
-    it("should change mode and take over state", () => {
-      const actual = replayToSimuMode(
-        makeReplayState({
-          attackTypes: [AttackType.BtbTsd],
-          btbState: BtbState.Btb,
-          current: makeCurrent(Direction.Down, 4, 19, Tetromino.Z),
-          field: makeField(
-            // prettier-ignore
-            "NNNSZZNNNN",
-            "LNNSSZZNNN"
-          ),
-          garbages: [
-            makeGarbage(0, 3, 2),
-            makeGarbage(12, 5, 0),
-            makeGarbage(1, 5, 0),
-          ],
-          histories: [
-            {
-              attackTypes: [],
-              btbState: BtbState.None,
-              current: makeCurrent(Direction.Up, 8, 1, Tetromino.O),
-              field: makeField(
-                // prettier-ignore
-                "NNNSZZNNNN",
-                "LNNSSZZNNN",
-                "LNNNSJJJOO",
-                "LLNIIIIJOO"
-              ),
-              garbages: [],
-              nexts: makeTetrominos("TZIJLOSZTSOLJIIJLO"),
-              noOfCycle: 1,
-              hold: makeHold(Tetromino.I, true),
-              isDead: false,
-              ren: -1,
-            },
-            {
-              attackTypes: [],
-              btbState: BtbState.None,
-              current: makeCurrent(Direction.Down, 4, 19, Tetromino.T),
-              field: makeField(
-                // prettier-ignore
-                "NNNSZZNNNN",
-                "LNNSSZZNNN",
-                "LNNNSJJJOO",
-                "LLNIIIIJOO"
-              ),
-              garbages: [],
-              nexts: makeTetrominos("ZIJLOSZTSOLJIIJLO"),
-              noOfCycle: 2,
-              hold: makeHold(Tetromino.I, true),
-              isDead: false,
-              ren: -1,
-            },
-            {
-              attackTypes: [],
-              btbState: BtbState.None,
-              current: makeCurrent(Direction.Down, 2, 1, Tetromino.T),
-              field: makeField(
-                // prettier-ignore
-                "NNNSZZNNNN",
-                "LNNSSZZNNN",
-                "LTTTSJJJOO",
-                "LLTIIIIJOO"
-              ),
-              garbages: [],
-              nexts: makeTetrominos("ZIJLOSZTSOLJIIJLO"),
-              noOfCycle: 2,
-              hold: makeHold(Tetromino.I, true),
-              isDead: false,
-              ren: -1,
-            },
-            {
-              attackTypes: [AttackType.BtbTsd],
-              btbState: BtbState.Btb,
-              current: makeCurrent(Direction.Down, 4, 19, Tetromino.Z),
-              field: makeField(
-                // prettier-ignore
-                "NNNSZZNNNN",
-                "LNNSSZZNNN"
-              ),
-              garbages: [
-                makeGarbage(0, 3, 2),
-                makeGarbage(12, 5, 0),
-                makeGarbage(1, 5, 0),
-              ],
-              nexts: makeTetrominos("IJLOSZTSOLJIIJLO"),
-              noOfCycle: 3,
-              hold: makeHold(Tetromino.I, true),
-              isDead: false,
-              ren: 0,
-            },
-          ],
-          hold: makeHold(Tetromino.I, true),
-          isDead: false,
-          nexts: makeTetrominos("IJLOSZTSOLJIIJLO"),
-          noOfCycle: 3,
-          ren: 0,
-          replaySteps: [
-            makeReplayHardDropStep(),
-            makeReplayDropStep(Direction.Down, 2, 1, SpinType.Spin),
-            makeReplayHardDropStep({ cols: [], line: 2 }),
-            makeReplayDropStep(Direction.Up, 1, 2, SpinType.None),
-            makeReplayHardDropStep({ cols: [], line: 2 }),
-          ],
-          step: 3,
-          replayInfo: {
-            nextNum: 12,
-            offsetRange: 5,
+    const makeStateBase = (): ReplayState =>
+      makeReplayState({
+        attackTypes: [AttackType.BtbTsd],
+        btbState: BtbState.Btb,
+        current: makeCurrent(Direction.Down, 4, 19, Tetromino.Z),
+        field: makeField(
+          // prettier-ignore
+          "NNNSZZNNNN",
+          "LNNSSZZNNN"
+        ),
+        garbages: [
+          makeGarbage(0, 3, 2),
+          makeGarbage(12, 5, 0),
+          makeGarbage(1, 5, 0),
+        ],
+        histories: [
+          {
+            attackTypes: [],
+            btbState: BtbState.None,
+            current: makeCurrent(Direction.Up, 8, 1, Tetromino.O),
+            field: makeField(
+              // prettier-ignore
+              "NNNSZZNNNN",
+              "LNNSSZZNNN",
+              "LNNNSJJJOO",
+              "LLNIIIIJOO"
+            ),
+            garbages: [],
+            nexts: makeTetrominos("TZIJLOSZTSOLJIIJLO"),
+            noOfCycle: 1,
+            hold: makeHold(Tetromino.I, true),
+            isDead: false,
+            ren: -1,
           },
-        })
-      );
+          {
+            attackTypes: [],
+            btbState: BtbState.None,
+            current: makeCurrent(Direction.Down, 4, 19, Tetromino.T),
+            field: makeField(
+              // prettier-ignore
+              "NNNSZZNNNN",
+              "LNNSSZZNNN",
+              "LNNNSJJJOO",
+              "LLNIIIIJOO"
+            ),
+            garbages: [],
+            nexts: makeTetrominos("ZIJLOSZTSOLJIIJLO"),
+            noOfCycle: 2,
+            hold: makeHold(Tetromino.I, true),
+            isDead: false,
+            ren: -1,
+          },
+          {
+            attackTypes: [],
+            btbState: BtbState.None,
+            current: makeCurrent(Direction.Down, 2, 1, Tetromino.T),
+            field: makeField(
+              // prettier-ignore
+              "NNNSZZNNNN",
+              "LNNSSZZNNN",
+              "LTTTSJJJOO",
+              "LLTIIIIJOO"
+            ),
+            garbages: [],
+            nexts: makeTetrominos("ZIJLOSZTSOLJIIJLO"),
+            noOfCycle: 2,
+            hold: makeHold(Tetromino.I, true),
+            isDead: false,
+            ren: -1,
+          },
+          {
+            attackTypes: [AttackType.BtbTsd],
+            btbState: BtbState.Btb,
+            current: makeCurrent(Direction.Down, 4, 19, Tetromino.Z),
+            field: makeField(
+              // prettier-ignore
+              "NNNSZZNNNN",
+              "LNNSSZZNNN"
+            ),
+            garbages: [
+              makeGarbage(0, 3, 2),
+              makeGarbage(12, 5, 0),
+              makeGarbage(1, 5, 0),
+            ],
+            nexts: makeTetrominos("IJLOSZTSOLJIIJLO"),
+            noOfCycle: 3,
+            hold: makeHold(Tetromino.I, true),
+            isDead: false,
+            ren: 0,
+          },
+        ],
+        hold: makeHold(Tetromino.I, true),
+        isDead: false,
+        nexts: makeTetrominos("IJLOSZTSOLJIIJLO"),
+        noOfCycle: 3,
+        ren: 0,
+        replaySteps: [
+          makeReplayHardDropStep(),
+          makeReplayDropStep(Direction.Down, 2, 1, SpinType.Spin),
+          makeReplayHardDropStep({ cols: [], line: 2 }),
+          makeReplayDropStep(Direction.Up, 1, 2, SpinType.None),
+          makeReplayHardDropStep({ cols: [], line: 2 }),
+        ],
+        step: 3,
+        replayInfo: {
+          nextNum: 12,
+          offsetRange: 5,
+        },
+      });
+
+    it("should change mode and take over state", () => {
+      const state = makeStateBase();
+      state.config = {
+        passesAllToSimu: false,
+        showsCycle: false,
+        showsGhost: true,
+        showsPivot: true,
+      };
+
+      const actual = replayToSimuMode(state, initialSimuState);
 
       const expected: ReplayToSimuAction = {
         type: RootActionsType.ReplayToSimuMode,
@@ -332,6 +342,7 @@ describe("rootModule", () => {
               "NNNSZZNNNN",
               "LNNSSZZNNN"
             ),
+            garbages: [makeGarbage(0, 1, 0), makeGarbage(12, 5, 0)],
             hold: makeHold(Tetromino.I, true),
             lastRoseUpColumn: -1,
             seed: actual.payload.retryState.seed,
@@ -344,6 +355,99 @@ describe("rootModule", () => {
       };
 
       expect(actual).toEqual(expected);
+    });
+
+    it("should change mode and take over all state", () => {
+      const state = makeStateBase();
+      const actual = replayToSimuMode(state, initialSimuState);
+
+      const expected: ReplayToSimuAction = {
+        type: RootActionsType.ReplayToSimuMode,
+        payload: {
+          attackTypes: [AttackType.BtbTsd],
+          btbState: BtbState.Btb,
+          current: makeCurrent(Direction.Up, 4, 19, Tetromino.Z),
+          field: makeField(
+            // prettier-ignore
+            "NNNSZZNNNN",
+            "LNNSSZZNNN"
+          ),
+          garbages: [
+            makeGarbage(0, 1, 0),
+            makeGarbage(12, 5, 0),
+            makeGarbage(1, 5, 0),
+          ],
+          hold: makeHold(Tetromino.I, true),
+          isDead: false,
+          lastRoseUpColumn: -1,
+          nexts: {
+            bag: makeNextNote("", 0),
+            nextNum: 12,
+            settled: makeTetrominos("IJLOSZTSOLJI"),
+            unsettled: makeNextNotes("IJLO"),
+          },
+          offsetRange: 5,
+          ren: 0,
+          retryState: {
+            bag: {
+              candidates: makeTetrominos("IJLOSZ"),
+              take: 6,
+            },
+            field: makeField(
+              // prettier-ignore
+              "NNNSZZNNNN",
+              "LNNSSZZNNN"
+            ),
+            garbages: [
+              makeGarbage(0, 1, 0),
+              makeGarbage(12, 5, 0),
+              makeGarbage(1, 5, 0),
+            ],
+            hold: makeHold(Tetromino.I, true),
+            lastRoseUpColumn: -1,
+            seed: actual.payload.retryState.seed,
+            unsettledNexts: new NextNotesInterpreter().interpret(
+              "ZIJLOSZTSOLJIIJLO"
+            ),
+          },
+          seed: actual.payload.seed,
+        },
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should change mode and ganerates lack of garbages", () => {
+      const state = makeStateBase();
+      state.garbages = [makeGarbage(0, 1, 0), makeGarbage(8, 5, 0)];
+
+      const simuState = makeSimuState({
+        config: {
+          garbage: {
+            a1: 20,
+            a2: 100,
+            b1: 10,
+            b2: 100,
+            generates: true,
+            level: 1,
+          },
+        },
+      });
+
+      const actual = replayToSimuMode(state, simuState);
+      expect(actual.payload.garbages).toEqual([
+        makeGarbage(0, 1, 0),
+        makeGarbage(8, 5, 0),
+        makeGarbage(1, 2, 0),
+        makeGarbage(1, 2, 0),
+        makeGarbage(1, 2, 0),
+        makeGarbage(1, 2, 0),
+        makeGarbage(1, 2, 0),
+      ]);
+      expect(actual.payload.retryState.garbages).toEqual([
+        makeGarbage(0, 1, 0),
+        makeGarbage(8, 5, 0),
+      ]);
     });
   });
 
@@ -637,6 +741,7 @@ describe("rootModule", () => {
           retryState: {
             bag: makeNextNote("IJLOSTZ", 5),
             field: makeField("IJLOSTZGNN"),
+            garbages: [],
             hold: makeHold(Tetromino.O, false),
             lastRoseUpColumn: -1,
             seed: actual.payload.simu.retryState.seed,
@@ -706,6 +811,7 @@ describe("rootModule", () => {
           retryState: {
             bag: makeNextNote("IJLOSTZ", 7),
             field: makeField("NNNNNNNNNN"),
+            garbages: [],
             hold: makeHold(Tetromino.None, true),
             lastRoseUpColumn: -1,
             seed: actual.payload.simu.retryState.seed,
@@ -807,6 +913,7 @@ describe("rootModule", () => {
               "NIJLOSTZGG",
               "IJLOSTZGGN"
             ),
+            garbages: [],
             hold: makeHold(Tetromino.J, false),
             lastRoseUpColumn: -1,
             seed: 3,

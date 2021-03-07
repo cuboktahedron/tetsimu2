@@ -2,7 +2,7 @@ import {
   Button,
   Divider,
   FormControl,
-  InputAdornment,
+  InputAdornment
 } from "@material-ui/core";
 import FastForwardIcon from "@material-ui/icons/FastForward";
 import FastRewindIcon from "@material-ui/icons/FastRewind";
@@ -14,7 +14,7 @@ import {
   changeAutoPlaying,
   changeStep,
   downReplaySpeed,
-  upReplaySpeed,
+  upReplaySpeed
 } from "ducks/replay/actions";
 import { getReplayConductor } from "ducks/replay/selectors";
 import { changeTetsimuMode, replayToSimuMode } from "ducks/root/actions";
@@ -22,9 +22,9 @@ import React from "react";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { TetsimuMode } from "types/core";
 import ReplayUrl from "utils/tetsimu/replay/replayUrl";
+import { RootContext } from "../App";
 import NumberTextField from "../ext/NumberTextField";
 import TextFieldEx from "../ext/TextFieldEx";
-import { ReplayContext } from "./Replay";
 
 const useStyles = useSidePanelStyles({
   cellTypes: {
@@ -58,11 +58,12 @@ const useStyles = useSidePanelStyles({
 });
 
 const Tools: React.FC = () => {
-  const { state, dispatch } = React.useContext(ReplayContext);
+  const { state: rootState, dispatch } = React.useContext(RootContext);
   const [stateUrl, setStateUrl] = React.useState("");
+  const state = rootState.replay;
 
   const handleSimuClick = () => {
-    dispatch(replayToSimuMode(state));
+    dispatch(replayToSimuMode(state, rootState.simu));
   };
 
   const handleSimuNoResetClick = () => {

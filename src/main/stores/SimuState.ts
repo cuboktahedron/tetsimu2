@@ -124,6 +124,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
     bag: { candidates: [], take: 0 },
     field,
     hold,
+    garbages: [],
     unsettledNexts: [],
     lastRoseUpColumn: -1,
     seed: initialSeed,

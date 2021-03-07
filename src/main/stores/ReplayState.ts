@@ -70,6 +70,7 @@ export const initialReplayState: ReplayState = ((): ReplayState => {
 
   const isTouchDevice = "ontouchstart" in window;
   const config: ReplayConfig = {
+    passesAllToSimu: true,
     showsCycle: false,
     showsGhost: true,
     showsPivot: true,

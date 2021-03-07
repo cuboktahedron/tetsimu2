@@ -22,6 +22,21 @@ class GarbageGenerator {
     this.garbages = _garbages.map((garbage) => ({ ...garbage }));
   }
 
+  generateGarbages(): GarbageInfo[] {
+    while (this.lackOfGarbages()) {
+      const amount = this.generateAmount();
+      const restStep = this.generateRestStep();
+
+      this.garbages.push({
+        amount,
+        offset: 0,
+        restStep,
+      });
+    }
+
+    return this.garbages;
+  }
+
   next(generatesGarbage: boolean): GarbageInfo[] {
     const garbage = this.garbages[0];
     if (garbage) {
@@ -32,15 +47,8 @@ class GarbageGenerator {
       }
     }
 
-    while (generatesGarbage && this.lackOfGarbages()) {
-      const amount = this.generateAmount();
-      const restStep = this.generateRestStep();
-
-      this.garbages.push({
-        amount,
-        offset: 0,
-        restStep,
-      });
+    if (generatesGarbage) {
+      this.generateGarbages();
     }
 
     const garbage2 = this.garbages[0] as GarbageInfo;

@@ -1,4 +1,9 @@
-import { Checkbox, FormControlLabel, FormLabel } from "@material-ui/core";
+import {
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  FormLabel
+} from "@material-ui/core";
 import { changeConfig } from "ducks/replay/actions";
 import React from "react";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
@@ -33,6 +38,15 @@ const Settings: React.FC = () => {
       changeConfig({
         ...config,
         showsCycle: e.target.checked,
+      })
+    );
+  };
+
+  const handlePassesAllToSimu = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(
+      changeConfig({
+        ...config,
+        passesAllToSimu: e.target.checked,
       })
     );
   };
@@ -79,6 +93,7 @@ const Settings: React.FC = () => {
           label="Show cycle"
         />
       </div>
+      <Divider />
       <div>
         <FormLabel component="legend" className={classes.settingGroupTitle}>
           Replay Info
@@ -88,6 +103,23 @@ const Settings: React.FC = () => {
         <li>Nexts: {state.replayInfo.nextNum}</li>
         <li>Offset range: {state.replayInfo.offsetRange}</li>
       </ul>
+      <Divider />
+      <div>
+        <FormLabel component="legend" className={classes.settingGroupTitle}>
+          Other
+        </FormLabel>
+      </div>
+      <div>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={state.config.passesAllToSimu}
+              onChange={handlePassesAllToSimu}
+            />
+          }
+          label="Pass all to simu"
+        />
+      </div>
     </div>
   );
 };

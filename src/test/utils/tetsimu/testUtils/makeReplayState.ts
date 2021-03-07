@@ -19,6 +19,12 @@ export const makeReplayState = (state: {
     speed: number;
   };
   btbState?: BtbState;
+  config?: {
+    passesAllToSimu?: boolean;
+    showsCycle?: boolean;
+    showsGhost?: boolean;
+    showsPivot?: boolean;
+  },
   current?: ActiveTetromino;
   field?: FieldState;
   garbages?: GarbageInfo[];
@@ -41,6 +47,7 @@ export const makeReplayState = (state: {
       },
       btbState: BtbState.None,
       config: {
+        passesAllToSimu: true,
         showsCycle: false,
         showsGhost: false,
         showsPivot: true,
