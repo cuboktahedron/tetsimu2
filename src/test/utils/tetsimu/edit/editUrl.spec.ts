@@ -75,7 +75,7 @@ describe("editUrl", () => {
   });
 
   describe("toState", () => {
-    it("should generate states from url(v2.01 <= v)", () => {
+    it("should generate states from url(v2.01 <= v) with np", () => {
       const f = "EjRWeBI0VngA";
       const h = "3";
       const nc = "6";
@@ -103,6 +103,32 @@ describe("editUrl", () => {
         hold: makeHold(Tetromino.I, false),
         nextsPattern: "q2[IJ]p2LOS$",
         numberOfCycle: 6,
+      };
+
+      expect(actual).toEqual(expected);
+    });
+
+    it("should generate states from url(v2.01 <= v) with ns", () => {
+      const ns = "Kcu4";
+      const m = `${TetsimuMode.Edit}`;
+      const v = "2.03";
+
+      const params = {
+        ns,
+        m,
+        v,
+      };
+      const gen = new EditUrl();
+      const actual = gen.toState(params);
+
+      const expected: EditStateFragments = {
+        field: makeField(
+          // prettier-ignore
+          "NNNNNNNNNN",
+        ),
+        hold: makeHold(Tetromino.None, true),
+        nextsPattern: "IJLOSTZ",
+        numberOfCycle: 1,
       };
 
       expect(actual).toEqual(expected);

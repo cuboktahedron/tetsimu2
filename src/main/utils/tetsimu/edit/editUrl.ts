@@ -5,7 +5,11 @@ import {
   deserializeHold as deserializeHold097,
   deserializeNexts as deserializeNexts097,
 } from "../097/deserializer";
-import { deserializeField, deserializeHold } from "../deserializer";
+import {
+  deserializeField,
+  deserializeHold,
+  deserializeNexts,
+} from "../deserializer";
 import { serializeField, serializeHold } from "../serializer";
 import { UnsupportedUrlError } from "../unsupportedUrlError";
 
@@ -46,6 +50,7 @@ class EditUrl201 {
   toState(params: { [key: string]: string }): EditStateFragments {
     const f = params.f ?? "";
     const np = params.np ?? "";
+    const ns = params.ns ?? "";
     const h = params.h ?? "0";
 
     const numberOfCycle = (() => {
@@ -59,10 +64,20 @@ class EditUrl201 {
 
     const field = deserializeField(f);
     const hold = deserializeHold(h);
-    const nextsPattern = np
-      .replace(/_/g, "[")
-      .replace(/\./g, "]")
-      .replace(/-/g, "$");
+    const nextsPattern = (() => {
+      if (np) {
+        return np.replace(/_/g, "[").replace(/\./g, "]").replace(/-/g, "$");
+      } else {
+        const nexts = deserializeNexts(ns);
+        const valueToKey = Object.fromEntries(
+          Object.entries(Tetromino).map(([key, value]) => {
+            return [value, key];
+          })
+        );
+
+        return nexts.map((type) => valueToKey[type]).join("");
+      }
+    })();
 
     return {
       field,
