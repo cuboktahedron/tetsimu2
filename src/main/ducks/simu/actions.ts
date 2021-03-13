@@ -1,4 +1,4 @@
-import { SimuStateHistory } from "stores/SimuState";
+import { initialSimuState, SimuStateHistory } from "stores/SimuState";
 import { ControllerKeys, Direction } from "types/core";
 import { SimuConfig } from "types/simu";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
@@ -10,6 +10,7 @@ import {
   ClearSimuAction,
   DoSimuAction,
   RedoAction,
+  ResetConfigToDefaultAction,
   RetryAction,
   SimuActionsType,
   SuperRetryAction,
@@ -185,6 +186,15 @@ export const redo = (
       replayStep: history.replayStep,
       seed: history.seed,
       step: newStep,
+    },
+  };
+};
+
+export const resetSimuConfigToDefault = (): ResetConfigToDefaultAction => {
+  return {
+    type: SimuActionsType.ResetConfigToDefault,
+    payload: {
+      config: initialSimuState.config,
     },
   };
 };

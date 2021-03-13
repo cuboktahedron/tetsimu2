@@ -1,4 +1,5 @@
 import {
+  Button,
   Checkbox,
   Divider,
   FormControl,
@@ -15,7 +16,8 @@ import {
 import {
   changeConfig,
   changeGarbageLevel,
-  clearSimu
+  clearSimu,
+  resetSimuConfigToDefault
 } from "ducks/simu/actions";
 import { getSimuConductor } from "ducks/simu/selectors";
 import React, { useEffect } from "react";
@@ -167,6 +169,10 @@ const Settings: React.FC = () => {
         playMode: e.target.value as PlayMode,
       })
     );
+  };
+
+  const handleDefaultClick = () => {
+    dispatch(resetSimuConfigToDefault());
   };
 
   useEffect(() => {
@@ -446,6 +452,18 @@ const Settings: React.FC = () => {
           Input
         </FormLabel>
         <div>{tapController}</div>
+      </div>
+
+      <Divider />
+
+      <div>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleDefaultClick}
+        >
+          Default
+        </Button>
       </div>
     </div>
   );

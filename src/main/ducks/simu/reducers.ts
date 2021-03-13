@@ -23,8 +23,8 @@ const reducer = (state: SimuState, anyAction: Action): SimuState => {
             b1: action.payload.b1,
             b2: action.payload.b2,
             level: action.payload.level,
-          }
-        }
+          },
+        },
       };
     case SimuActionsType.ChangeZoom:
       return {
@@ -53,6 +53,11 @@ const reducer = (state: SimuState, anyAction: Action): SimuState => {
         ...action.payload,
       };
     }
+    case SimuActionsType.ResetConfigToDefault:
+      return {
+        ...state,
+        config: action.payload.config,
+      };
     case SimuActionsType.Retry:
       return {
         ...state,

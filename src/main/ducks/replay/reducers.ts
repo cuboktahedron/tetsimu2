@@ -94,6 +94,11 @@ const reducer = (state: ReplayState, anyAction: Action): ReplayState => {
           },
         };
       }
+    case ReplayActionsType.ResetConfigToDefault:
+      return {
+        ...state,
+        config: action.payload.config,
+      };
   }
   return state;
 };

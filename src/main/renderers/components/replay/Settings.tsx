@@ -1,10 +1,11 @@
 import {
+  Button,
   Checkbox,
   Divider,
   FormControlLabel,
   FormLabel
 } from "@material-ui/core";
-import { changeConfig } from "ducks/replay/actions";
+import { changeConfig, resetReplayConfigToDefault } from "ducks/replay/actions";
 import React from "react";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { ReplayContext } from "./Replay";
@@ -49,6 +50,10 @@ const Settings: React.FC = () => {
         passesAllToSimu: e.target.checked,
       })
     );
+  };
+
+  const handleDefaultClick = () => {
+    dispatch(resetReplayConfigToDefault());
   };
 
   const classes = useStyles();
@@ -119,6 +124,18 @@ const Settings: React.FC = () => {
           }
           label="Pass all to simu"
         />
+      </div>
+
+      <Divider />
+
+      <div>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleDefaultClick}
+        >
+          Default
+        </Button>
       </div>
     </div>
   );

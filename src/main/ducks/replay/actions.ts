@@ -1,3 +1,4 @@
+import { initialReplayState } from "stores/ReplayState";
 import { ReplayConfig } from "types/replay";
 import { ReplayConductor } from "utils/tetsimu/replay/replayConductor";
 import { getReplayConductor } from "./selectors";
@@ -11,6 +12,7 @@ import {
   ForwardStepAction,
   ForwardStepAutoAction,
   ReplayActionsType,
+  ResetConfigToDefaultAction,
 } from "./types";
 
 export const backwardStep = (
@@ -255,4 +257,13 @@ export const forwardStepAuto = (
       },
     };
   }
+};
+
+export const resetReplayConfigToDefault = (): ResetConfigToDefaultAction => {
+  return {
+    type: ReplayActionsType.ResetConfigToDefault,
+    payload: {
+      config: initialReplayState.config,
+    },
+  };
 };
