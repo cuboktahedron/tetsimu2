@@ -4,24 +4,24 @@ import {
   HoldState,
   NextNote,
   Tetromino,
-  TetsimuMode,
+  TetsimuMode
 } from "types/core";
 import {
   deserializeField as deserializeField097,
   deserializeHold as deserializeHold097,
-  deserializeNexts as deserializeNexts097,
+  deserializeNexts as deserializeNexts097
 } from "../097/deserializer";
 import {
   deserializeField,
   deserializeHold,
-  deserializeNexts,
+  deserializeNexts
 } from "../deserializer";
 import NextNotesInterpreter from "../nextNotesInterpreter";
 import {
   serializeField,
   serializeHold,
   serializeNexts,
-  serializeSteps,
+  serializeSteps
 } from "../serializer";
 import { UnsupportedUrlError } from "../unsupportedUrlError";
 
@@ -30,15 +30,15 @@ export const UNSPECIFIED_SEED = -1;
 export type SimuStateFragments = {
   hold: HoldState;
   field: FieldState;
-  offsetRange: number;
-  nextNum: number;
+  offsetRange?: number;
+  nextNum?: number;
   numberOfCycle: number;
   nextNotes: NextNote[];
   seed: number;
 };
 
 class SimuUrl {
-  private static DefaultVersion = "2.02";
+  private static DefaultVersion = "2.03";
 
   fromState(state: SimuState): string {
     const gen = new SimuUrl201();
@@ -62,7 +62,7 @@ class SimuUrl {
 }
 
 class SimuUrl201 {
-  public static Version = "2.02";
+  public static Version = "2.03";
 
   toState(params: { [key: string]: string }): SimuStateFragments {
     const f = params.f ?? "";
@@ -79,11 +79,11 @@ class SimuUrl201 {
       }
     })();
 
-    const paramToNumber = (
+    const paramToNumber = <T>(
       param: string,
       min: number,
       max: number,
-      defaultValue: number
+      defaultValue: T
     ) => {
       const value = parseInt(param);
       if (isNaN(value) || value < min || value > max) {
@@ -93,8 +93,8 @@ class SimuUrl201 {
       }
     };
 
-    const nextNum = paramToNumber(params.nn, 1, 12, 5);
-    const offsetRange = paramToNumber(params.or, 0, 12, 2);
+    const nextNum = paramToNumber(params.nn, 1, 12, undefined);
+    const offsetRange = paramToNumber(params.or, 0, 12, undefined);
     const seed = paramToNumber(params.s, 0, 100_000_000, -1);
     const field = deserializeField(f);
     const hold = deserializeHold(h);
@@ -158,12 +158,8 @@ class SimuUrl201 {
     if (nc !== 1) {
       params.push(`nc=${nc}`);
     }
-    if (nn !== 5) {
-      params.push(`nn=${nn}`);
-    }
-    if (or !== 2) {
-      params.push(`or=${or}`);
-    }
+    params.push(`nn=${nn}`);
+    params.push(`or=${or}`);
     params.push(`m=${m}`);
     params.push(`v=${v}`);
 
@@ -215,8 +211,6 @@ class SimuUrl097 {
     return {
       field,
       hold,
-      offsetRange: 2,
-      nextNum: 5,
       numberOfCycle: 1,
       nextNotes,
       seed,

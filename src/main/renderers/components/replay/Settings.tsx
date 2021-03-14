@@ -5,7 +5,11 @@ import {
   FormControlLabel,
   FormLabel
 } from "@material-ui/core";
-import { changeConfig, resetReplayConfigToDefault } from "ducks/replay/actions";
+import {
+  changeConfig,
+  resetReplayConfigToDefault,
+  saveReplayConfig
+} from "ducks/replay/actions";
 import React from "react";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { ReplayContext } from "./Replay";
@@ -54,6 +58,10 @@ const Settings: React.FC = () => {
 
   const handleDefaultClick = () => {
     dispatch(resetReplayConfigToDefault());
+  };
+
+  const handleSaveClick = () => {
+    dispatch(saveReplayConfig(state.config));
   };
 
   const classes = useStyles();
@@ -128,14 +136,27 @@ const Settings: React.FC = () => {
 
       <Divider />
 
-      <div>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleDefaultClick}
-        >
-          Default
-        </Button>
+      <div className={classes.buttons}>
+        <div>
+          <div>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleDefaultClick}
+            >
+              Default
+            </Button>
+          </div>
+          <div>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleSaveClick}
+            >
+              Save
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

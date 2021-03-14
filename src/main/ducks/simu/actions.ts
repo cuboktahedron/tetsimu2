@@ -12,9 +12,10 @@ import {
   RedoAction,
   ResetConfigToDefaultAction,
   RetryAction,
+  SaveConfigAction,
   SimuActionsType,
   SuperRetryAction,
-  UndoAction,
+  UndoAction
 } from "./types";
 
 export const changeConfig = (config: SimuConfig): ChangeConfigAction => {
@@ -224,6 +225,14 @@ export const retry = (conductor: SimuConductor): RetryAction => {
       seed: newState.seed,
       step: newState.step,
     },
+  };
+};
+
+export const saveSimuConfig = (config: SimuConfig): SaveConfigAction => {
+  localStorage.setItem("simu.config", JSON.stringify(config));
+  return {
+    type: SimuActionsType.SaveConfig,
+    payload: {},
   };
 };
 

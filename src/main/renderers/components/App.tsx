@@ -1,7 +1,7 @@
 import {
   createMuiTheme,
   MuiThemeProvider,
-  useMediaQuery,
+  useMediaQuery
 } from "@material-ui/core";
 import reducer from "ducks/root";
 import {
@@ -9,6 +9,7 @@ import {
   clearError,
   error,
   initializeApp,
+  loadConfigs
 } from "ducks/root/actions";
 import React from "react";
 import { initialRootState } from "stores/RootState";
@@ -50,9 +51,19 @@ const App: React.FC = () => {
     Math.min(480, window.innerWidth)
   );
   const [open, setOpen] = React.useState(false);
+  const [loadedConfigs, setLoadedConfigs] = React.useState(false);
   const mathces = useMediaQuery("(min-width:1168px)", { noSsr: true });
 
   React.useEffect(() => {
+    dispatch(loadConfigs());
+    setLoadedConfigs(true);
+  }, []);
+
+  React.useEffect(() => {
+    if (!loadedConfigs) {
+      return;
+    }
+
     try {
       dispatch(initializeApp(location.search.replace(/^\?/, ""), state));
     } catch (e) {
@@ -73,7 +84,7 @@ const App: React.FC = () => {
     if (mathces) {
       setOpen(true);
     }
-  }, []);
+  }, [loadedConfigs]);
 
   const handleErrorDialogClose = () => {
     dispatch(clearError());

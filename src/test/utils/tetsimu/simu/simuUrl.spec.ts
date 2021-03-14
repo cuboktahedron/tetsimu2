@@ -3,11 +3,11 @@ import {
   Direction,
   SpinType,
   Tetromino,
-  TetsimuMode,
+  TetsimuMode
 } from "types/core";
 import SimuUrl, {
   SimuStateFragments,
-  UNSPECIFIED_SEED,
+  UNSPECIFIED_SEED
 } from "utils/tetsimu/simu/simuUrl";
 import { makeField } from "../testUtils/makeField";
 import { makeHold } from "../testUtils/makeHold";
@@ -15,7 +15,7 @@ import { makeNextNote, makeNextNotes } from "../testUtils/makeNextNote";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
-  makeReplayHoldStep,
+  makeReplayHoldStep
 } from "../testUtils/makeReplayStep";
 import { makeSimuState } from "../testUtils/makeSimuState";
 import { makeTetrominos } from "../testUtils/makeTetrominos";
@@ -76,7 +76,7 @@ describe("simuUrl", () => {
       const nn = "12";
       const or = "3";
       const m = TetsimuMode.Replay;
-      const v = "2.02";
+      const v = "2.03";
       const expected = `${loc}?f=${f}&ns=${ns}&ss=${ss}&h=${h}&nc=${nc}&nn=${nn}&or=${or}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
@@ -114,10 +114,12 @@ describe("simuUrl", () => {
       const gen = new SimuUrl();
       const actual = gen.fromState(state);
       const loc = location.href.replace(/\?.*$/, "");
+      const nn = 5;
+      const or = 2;
       const ns = "IA__";
       const m = TetsimuMode.Replay;
-      const v = "2.02";
-      const expected = `${loc}?ns=${ns}&m=${m}&v=${v}`;
+      const v = "2.03";
+      const expected = `${loc}?ns=${ns}&nn=${nn}&or=${or}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
   });
@@ -183,8 +185,8 @@ describe("simuUrl", () => {
       const expected: SimuStateFragments = {
         field: makeField("NNNNNNNNNN"),
         hold: makeHold(Tetromino.None, true),
-        offsetRange: 2,
-        nextNum: 5,
+        offsetRange: undefined,
+        nextNum: undefined,
         numberOfCycle: 1,
         nextNotes: makeNextNotes("q2 [IJ]p2 LOS $"),
         seed: UNSPECIFIED_SEED,
@@ -199,9 +201,9 @@ describe("simuUrl", () => {
 
       const expected: SimuStateFragments = {
         field: makeField("NNNNNNNNNN"),
-        offsetRange: 2,
+        offsetRange: undefined,
         hold: makeHold(Tetromino.None, true),
-        nextNum: 5,
+        nextNum: undefined,
         numberOfCycle: 1,
         nextNotes: [],
         seed: UNSPECIFIED_SEED,
@@ -237,8 +239,8 @@ describe("simuUrl", () => {
         "IJLOSTZGGN"
       ),
       hold: makeHold(Tetromino.J, false),
-      offsetRange: 2,
-      nextNum: 5,
+      offsetRange: undefined,
+      nextNum: undefined,
       numberOfCycle: 1,
       nextNotes: makeNextNotes("IJq1q1LOq1TS"),
       seed: 3,

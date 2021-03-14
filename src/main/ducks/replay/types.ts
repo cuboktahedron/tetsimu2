@@ -6,7 +6,7 @@ import {
   BtbState,
   FieldState,
   HoldState,
-  Tetromino
+  Tetromino,
 } from "types/core";
 import { ReplayConfig, ReplayStateHistory } from "types/replay";
 
@@ -20,6 +20,7 @@ export const ReplayActionsType = {
   ForwardStep: "replay/forwardStep",
   ForwardStepAuto: "replay/forwardStepAuto",
   ResetConfigToDefault: "replay/resetConfigToDefault",
+  SaveConfig: "replay/saveConfig",
 } as const;
 
 export type ReplayActions =
@@ -31,7 +32,8 @@ export type ReplayActions =
   | ChangeZoomAction
   | ForwardStepAction
   | ForwardStepAutoAction
-  | ResetConfigToDefaultAction;
+  | ResetConfigToDefaultAction
+  | SaveConfigAction;
 
 export type BackwardStepAction = {
   type: typeof ReplayActionsType.BackwardStep;
@@ -158,4 +160,9 @@ export type ResetConfigToDefaultAction = {
   payload: {
     config: ReplayConfig;
   };
+} & Action;
+
+export type SaveConfigAction = {
+  type: typeof ReplayActionsType.SaveConfig;
+  payload: {};
 } & Action;

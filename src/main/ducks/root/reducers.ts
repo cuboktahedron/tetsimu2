@@ -93,6 +93,19 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
           simu: action.payload.simu,
         };
       }
+      case RootActionsType.LoadConfigs: {
+        return {
+          ...state,
+          replay: {
+            ...state.replay,
+            config: action.payload.replay,
+          },
+          simu: {
+            ...state.simu,
+            config: action.payload.simu,
+          },
+        };
+      }
       case RootActionsType.ReplayToSimuMode:
         return {
           ...state,

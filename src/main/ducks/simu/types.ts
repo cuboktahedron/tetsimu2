@@ -25,6 +25,7 @@ export const SimuActionsType = {
   ResetConfigToDefault: "simu/resetConfigToDefault",
   Retry: "simu/retry",
   RotateTetromino: "simu/rotateTetromino",
+  SaveConfig: "simu/saveConfig",
   SuperRetry: "simu/superRetry",
   Undo: "simu/undo",
 } as const;
@@ -38,6 +39,7 @@ export type SimuActions =
   | RedoAction
   | ResetConfigToDefaultAction
   | RetryAction
+  | SaveConfigAction
   | SuperRetryAction
   | UndoAction;
 
@@ -155,6 +157,11 @@ export type ResetConfigToDefaultAction = {
   payload: {
     config: SimuConfig;
   };
+} & Action;
+
+export type SaveConfigAction = {
+  type: typeof SimuActionsType.SaveConfig;
+  payload: {};
 } & Action;
 
 export type RetryAction = {

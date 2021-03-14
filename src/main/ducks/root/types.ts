@@ -11,10 +11,10 @@ import {
   NextNote,
   ReplayStep,
   Tetromino,
-  TetsimuMode,
+  TetsimuMode
 } from "types/core";
-import { ReplayStateHistory } from "types/replay";
-import { SimuRetryState } from "types/simu";
+import { ReplayConfig, ReplayStateHistory } from "types/replay";
+import { SimuConfig, SimuRetryState } from "types/simu";
 
 export const RootActionsType = {
   ChangeTetsimuMode: "root/changeTetsimuMode",
@@ -22,6 +22,7 @@ export const RootActionsType = {
   EditToSimuMode: "root/editToSimuMode",
   Error: "root/error",
   InitializeApp: "root/initializeApp",
+  LoadConfigs: "root/loadConfigs",
   ReplayToSimuMode: "root/replayToSimuMode",
   SimuToEditMode: "root/simuToEditMode",
   SimuToReplayMode: "root/simuToReplayMode",
@@ -33,6 +34,7 @@ export type RootActions =
   | EditToSimuAction
   | ErrorAction
   | InitializeAppAction
+  | LoadConfigsAction
   | ReplayToSimuAction
   | SimuToEditAction
   | SimuToReplayAction;
@@ -82,6 +84,14 @@ export type InitializeAppAction = {
     mode: TetsimuMode;
     replay: ReplayState;
     simu: SimuState;
+  };
+} & Action;
+
+export type LoadConfigsAction = {
+  type: typeof RootActionsType.LoadConfigs;
+  payload: {
+    replay: ReplayConfig;
+    simu: SimuConfig;
   };
 } & Action;
 

@@ -13,6 +13,7 @@ import {
   ForwardStepAutoAction,
   ReplayActionsType,
   ResetConfigToDefaultAction,
+  SaveConfigAction
 } from "./types";
 
 export const backwardStep = (
@@ -265,5 +266,13 @@ export const resetReplayConfigToDefault = (): ResetConfigToDefaultAction => {
     payload: {
       config: initialReplayState.config,
     },
+  };
+};
+
+export const saveReplayConfig = (config: ReplayConfig): SaveConfigAction => {
+  localStorage.setItem("replay.config", JSON.stringify(config));
+  return {
+    type: ReplayActionsType.SaveConfig,
+    payload: {},
   };
 };

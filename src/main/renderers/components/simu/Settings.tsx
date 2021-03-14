@@ -17,7 +17,8 @@ import {
   changeConfig,
   changeGarbageLevel,
   clearSimu,
-  resetSimuConfigToDefault
+  resetSimuConfigToDefault,
+  saveSimuConfig
 } from "ducks/simu/actions";
 import { getSimuConductor } from "ducks/simu/selectors";
 import React, { useEffect } from "react";
@@ -173,6 +174,10 @@ const Settings: React.FC = () => {
 
   const handleDefaultClick = () => {
     dispatch(resetSimuConfigToDefault());
+  };
+
+  const handleSaveClick = () => {
+    dispatch(saveSimuConfig(state.config));
   };
 
   useEffect(() => {
@@ -456,14 +461,27 @@ const Settings: React.FC = () => {
 
       <Divider />
 
-      <div>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleDefaultClick}
-        >
-          Default
-        </Button>
+      <div className={classes.buttons}>
+        <div>
+          <div>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleDefaultClick}
+            >
+              Default
+            </Button>
+          </div>
+          <div>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleSaveClick}
+            >
+              Save
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,12 +1,13 @@
+import merge from "deepmerge";
 import {
   getNextAttacks,
   getReplayConductor,
   getUrgentAttack
 } from "ducks/replay/selectors";
 import { EditState } from "stores/EditState";
-import { ReplayState } from "stores/ReplayState";
+import { initialReplayState, ReplayState } from "stores/ReplayState";
 import { RootState } from "stores/RootState";
-import { GarbageInfo, SimuState } from "stores/SimuState";
+import { GarbageInfo, initialSimuState, SimuState } from "stores/SimuState";
 import {
   ActiveTetromino,
   BtbState,
@@ -21,6 +22,9 @@ import {
   Tetromino,
   TetsimuMode
 } from "types/core";
+import { ReplayConfig } from "types/replay";
+import { SimuConfig } from "types/simu";
+import { getItemOrDefault } from "utils/localStorage";
 import EditUrl, { EditStateFragments } from "utils/tetsimu/edit/editUrl";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import NextGenerator from "utils/tetsimu/nextGenerator";
@@ -41,6 +45,7 @@ import {
   EditToSimuAction,
   ErrorAction,
   InitializeAppAction,
+  LoadConfigsAction,
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
@@ -284,8 +289,8 @@ const initializeSimuState = (
       garbage: {
         ...state.config.garbage,
       },
-      nextNum: fragments.nextNum,
-      offsetRange: fragments.offsetRange,
+      nextNum: fragments.nextNum ?? state.config.nextNum,
+      offsetRange: fragments.offsetRange ?? state.config.offsetRange,
     },
     current,
     field: fragments.field,
@@ -502,6 +507,34 @@ const convertReplaySteps = (conductor: ReplayConductor): ReplayStep[] => {
   }
 
   return conductor.state.replaySteps;
+};
+
+export const loadConfigs = (): LoadConfigsAction => {
+  const replay = (() => {
+    const config = getItemOrDefault<ReplayConfig>(
+      "replay.config",
+      initialReplayState.config
+    );
+
+    return merge(initialReplayState.config, config) as ReplayConfig;
+  })();
+
+  const simu = (() => {
+    const config = getItemOrDefault<SimuConfig>(
+      "simu.config",
+      initialSimuState.config
+    );
+
+    return merge(initialSimuState.config, config) as SimuConfig;
+  })();
+
+  return {
+    type: RootActionsType.LoadConfigs,
+    payload: {
+      replay,
+      simu,
+    },
+  };
 };
 
 export const replayToSimuMode = (
