@@ -1,7 +1,13 @@
 import { retry, superRetry } from "ducks/simu/actions";
 import { getSimuConductor } from "ducks/simu/selectors";
 import { SimuActionsType } from "ducks/simu/types";
-import { FieldCellValue, MAX_FIELD_WIDTH, Tetromino } from "types/core";
+import {
+  AttackType,
+  BtbState,
+  FieldCellValue,
+  MAX_FIELD_WIDTH,
+  Tetromino,
+} from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
 import { sleep } from "utils/function";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
@@ -28,13 +34,16 @@ describe("simuModule", () => {
         },
       };
       const retryState: SimuRetryState = {
+        attackTypes: [AttackType.BtbTetris],
         bag: makeNextNote("IOT", 3),
+        btbState: BtbState.Btb,
         field: makeField("IJLOSTZNNN"),
         garbages: [makeGarbage(0, 2), makeGarbage(8, 5)],
         hold: makeHold(Tetromino.T, false),
         lastRoseUpColumn: 3,
-        unsettledNexts: new NextNotesInterpreter().interpret("I"),
+        ren: 2,
         seed: makeSeed(1),
+        unsettledNexts: new NextNotesInterpreter().interpret("I"),
       };
 
       const actual1 = retry(
@@ -66,6 +75,8 @@ describe("simuModule", () => {
 
       expect(actual1).toEqual(actual2);
       expect(actual1.type).toBe(SimuActionsType.Retry);
+      expect(actual1.payload.attackTypes).toEqual([AttackType.BtbTetris]);
+      expect(actual1.payload.btbState).toEqual(BtbState.Btb);
       expect(actual1.payload.current.type).toEqual(Tetromino.I);
       expect(actual1.payload.field).toEqual(retryState.field);
       expect(actual1.payload.garbages).toEqual(
@@ -85,6 +96,7 @@ describe("simuModule", () => {
       expect(actual1.payload.nexts.settled.length).toEqual(12);
       expect(actual1.payload.replayNextStep).toEqual(12);
       expect(actual1.payload.replayNexts.length).toEqual(12);
+      expect(actual1.payload.ren).toEqual(2);
       expect(actual1.payload.replayStep).toEqual(0);
       expect(actual1.payload.replaySteps.length).toEqual(0);
       expect(actual1.payload.step).toEqual(0);
@@ -105,13 +117,16 @@ describe("simuModule", () => {
         },
       };
       const retryState: SimuRetryState = {
+        attackTypes: [AttackType.BtbTsd],
         bag: makeNextNote("IOT", 3),
+        btbState: BtbState.Btb,
         field: makeField("IJLOSTZNNN"),
         garbages: [makeGarbage(0, 1), makeGarbage(1, 1)],
         hold: makeHold(Tetromino.T, false),
         lastRoseUpColumn: 3,
-        unsettledNexts: new NextNotesInterpreter().interpret("[IJL]p3"),
+        ren: 5,
         seed: makeSeed(1),
+        unsettledNexts: new NextNotesInterpreter().interpret("[IJL]p3"),
       };
 
       const actual1 = superRetry(
@@ -139,6 +154,8 @@ describe("simuModule", () => {
 
       expect(actual1).not.toEqual(actual2);
       expect(actual1.type).toBe(SimuActionsType.SuperRetry);
+      expect(actual1.payload.attackTypes).toEqual([AttackType.BtbTsd]);
+      expect(actual1.payload.btbState).toEqual(BtbState.Btb);
       expect(actual1.payload.garbages.slice(0, 2)).toEqual(
         actual2.payload.garbages.slice(0, 2)
       );
@@ -169,6 +186,7 @@ describe("simuModule", () => {
         retryState.lastRoseUpColumn
       );
       expect(actual1.payload.nexts.settled.length).toEqual(12);
+      expect(actual1.payload.ren).toEqual(5);
       expect(actual1.payload.replayNextStep).toEqual(12);
       expect(actual1.payload.replayNexts.length).toEqual(12);
       expect(actual1.payload.replayStep).toEqual(0);
@@ -182,7 +200,9 @@ describe("simuModule", () => {
         riseUpRate: { first: 100, second: 100 },
       };
       const retryState: SimuRetryState = {
+        attackTypes: [],
         bag: makeNextNote("IOT", 3),
+        btbState: BtbState.None,
         field: makeField("IJLOSTZNNN"),
         garbages: [],
         hold: {
@@ -190,8 +210,9 @@ describe("simuModule", () => {
           type: Tetromino.T,
         },
         lastRoseUpColumn: 1,
-        unsettledNexts: [],
+        ren: -1,
         seed: makeSeed(1),
+        unsettledNexts: [],
       };
 
       const actual = superRetry(
@@ -235,7 +256,9 @@ describe("simuModule", () => {
         riseUpRate: { first: 0, second: 0 },
       };
       const retryState: SimuRetryState = {
+        attackTypes: [],
         bag: makeNextNote("IOT", 3),
+        btbState: BtbState.None,
         field: makeField("IJLOSTZNNN"),
         garbages: [],
         hold: {
@@ -243,8 +266,9 @@ describe("simuModule", () => {
           type: Tetromino.T,
         },
         lastRoseUpColumn: 1,
-        unsettledNexts: [],
+        ren: -1,
         seed: makeSeed(1),
+        unsettledNexts: [],
       };
 
       const actual = superRetry(

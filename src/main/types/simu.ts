@@ -1,10 +1,12 @@
 import { GarbageInfo } from "stores/ReplayState";
 import {
+  AttackType,
+  BtbState,
   CycleBag,
   FieldState,
   HoldState,
   NextNote,
-  TapControllerType
+  TapControllerType,
 } from "./core";
 
 export const PlayMode = {
@@ -39,11 +41,14 @@ export type SimuConfig = {
 };
 
 export type SimuRetryState = {
+  attackTypes: AttackType[];
   bag: CycleBag;
+  btbState: BtbState;
   field: FieldState;
   garbages: GarbageInfo[];
   hold: HoldState;
   lastRoseUpColumn: number;
-  unsettledNexts: NextNote[];
+  ren: number;
   seed: number;
+  unsettledNexts: NextNote[];
 };

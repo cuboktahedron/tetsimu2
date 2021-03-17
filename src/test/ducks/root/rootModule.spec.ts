@@ -93,14 +93,17 @@ describe("rootModule", () => {
             bag: makeNextNote("IJL", 3),
           },
           retryState: {
+            attackTypes: [],
             bag: {
               candidates: makeTetrominos("IJLOSTZ"),
               take: 2,
             },
+            btbState: BtbState.None,
             field: makeField("IJLOSTZNNN"),
             garbages: [],
             hold: makeHold(Tetromino.I, false),
             lastRoseUpColumn: -1,
+            ren: -1,
             seed: actual.payload.retryState.seed,
             unsettledNexts: new NextNotesInterpreter().interpret(
               "IJ, LOSTZIJ, ZTSOL"
@@ -333,10 +336,12 @@ describe("rootModule", () => {
           offsetRange: 5,
           ren: 0,
           retryState: {
+            attackTypes: [AttackType.BtbTsd],
             bag: {
               candidates: makeTetrominos("IJLOSZ"),
               take: 6,
             },
+            btbState: BtbState.Btb,
             field: makeField(
               // prettier-ignore
               "NNNSZZNNNN",
@@ -345,6 +350,7 @@ describe("rootModule", () => {
             garbages: [makeGarbage(0, 1, 0), makeGarbage(12, 5, 0)],
             hold: makeHold(Tetromino.I, true),
             lastRoseUpColumn: -1,
+            ren: 0,
             seed: actual.payload.retryState.seed,
             unsettledNexts: new NextNotesInterpreter().interpret(
               "ZIJLOSZTSOLJI"
@@ -389,10 +395,12 @@ describe("rootModule", () => {
           offsetRange: 5,
           ren: 0,
           retryState: {
+            attackTypes: [AttackType.BtbTsd],
             bag: {
               candidates: makeTetrominos("IJLOSZ"),
               take: 6,
             },
+            btbState: BtbState.Btb,
             field: makeField(
               // prettier-ignore
               "NNNSZZNNNN",
@@ -405,6 +413,7 @@ describe("rootModule", () => {
             ],
             hold: makeHold(Tetromino.I, true),
             lastRoseUpColumn: -1,
+            ren: 0,
             seed: actual.payload.retryState.seed,
             unsettledNexts: new NextNotesInterpreter().interpret(
               "ZIJLOSZTSOLJIIJLO"
@@ -739,11 +748,14 @@ describe("rootModule", () => {
           replayStep: 0,
           replaySteps: [],
           retryState: {
+            attackTypes: [],
             bag: makeNextNote("IJLOSTZ", 5),
+            btbState: BtbState.None,
             field: makeField("IJLOSTZGNN"),
             garbages: [],
             hold: makeHold(Tetromino.O, false),
             lastRoseUpColumn: -1,
+            ren: -1,
             seed: actual.payload.simu.retryState.seed,
             unsettledNexts: makeNextNotes("I[J]p1LOS IJLOSTq1 I $"),
           },
@@ -809,11 +821,14 @@ describe("rootModule", () => {
           replayStep: 0,
           replaySteps: [],
           retryState: {
+            attackTypes: [],
             bag: makeNextNote("IJLOSTZ", 7),
+            btbState: BtbState.None,
             field: makeField("NNNNNNNNNN"),
             garbages: [],
             hold: makeHold(Tetromino.None, true),
             lastRoseUpColumn: -1,
+            ren: -1,
             seed: actual.payload.simu.retryState.seed,
             unsettledNexts: makeNextNotes("IJLOSTZIJLOST"),
           },
@@ -907,7 +922,9 @@ describe("rootModule", () => {
           replayStep: 0,
           replaySteps: [],
           retryState: {
+            attackTypes: [],
             bag: makeNextNote("IJLOSTZ", 7),
+            btbState: BtbState.None,
             field: makeField(
               // prettier-ignore
               "NIJLOSTZGG",
@@ -916,6 +933,7 @@ describe("rootModule", () => {
             garbages: [],
             hold: makeHold(Tetromino.J, false),
             lastRoseUpColumn: -1,
+            ren: -1,
             seed: 3,
             unsettledNexts: makeNextNotes("IJLOSTZZTSOLJI"),
           },

@@ -12,7 +12,7 @@ import {
   ReplayStep,
   SpinType,
   TapControllerType,
-  Tetromino
+  Tetromino,
 } from "types/core";
 import { PlayMode, SimuConfig, SimuRetryState } from "types/simu";
 import { makeFullNextNote } from "utils/tetsimu/functions";
@@ -121,13 +121,16 @@ export const initialSimuState: SimuState = ((): SimuState => {
   };
 
   const retryState: SimuRetryState = {
+    attackTypes: [],
     bag: { candidates: [], take: 0 },
+    btbState: BtbState.None,
     field,
     hold,
     garbages: [],
-    unsettledNexts: [],
     lastRoseUpColumn: -1,
+    ren: -1,
     seed: initialSeed,
+    unsettledNexts: [],
   };
 
   const isTouchDevice = "ontouchstart" in window;

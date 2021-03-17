@@ -432,16 +432,16 @@ export class SimuConductor {
         const gGen = new GarbageGenerator(
           this.rng,
           this.state.config.garbage,
-          this.state.retryState.garbages,
+          this.state.retryState.garbages
         );
         return gGen.generateGarbages();
       } else {
-        return this.state.garbages;
+        return this.state.retryState.garbages;
       }
     })();
 
-    this.state.attackTypes = [];
-    this.state.btbState = BtbState.None;
+    this.state.attackTypes = this.state.retryState.attackTypes;
+    this.state.btbState = this.state.retryState.btbState;
     this.state.current = newCurrent;
     this.state.garbages = newGarbages;
     this.state.field = newField;
@@ -450,7 +450,7 @@ export class SimuConductor {
     this.state.hold = newHold;
     this.state.lastRoseUpColumn = newLastRoseUpColumn;
     this.state.nexts = newNexts;
-    this.state.ren = -1;
+    this.state.ren = this.state.retryState.ren;
     this.state.replayNextStep = newNexts.settled.length;
     this.state.replayNexts = newNexts.settled;
     this.state.replayStep = 0;
@@ -556,26 +556,29 @@ export class SimuConductor {
         const gGen = new GarbageGenerator(
           this.rng,
           this.state.config.garbage,
-          this.state.retryState.garbages,
+          this.state.retryState.garbages
         );
         return gGen.generateGarbages();
       } else {
-        return this.state.garbages;
+        return this.state.retryState.garbages;
       }
     })();
 
     const newRetryState: SimuRetryState = {
+      attackTypes: this.state.retryState.attackTypes,
       bag: this.state.retryState.bag,
+      btbState: this.state.retryState.btbState,
       field: newField,
       garbages: this.state.retryState.garbages,
       hold: newHold,
       lastRoseUpColumn: this.state.retryState.lastRoseUpColumn,
+      ren: this.state.retryState.ren,
       unsettledNexts: this.state.retryState.unsettledNexts,
       seed: initialSeed,
     };
 
-    this.state.attackTypes = [];
-    this.state.btbState = BtbState.None;
+    this.state.attackTypes = this.state.retryState.attackTypes;
+    this.state.btbState = this.state.retryState.btbState;
     this.state.current = newCurrent;
     this.state.field = newField;
     this.state.garbages = newGarbages;
@@ -584,7 +587,7 @@ export class SimuConductor {
     this.state.hold = newHold;
     this.state.lastRoseUpColumn = newLastRoseUpColumn;
     this.state.nexts = newNexts;
-    this.state.ren = -1;
+    this.state.ren = this.state.retryState.ren;
     this.state.retryState = newRetryState;
     this.state.replayNextStep = newNexts.settled.length;
     this.state.replayNexts = newNexts.settled;
@@ -636,7 +639,9 @@ export class SimuConductor {
     })();
 
     this.state.retryState = {
+      attackTypes: [],
       bag,
+      btbState: BtbState.None,
       field,
       hold: {
         canHold: true,
@@ -644,6 +649,7 @@ export class SimuConductor {
       },
       garbages: [],
       lastRoseUpColumn: -1,
+      ren: -1,
       seed: this.rng.seed,
       unsettledNexts: [],
     };
