@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
 
     main: {
-      flexGrow: 1,
+      flex: 1,
       overflowY: "auto",
     },
 
