@@ -23,6 +23,7 @@
     "@types/mersenne-twister": "^1.1.2",
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
+    "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^3.4.0",
     "@typescript-eslint/parser": "^3.4.0",
     "css-loader": "^3.6.0",
@@ -47,9 +48,11 @@
     "webpack-merge": "^5.0.9"
   },
   "dependencies": {
-    "deepmerge": "^4.2.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
     "deep-object-diff": "^1.1.0",
+    "deepmerge": "^4.2.2",
     "mersenne-twister": "^1.1.0",
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.0",
+    "uuid": "^8.3.2"
   }
 }

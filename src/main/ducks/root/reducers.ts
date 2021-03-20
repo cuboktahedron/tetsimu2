@@ -1,4 +1,5 @@
 import editReducer from "ducks/edit";
+import explorerReducer from "ducks/explorer";
 import replayReducer from "ducks/replay";
 import simuReducer from "ducks/simu";
 import { RootState } from "stores/RootState";
@@ -8,6 +9,7 @@ import { RootActions, RootActionsType } from "./types";
 
 const reducers = {
   edit: editReducer,
+  explorer: explorerReducer,
   replay: replayReducer,
   simu: simuReducer,
 };
@@ -229,6 +231,18 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
   }
 
   if (reducerName === "replay") {
+    const newState = reducers[reducerName](state[reducerName], anyAction);
+    if (newState !== state[reducerName]) {
+      return {
+        ...state,
+        [reducerName]: newState,
+      };
+    } else {
+      return state;
+    }
+  }
+
+  if (reducerName === "explorer") {
     const newState = reducers[reducerName](state[reducerName], anyAction);
     if (newState !== state[reducerName]) {
       return {

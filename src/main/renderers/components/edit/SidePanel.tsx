@@ -12,13 +12,15 @@ import { blueGrey } from "@material-ui/core/colors";
 import CallToActionIcon from "@material-ui/icons/CallToAction";
 import EditIcon from "@material-ui/icons/Edit";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
+import PageviewIcon from "@material-ui/icons/Pageview";
 import clsx from "clsx";
 import React from "react";
 import { SidePanelContext } from "../App";
+import Explorer from "../explorer/Explorer";
 import Help from "../Help";
 import Tools from "./Tools";
 
-type IconNames = "edit/tools" | "help";
+type IconNames = "edit/tools" | "explorer" | "explorer" | "help";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,6 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const mains = {
   "edit/tools": <Tools />,
+  explorer: <Explorer />,
   help: <Help />,
 };
 
@@ -125,6 +128,19 @@ const SidePanel: React.FC = () => {
         </ListItemIcon>
       </ListItem>
       <Divider />
+      <ListItem
+        button
+        disableGutters
+        onClick={() => handleMenuIconClick("explorer")}
+      >
+        <ListItemIcon className={classes.listIcon}>
+          <PageviewIcon
+            className={clsx(classes.icon, {
+              selected: selectedMenuName === "explorer" && open,
+            })}
+          />
+        </ListItemIcon>
+      </ListItem>
       <ListItem
         button
         disableGutters

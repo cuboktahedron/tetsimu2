@@ -23,6 +23,10 @@ const HotKey: React.FC = () => {
         return;
       }
 
+      if (target.classList.contains("ignore-hotkey")) {
+        return;
+      }
+
       if (e.shiftKey || e.altKey || e.ctrlKey) {
         return;
       }
@@ -52,6 +56,10 @@ const HotKey: React.FC = () => {
       const target = e.target as Element;
       const nodeName = target?.nodeName.toLowerCase();
       if (nodeName === "input") {
+        return;
+      }
+
+      if (target.classList.contains("ignore-hotkey")) {
         return;
       }
 

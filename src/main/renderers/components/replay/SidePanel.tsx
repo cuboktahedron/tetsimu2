@@ -6,12 +6,13 @@ import {
   makeStyles,
   Theme,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@material-ui/core";
 import { blueGrey, grey } from "@material-ui/core/colors";
 import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
 import CallToActionIcon from "@material-ui/icons/CallToAction";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
+import PageviewIcon from "@material-ui/icons/Pageview";
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 import SettingsIcon from "@material-ui/icons/Settings";
 import clsx from "clsx";
@@ -20,12 +21,18 @@ import { getReplayConductor } from "ducks/replay/selectors";
 import React from "react";
 import { useValueRef } from "renderers/hooks/useValueRef";
 import { RootContext, SidePanelContext } from "../App";
+import Explorer from "../explorer/Explorer";
 import Help from "../Help";
 import Settings from "./Settings";
 import Stats from "./Stats";
 import Tools from "./Tools";
 
-type IconNames = "help" | "replay/tools" | "replay/settings" | "replay/stats";
+type IconNames =
+  | "explorer"
+  | "help"
+  | "replay/tools"
+  | "replay/settings"
+  | "replay/stats";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,6 +71,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const mains = {
+  explorer: <Explorer />,
   help: <Help />,
   "replay/settings": <Settings />,
   "replay/stats": <Stats />,
@@ -199,6 +207,19 @@ const SidePanel: React.FC = () => {
         </ListItemIcon>
       </ListItem>
       <Divider />
+      <ListItem
+        button
+        disableGutters
+        onClick={() => handleMenuIconClick("explorer")}
+      >
+        <ListItemIcon className={classes.listIcon}>
+          <PageviewIcon
+            className={clsx(classes.icon, {
+              selected: selectedMenuName === "explorer" && open,
+            })}
+          />
+        </ListItemIcon>
+      </ListItem>
       <ListItem
         button
         disableGutters

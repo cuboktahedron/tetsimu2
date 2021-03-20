@@ -286,6 +286,7 @@ const initializeSimuState = (
 
   return {
     ...state,
+    attackTypes: [],
     btbState: BtbState.None,
     config: {
       ...state.config,
@@ -297,6 +298,7 @@ const initializeSimuState = (
     },
     current,
     field: fragments.field,
+    garbages: [],
     histories: [
       {
         attackTypes: [],
@@ -398,21 +400,17 @@ const initializeReplayState = (
     nexts.shift();
   }
 
-  const newState = {
+  const newState: ReplayState = {
     ...state,
     attackTypes: [],
+    auto: {
+      ...state.auto,
+      playing: false,
+    },
     btbState: BtbState.None,
     current,
     field: fragments.field,
     garbages: [] as GarbageInfo[],
-    hold: fragments.hold,
-    isDead,
-    noOfCycle,
-    replayInfo: {
-      ...state.replayInfo,
-      nextNum: fragments.nextNum,
-      offsetRange: fragments.offsetRange,
-    },
     histories: [
       {
         attackTypes: [],
@@ -427,9 +425,18 @@ const initializeReplayState = (
         ren: -1,
       },
     ],
+    hold: fragments.hold,
+    isDead,
     nexts,
+    noOfCycle,
     ren: -1,
+    replayInfo: {
+      ...state.replayInfo,
+      nextNum: fragments.nextNum,
+      offsetRange: fragments.offsetRange,
+    },
     replaySteps: fragments.replaySteps,
+    step: 0,
   };
 
   const replaySteps = fragments.replaySteps;
