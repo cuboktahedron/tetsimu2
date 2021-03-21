@@ -13,7 +13,6 @@ import HoldNexts from "./HoldNexts";
 import HotKey from "./Hotkey";
 import NextsOnly from "./NextsOnly";
 import Operation from "./Operation";
-import SidePanel from "./SidePanel";
 
 export const EditContext = React.createContext({
   state: initialEditState,
@@ -78,7 +77,6 @@ const Edit: React.FC = () => {
           </div>
           <HotKey />
         </div>
-        <SidePanel />
       </EditContext.Provider>
     );
   } else {
@@ -101,7 +99,6 @@ const Edit: React.FC = () => {
           </div>
           <HotKey />
         </div>
-        <SidePanel />
       </EditContext.Provider>
     );
   }

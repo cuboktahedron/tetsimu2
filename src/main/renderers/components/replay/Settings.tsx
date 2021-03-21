@@ -12,12 +12,13 @@ import {
 } from "ducks/replay/actions";
 import React from "react";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
-import { ReplayContext } from "./Replay";
+import { RootContext } from "../App";
 
 const useStyles = useSidePanelStyles();
 
 const Settings: React.FC = () => {
-  const { state, dispatch } = React.useContext(ReplayContext);
+  const { state: rootState, dispatch } = React.useContext(RootContext);
+  const state = rootState.replay;
   const config = state.config;
 
   const handleShowPivotChange = (e: React.ChangeEvent<HTMLInputElement>) => {

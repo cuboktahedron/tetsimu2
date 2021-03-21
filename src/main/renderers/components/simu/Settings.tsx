@@ -25,8 +25,8 @@ import React, { useEffect } from "react";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { MAX_NEXTS_NUM, TapControllerType } from "types/core";
 import { PlayMode } from "types/simu";
+import { RootContext } from "../App";
 import NumberTextField from "../ext/NumberTextField";
-import { SimuContext } from "./Simu";
 
 const useStyles = useSidePanelStyles({
   formControl: {
@@ -35,7 +35,8 @@ const useStyles = useSidePanelStyles({
 });
 
 const Settings: React.FC = () => {
-  const { state, dispatch } = React.useContext(SimuContext);
+  const { state: rootState, dispatch } = React.useContext(RootContext);
+  const state = rootState.simu;
   const config = state.config;
   const [playMode, setPlayMode] = React.useState(config.playMode);
 

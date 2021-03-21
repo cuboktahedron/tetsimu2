@@ -13,7 +13,6 @@ import HoldNexts from "./HoldNexts";
 import HotKey from "./Hotkey";
 import NextsOnly from "./NextsOnly";
 import Operation from "./Operation";
-import SidePanel from "./SidePanel";
 import VirtualControllerTypeA from "./VirtualControllerTypeA";
 import VirtualControllerTypeB from "./VirtualControllerTypeB";
 
@@ -65,7 +64,7 @@ const Simu: React.FC = () => {
     if (state.zoom !== zoom) {
       dispatch(changeZoom(zoom));
     }
-  }, [zoom])
+  }, [zoom]);
 
   const virtualController = (() => {
     if (!state.env.isTouchDevice) {
@@ -96,7 +95,6 @@ const Simu: React.FC = () => {
           <HotKey />
           {virtualController}
         </div>
-        <SidePanel />
       </SimuContext.Provider>
     );
   } else {
@@ -120,7 +118,6 @@ const Simu: React.FC = () => {
           <HotKey />
           {virtualController}
         </div>
-        <SidePanel />
       </SimuContext.Provider>
     );
   }

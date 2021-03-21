@@ -13,7 +13,6 @@ import HoldNexts from "./HoldNexts";
 import HotKey from "./Hotkey";
 import NextsOnly from "./NextsOnly";
 import Operation from "./Operation";
-import SidePanel from "./SidePanel";
 
 export const ReplayContext = React.createContext({
   state: initialReplayState,
@@ -78,7 +77,6 @@ const Replay: React.FC = () => {
           </div>
           <HotKey />
         </div>
-        <SidePanel />
       </ReplayContext.Provider>
     );
   } else {
@@ -101,7 +99,6 @@ const Replay: React.FC = () => {
           </div>
           <HotKey />
         </div>
-        <SidePanel />
       </ReplayContext.Provider>
     );
   }

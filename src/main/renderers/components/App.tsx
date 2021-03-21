@@ -19,6 +19,7 @@ import { UnsupportedUrlError } from "utils/tetsimu/unsupportedUrlError";
 import ErrorDialog from "./core/ErrorDialog";
 import Edit from "./edit/Edit";
 import Replay from "./replay/Replay";
+import SidePanel from "./root/SidePanel";
 import Simu from "./simu/Simu";
 
 const theme = createMuiTheme({
@@ -40,6 +41,11 @@ export const RootContext = React.createContext({
 type SidePanelContext = {
   drawerWidth: [number, React.Dispatch<React.SetStateAction<number>>];
   open: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+  selectedMenuMain: [
+    JSX.Element | null,
+    React.Dispatch<React.SetStateAction<JSX.Element | null>>
+  ];
+  selectedMenuName: [string, React.Dispatch<React.SetStateAction<string>>];
 };
 export const SidePanelContext = React.createContext({} as SidePanelContext);
 
@@ -51,6 +57,11 @@ const App: React.FC = () => {
     Math.min(480, window.innerWidth)
   );
   const [open, setOpen] = React.useState(false);
+  const [selectedMenuName, setSelectedMenuName] = React.useState("");
+  const [
+    selectedMenuMain,
+    setSelectedMenuMain,
+  ] = React.useState<JSX.Element | null>(null);
   const [loadedConfigs, setLoadedConfigs] = React.useState(false);
   const mathces = useMediaQuery("(min-width:1168px)", { noSsr: true });
 
@@ -103,25 +114,36 @@ const App: React.FC = () => {
     }
   })();
 
+  const sidePanel = (() => {
+    if (state.mode === TetsimuMode.None) {
+      return "";
+    } else {
+      return <SidePanel />;
+    }
+  })();
+
   return (
     <MuiThemeProvider theme={theme}>
       <RootContext.Provider value={{ state, dispatch }}>
+        {main}
+        {state.dialog.error ? (
+          <ErrorDialog
+            title={state.dialog.error.title}
+            message={state.dialog.error.message}
+            onClose={handleErrorDialogClose}
+          />
+        ) : (
+          ""
+        )}
         <SidePanelContext.Provider
           value={{
             drawerWidth: [drawerWidth, setDrawerWidth],
             open: [open, setOpen],
+            selectedMenuMain: [selectedMenuMain, setSelectedMenuMain],
+            selectedMenuName: [selectedMenuName, setSelectedMenuName],
           }}
         >
-          {main}
-          {state.dialog.error ? (
-            <ErrorDialog
-              title={state.dialog.error.title}
-              message={state.dialog.error.message}
-              onClose={handleErrorDialogClose}
-            />
-          ) : (
-            ""
-          )}
+          {sidePanel}
         </SidePanelContext.Provider>
       </RootContext.Provider>
     </MuiThemeProvider>

@@ -59,8 +59,8 @@ const useStyles = useSidePanelStyles({
 
 const Tools: React.FC = () => {
   const { state: rootState, dispatch } = React.useContext(RootContext);
-  const [stateUrl, setStateUrl] = React.useState("");
   const state = rootState.replay;
+  const [stateUrl, setStateUrl] = React.useState("");
 
   const handleSimuClick = () => {
     dispatch(replayToSimuMode(state, rootState.simu));

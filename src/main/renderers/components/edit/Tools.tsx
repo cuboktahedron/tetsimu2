@@ -3,7 +3,7 @@ import {
   Checkbox,
   Divider,
   FormControl,
-  FormControlLabel,
+  FormControlLabel
 } from "@material-ui/core";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import {
@@ -13,7 +13,7 @@ import {
   changeNoOfCycle,
   clearEdit,
   flipField,
-  slideField,
+  slideField
 } from "ducks/edit/actions";
 import { changeTetsimuMode, editToSimuMode } from "ducks/root/actions";
 import React, { useEffect } from "react";
@@ -22,16 +22,17 @@ import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { TetsimuMode } from "types/core";
 import EditUrl from "utils/tetsimu/edit/editUrl";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
+import { RootContext } from "../App";
 import NumberTextField from "../ext/NumberTextField";
 import TextFieldEx from "../ext/TextFieldEx";
-import { EditContext } from "./Edit";
 
 const useStyles = useSidePanelStyles();
 
 const MAX_NEXT_BASE_NO = 1000 - 7;
 
 const Tools: React.FC = () => {
-  const { state, dispatch } = React.useContext(EditContext);
+  const { state: rootState, dispatch } = React.useContext(RootContext);
+  const state = rootState.edit;
   const [nextsPattern, setNextsPattern] = React.useState({
     errorText: "",
     value: state.tools.nextsPattern,

@@ -2,13 +2,14 @@ import { FormLabel } from "@material-ui/core";
 import { getStats } from "ducks/replay/selectors";
 import React from "react";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
+import { RootContext } from "../App";
 import CounterStats from "../CounterStats";
-import { ReplayContext } from "./Replay";
 
 const useStyles = useSidePanelStyles();
 
 const Stats: React.FC = () => {
-  const { state } = React.useContext(ReplayContext);
+  const { state: rootState } = React.useContext(RootContext);
+  const state = rootState.replay;
 
   const stats = React.useMemo(() => getStats(state), [state.step]);
   const classes = useStyles();

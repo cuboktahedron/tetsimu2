@@ -16,13 +16,14 @@ import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { TetsimuMode } from "types/core";
 import { SimuConductor } from "utils/tetsimu/simu/simuConductor";
 import SimuUrl from "utils/tetsimu/simu/simuUrl";
+import { RootContext } from "../App";
 import TextFieldEx from "../ext/TextFieldEx";
-import { SimuContext } from "./Simu";
 
 const useStyles = useSidePanelStyles();
 
 const Tools: React.FC = () => {
-  const { state, dispatch } = React.useContext(SimuContext);
+  const { state: rootState, dispatch } = React.useContext(RootContext);
+  const state = rootState.simu
   const [stateUrl, setStateUrl] = React.useState("");
 
   const handleEditClick = () => {
