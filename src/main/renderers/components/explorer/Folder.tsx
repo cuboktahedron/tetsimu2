@@ -64,6 +64,15 @@ const Folder: React.FC<FolderProps> = (props) => {
     });
   };
 
+  const handleRemoveFolderClick = () => {
+    props.eventHandler({
+      type: ExplorerEventType.FolderRemoved,
+      payload: {
+        pathToDelete: props.dir,
+      },
+    });
+  };
+
   return (
     <TreeItem
       className="ignore-hotkey"
@@ -84,7 +93,7 @@ const Folder: React.FC<FolderProps> = (props) => {
             <IconButton>
               <NoteAddIcon />
             </IconButton>
-            <IconButton>
+            <IconButton onClick={handleRemoveFolderClick}>
               <DeleteIcon />
             </IconButton>
           </div>

@@ -19,6 +19,7 @@ export class ExplorerHelper {
 
     const dirs = [...path.split("/")].filter((dir) => dir !== "");
     let currentFolder = this.rootFolder;
+    let parentFolder: ExplorerItemFolder | null = null;
 
     for (let i = 0; i < dirs.length; i++) {
       const dir = dirs[i];
@@ -35,21 +36,28 @@ export class ExplorerHelper {
       }
 
       const orgFolder = currentFolder.items[folder.id] as ExplorerItemFolder;
-      currentFolder.items[folder.id] ==
-        { ...orgFolder, items: { ...orgFolder.items } };
-      currentFolder = folder;
+      currentFolder.items[folder.id] = {
+        ...orgFolder,
+        items: { ...orgFolder.items },
+      };
+      parentFolder = currentFolder;
+      currentFolder = currentFolder.items[folder.id] as ExplorerItemFolder;
     }
 
     if (currentFolder === null) {
       return null;
     }
 
-    return new FolderHelper(currentFolder, this.rootFolder);
+    return new FolderHelper(currentFolder, parentFolder, this.rootFolder);
   }
 }
 
 export class FolderHelper {
-  constructor(private folder: ExplorerItemFolder, private _root: RootFolder) {}
+  constructor(
+    private folder: ExplorerItemFolder,
+    private parentFolder: ExplorerItemFolder | null,
+    private rootFolder: RootFolder
+  ) {}
 
   get id(): string {
     return this.folder.id;
@@ -60,7 +68,7 @@ export class FolderHelper {
   }
 
   get root(): RootFolder {
-    return this._root;
+    return this.rootFolder;
   }
 
   addFolder(newFolder: ExplorerItemFolder) {
@@ -97,5 +105,13 @@ export class FolderHelper {
     })();
 
     this.folder.items[newFolder.id] = { ...newFolder, name: newFolderName };
+  }
+
+  remove() {
+    if (this.parentFolder === null) {
+      throw Error("Root folder can't be deleted.");
+    }
+
+    delete this.parentFolder.items[this.folder.id];
   }
 }

@@ -10,7 +10,7 @@ import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import SyncIcon from "@material-ui/icons/Sync";
 import TreeView from "@material-ui/lab/TreeView";
-import { addFolder } from "ducks/explorer/actions";
+import { addFolder, removeFolder } from "ducks/explorer/actions";
 import { getOrderedItems } from "ducks/explorer/selectors";
 import React from "react";
 import { ExplorerItemType, initialExplorerState } from "stores/ExplorerState";
@@ -69,6 +69,10 @@ const Explorer: React.FC = () => {
             state.rootFolder
           )
         );
+        break;
+      }
+      case ExplorerEventType.FolderRemoved: {
+        dispatch(removeFolder(event.payload.pathToDelete, state.rootFolder));
         break;
       }
     }

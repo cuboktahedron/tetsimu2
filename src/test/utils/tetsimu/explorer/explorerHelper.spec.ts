@@ -47,25 +47,43 @@ describe("ExplorerHelper", () => {
     expect(folder12?.id).toBe("1-2");
   });
 
-  it("should add folder", () => {
-    const helper = new ExplorerHelper(rootFolders);
-    const rootFolder = helper.folder("/") as FolderHelper;
-    rootFolder.addFolder(makeFolder("new1", "new_folder1"));
+  describe("folder", () => {
+    describe("addFolder", () => {
+      it("should add folder", () => {
+        const helper = new ExplorerHelper(rootFolders);
+        const rootFolder = helper.folder("/") as FolderHelper;
+        rootFolder.addFolder(makeFolder("new1", "new_folder1"));
 
-    const newFolder1 = helper.folder("/new_folder1");
-    expect(newFolder1?.id).toBe("new1");
+        const newFolder1 = helper.folder("/new_folder1");
+        expect(newFolder1?.id).toBe("new1");
 
-    const helperOfOriginal = new ExplorerHelper(rootFolders);
-    const orgNewFolder1 = helperOfOriginal.folder("/new_folder1");
-    expect(orgNewFolder1).toBeNull();
-  });
+        const helperOfOriginal = new ExplorerHelper(rootFolders);
+        const orgNewFolder1 = helperOfOriginal.folder("/new_folder1");
+        expect(orgNewFolder1).toBeNull();
+      });
 
-  it("should rename folder if same name item exists", () => {
-    const helper = new ExplorerHelper(rootFolders);
-    const rootFolder = helper.folder("/") as FolderHelper;
-    rootFolder.addFolder(makeFolder("new1", "folder1"));
+      it("should rename folder if same name item exists", () => {
+        const helper = new ExplorerHelper(rootFolders);
+        const rootFolder = helper.folder("/") as FolderHelper;
+        rootFolder.addFolder(makeFolder("new1", "folder1"));
 
-    const newFolder = helper.folder("/folder3");
-    expect(newFolder?.id).toBe("new1");
+        const newFolder = helper.folder("/folder3");
+        expect(newFolder?.id).toBe("new1");
+      });
+    });
+
+    describe("removeFolder", () => {
+      it("should remove folder", () => {
+        const helper = new ExplorerHelper(rootFolders);
+
+        const folder12 = helper.folder("/folder1/folder1-2");
+        folder12?.remove();
+        expect(helper.folder("/folder1/folder1-2")).toBeNull();
+
+        const helperOfOriginal = new ExplorerHelper(rootFolders);
+        const orgFolder12 = helperOfOriginal.folder("/folder1/folder1-2");
+        expect(orgFolder12).not.toBeNull();
+      });
+    });
   });
 });

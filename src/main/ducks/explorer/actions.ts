@@ -4,9 +4,16 @@ import {
   Path,
   RootFolder
 } from "stores/ExplorerState";
-import { ExplorerHelper, FolderHelper } from "utils/tetsimu/explorer/explorerHelper";
+import {
+  ExplorerHelper,
+  FolderHelper
+} from "utils/tetsimu/explorer/explorerHelper";
 import { v4 as uuidv4 } from "uuid";
-import { AddFolderAction, ExplorerActionsType } from "./types";
+import {
+  AddFolderAction,
+  ExplorerActionsType,
+  RemoveFolderAction
+} from "./types";
 
 export const addFolder = (
   newFolderName: string,
@@ -15,7 +22,6 @@ export const addFolder = (
 ): AddFolderAction => {
   const newId = uuidv4();
 
-  // TODO: null check
   const folder = new ExplorerHelper(rootFolder).folder(destDir) as FolderHelper;
 
   const newFolder: ExplorerItemFolder = {
@@ -31,6 +37,24 @@ export const addFolder = (
 
   return {
     type: ExplorerActionsType.AddFolder,
+    payload: {
+      rootFolder: folder.root,
+    },
+  };
+};
+
+export const removeFolder = (
+  pathToDelete: Path,
+  rootFolder: RootFolder
+): RemoveFolderAction => {
+  const folder = new ExplorerHelper(rootFolder).folder(
+    pathToDelete
+  ) as FolderHelper;
+
+  folder.remove();
+
+  return {
+    type: ExplorerActionsType.RemoveFolder,
     payload: {
       rootFolder: folder.root,
     },
