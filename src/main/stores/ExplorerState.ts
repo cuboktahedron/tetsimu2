@@ -9,7 +9,7 @@ export const ExplorerItemType = {
 
 export type ExplorerItemType = typeof ExplorerItemType[keyof typeof ExplorerItemType];
 
-export type ExploreItemFile = {
+export type ExplorerItemFile = {
   type: typeof ExplorerItemType.File;
   details: string;
   id: string;
@@ -31,7 +31,7 @@ export type ExplorerItemFolder = {
   syncUrl: string;
 };
 
-export type ExplorerItem = ExploreItemFile | ExplorerItemFolder;
+export type ExplorerItem = ExplorerItemFile | ExplorerItemFolder;
 
 export const initialExplorerState: ExplorerState = ((): ExplorerState => {
   return {

@@ -6,6 +6,11 @@ const reducer = (state: ExplorerState, anyAction: Action): ExplorerState => {
   const action = anyAction as ExplorerActions;
 
   switch (action.type) {
+    case ExplorerActionsType.AddFile:
+      return {
+        ...state,
+        rootFolder: action.payload.rootFolder,
+      };
     case ExplorerActionsType.AddFolder:
       return {
         ...state,

@@ -3,23 +3,19 @@ import {
   makeStyles,
   SvgIcon,
   SvgIconProps,
-  Theme
+  Theme,
 } from "@material-ui/core";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import SyncIcon from "@material-ui/icons/Sync";
 import TreeView from "@material-ui/lab/TreeView";
-import { addFolder, removeFolder } from "ducks/explorer/actions";
 import { getOrderedItems } from "ducks/explorer/selectors";
 import React from "react";
+import { useExplorerEventHandler } from "renderers/hooks/explorer/useExplorerEventHandler";
 import { ExplorerItemType, initialExplorerState } from "stores/ExplorerState";
 import { Action } from "types/core";
-import {
-  ExplorerEvent,
-  ExplorerEventHandler,
-  ExplorerEventType
-} from "utils/tetsimu/explorer/explorerEvent";
+import { ExplorerEventType } from "utils/tetsimu/explorer/explorerEvent";
 import { RootContext } from "../App";
 import Folder from "./Folder";
 
@@ -58,29 +54,11 @@ const Explorer: React.FC = () => {
   const { state: rootState, dispatch } = React.useContext(RootContext);
   const state = rootState.explorer;
   const classes = useStyles();
-
-  const explorerEventHandler: ExplorerEventHandler = (event: ExplorerEvent) => {
-    switch (event.type) {
-      case ExplorerEventType.FolderAdded: {
-        dispatch(
-          addFolder(
-            event.payload.newFolderName,
-            event.payload.dest,
-            state.rootFolder
-          )
-        );
-        break;
-      }
-      case ExplorerEventType.FolderRemoved: {
-        dispatch(removeFolder(event.payload.pathToDelete, state.rootFolder));
-        break;
-      }
-    }
-  };
+  const explorerEventHandler = useExplorerEventHandler();
 
   const handleNewFolderClick = () => {
     explorerEventHandler({
-      type: ExplorerEventType.FolderAdded,
+      type: ExplorerEventType.FolderAdd,
       payload: {
         newFolderName: "NewFolder",
         dest: "/",

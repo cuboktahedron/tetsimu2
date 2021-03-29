@@ -5,9 +5,9 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import SyncIcon from "@material-ui/icons/Sync";
 import { TreeItem } from "@material-ui/lab";
 import React from "react";
-import { ExploreItemFile } from "stores/ExplorerState";
+import { ExplorerItemFile } from "stores/ExplorerState";
 
-export type FileProps = {} & ExploreItemFile;
+export type FileProps = {} & ExplorerItemFile;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

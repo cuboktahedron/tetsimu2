@@ -54,9 +54,9 @@ const Folder: React.FC<FolderProps> = (props) => {
     }
   });
 
-  const handleNewFolderClick = () => {
+  const handleAddFolderClick = () => {
     props.eventHandler({
-      type: ExplorerEventType.FolderAdded,
+      type: ExplorerEventType.FolderAdd,
       payload: {
         newFolderName: "NewFolder",
         dest: props.dir,
@@ -73,6 +73,16 @@ const Folder: React.FC<FolderProps> = (props) => {
     });
   };
 
+  const handleAddFileClick = () => {
+    props.eventHandler({
+      type: ExplorerEventType.FileAdd,
+      payload: {
+        dest: props.dir,
+        newFileName: "NewFile",
+      },
+    });
+  };
+
   return (
     <TreeItem
       className="ignore-hotkey"
@@ -81,7 +91,7 @@ const Folder: React.FC<FolderProps> = (props) => {
         <div className={classes.labelRoot} onClick={(e) => e.preventDefault()}>
           <div>{props.name}</div>
           <div style={{ marginLeft: "auto" }}>
-            <IconButton onClick={handleNewFolderClick}>
+            <IconButton onClick={handleAddFolderClick}>
               <CreateNewFolderIcon />
             </IconButton>
             <IconButton>
@@ -90,7 +100,7 @@ const Folder: React.FC<FolderProps> = (props) => {
             <IconButton>
               <SyncIcon />
             </IconButton>
-            <IconButton>
+            <IconButton onClick={handleAddFileClick}>
               <NoteAddIcon />
             </IconButton>
             <IconButton onClick={handleRemoveFolderClick}>
