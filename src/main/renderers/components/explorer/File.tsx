@@ -6,8 +6,15 @@ import SyncIcon from "@material-ui/icons/Sync";
 import { TreeItem } from "@material-ui/lab";
 import React from "react";
 import { ExplorerItemFile } from "stores/ExplorerState";
+import {
+  ExplorerEventHandler,
+  ExplorerEventType
+} from "utils/tetsimu/explorer/explorerEvent";
 
-export type FileProps = {} & ExplorerItemFile;
+export type FileProps = {
+  path: string;
+  eventHandler: ExplorerEventHandler;
+} & ExplorerItemFile;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,18 +31,16 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const File: React.FC<FileProps> = (props) => {
-  // const { state, dispatch } = React.useContext(ExplorerContext);
-
-  // const handleItemClick = () => {
-  //   dispatch(
-  //     initializeApp(
-  //       "ns=Ud515amsfR1ifOnap0RfunuReNc60Tp5eVnN.jVOfil7K3irxZ0q.irPmAA_&ss=AJABQABAACAQG8EBtBAXwQLkECVAKoA1ADEAOsBEQEAAVoBGAGEAHMAnQC5AQAA8QFaAO0AcwBhANQAlQBxAP8AvADhARMAxAFaAHMA1ABoAS4AnQDAALcBHwF5AOsAcwCqAF8A7QC5AL0A1AEhARABRAEsAaUEEnAWkAcwDtAHMAJABhAG8AUADEAJMECqALwBFQEcBA4QFnANQBdwBzAMEA5QEZATgAgQB4AR8BcQDUAHMA5ADJAR8ATACqARgA1AE.AHMAewQHwEBzPA_&m=1&v=2.01",
-  //       state
-  //     )
-  //   );
-  // };
-
   const classes = useStyles();
+
+  const handleRemoveFileClick = () => {
+    props.eventHandler({
+      type: ExplorerEventType.FileRemove,
+      payload: {
+        pathToDelete: props.path,
+      },
+    });
+  };
 
   return (
     <TreeItem
@@ -54,7 +59,7 @@ const File: React.FC<FileProps> = (props) => {
             <IconButton>
               <SyncIcon />
             </IconButton>
-            <IconButton>
+            <IconButton onClick={handleRemoveFileClick}>
               <DeleteIcon />
             </IconButton>
           </div>

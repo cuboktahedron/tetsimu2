@@ -163,7 +163,7 @@ export class FileHelper {
   constructor(
     private file: ExplorerItemFile,
     // @ts-ignore
-    private parentFolder: ExplorerItemFolder | null,
+    private parentFolder: ExplorerItemFolder,
     private rootFolder: RootFolder
   ) {}
 
@@ -177,5 +177,9 @@ export class FileHelper {
 
   get root(): RootFolder {
     return this.rootFolder;
+  }
+
+  remove() {
+    delete this.parentFolder.items[this.file.id];
   }
 }

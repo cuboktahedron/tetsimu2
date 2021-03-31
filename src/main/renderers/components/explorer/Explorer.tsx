@@ -73,7 +73,7 @@ const Explorer: React.FC = () => {
         <Folder
           key={root.id}
           {...root}
-          dir={`/${root.name}`}
+          path={`/${root.name}`}
           eventHandler={explorerEventHandler}
         />
       );

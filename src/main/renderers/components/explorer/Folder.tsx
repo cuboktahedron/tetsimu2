@@ -10,12 +10,12 @@ import React from "react";
 import { ExplorerItemFolder, ExplorerItemType } from "stores/ExplorerState";
 import {
   ExplorerEventHandler,
-  ExplorerEventType
+  ExplorerEventType,
 } from "utils/tetsimu/explorer/explorerEvent";
 import File from "./File";
 
 export type FolderProps = {
-  dir: string;
+  path: string;
   eventHandler: ExplorerEventHandler;
 } & ExplorerItemFolder;
 
@@ -43,12 +43,19 @@ const Folder: React.FC<FolderProps> = (props) => {
         <Folder
           key={item.id}
           {...item}
-          dir={`${props.dir}/${item.name}`}
+          path={`${props.path}/${item.name}`}
           eventHandler={props.eventHandler}
         />
       );
     } else if (item.type === ExplorerItemType.File) {
-      return <File key={item.id} {...item} />;
+      return (
+        <File
+          key={item.id}
+          {...item}
+          path={`${props.path}/${item.name}`}
+          eventHandler={props.eventHandler}
+        />
+      );
     } else {
       return "";
     }
@@ -59,16 +66,16 @@ const Folder: React.FC<FolderProps> = (props) => {
       type: ExplorerEventType.FolderAdd,
       payload: {
         newFolderName: "NewFolder",
-        dest: props.dir,
+        dest: props.path,
       },
     });
   };
 
   const handleRemoveFolderClick = () => {
     props.eventHandler({
-      type: ExplorerEventType.FolderRemoved,
+      type: ExplorerEventType.FolderRemove,
       payload: {
-        pathToDelete: props.dir,
+        pathToDelete: props.path,
       },
     });
   };
@@ -77,7 +84,7 @@ const Folder: React.FC<FolderProps> = (props) => {
     props.eventHandler({
       type: ExplorerEventType.FileAdd,
       payload: {
-        dest: props.dir,
+        dest: props.path,
         newFileName: "NewFile",
       },
     });

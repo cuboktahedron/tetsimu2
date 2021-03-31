@@ -7,6 +7,7 @@ import {
 } from "stores/ExplorerState";
 import {
   ExplorerHelper,
+  FileHelper,
   FolderHelper
 } from "utils/tetsimu/explorer/explorerHelper";
 import { v4 as uuidv4 } from "uuid";
@@ -14,6 +15,7 @@ import {
   AddFileAction,
   AddFolderAction,
   ExplorerActionsType,
+  RemoveFileAction,
   RemoveFolderAction
 } from "./types";
 
@@ -69,6 +71,21 @@ export const addFolder = (
     type: ExplorerActionsType.AddFolder,
     payload: {
       rootFolder: folder.root,
+    },
+  };
+};
+
+export const removeFile = (
+  pathToDelete: Path,
+  rootFolder: RootFolder
+): RemoveFileAction => {
+  const file = new ExplorerHelper(rootFolder).file(pathToDelete) as FileHelper;
+  file.remove();
+
+  return {
+    type: ExplorerActionsType.RemoveFile,
+    payload: {
+      rootFolder: file.root,
     },
   };
 };

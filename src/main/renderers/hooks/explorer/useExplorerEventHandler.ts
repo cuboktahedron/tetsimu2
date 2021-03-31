@@ -1,4 +1,9 @@
-import { addFile, addFolder, removeFolder } from "ducks/explorer/actions";
+import {
+  addFile,
+  addFolder,
+  removeFile,
+  removeFolder
+} from "ducks/explorer/actions";
 import React from "react";
 import { RootContext } from "renderers/components/App";
 import {
@@ -22,6 +27,10 @@ export const useExplorerEventHandler = () => {
         );
         break;
       }
+      case ExplorerEventType.FileRemove: {
+        dispatch(removeFile(event.payload.pathToDelete, state.rootFolder));
+        break;
+      }
       case ExplorerEventType.FolderAdd: {
         dispatch(
           addFolder(
@@ -32,7 +41,7 @@ export const useExplorerEventHandler = () => {
         );
         break;
       }
-      case ExplorerEventType.FolderRemoved: {
+      case ExplorerEventType.FolderRemove: {
         dispatch(removeFolder(event.payload.pathToDelete, state.rootFolder));
         break;
       }

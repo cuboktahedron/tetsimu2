@@ -124,5 +124,19 @@ describe("ExplorerHelper", () => {
         expect(newFile?.id).toBe("new1");
       });
     });
+
+    describe("removeFile", () => {
+      it("should remove file", () => {
+        const helper = new ExplorerHelper(rootFolders);
+
+        const file13 = helper.file("/folder1/file1-3");
+        file13?.remove();
+        expect(helper.folder("/folder1/file1-3")).toBeNull();
+
+        const helperOfOriginal = new ExplorerHelper(rootFolders);
+        const orgFile13 = helperOfOriginal.file("/folder1/file1-3");
+        expect(orgFile13).not.toBeNull();
+      });
+    });
   });
 });

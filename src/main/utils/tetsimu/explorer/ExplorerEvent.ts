@@ -2,8 +2,9 @@ import { Path } from "stores/ExplorerState";
 
 export const ExplorerEventType = {
   FolderAdd: 1,
-  FolderRemoved: 2,
+  FolderRemove: 2,
   FileAdd: 3,
+  FileRemove: 4,
 } as const;
 
 export type ExplorerEventType = typeof ExplorerEventType[keyof typeof ExplorerEventType];
@@ -17,7 +18,7 @@ export type FolderAdd = {
 };
 
 export type FolderRemove = {
-  type: typeof ExplorerEventType.FolderRemoved;
+  type: typeof ExplorerEventType.FolderRemove;
   payload: {
     pathToDelete: Path;
   };
@@ -31,6 +32,13 @@ export type FileAdd = {
   };
 };
 
-export type ExplorerEvent = FolderAdd | FolderRemove | FileAdd;
+export type FileRemove = {
+  type: typeof ExplorerEventType.FileRemove;
+  payload: {
+    pathToDelete: Path;
+  };
+};
+
+export type ExplorerEvent = FolderAdd | FolderRemove | FileAdd | FileRemove;
 
 export type ExplorerEventHandler = (event: ExplorerEvent) => void;
