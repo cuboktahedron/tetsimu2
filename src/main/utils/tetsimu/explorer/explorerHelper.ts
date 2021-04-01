@@ -4,7 +4,7 @@ import {
   ExplorerItemType,
   FolderItems,
   Path,
-  RootFolder
+  RootFolder,
 } from "stores/ExplorerState";
 
 export class ExplorerHelper {
@@ -162,7 +162,6 @@ export class FolderHelper {
 export class FileHelper {
   constructor(
     private file: ExplorerItemFile,
-    // @ts-ignore
     private parentFolder: ExplorerItemFolder,
     private rootFolder: RootFolder
   ) {}
@@ -175,11 +174,28 @@ export class FileHelper {
     return this.file.name;
   }
 
+  get description(): string {
+    return this.file.description;
+  }
+
+  get parameters(): string {
+    return this.file.parameters;
+  }
+
+  get syncUrl(): string {
+    return this.file.syncUrl;
+  }
+
   get root(): RootFolder {
     return this.rootFolder;
   }
 
   remove() {
     delete this.parentFolder.items[this.file.id];
+  }
+
+  update(saveData: ExplorerItemFile) {
+    this.file = { ...saveData };
+    this.parentFolder.items[this.file.id] = { ...saveData };
   }
 }

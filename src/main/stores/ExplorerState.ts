@@ -11,7 +11,7 @@ export type ExplorerItemType = typeof ExplorerItemType[keyof typeof ExplorerItem
 
 export type ExplorerItemFile = {
   type: typeof ExplorerItemType.File;
-  details: string;
+  description: string;
   id: string;
   name: string;
   parameters: string;
@@ -24,7 +24,7 @@ export type Path = string;
 
 export type ExplorerItemFolder = {
   type: typeof ExplorerItemType.Folder;
-  details: string;
+  description: string;
   id: string;
   items: FolderItems;
   name: string;
@@ -36,7 +36,7 @@ export type ExplorerItem = ExplorerItemFile | ExplorerItemFolder;
 export const initialExplorerState: ExplorerState = ((): ExplorerState => {
   return {
     rootFolder: {
-      details: "",
+      description: "",
       id: "__root__",
       items: {},
       name: "root",

@@ -3,7 +3,7 @@ import {
   makeStyles,
   SvgIcon,
   SvgIconProps,
-  Theme,
+  Theme
 } from "@material-ui/core";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
@@ -73,6 +73,7 @@ const Explorer: React.FC = () => {
         <Folder
           key={root.id}
           {...root}
+          parentFolder={state.rootFolder}
           path={`/${root.name}`}
           eventHandler={explorerEventHandler}
         />

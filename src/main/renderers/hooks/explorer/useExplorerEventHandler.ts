@@ -2,7 +2,8 @@ import {
   addFile,
   addFolder,
   removeFile,
-  removeFolder
+  removeFolder,
+  saveFile
 } from "ducks/explorer/actions";
 import React from "react";
 import { RootContext } from "renderers/components/App";
@@ -29,6 +30,16 @@ export const useExplorerEventHandler = () => {
       }
       case ExplorerEventType.FileRemove: {
         dispatch(removeFile(event.payload.pathToDelete, state.rootFolder));
+        break;
+      }
+      case ExplorerEventType.FileSave: {
+        dispatch(
+          saveFile(
+            event.payload.pathToSave,
+            event.payload.file,
+            state.rootFolder
+          )
+        );
         break;
       }
       case ExplorerEventType.FolderAdd: {

@@ -3,12 +3,12 @@ import {
   ExplorerItemFolder,
   ExplorerItemType,
   Path,
-  RootFolder
+  RootFolder,
 } from "stores/ExplorerState";
 import {
   ExplorerHelper,
   FileHelper,
-  FolderHelper
+  FolderHelper,
 } from "utils/tetsimu/explorer/explorerHelper";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -16,7 +16,8 @@ import {
   AddFolderAction,
   ExplorerActionsType,
   RemoveFileAction,
-  RemoveFolderAction
+  RemoveFolderAction,
+  SaveFileAction,
 } from "./types";
 
 export const addFile = (
@@ -30,7 +31,7 @@ export const addFile = (
 
   const newFile: ExplorerItemFile = {
     type: ExplorerItemType.File,
-    details: "",
+    description: "",
     id: newId,
     name: newFileName,
     parameters: "",
@@ -58,7 +59,7 @@ export const addFolder = (
 
   const newFolder: ExplorerItemFolder = {
     type: ExplorerItemType.Folder,
-    details: "",
+    description: "",
     id: newId,
     items: {},
     name: newFolderName,
@@ -104,6 +105,22 @@ export const removeFolder = (
     type: ExplorerActionsType.RemoveFolder,
     payload: {
       rootFolder: folder.root,
+    },
+  };
+};
+
+export const saveFile = (
+  pathToSave: Path,
+  saveData: ExplorerItemFile,
+  rootFolder: RootFolder
+): SaveFileAction => {
+  const file = new ExplorerHelper(rootFolder).file(pathToSave) as FileHelper;
+  file.update(saveData);
+
+  return {
+    type: ExplorerActionsType.SaveFile,
+    payload: {
+      rootFolder: file.root,
     },
   };
 };

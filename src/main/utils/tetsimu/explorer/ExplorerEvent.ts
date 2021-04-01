@@ -1,10 +1,11 @@
-import { Path } from "stores/ExplorerState";
+import { ExplorerItemFile, Path } from "stores/ExplorerState";
 
 export const ExplorerEventType = {
   FolderAdd: 1,
   FolderRemove: 2,
   FileAdd: 3,
   FileRemove: 4,
+  FileSave: 5,
 } as const;
 
 export type ExplorerEventType = typeof ExplorerEventType[keyof typeof ExplorerEventType];
@@ -39,6 +40,19 @@ export type FileRemove = {
   };
 };
 
-export type ExplorerEvent = FolderAdd | FolderRemove | FileAdd | FileRemove;
+export type FileSave = {
+  type: typeof ExplorerEventType.FileSave;
+  payload: {
+    file: ExplorerItemFile;
+    pathToSave: Path;
+  };
+};
+
+export type ExplorerEvent =
+  | FolderAdd
+  | FolderRemove
+  | FileAdd
+  | FileRemove
+  | FileSave;
 
 export type ExplorerEventHandler = (event: ExplorerEvent) => void;

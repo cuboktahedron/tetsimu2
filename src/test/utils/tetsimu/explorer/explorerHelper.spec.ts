@@ -7,13 +7,14 @@ import {
 } from "stores/ExplorerState";
 import {
   ExplorerHelper,
+  FileHelper,
   FolderHelper,
 } from "utils/tetsimu/explorer/explorerHelper";
 
 const makeFolder = (id: string, name: string): ExplorerItemFolder => {
   return {
     type: ExplorerItemType.Folder,
-    details: "",
+    description: "",
     id,
     items: {},
     name,
@@ -24,7 +25,7 @@ const makeFolder = (id: string, name: string): ExplorerItemFolder => {
 const makeFile = (id: string, name: string): ExplorerItemFile => {
   return {
     type: ExplorerItemType.File,
-    details: "",
+    description: "",
     id,
     name,
     parameters: "",
@@ -49,15 +50,15 @@ describe("ExplorerHelper", () => {
 
   it("should find specific folder", () => {
     const helper = new ExplorerHelper(rootFolders);
-    const rootFolder = helper.folder("/");
+    const rootFolder = helper.folder("/") as FolderHelper;
 
-    expect(rootFolder?.name).toBe("root");
+    expect(rootFolder.name).toBe("root");
 
-    const folder1 = helper.folder("/folder1");
-    expect(folder1?.id).toBe("1");
+    const folder1 = helper.folder("/folder1") as FolderHelper;
+    expect(folder1.id).toBe("1");
 
-    const folder12 = helper.folder("/folder1/folder1-2");
-    expect(folder12?.id).toBe("1-2");
+    const folder12 = helper.folder("/folder1/folder1-2") as FolderHelper;
+    expect(folder12.id).toBe("1-2");
   });
 
   describe("folder", () => {
@@ -67,8 +68,8 @@ describe("ExplorerHelper", () => {
         const rootFolder = helper.folder("/") as FolderHelper;
         rootFolder.addFolder(makeFolder("new1", "new_folder1"));
 
-        const newFolder1 = helper.folder("/new_folder1");
-        expect(newFolder1?.id).toBe("new1");
+        const newFolder1 = helper.folder("/new_folder1") as FolderHelper;
+        expect(newFolder1.id).toBe("new1");
 
         const helperOfOriginal = new ExplorerHelper(rootFolders);
         const orgNewFolder1 = helperOfOriginal.folder("/new_folder1");
@@ -80,7 +81,7 @@ describe("ExplorerHelper", () => {
         const rootFolder = helper.folder("/") as FolderHelper;
         rootFolder.addFolder(makeFolder("new1", "folder1"));
 
-        const newFolder = helper.folder("/folder3");
+        const newFolder = helper.folder("/folder3") as FolderHelper;
         expect(newFolder?.id).toBe("new1");
       });
     });
@@ -89,8 +90,8 @@ describe("ExplorerHelper", () => {
       it("should remove folder", () => {
         const helper = new ExplorerHelper(rootFolders);
 
-        const folder12 = helper.folder("/folder1/folder1-2");
-        folder12?.remove();
+        const folder12 = helper.folder("/folder1/folder1-2") as FolderHelper;
+        folder12.remove();
         expect(helper.folder("/folder1/folder1-2")).toBeNull();
 
         const helperOfOriginal = new ExplorerHelper(rootFolders);
@@ -102,11 +103,13 @@ describe("ExplorerHelper", () => {
     describe("addFfile", () => {
       it("should add file", () => {
         const helper = new ExplorerHelper(rootFolders);
-        const folder12 = helper.folder("/folder1/folder1-2");
-        folder12?.addFile(makeFile("new1", "new_file1"));
+        const folder12 = helper.folder("/folder1/folder1-2") as FolderHelper;
+        folder12.addFile(makeFile("new1", "new_file1"));
 
-        const newFile1 = helper.file("/folder1/folder1-2/new_file1");
-        expect(newFile1?.id).toBe("new1");
+        const newFile1 = helper.file(
+          "/folder1/folder1-2/new_file1"
+        ) as FileHelper;
+        expect(newFile1.id).toBe("new1");
 
         const helperOfOriginal = new ExplorerHelper(rootFolders);
         const orgNewFile1 = helperOfOriginal.file(
@@ -117,11 +120,11 @@ describe("ExplorerHelper", () => {
 
       it("should rename file if same name item exists", () => {
         const helper = new ExplorerHelper(rootFolders);
-        const folder12 = helper.folder("/folder1");
-        folder12?.addFile(makeFile("new1", "file1-3"));
+        const folder12 = helper.folder("/folder1") as FolderHelper;
+        folder12.addFile(makeFile("new1", "file1-3"));
 
-        const newFile = helper.file("/folder1/file1-4");
-        expect(newFile?.id).toBe("new1");
+        const newFile = helper.file("/folder1/file1-4") as FileHelper;
+        expect(newFile.id).toBe("new1");
       });
     });
 
@@ -129,13 +132,40 @@ describe("ExplorerHelper", () => {
       it("should remove file", () => {
         const helper = new ExplorerHelper(rootFolders);
 
-        const file13 = helper.file("/folder1/file1-3");
-        file13?.remove();
+        const file13 = helper.file("/folder1/file1-3") as FileHelper;
+        file13.remove();
         expect(helper.folder("/folder1/file1-3")).toBeNull();
 
         const helperOfOriginal = new ExplorerHelper(rootFolders);
         const orgFile13 = helperOfOriginal.file("/folder1/file1-3");
         expect(orgFile13).not.toBeNull();
+      });
+    });
+
+    describe("updateFile", () => {
+      it("should update file", () => {
+        const helper = new ExplorerHelper(rootFolders);
+
+        const file13 = helper.file("/folder1/file1-3") as FileHelper;
+        file13.update({
+          id: file13.id,
+          description: "new description",
+          name: "new name",
+          parameters: "new parameters",
+          syncUrl: "new sync url",
+          type: ExplorerItemType.File,
+        });
+        const newFile13 = helper.file("/folder1/new name") as FileHelper;
+        expect(newFile13.description).toBe("new description");
+        expect(newFile13.name).toBe("new name");
+        expect(newFile13.parameters).toBe("new parameters");
+        expect(newFile13.syncUrl).toBe("new sync url");
+
+        const helperOfOriginal = new ExplorerHelper(rootFolders);
+        const orgFile13 = helperOfOriginal.file(
+          "/folder1/new name"
+        ) as FileHelper;
+        expect(orgFile13).toBeNull();
       });
     });
   });

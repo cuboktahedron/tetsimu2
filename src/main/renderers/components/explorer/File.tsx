@@ -5,15 +5,17 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import SyncIcon from "@material-ui/icons/Sync";
 import { TreeItem } from "@material-ui/lab";
 import React from "react";
-import { ExplorerItemFile } from "stores/ExplorerState";
+import { ExplorerItemFile, ExplorerItemFolder } from "stores/ExplorerState";
 import {
   ExplorerEventHandler,
   ExplorerEventType
 } from "utils/tetsimu/explorer/explorerEvent";
+import EditFileForm from "./EditFileForm";
 
 export type FileProps = {
-  path: string;
   eventHandler: ExplorerEventHandler;
+  parentFolder: ExplorerItemFolder;
+  path: string;
 } & ExplorerItemFile;
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -31,7 +33,12 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const File: React.FC<FileProps> = (props) => {
+  const [opensEditForm, setOpensEditForm] = React.useState(false);
   const classes = useStyles();
+
+  const handleEditClick = () => {
+    setOpensEditForm(true);
+  };
 
   const handleRemoveFileClick = () => {
     props.eventHandler({
@@ -42,30 +49,58 @@ const File: React.FC<FileProps> = (props) => {
     });
   };
 
+  const handleEditClose = () => {
+    setOpensEditForm(false);
+  };
+
+  const handleEditSave = (file: ExplorerItemFile) => {
+    props.eventHandler({
+      type: ExplorerEventType.FileSave,
+      payload: {
+        file,
+        pathToSave: props.path,
+      },
+    });
+    setOpensEditForm(false);
+  };
+
+  const { path, eventHandler, parentFolder, ...file } = props;
   return (
-    <TreeItem
-      className="ignore-hotkey"
-      nodeId={props.id}
-      label={
-        <div className={classes.labelRoot} onClick={(e) => e.preventDefault()}>
-          {props.name}
-          <div style={{ marginLeft: "auto" }}>
-            <IconButton>
-              <EditIcon />
-            </IconButton>
-            <IconButton>
-              <GetAppIcon />
-            </IconButton>
-            <IconButton>
-              <SyncIcon />
-            </IconButton>
-            <IconButton onClick={handleRemoveFileClick}>
-              <DeleteIcon />
-            </IconButton>
+    <div>
+      <TreeItem
+        className="ignore-hotkey"
+        nodeId={props.id}
+        label={
+          <div
+            className={classes.labelRoot}
+            onClick={(e) => e.preventDefault()}
+          >
+            {props.name}
+            <div style={{ marginLeft: "auto" }}>
+              <IconButton onClick={handleEditClick}>
+                <EditIcon />
+              </IconButton>
+              <IconButton>
+                <GetAppIcon />
+              </IconButton>
+              <IconButton>
+                <SyncIcon />
+              </IconButton>
+              <IconButton onClick={handleRemoveFileClick}>
+                <DeleteIcon />
+              </IconButton>
+            </div>
           </div>
-        </div>
-      }
-    />
+        }
+      />
+      <EditFileForm
+        file={file}
+        parentFolder={parentFolder}
+        open={opensEditForm}
+        onClose={handleEditClose}
+        onSave={handleEditSave}
+      />
+    </div>
   );
 };
 

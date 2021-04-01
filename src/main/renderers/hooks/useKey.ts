@@ -20,7 +20,7 @@ export const useKey = (): ControllerKeys => {
     const callback = (e: KeyboardEvent) => {
       const target = e.target as Element;
       const nodeName = target?.nodeName.toLowerCase();
-      if (nodeName === "input") {
+      if (nodeName === "input" || nodeName === "textarea") {
         return;
       }
 
@@ -71,7 +71,7 @@ export const useKey = (): ControllerKeys => {
     const callback = (e: KeyboardEvent) => {
       const target = e.target as Element;
       const nodeName = target?.nodeName.toLowerCase();
-      if (nodeName === "input") {
+      if (nodeName === "input" || nodeName === "textarea") {
         return;
       }
 

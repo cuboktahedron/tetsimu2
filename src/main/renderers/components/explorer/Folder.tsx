@@ -10,13 +10,14 @@ import React from "react";
 import { ExplorerItemFolder, ExplorerItemType } from "stores/ExplorerState";
 import {
   ExplorerEventHandler,
-  ExplorerEventType,
+  ExplorerEventType
 } from "utils/tetsimu/explorer/explorerEvent";
 import File from "./File";
 
 export type FolderProps = {
-  path: string;
   eventHandler: ExplorerEventHandler;
+  parentFolder: ExplorerItemFolder;
+  path: string;
 } & ExplorerItemFolder;
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -37,12 +38,15 @@ const Folder: React.FC<FolderProps> = (props) => {
   const classes = useStyles();
 
   const itemsInFolder = getOrderedItems(props.items);
+  const { path, eventHandler, parentFolder, ...thisFolder } = props;
+
   const items = itemsInFolder.map((item) => {
     if (item.type === ExplorerItemType.Folder) {
       return (
         <Folder
           key={item.id}
           {...item}
+          parentFolder={thisFolder}
           path={`${props.path}/${item.name}`}
           eventHandler={props.eventHandler}
         />
@@ -52,6 +56,7 @@ const Folder: React.FC<FolderProps> = (props) => {
         <File
           key={item.id}
           {...item}
+          parentFolder={thisFolder}
           path={`${props.path}/${item.name}`}
           eventHandler={props.eventHandler}
         />
