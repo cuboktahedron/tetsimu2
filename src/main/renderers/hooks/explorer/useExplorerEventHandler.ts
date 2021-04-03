@@ -3,13 +3,14 @@ import {
   addFolder,
   removeFile,
   removeFolder,
-  saveFile
+  saveFile,
+  saveFolder,
 } from "ducks/explorer/actions";
 import React from "react";
 import { RootContext } from "renderers/components/App";
 import {
   ExplorerEvent,
-  ExplorerEventType
+  ExplorerEventType,
 } from "utils/tetsimu/explorer/explorerEvent";
 
 export const useExplorerEventHandler = () => {
@@ -54,6 +55,16 @@ export const useExplorerEventHandler = () => {
       }
       case ExplorerEventType.FolderRemove: {
         dispatch(removeFolder(event.payload.pathToDelete, state.rootFolder));
+        break;
+      }
+      case ExplorerEventType.FolderSave: {
+        dispatch(
+          saveFolder(
+            event.payload.pathToSave,
+            event.payload.folder,
+            state.rootFolder
+          )
+        );
         break;
       }
     }

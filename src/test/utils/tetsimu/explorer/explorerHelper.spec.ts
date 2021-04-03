@@ -3,12 +3,12 @@ import {
   ExplorerItemFolder,
   ExplorerItemType,
   initialExplorerState,
-  RootFolder,
+  RootFolder
 } from "stores/ExplorerState";
 import {
   ExplorerHelper,
   FileHelper,
-  FolderHelper,
+  FolderHelper
 } from "utils/tetsimu/explorer/explorerHelper";
 
 const makeFolder = (id: string, name: string): ExplorerItemFolder => {
@@ -155,17 +155,44 @@ describe("ExplorerHelper", () => {
           syncUrl: "new sync url",
           type: ExplorerItemType.File,
         });
-        const newFile13 = helper.file("/folder1/new name") as FileHelper;
-        expect(newFile13.description).toBe("new description");
-        expect(newFile13.name).toBe("new name");
-        expect(newFile13.parameters).toBe("new parameters");
-        expect(newFile13.syncUrl).toBe("new sync url");
+        const newFile = helper.file("/folder1/new name") as FileHelper;
+        expect(newFile.description).toBe("new description");
+        expect(newFile.name).toBe("new name");
+        expect(newFile.parameters).toBe("new parameters");
+        expect(newFile.syncUrl).toBe("new sync url");
 
         const helperOfOriginal = new ExplorerHelper(rootFolders);
-        const orgFile13 = helperOfOriginal.file(
+        const orgNewFile = helperOfOriginal.file(
           "/folder1/new name"
         ) as FileHelper;
-        expect(orgFile13).toBeNull();
+        expect(orgNewFile).toBeNull();
+      });
+    });
+
+    describe("updateFolder", () => {
+      it("should update folder", () => {
+        const helper = new ExplorerHelper(rootFolders);
+
+        const folder1 = helper.folder("/folder1") as FolderHelper;
+        folder1.update({
+          id: folder1.id,
+          description: "new description",
+          items: folder1.items,
+          name: "new name",
+          syncUrl: "new sync url",
+          type: ExplorerItemType.Folder,
+        });
+        const newFolder = helper.folder("/new name") as FolderHelper;
+        expect(newFolder.description).toBe("new description");
+        expect(newFolder.items).toEqual(folder1.items);
+        expect(newFolder.name).toBe("new name");
+        expect(newFolder.syncUrl).toBe("new sync url");
+
+        const helperOfOriginal = new ExplorerHelper(rootFolders);
+        const orgFolder = helperOfOriginal.folder(
+          "/folder1/new name"
+        ) as FolderHelper;
+        expect(orgFolder).toBeNull();
       });
     });
   });

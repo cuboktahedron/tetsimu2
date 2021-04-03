@@ -31,6 +31,11 @@ const reducer = (state: ExplorerState, anyAction: Action): ExplorerState => {
         ...state,
         rootFolder: action.payload.rootFolder,
       };
+    case ExplorerActionsType.SaveFolder:
+      return {
+        ...state,
+        rootFolder: action.payload.rootFolder,
+      };
     default:
       return state;
   }

@@ -4,7 +4,7 @@ import {
   ExplorerItemType,
   FolderItems,
   Path,
-  RootFolder,
+  RootFolder
 } from "stores/ExplorerState";
 
 export class ExplorerHelper {
@@ -93,6 +93,10 @@ export class FolderHelper {
     return this.folder;
   }
 
+  get description(): string {
+    return this.folder.description;
+  }
+
   get id(): string {
     return this.folder.id;
   }
@@ -107,6 +111,10 @@ export class FolderHelper {
 
   get items(): FolderItems {
     return this.folder.items;
+  }
+
+  get syncUrl(): string {
+    return this.folder.syncUrl;
   }
 
   addFolder(newFolder: ExplorerItemFolder) {
@@ -125,6 +133,13 @@ export class FolderHelper {
     }
 
     delete this.parentFolder.items[this.folder.id];
+  }
+
+  update(saveData: ExplorerItemFolder) {
+    this.folder = { ...saveData, items: { ...saveData.items } };
+    if (this.parentFolder !== null) {
+      this.parentFolder.items[this.folder.id] = { ...saveData };
+    }
   }
 
   private makeNewFileName(orgName: string): string {
