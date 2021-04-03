@@ -1,4 +1,4 @@
-import { RootFolder } from "stores/ExplorerState";
+import { ExplorerRootFolder } from "stores/ExplorerState";
 import { Action } from "types/core";
 
 export const ExplorerActionsType = {
@@ -21,41 +21,41 @@ export type ExplorerActions =
 export type AddFileAction = {
   type: typeof ExplorerActionsType.AddFile;
   payload: {
-    rootFolder: RootFolder;
+    rootFolder: ExplorerRootFolder;
   };
 } & Action;
 
 export type AddFolderAction = {
   type: typeof ExplorerActionsType.AddFolder;
   payload: {
-    rootFolder: RootFolder;
+    rootFolder: ExplorerRootFolder;
   };
 } & Action;
 
 export type RemoveFileAction = {
   type: typeof ExplorerActionsType.RemoveFile;
   payload: {
-    rootFolder: RootFolder;
+    rootFolder: ExplorerRootFolder;
   };
 } & Action;
 
 export type RemoveFolderAction = {
   type: typeof ExplorerActionsType.RemoveFolder;
   payload: {
-    rootFolder: RootFolder;
+    rootFolder: ExplorerRootFolder;
   };
 } & Action;
 
 export type SaveFileAction = {
   type: typeof ExplorerActionsType.SaveFile;
   payload: {
-    rootFolder: RootFolder;
+    rootFolder: ExplorerRootFolder;
   };
 } & Action;
 
 export type SaveFolderAction = {
   type: typeof ExplorerActionsType.SaveFolder;
   payload: {
-    rootFolder: RootFolder;
+    rootFolder: ExplorerRootFolder;
   };
 } & Action;

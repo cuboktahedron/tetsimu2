@@ -1,7 +1,7 @@
 import {
   createMuiTheme,
   MuiThemeProvider,
-  useMediaQuery
+  useMediaQuery,
 } from "@material-ui/core";
 import reducer from "ducks/root";
 import {
@@ -9,7 +9,8 @@ import {
   clearError,
   error,
   initializeApp,
-  loadConfigs
+  loadConfigs,
+  loadExplorer,
 } from "ducks/root/actions";
 import React from "react";
 import { initialRootState } from "stores/RootState";
@@ -63,6 +64,7 @@ const App: React.FC = () => {
     setSelectedMenuMain,
   ] = React.useState<JSX.Element | null>(null);
   const [loadedConfigs, setLoadedConfigs] = React.useState(false);
+  const [loadedExplorer, setLoadedExplorer] = React.useState(false);
   const mathces = useMediaQuery("(min-width:1168px)", { noSsr: true });
 
   React.useEffect(() => {
@@ -71,7 +73,12 @@ const App: React.FC = () => {
   }, []);
 
   React.useEffect(() => {
-    if (!loadedConfigs) {
+    dispatch(loadExplorer());
+    setLoadedExplorer(true);
+  }, []);
+
+  React.useEffect(() => {
+    if (!loadedConfigs || !loadedExplorer) {
       return;
     }
 
@@ -95,7 +102,7 @@ const App: React.FC = () => {
     if (mathces) {
       setOpen(true);
     }
-  }, [loadedConfigs]);
+  }, [loadedConfigs, loadedExplorer]);
 
   const handleErrorDialogClose = () => {
     dispatch(clearError());

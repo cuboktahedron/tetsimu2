@@ -3,7 +3,7 @@ import {
   ExplorerItemFolder,
   ExplorerItemType,
   initialExplorerState,
-  RootFolder
+  ExplorerRootFolder
 } from "stores/ExplorerState";
 import {
   ExplorerHelper,
@@ -40,7 +40,7 @@ describe("ExplorerHelper", () => {
   folder1.items["1-3"] = makeFile("1-3", "file1-3");
   const folder2 = makeFolder("2", "folder2");
 
-  const rootFolders: RootFolder = {
+  const rootFolders: ExplorerRootFolder = {
     ...initialExplorerState.rootFolder,
     items: { ...initialExplorerState.rootFolder.items },
   };

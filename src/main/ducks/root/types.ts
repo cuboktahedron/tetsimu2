@@ -1,4 +1,5 @@
 import { EditState } from "stores/EditState";
+import { ExplorerRootFolder } from "stores/ExplorerState";
 import { ReplayState } from "stores/ReplayState";
 import { GarbageInfo, SimuState } from "stores/SimuState";
 import {
@@ -23,6 +24,7 @@ export const RootActionsType = {
   Error: "root/error",
   InitializeApp: "root/initializeApp",
   LoadConfigs: "root/loadConfigs",
+  LoadExplorer: "root/loadExplorer",
   ReplayToSimuMode: "root/replayToSimuMode",
   SimuToEditMode: "root/simuToEditMode",
   SimuToReplayMode: "root/simuToReplayMode",
@@ -35,6 +37,7 @@ export type RootActions =
   | ErrorAction
   | InitializeAppAction
   | LoadConfigsAction
+  | LoadExplorerAction
   | ReplayToSimuAction
   | SimuToEditAction
   | SimuToReplayAction;
@@ -92,6 +95,13 @@ export type LoadConfigsAction = {
   payload: {
     replay: ReplayConfig;
     simu: SimuConfig;
+  };
+} & Action;
+
+export type LoadExplorerAction = {
+  type: typeof RootActionsType.LoadExplorer;
+  payload: {
+    rootFolder: ExplorerRootFolder;
   };
 } & Action;
 

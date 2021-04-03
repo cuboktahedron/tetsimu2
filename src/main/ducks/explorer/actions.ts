@@ -3,12 +3,12 @@ import {
   ExplorerItemFolder,
   ExplorerItemType,
   Path,
-  RootFolder
+  ExplorerRootFolder,
 } from "stores/ExplorerState";
 import {
   ExplorerHelper,
   FileHelper,
-  FolderHelper
+  FolderHelper,
 } from "utils/tetsimu/explorer/explorerHelper";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -18,13 +18,13 @@ import {
   RemoveFileAction,
   RemoveFolderAction,
   SaveFileAction,
-  SaveFolderAction
+  SaveFolderAction,
 } from "./types";
 
 export const addFile = (
   newFileName: string,
   destDir: Path,
-  rootFolder: RootFolder
+  rootFolder: ExplorerRootFolder
 ): AddFileAction => {
   const newId = uuidv4();
 
@@ -40,6 +40,7 @@ export const addFile = (
   };
 
   folder.addFile(newFile);
+  localStorage.setItem("explorer.rootFolder", JSON.stringify(folder.root));
 
   return {
     type: ExplorerActionsType.AddFile,
@@ -52,7 +53,7 @@ export const addFile = (
 export const addFolder = (
   newFolderName: string,
   destDir: Path,
-  rootFolder: RootFolder
+  rootFolder: ExplorerRootFolder
 ): AddFolderAction => {
   const newId = uuidv4();
 
@@ -68,6 +69,7 @@ export const addFolder = (
   };
 
   folder.addFolder(newFolder);
+  localStorage.setItem("explorer.rootFolder", JSON.stringify(folder.root));
 
   return {
     type: ExplorerActionsType.AddFolder,
@@ -79,10 +81,11 @@ export const addFolder = (
 
 export const removeFile = (
   pathToDelete: Path,
-  rootFolder: RootFolder
+  rootFolder: ExplorerRootFolder
 ): RemoveFileAction => {
   const file = new ExplorerHelper(rootFolder).file(pathToDelete) as FileHelper;
   file.remove();
+  localStorage.setItem("explorer.rootFolder", JSON.stringify(file.root));
 
   return {
     type: ExplorerActionsType.RemoveFile,
@@ -94,13 +97,14 @@ export const removeFile = (
 
 export const removeFolder = (
   pathToDelete: Path,
-  rootFolder: RootFolder
+  rootFolder: ExplorerRootFolder
 ): RemoveFolderAction => {
   const folder = new ExplorerHelper(rootFolder).folder(
     pathToDelete
   ) as FolderHelper;
 
   folder.remove();
+  localStorage.setItem("explorer.rootFolder", JSON.stringify(folder.root));
 
   return {
     type: ExplorerActionsType.RemoveFolder,
@@ -113,10 +117,11 @@ export const removeFolder = (
 export const saveFile = (
   pathToSave: Path,
   saveData: ExplorerItemFile,
-  rootFolder: RootFolder
+  rootFolder: ExplorerRootFolder
 ): SaveFileAction => {
   const file = new ExplorerHelper(rootFolder).file(pathToSave) as FileHelper;
   file.update(saveData);
+  localStorage.setItem("explorer.rootFolder", JSON.stringify(file.root));
 
   return {
     type: ExplorerActionsType.SaveFile,
@@ -129,12 +134,13 @@ export const saveFile = (
 export const saveFolder = (
   pathToSave: Path,
   saveData: ExplorerItemFolder,
-  rootFolder: RootFolder
+  rootFolder: ExplorerRootFolder
 ): SaveFolderAction => {
   const folder = new ExplorerHelper(rootFolder).folder(
     pathToSave
   ) as FolderHelper;
   folder.update(saveData);
+  localStorage.setItem("explorer.rootFolder", JSON.stringify(folder.root));
 
   return {
     type: ExplorerActionsType.SaveFolder,

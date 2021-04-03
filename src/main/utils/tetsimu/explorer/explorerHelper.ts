@@ -4,13 +4,13 @@ import {
   ExplorerItemType,
   FolderItems,
   Path,
-  RootFolder
+  ExplorerRootFolder
 } from "stores/ExplorerState";
 
 export class ExplorerHelper {
-  private rootFolder: RootFolder;
+  private rootFolder: ExplorerRootFolder;
 
-  constructor(_rootFolder: RootFolder) {
+  constructor(_rootFolder: ExplorerRootFolder) {
     this.rootFolder = { ..._rootFolder, items: { ..._rootFolder.items } };
   }
 
@@ -86,7 +86,7 @@ export class FolderHelper {
   constructor(
     private folder: ExplorerItemFolder,
     private parentFolder: ExplorerItemFolder | null,
-    private rootFolder: RootFolder
+    private rootFolder: ExplorerRootFolder
   ) {}
 
   get raw(): ExplorerItemFolder {
@@ -105,7 +105,7 @@ export class FolderHelper {
     return this.folder.name;
   }
 
-  get root(): RootFolder {
+  get root(): ExplorerRootFolder {
     return this.rootFolder;
   }
 
@@ -178,7 +178,7 @@ export class FileHelper {
   constructor(
     private file: ExplorerItemFile,
     private parentFolder: ExplorerItemFolder,
-    private rootFolder: RootFolder
+    private rootFolder: ExplorerRootFolder
   ) {}
 
   get id(): string {
@@ -201,7 +201,7 @@ export class FileHelper {
     return this.file.syncUrl;
   }
 
-  get root(): RootFolder {
+  get root(): ExplorerRootFolder {
     return this.rootFolder;
   }
 

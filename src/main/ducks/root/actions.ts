@@ -2,9 +2,10 @@ import merge from "deepmerge";
 import {
   getNextAttacks,
   getReplayConductor,
-  getUrgentAttack
+  getUrgentAttack,
 } from "ducks/replay/selectors";
 import { EditState } from "stores/EditState";
+import { ExplorerRootFolder, initialExplorerState } from "stores/ExplorerState";
 import { initialReplayState, ReplayState } from "stores/ReplayState";
 import { RootState } from "stores/RootState";
 import { GarbageInfo, initialSimuState, SimuState } from "stores/SimuState";
@@ -20,7 +21,7 @@ import {
   ReplayStepType,
   SpinType,
   Tetromino,
-  TetsimuMode
+  TetsimuMode,
 } from "types/core";
 import { ReplayConfig } from "types/replay";
 import { SimuConfig } from "types/simu";
@@ -32,12 +33,12 @@ import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 import { ReplayConductor } from "utils/tetsimu/replay/replayConductor";
 import ReplayUrl, {
-  ReplayStateFragments
+  ReplayStateFragments,
 } from "utils/tetsimu/replay/replayUrl";
 import GarbageGenerator from "utils/tetsimu/simu/garbageGenerator";
 import SimuUrl, {
   SimuStateFragments,
-  UNSPECIFIED_SEED
+  UNSPECIFIED_SEED,
 } from "utils/tetsimu/simu/simuUrl";
 import {
   ChangeTetsimuModeAction,
@@ -46,10 +47,11 @@ import {
   ErrorAction,
   InitializeAppAction,
   LoadConfigsAction,
+  LoadExplorerAction,
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction
+  SimuToReplayAction,
 } from "./types";
 
 export const changeTetsimuMode = (
@@ -546,6 +548,24 @@ export const loadConfigs = (): LoadConfigsAction => {
     payload: {
       replay,
       simu,
+    },
+  };
+};
+
+export const loadExplorer = (): LoadExplorerAction => {
+  const rootFolder = (() => {
+    const rootFolder = getItemOrDefault<ExplorerRootFolder>(
+      "explorer.rootFolder",
+      initialExplorerState.rootFolder
+    );
+
+    return rootFolder;
+  })();
+
+  return {
+    type: RootActionsType.LoadExplorer,
+    payload: {
+      rootFolder,
     },
   };
 };

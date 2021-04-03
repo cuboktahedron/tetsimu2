@@ -108,6 +108,14 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
           },
         };
       }
+      case RootActionsType.LoadExplorer: {
+        return {
+          ...state,
+          explorer: {
+            rootFolder: action.payload.rootFolder,
+          },
+        };
+      }
       case RootActionsType.ReplayToSimuMode:
         return {
           ...state,

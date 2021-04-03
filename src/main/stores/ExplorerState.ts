@@ -1,5 +1,5 @@
 export type ExplorerState = {
-  rootFolder: RootFolder;
+  rootFolder: ExplorerRootFolder;
 };
 
 export const ExplorerItemType = {
@@ -18,7 +18,7 @@ export type ExplorerItemFile = {
   syncUrl: string;
 };
 
-export type RootFolder = ExplorerItemFolder;
+export type ExplorerRootFolder = ExplorerItemFolder;
 export type FolderItems = { [key: string]: ExplorerItem };
 export type Path = string;
 
