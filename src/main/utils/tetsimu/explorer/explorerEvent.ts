@@ -1,7 +1,12 @@
-import { ExplorerItemFile, ExplorerItemFolder, Path } from "stores/ExplorerState";
+import {
+  ExplorerItemFile,
+  ExplorerItemFolder,
+  Path
+} from "stores/ExplorerState";
 
 export const ExplorerEventType = {
   FileAdd: "fileAdd",
+  FileLoad: "fileLoad",
   FileRemove: "fileRemove",
   FileSave: "fileSave",
   FolderAdd: "folderAdd",
@@ -16,6 +21,13 @@ export type FileAdd = {
   payload: {
     dest: Path;
     newFileName: string;
+  };
+};
+
+export type FileLoad = {
+  type: typeof ExplorerEventType.FileLoad;
+  payload: {
+    parameters: string;
   };
 };
 
@@ -59,6 +71,7 @@ export type FolderSave = {
 
 export type ExplorerEvent =
   | FileAdd
+  | FileLoad
   | FileRemove
   | FileSave
   | FolderAdd

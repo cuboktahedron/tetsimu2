@@ -1,8 +1,6 @@
 import { createStyles, IconButton, makeStyles, Theme } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import GetAppIcon from "@material-ui/icons/GetApp";
-import SyncIcon from "@material-ui/icons/Sync";
 import { TreeItem } from "@material-ui/lab";
 import React from "react";
 import { ExplorerItemFile, ExplorerItemFolder } from "stores/ExplorerState";
@@ -36,17 +34,23 @@ const File: React.FC<FileProps> = (props) => {
   const [opensEditForm, setOpensEditForm] = React.useState(false);
   const classes = useStyles();
 
-  const handleEditClick = () => {
+  const handleEditClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
     setOpensEditForm(true);
   };
 
-  const handleRemoveFileClick = () => {
+  const handleRemoveFileClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
     props.eventHandler({
       type: ExplorerEventType.FileRemove,
       payload: {
         pathToDelete: props.path,
       },
     });
+
+    return false;
   };
 
   const handleEditClose = () => {
@@ -64,6 +68,17 @@ const File: React.FC<FileProps> = (props) => {
     setOpensEditForm(false);
   };
 
+  const handleItemClick = () => {
+    if (props.parameters) {
+      props.eventHandler({
+        type: ExplorerEventType.FileLoad,
+        payload: {
+          parameters: props.parameters,
+        },
+      });
+    }
+  };
+
   const { path, eventHandler, parentFolder, ...file } = props;
   return (
     <div>
@@ -71,20 +86,11 @@ const File: React.FC<FileProps> = (props) => {
         className="ignore-hotkey"
         nodeId={props.id}
         label={
-          <div
-            className={classes.labelRoot}
-            onClick={(e) => e.preventDefault()}
-          >
+          <div className={classes.labelRoot} onClick={handleItemClick}>
             {props.name}
             <div style={{ marginLeft: "auto" }}>
               <IconButton onClick={handleEditClick}>
                 <EditIcon />
-              </IconButton>
-              <IconButton>
-                <GetAppIcon />
-              </IconButton>
-              <IconButton>
-                <SyncIcon />
               </IconButton>
               <IconButton onClick={handleRemoveFileClick}>
                 <DeleteIcon />

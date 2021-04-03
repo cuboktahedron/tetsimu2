@@ -33,6 +33,20 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
     parameters: "",
   });
 
+  React.useEffect(() => {
+    setFormState({
+      name: props.file.name,
+      description: props.file.description,
+      parameters: props.file.parameters,
+    });
+
+    setFormErrorState({
+      name: "",
+      description: "",
+      parameters: "",
+    });
+  }, [props]);
+
   const itemNamesForValidation = React.useMemo(() => {
     return Object.values(props.parentFolder.items)
       .filter((item) => item.id !== props.file.id)
@@ -76,8 +90,17 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
     return true;
   };
 
-  const handleNameOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
+  const handleNameBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
+    let value = e.target.value.trim();
+
+    setFormState({
+      ...formState,
+      name: value,
+    });
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
     if (validateName(value)) {
       setFormState({
         ...formState,
@@ -96,9 +119,24 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
     });
   };
 
+  const handleParametersBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
+    let value = e.target.value.trim();
+    const index = value.indexOf("?");
+    if (index !== -1) {
+      value = value.substring(index + 1);
+    }
+
+    setFormState({
+      ...formState,
+      parameters: value,
+    });
+  };
+
   return (
     <Dialog
       classes={{ scrollPaper: "ignore-hotkey" }}
+      fullWidth
+      maxWidth="md"
       open={props.open}
       onClose={props.onClose}
     >
@@ -106,35 +144,39 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
       <DialogContent>
         <TextField
           autoFocus
-          defaultValue={formState.name}
           error={!!formErrorState.name}
           fullWidth
           helperText={formErrorState.name}
           label="name"
           margin="dense"
+          value={formState.name}
           variant="outlined"
-          onChange={handleNameOnChange}
+          onBlur={handleNameBlur}
+          onChange={handleNameChange}
         />
         <TextField
-          defaultValue={formState.description}
           error={!!formErrorState.description}
           fullWidth
           helperText={formErrorState.description}
           label="description"
           margin="dense"
           multiline
-          rows={4}
+          rows={8}
+          value={formState.description}
           variant="outlined"
           onChange={(e) => handleOnChange("description", e)}
         />
         <TextField
-          defaultValue={formState.parameters}
           error={!!formErrorState.parameters}
           helperText={formErrorState.parameters}
           fullWidth
           label="parameters"
           margin="dense"
+          multiline
+          rows={6}
+          value={formState.parameters}
           variant="outlined"
+          onBlur={handleParametersBlur}
           onChange={(e) => handleOnChange("parameters", e)}
         />
       </DialogContent>

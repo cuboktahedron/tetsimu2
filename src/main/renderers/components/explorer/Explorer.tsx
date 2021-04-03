@@ -5,10 +5,7 @@ import {
   SvgIconProps,
   Theme
 } from "@material-ui/core";
-import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
-import GetAppIcon from "@material-ui/icons/GetApp";
-import SyncIcon from "@material-ui/icons/Sync";
 import TreeView from "@material-ui/lab/TreeView";
 import { getOrderedItems } from "ducks/explorer/selectors";
 import React from "react";
@@ -89,15 +86,6 @@ const Explorer: React.FC = () => {
         <div>
           <IconButton onClick={handleNewFolderClick}>
             <CreateNewFolderIcon />
-          </IconButton>
-          <IconButton>
-            <GetAppIcon />
-          </IconButton>
-          <IconButton>
-            <CloudDownloadIcon />
-          </IconButton>
-          <IconButton>
-            <SyncIcon />
           </IconButton>
         </div>
 

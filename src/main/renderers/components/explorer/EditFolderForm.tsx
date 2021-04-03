@@ -4,7 +4,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  TextField
+  TextField,
 } from "@material-ui/core";
 import React from "react";
 import { ExplorerItemFolder, ExplorerItemType } from "stores/ExplorerState";
@@ -25,8 +25,19 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
   const [formErrorState, setFormErrorState] = React.useState({
     name: "",
     description: "",
-    parameters: "",
   });
+
+  React.useEffect(() => {
+    setFormState({
+      name: props.folder.name,
+      description: props.folder.description,
+    });
+
+    setFormErrorState({
+      name: "",
+      description: "",
+    });
+  }, [props]);
 
   const itemNamesForValidation = React.useMemo(() => {
     return Object.values(props.parentFolder.items)
@@ -46,6 +57,15 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
 
   const hasValidationError = (): boolean => {
     return Object.values(formErrorState).some((error) => !!error);
+  };
+
+  const handleNameBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
+    let value = e.target.value.trim();
+
+    setFormState({
+      ...formState,
+      name: value,
+    });
   };
 
   const validateName = (value: string): boolean => {
@@ -72,8 +92,8 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
     return true;
   };
 
-  const handleNameOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
     if (validateName(value)) {
       setFormState({
         ...formState,
@@ -95,6 +115,8 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
   return (
     <Dialog
       classes={{ scrollPaper: "ignore-hotkey" }}
+      fullWidth
+      maxWidth="md"
       open={props.open}
       onClose={props.onClose}
     >
@@ -102,24 +124,25 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
       <DialogContent>
         <TextField
           autoFocus
-          defaultValue={formState.name}
           error={!!formErrorState.name}
           fullWidth
           helperText={formErrorState.name}
           label="name"
           margin="dense"
+          value={formState.name}
           variant="outlined"
-          onChange={handleNameOnChange}
+          onBlur={handleNameBlur}
+          onChange={handleNameChange}
         />
         <TextField
-          defaultValue={formState.description}
           error={!!formErrorState.description}
           fullWidth
           helperText={formErrorState.description}
           label="description"
           margin="dense"
           multiline
-          rows={4}
+          rows={8}
+          value={formState.description}
           variant="outlined"
           onChange={(e) => handleOnChange("description", e)}
         />

@@ -2,9 +2,7 @@ import { createStyles, IconButton, makeStyles, Theme } from "@material-ui/core";
 import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import GetAppIcon from "@material-ui/icons/GetApp";
 import NoteAddIcon from "@material-ui/icons/NoteAdd";
-import SyncIcon from "@material-ui/icons/Sync";
 import { TreeItem } from "@material-ui/lab";
 import { getOrderedItems } from "ducks/explorer/selectors";
 import React from "react";
@@ -134,12 +132,6 @@ const Folder: React.FC<FolderProps> = (props) => {
               </IconButton>
               <IconButton onClick={handleAddFolderClick}>
                 <CreateNewFolderIcon />
-              </IconButton>
-              <IconButton>
-                <GetAppIcon />
-              </IconButton>
-              <IconButton>
-                <SyncIcon />
               </IconButton>
               <IconButton onClick={handleAddFileClick}>
                 <NoteAddIcon />
