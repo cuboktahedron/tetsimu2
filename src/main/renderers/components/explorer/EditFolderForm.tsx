@@ -6,7 +6,7 @@ import {
   DialogTitle,
   TextField,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@material-ui/core";
 import React from "react";
 import { ExplorerItemFolder, ExplorerItemType } from "stores/ExplorerState";
@@ -124,6 +124,9 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
       maxWidth="md"
       open={props.open}
       onClose={props.onClose}
+      onTouchEnd={(e) => e.stopPropagation()}
+      onTouchMove={(e) => e.stopPropagation()}
+      onTouchStart={(e) => e.stopPropagation()}
     >
       <DialogTitle>Edit folder</DialogTitle>
       <DialogContent>

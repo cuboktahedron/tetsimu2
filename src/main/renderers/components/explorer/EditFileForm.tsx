@@ -144,6 +144,9 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
       maxWidth="md"
       open={props.open}
       onClose={props.onClose}
+      onTouchEnd={(e) => e.stopPropagation()}
+      onTouchMove={(e) => e.stopPropagation()}
+      onTouchStart={(e) => e.stopPropagation()}
     >
       <DialogTitle>Edit file</DialogTitle>
       <DialogContent>
