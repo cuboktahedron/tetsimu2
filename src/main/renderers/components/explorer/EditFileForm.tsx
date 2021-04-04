@@ -179,6 +179,7 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
           helperText={formErrorState.parameters}
           fullWidth
           label="parameters"
+          placeholder="Paste generated url parameters here"
           margin="dense"
           multiline
           rows={6}
