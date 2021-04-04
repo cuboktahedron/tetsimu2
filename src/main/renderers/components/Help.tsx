@@ -15,7 +15,7 @@ const Help: React.FC = () => {
   return (
     <div className={classes.root}>
       <h2>Tetsimu2</h2>
-      <p>version: 2.02</p>
+      <p>version: 2.03</p>
       <div>
         <h3>author</h3>
         <p>cuboktahedron</p>
