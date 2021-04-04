@@ -18,6 +18,11 @@ const HotKey: React.FC = () => {
   React.useEffect(() => {
     const callback = (e: KeyboardEvent) => {
       const target = e.target as Element;
+      const dialog = target.closest(".MuiDialog-root");
+      if (dialog !== null) {
+        return;
+      }
+
       const nodeName = target?.nodeName.toLowerCase();
       if (nodeName === "input" || nodeName === "textarea") {
         return;
@@ -54,6 +59,11 @@ const HotKey: React.FC = () => {
   React.useEffect(() => {
     const callback = (e: KeyboardEvent) => {
       const target = e.target as Element;
+      const dialog = target.closest(".MuiDialog-root");
+      if (dialog !== null) {
+        return;
+      }
+
       const nodeName = target?.nodeName.toLowerCase();
       if (nodeName === "input" || nodeName === "textarea") {
         return;

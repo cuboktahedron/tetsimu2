@@ -134,7 +134,6 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
 
   return (
     <Dialog
-      classes={{ scrollPaper: "ignore-hotkey" }}
       fullWidth
       maxWidth="md"
       open={props.open}
