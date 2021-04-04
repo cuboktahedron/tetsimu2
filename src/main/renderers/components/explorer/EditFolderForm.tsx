@@ -5,6 +5,8 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
+  useMediaQuery,
+  useTheme,
 } from "@material-ui/core";
 import React from "react";
 import { ExplorerItemFolder, ExplorerItemType } from "stores/ExplorerState";
@@ -112,14 +114,18 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
     });
   };
 
+  const theme = useTheme();
+  const small = useMediaQuery(theme.breakpoints.down("xs"));
+
   return (
     <Dialog
+      fullScreen={small}
       fullWidth
       maxWidth="md"
       open={props.open}
       onClose={props.onClose}
     >
-      <DialogTitle>Edit file</DialogTitle>
+      <DialogTitle>Edit folder</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus

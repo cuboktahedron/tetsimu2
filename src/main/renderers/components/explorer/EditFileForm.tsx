@@ -4,7 +4,9 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  TextField
+  TextField,
+  useMediaQuery,
+  useTheme
 } from "@material-ui/core";
 import React from "react";
 import {
@@ -132,8 +134,12 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
     });
   };
 
+  const theme = useTheme();
+  const small = useMediaQuery(theme.breakpoints.down("xs"));
+
   return (
     <Dialog
+      fullScreen={small}
       fullWidth
       maxWidth="md"
       open={props.open}
