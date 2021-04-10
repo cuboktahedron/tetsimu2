@@ -2,9 +2,9 @@ import {
   ExplorerItemFile,
   ExplorerItemFolder,
   ExplorerItemType,
+  ExplorerRootFolder,
   FolderItems,
   Path,
-  ExplorerRootFolder
 } from "stores/ExplorerState";
 
 export class ExplorerHelper {
@@ -136,16 +136,16 @@ export class FolderHelper {
   }
 
   update(saveData: ExplorerItemFolder) {
-    this.folder = { ...saveData, items: { ...saveData.items } };
+    this.folder = { ...saveData, id: this.id, items: { ...saveData.items } };
     if (this.parentFolder !== null) {
       this.parentFolder.items[this.folder.id] = { ...saveData };
     }
   }
 
   private makeNewFileName(orgName: string): string {
-    const match = orgName.match(/(.*)(\d+)$/);
+    const match = orgName.match(/(.+?)(\d*)$/);
     let nameBody = orgName;
-    let suffixCount = 1;
+    let suffixCount = 0;
 
     if (match !== null) {
       if (match[1]) {
@@ -157,7 +157,8 @@ export class FolderHelper {
       }
     }
 
-    let newName = nameBody + suffixCount;
+    let newName = nameBody + ((suffixCount === 0) ? "" : "" + suffixCount);
+
     while (true) {
       const item = Object.values(this.folder.items).find(
         (item) => item.name === newName
@@ -195,10 +196,6 @@ export class FileHelper {
 
   get parameters(): string {
     return this.file.parameters;
-  }
-
-  get syncUrl(): string {
-    return this.file.syncUrl;
   }
 
   get root(): ExplorerRootFolder {

@@ -59,7 +59,6 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
     props.onSave({
       ...formState,
       id: props.file.id,
-      syncUrl: "",
       type: ExplorerItemType.File,
     });
   };
@@ -150,6 +149,16 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
     >
       <DialogTitle>Edit file</DialogTitle>
       <DialogContent>
+        <TextField
+          defaultValue={props.file.id}
+          fullWidth
+          InputProps={{
+            readOnly: true,
+          }}
+          label="id"
+          margin="dense"
+          variant="filled"
+        />
         <TextField
           autoFocus
           error={!!formErrorState.name}

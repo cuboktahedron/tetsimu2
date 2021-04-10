@@ -15,7 +15,6 @@ export type ExplorerItemFile = {
   id: string;
   name: string;
   parameters: string;
-  syncUrl: string;
 };
 
 export type ExplorerRootFolder = ExplorerItemFolder;

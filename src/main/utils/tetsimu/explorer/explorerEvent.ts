@@ -5,6 +5,7 @@ import {
 } from "stores/ExplorerState";
 
 export const ExplorerEventType = {
+  ErrorOccured: "errorOccured",
   FileAdd: "fileAdd",
   FileLoad: "fileLoad",
   FileRemove: "fileRemove",
@@ -13,9 +14,18 @@ export const ExplorerEventType = {
   FolderRemove: "folderRemove",
   FolderSave: "folderSave",
   FolderSync: "folderSync",
+  SyncFolderAdd: "syncFolderAdd",
 } as const;
 
 export type ExplorerEventType = typeof ExplorerEventType[keyof typeof ExplorerEventType];
+
+export type ErrorOccured = {
+  type: typeof ExplorerEventType.ErrorOccured;
+  payload: {
+    reason: string;
+    title: string;
+  };
+};
 
 export type FileAdd = {
   type: typeof ExplorerEventType.FileAdd;
@@ -73,19 +83,29 @@ export type FolderSave = {
 export type FolderSync = {
   type: typeof ExplorerEventType.FolderSync;
   payload: {
-    folder: ExplorerItemFolder;
     pathToSync: Path;
+    syncData: ExplorerItemFolder;
+  };
+};
+
+export type SyncFolderAdd = {
+  type: typeof ExplorerEventType.SyncFolderAdd;
+  payload: {
+    dest: Path;
+    syncData: ExplorerItemFolder;
   };
 };
 
 export type ExplorerEvent =
-  | FileAdd
+| ErrorOccured
+| FileAdd
   | FileLoad
   | FileRemove
   | FileSave
   | FolderAdd
   | FolderRemove
   | FolderSave
-  | FolderSync;
+  | FolderSync
+  | SyncFolderAdd;
 
 export type ExplorerEventHandler = (event: ExplorerEvent) => void;

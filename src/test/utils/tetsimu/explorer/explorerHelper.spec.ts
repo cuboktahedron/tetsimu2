@@ -1,37 +1,14 @@
 import {
-  ExplorerItemFile,
-  ExplorerItemFolder,
   ExplorerItemType,
+  ExplorerRootFolder,
   initialExplorerState,
-  ExplorerRootFolder
 } from "stores/ExplorerState";
 import {
   ExplorerHelper,
   FileHelper,
-  FolderHelper
+  FolderHelper,
 } from "utils/tetsimu/explorer/explorerHelper";
-
-const makeFolder = (id: string, name: string): ExplorerItemFolder => {
-  return {
-    type: ExplorerItemType.Folder,
-    description: "",
-    id,
-    items: {},
-    name,
-    syncUrl: "",
-  };
-};
-
-const makeFile = (id: string, name: string): ExplorerItemFile => {
-  return {
-    type: ExplorerItemType.File,
-    description: "",
-    id,
-    name,
-    parameters: "",
-    syncUrl: "",
-  };
-};
+import { makeFile, makeFolder } from "./testHelper/factories";
 
 describe("ExplorerHelper", () => {
   const folder1 = makeFolder("1", "folder1");
@@ -152,14 +129,12 @@ describe("ExplorerHelper", () => {
           description: "new description",
           name: "new name",
           parameters: "new parameters",
-          syncUrl: "new sync url",
           type: ExplorerItemType.File,
         });
         const newFile = helper.file("/folder1/new name") as FileHelper;
         expect(newFile.description).toBe("new description");
         expect(newFile.name).toBe("new name");
         expect(newFile.parameters).toBe("new parameters");
-        expect(newFile.syncUrl).toBe("new sync url");
 
         const helperOfOriginal = new ExplorerHelper(rootFolders);
         const orgNewFile = helperOfOriginal.file(

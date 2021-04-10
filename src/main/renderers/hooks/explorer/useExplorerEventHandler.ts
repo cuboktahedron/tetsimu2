@@ -1,18 +1,19 @@
 import {
   addFile,
   addFolder,
+  addSyncFolder,
   removeFile,
   removeFolder,
   saveFile,
   saveFolder,
-  syncFolder
+  syncFolder,
 } from "ducks/explorer/actions";
 import { error, initializeApp } from "ducks/root/actions";
 import React from "react";
 import { RootContext } from "renderers/components/App";
 import {
   ExplorerEvent,
-  ExplorerEventType
+  ExplorerEventType,
 } from "utils/tetsimu/explorer/explorerEvent";
 import { UnsupportedUrlError } from "utils/tetsimu/unsupportedUrlError";
 
@@ -22,6 +23,10 @@ export const useExplorerEventHandler = () => {
 
   return (event: ExplorerEvent) => {
     switch (event.type) {
+      case ExplorerEventType.ErrorOccured: {
+        dispatch(error(event.payload.title, event.payload.reason));
+        break;
+      }
       case ExplorerEventType.FileAdd: {
         dispatch(
           addFile(
@@ -91,7 +96,17 @@ export const useExplorerEventHandler = () => {
         dispatch(
           syncFolder(
             event.payload.pathToSync,
-            event.payload.folder,
+            event.payload.syncData,
+            state.rootFolder
+          )
+        );
+        break;
+      }
+      case ExplorerEventType.SyncFolderAdd: {
+        dispatch(
+          addSyncFolder(
+            event.payload.dest,
+            event.payload.syncData,
             state.rootFolder
           )
         );

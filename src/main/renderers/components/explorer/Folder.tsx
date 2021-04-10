@@ -3,6 +3,7 @@ import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import NoteAddIcon from "@material-ui/icons/NoteAdd";
+import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import SyncIcon from "@material-ui/icons/Sync";
 import { TreeItem } from "@material-ui/lab";
 import { getOrderedItems } from "ducks/explorer/selectors";
@@ -12,6 +13,9 @@ import {
   ExplorerEventHandler,
   ExplorerEventType
 } from "utils/tetsimu/explorer/explorerEvent";
+import { fetchExplorerItemFolder } from "utils/tetsimu/explorer/fetchUtils";
+import { validateSyncedData } from "utils/tetsimu/explorer/validator";
+import AddSyncForm from "./AddSyncForm";
 import EditFolderForm from "./EditFolderForm";
 import File from "./File";
 
@@ -44,12 +48,15 @@ const SyncState = {
 
 type SyncState = typeof SyncState[keyof typeof SyncState];
 
-type SyncStateWith =
+type SyncStateWith = {
+  addSync: boolean;
+} & (
   | {
       state: typeof SyncState.Ready;
     }
   | {
       state: typeof SyncState.Started;
+      syncUrl: string;
     }
   | {
       state: typeof SyncState.Suceeded;
@@ -58,12 +65,15 @@ type SyncStateWith =
   | {
       state: typeof SyncState.Failed;
       reason: string;
-    };
+    }
+);
 
 const Folder: React.FC<FolderProps> = (props) => {
   const [opensEditForm, setOpensEditForm] = React.useState(false);
+  const [opensAddSyncForm, setOpensAddSyncForm] = React.useState(false);
   const classes = useStyles();
   const [syncState, setSyncState] = React.useState<SyncStateWith>({
+    addSync: false,
     state: SyncState.Ready,
   });
 
@@ -129,11 +139,31 @@ const Folder: React.FC<FolderProps> = (props) => {
     });
   };
 
+  const handleAddSyncClick = () => {
+    setOpensAddSyncForm(true);
+  };
+
+  const handleAddSyncClose = () => {
+    setOpensAddSyncForm(false);
+  };
+
+  const handleAddSyncSync = (syncUrl: string) => {
+    setOpensAddSyncForm(false);
+
+    setSyncState({
+      addSync: true,
+      state: SyncState.Started,
+      syncUrl,
+    });
+  };
+
   const handleEditClose = () => {
     setOpensEditForm(false);
   };
 
   const handleEditSave = (folder: ExplorerItemFolder) => {
+    setOpensEditForm(false);
+
     props.eventHandler({
       type: ExplorerEventType.FolderSave,
       payload: {
@@ -141,11 +171,14 @@ const Folder: React.FC<FolderProps> = (props) => {
         pathToSave: props.path,
       },
     });
-    setOpensEditForm(false);
   };
 
   const handleSyncClick = () => {
-    setSyncState({ state: SyncState.Started });
+    setSyncState({
+      addSync: false,
+      state: SyncState.Started,
+      syncUrl: props.syncUrl,
+    });
   };
 
   React.useEffect(() => {
@@ -155,21 +188,41 @@ const Folder: React.FC<FolderProps> = (props) => {
       return;
     }
 
+    const changeSyncState = (newSyncStateWith: SyncStateWith) => {
+      if (unmounted) {
+        return;
+      }
+
+      setSyncState(newSyncStateWith);
+    };
+
     if (syncState.state === SyncState.Started) {
       (async () => {
-        const response = await fetch(props.syncUrl);
-        if (unmounted) {
-          return;
-        }
-
-        if (response.ok) {
-          const data = await response.json();
-          // TODO: validate
-          setSyncState({ state: SyncState.Suceeded, folder: data });
+        const fetchResult = await fetchExplorerItemFolder(syncState.syncUrl);
+        if (fetchResult.succeeded) {
+          const validateResult = validateSyncedData(
+            syncState.addSync ? null : props,
+            syncState.addSync ? props : props.parentFolder,
+            fetchResult.data
+          );
+          if (validateResult.isValid) {
+            changeSyncState({
+              addSync: syncState.addSync,
+              state: SyncState.Suceeded,
+              folder: fetchResult.data,
+            });
+          } else {
+            changeSyncState({
+              addSync: syncState.addSync,
+              state: SyncState.Failed,
+              reason: validateResult.errorMessage,
+            });
+          }
         } else {
-          setSyncState({
+          changeSyncState({
+            addSync: syncState.addSync,
             state: SyncState.Failed,
-            reason: response.statusText,
+            reason: fetchResult.reason,
           });
         }
       })();
@@ -182,20 +235,43 @@ const Folder: React.FC<FolderProps> = (props) => {
 
   React.useEffect(() => {
     if (syncState.state === SyncState.Suceeded) {
-      console.log(syncState);
-      props.eventHandler({
-        type: ExplorerEventType.FolderSync,
-        payload: {
-          folder: syncState.folder,
-          pathToSync: props.path,
-        },
+      if (syncState.addSync) {
+        props.eventHandler({
+          type: ExplorerEventType.SyncFolderAdd,
+          payload: {
+            dest: props.path,
+            syncData: syncState.folder,
+          },
+        });
+      } else {
+        props.eventHandler({
+          type: ExplorerEventType.FolderSync,
+          payload: {
+            pathToSync: props.path,
+            syncData: syncState.folder,
+          },
+        });
+      }
+
+      setSyncState({
+        addSync: false,
+        state: SyncState.Ready,
       });
-      setSyncState({ state: SyncState.Ready });
     }
 
     if (syncState.state === SyncState.Failed) {
-      console.log(syncState);
-      setSyncState({ state: SyncState.Ready });
+      setSyncState({
+        addSync: false,
+        state: SyncState.Ready,
+      });
+
+      props.eventHandler({
+        type: ExplorerEventType.ErrorOccured,
+        payload: {
+          reason: syncState.reason,
+          title: "Sync failed",
+        },
+      });
     }
   }, [syncState]);
 
@@ -221,6 +297,9 @@ const Folder: React.FC<FolderProps> = (props) => {
               <IconButton onClick={handleAddFileClick}>
                 <NoteAddIcon />
               </IconButton>
+              <IconButton onClick={handleAddSyncClick}>
+                <PlaylistAddIcon />
+              </IconButton>
               <IconButton
                 onClick={handleSyncClick}
                 disabled={!props.syncUrl || syncState.state !== SyncState.Ready}
@@ -242,6 +321,11 @@ const Folder: React.FC<FolderProps> = (props) => {
         open={opensEditForm}
         onClose={handleEditClose}
         onSave={handleEditSave}
+      />
+      <AddSyncForm
+        open={opensAddSyncForm}
+        onClose={handleAddSyncClose}
+        onSync={handleAddSyncSync}
       />
     </div>
   );

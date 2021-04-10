@@ -23,25 +23,21 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
   const [formState, setFormState] = React.useState({
     description: props.folder.description,
     name: props.folder.name,
-    syncUrl: props.folder.syncUrl,
   });
   const [formErrorState, setFormErrorState] = React.useState({
     description: "",
     name: "",
-    syncUrl: "",
   });
 
   React.useEffect(() => {
     setFormState({
       description: props.folder.description,
       name: props.folder.name,
-      syncUrl: props.folder.syncUrl,
     });
 
     setFormErrorState({
       description: "",
       name: "",
-      syncUrl: "",
     });
   }, [props]);
 
@@ -56,6 +52,7 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
       ...formState,
       id: props.folder.id,
       items: props.folder.items,
+      syncUrl: props.folder.syncUrl,
       type: ExplorerItemType.Folder,
     });
   };
@@ -134,6 +131,16 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
       <DialogTitle>Edit folder</DialogTitle>
       <DialogContent>
         <TextField
+          defaultValue={props.folder.id}
+          fullWidth
+          InputProps={{
+            readOnly: true,
+          }}
+          label="id"
+          margin="dense"
+          variant="filled"
+        />
+        <TextField
           autoFocus
           error={!!formErrorState.name}
           fullWidth
@@ -158,12 +165,14 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
           onChange={(e) => handleOnChange("description", e)}
         />
         <TextField
+          defaultValue={props.folder.syncUrl}
           fullWidth
+          InputProps={{
+            readOnly: true,
+          }}
           label="syncUrl"
           margin="dense"
-          value={formState.syncUrl}
-          variant="outlined"
-          onChange={(e) => handleOnChange("syncUrl", e)}
+          variant="filled"
         />
       </DialogContent>
       <DialogActions>
