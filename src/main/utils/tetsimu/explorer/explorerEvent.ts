@@ -12,6 +12,7 @@ export const ExplorerEventType = {
   FolderAdd: "folderAdd",
   FolderRemove: "folderRemove",
   FolderSave: "folderSave",
+  FolderSync: "folderSync",
 } as const;
 
 export type ExplorerEventType = typeof ExplorerEventType[keyof typeof ExplorerEventType];
@@ -69,6 +70,14 @@ export type FolderSave = {
   };
 };
 
+export type FolderSync = {
+  type: typeof ExplorerEventType.FolderSync;
+  payload: {
+    folder: ExplorerItemFolder;
+    pathToSync: Path;
+  };
+};
+
 export type ExplorerEvent =
   | FileAdd
   | FileLoad
@@ -76,6 +85,7 @@ export type ExplorerEvent =
   | FileSave
   | FolderAdd
   | FolderRemove
-  | FolderSave;
+  | FolderSave
+  | FolderSync;
 
 export type ExplorerEventHandler = (event: ExplorerEvent) => void;

@@ -79,12 +79,13 @@ const File: React.FC<FileProps> = (props) => {
     }
   };
 
+  const nodeId = `${props.path}/${props.id}`;
   const { path, eventHandler, parentFolder, ...file } = props;
   return (
     <div>
       <TreeItem
         className="ignore-hotkey"
-        nodeId={props.id}
+        nodeId={nodeId}
         label={
           <div className={classes.labelRoot} onClick={handleItemClick}>
             {props.name}

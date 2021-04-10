@@ -2,13 +2,13 @@ import {
   ExplorerItemFile,
   ExplorerItemFolder,
   ExplorerItemType,
-  Path,
   ExplorerRootFolder,
+  Path
 } from "stores/ExplorerState";
 import {
   ExplorerHelper,
   FileHelper,
-  FolderHelper,
+  FolderHelper
 } from "utils/tetsimu/explorer/explorerHelper";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -19,6 +19,7 @@ import {
   RemoveFolderAction,
   SaveFileAction,
   SaveFolderAction,
+  SyncFolderAction
 } from "./types";
 
 export const addFile = (
@@ -144,6 +145,25 @@ export const saveFolder = (
 
   return {
     type: ExplorerActionsType.SaveFolder,
+    payload: {
+      rootFolder: folder.root,
+    },
+  };
+};
+
+export const syncFolder = (
+  pathToSync: Path,
+  syncData: ExplorerItemFolder,
+  rootFolder: ExplorerRootFolder
+): SyncFolderAction => {
+  const folder = new ExplorerHelper(rootFolder).folder(
+    pathToSync
+  ) as FolderHelper;
+  folder.update(syncData);
+  localStorage.setItem("explorer.rootFolder", JSON.stringify(folder.root));
+
+  return {
+    type: ExplorerActionsType.SyncFolder,
     payload: {
       rootFolder: folder.root,
     },

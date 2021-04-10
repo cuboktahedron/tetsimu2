@@ -21,23 +21,27 @@ export type EditFolderFormProps = {
 
 const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
   const [formState, setFormState] = React.useState({
-    name: props.folder.name,
     description: props.folder.description,
+    name: props.folder.name,
+    syncUrl: props.folder.syncUrl,
   });
   const [formErrorState, setFormErrorState] = React.useState({
-    name: "",
     description: "",
+    name: "",
+    syncUrl: "",
   });
 
   React.useEffect(() => {
     setFormState({
-      name: props.folder.name,
       description: props.folder.description,
+      name: props.folder.name,
+      syncUrl: props.folder.syncUrl,
     });
 
     setFormErrorState({
-      name: "",
       description: "",
+      name: "",
+      syncUrl: "",
     });
   }, [props]);
 
@@ -52,7 +56,6 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
       ...formState,
       id: props.folder.id,
       items: props.folder.items,
-      syncUrl: "",
       type: ExplorerItemType.Folder,
     });
   };
@@ -153,6 +156,14 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
           value={formState.description}
           variant="outlined"
           onChange={(e) => handleOnChange("description", e)}
+        />
+        <TextField
+          fullWidth
+          label="syncUrl"
+          margin="dense"
+          value={formState.syncUrl}
+          variant="outlined"
+          onChange={(e) => handleOnChange("syncUrl", e)}
         />
       </DialogContent>
       <DialogActions>

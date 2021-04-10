@@ -3,6 +3,7 @@ import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import NoteAddIcon from "@material-ui/icons/NoteAdd";
+import SyncIcon from "@material-ui/icons/Sync";
 import { TreeItem } from "@material-ui/lab";
 import { getOrderedItems } from "ducks/explorer/selectors";
 import React from "react";
@@ -34,9 +35,37 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const SyncState = {
+  Ready: 0,
+  Started: 1,
+  Suceeded: 2,
+  Failed: 3,
+} as const;
+
+type SyncState = typeof SyncState[keyof typeof SyncState];
+
+type SyncStateWith =
+  | {
+      state: typeof SyncState.Ready;
+    }
+  | {
+      state: typeof SyncState.Started;
+    }
+  | {
+      state: typeof SyncState.Suceeded;
+      folder: ExplorerItemFolder;
+    }
+  | {
+      state: typeof SyncState.Failed;
+      reason: string;
+    };
+
 const Folder: React.FC<FolderProps> = (props) => {
   const [opensEditForm, setOpensEditForm] = React.useState(false);
   const classes = useStyles();
+  const [syncState, setSyncState] = React.useState<SyncStateWith>({
+    state: SyncState.Ready,
+  });
 
   const itemsInFolder = getOrderedItems(props.items);
   const { path, eventHandler, parentFolder, ...thisFolder } = props;
@@ -115,11 +144,67 @@ const Folder: React.FC<FolderProps> = (props) => {
     setOpensEditForm(false);
   };
 
+  const handleSyncClick = () => {
+    setSyncState({ state: SyncState.Started });
+  };
+
+  React.useEffect(() => {
+    let unmounted = false;
+
+    if (syncState.state === SyncState.Ready) {
+      return;
+    }
+
+    if (syncState.state === SyncState.Started) {
+      (async () => {
+        const response = await fetch(props.syncUrl);
+        if (unmounted) {
+          return;
+        }
+
+        if (response.ok) {
+          const data = await response.json();
+          // TODO: validate
+          setSyncState({ state: SyncState.Suceeded, folder: data });
+        } else {
+          setSyncState({
+            state: SyncState.Failed,
+            reason: response.statusText,
+          });
+        }
+      })();
+    }
+
+    return () => {
+      unmounted = true;
+    };
+  }, [syncState]);
+
+  React.useEffect(() => {
+    if (syncState.state === SyncState.Suceeded) {
+      console.log(syncState);
+      props.eventHandler({
+        type: ExplorerEventType.FolderSync,
+        payload: {
+          folder: syncState.folder,
+          pathToSync: props.path,
+        },
+      });
+      setSyncState({ state: SyncState.Ready });
+    }
+
+    if (syncState.state === SyncState.Failed) {
+      console.log(syncState);
+      setSyncState({ state: SyncState.Ready });
+    }
+  }, [syncState]);
+
+  const nodeId = `${props.path}/${props.id}`;
   return (
     <div>
       <TreeItem
         className="ignore-hotkey"
-        nodeId={props.id}
+        nodeId={nodeId}
         label={
           <div
             className={classes.labelRoot}
@@ -135,6 +220,12 @@ const Folder: React.FC<FolderProps> = (props) => {
               </IconButton>
               <IconButton onClick={handleAddFileClick}>
                 <NoteAddIcon />
+              </IconButton>
+              <IconButton
+                onClick={handleSyncClick}
+                disabled={!props.syncUrl || syncState.state !== SyncState.Ready}
+              >
+                <SyncIcon />
               </IconButton>
               <IconButton onClick={handleRemoveFolderClick}>
                 <DeleteIcon />
