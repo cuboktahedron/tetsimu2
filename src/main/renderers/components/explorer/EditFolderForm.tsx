@@ -61,15 +61,6 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
     return Object.values(formErrorState).some((error) => !!error);
   };
 
-  const handleNameBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
-    let value = e.target.value.trim();
-
-    setFormState({
-      ...formState,
-      name: value,
-    });
-  };
-
   const validateName = (value: string): boolean => {
     if (value.trim() === "") {
       setFormErrorState({
@@ -95,13 +86,13 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (validateName(value)) {
-      setFormState({
-        ...formState,
-        name: value,
-      });
-    }
+    const value = e.target.value.trim();
+    setFormState({
+      ...formState,
+      name: value,
+    });
+
+    validateName(value);
   };
 
   const handleOnChange = (
@@ -149,7 +140,6 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
           margin="dense"
           value={formState.name}
           variant="outlined"
-          onBlur={handleNameBlur}
           onChange={handleNameChange}
         />
         <TextField

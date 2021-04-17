@@ -6,7 +6,7 @@ import {
   DialogTitle,
   TextField,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@material-ui/core";
 import React from "react";
 
@@ -65,12 +65,7 @@ const AddSyncForm: React.FC<AddSyncProps> = (props) => {
       syncUrl: value,
     });
 
-    if (validateSyncUrl(value)) {
-      setFormState({
-        ...formState,
-        syncUrl: value,
-      });
-    }
+    validateSyncUrl(value);
   };
 
   const theme = useTheme();
