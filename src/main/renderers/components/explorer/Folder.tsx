@@ -5,13 +5,13 @@ import EditIcon from "@material-ui/icons/Edit";
 import NoteAddIcon from "@material-ui/icons/NoteAdd";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import SyncIcon from "@material-ui/icons/Sync";
-import { TreeItem } from "@material-ui/lab";
+import { TreeItem, TreeItemProps } from "@material-ui/lab";
 import { getOrderedItems } from "ducks/explorer/selectors";
 import React from "react";
 import { ExplorerItemFolder, ExplorerItemType } from "stores/ExplorerState";
 import {
   ExplorerEventHandler,
-  ExplorerEventType
+  ExplorerEventType,
 } from "utils/tetsimu/explorer/explorerEvent";
 import { fetchExplorerItemFolder } from "utils/tetsimu/explorer/fetchUtils";
 import { validateSyncedData } from "utils/tetsimu/explorer/validator";
@@ -23,7 +23,8 @@ export type FolderProps = {
   eventHandler: ExplorerEventHandler;
   parentFolder: ExplorerItemFolder;
   path: string;
-} & ExplorerItemFolder;
+} & ExplorerItemFolder &
+  TreeItemProps;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -84,8 +85,9 @@ const Folder: React.FC<FolderProps> = (props) => {
     if (item.type === ExplorerItemType.Folder) {
       return (
         <Folder
-          key={item.id}
           {...item}
+          key={item.id}
+          nodeId={`${props.nodeId}/${item.id}`}
           parentFolder={thisFolder}
           path={`${props.path}/${item.name}`}
           eventHandler={props.eventHandler}
@@ -94,8 +96,9 @@ const Folder: React.FC<FolderProps> = (props) => {
     } else if (item.type === ExplorerItemType.File) {
       return (
         <File
-          key={item.id}
           {...item}
+          key={item.id}
+          nodeId={`${props.nodeId}/${item.id}`}
           parentFolder={thisFolder}
           path={`${props.path}/${item.name}`}
           eventHandler={props.eventHandler}
@@ -275,12 +278,11 @@ const Folder: React.FC<FolderProps> = (props) => {
     }
   }, [syncState]);
 
-  const nodeId = `${props.path}/${props.id}`;
   return (
-    <div>
+    <React.Fragment>
       <TreeItem
         className="ignore-hotkey"
-        nodeId={nodeId}
+        nodeId={props.nodeId}
         label={
           <div
             className={classes.labelRoot}
@@ -327,7 +329,7 @@ const Folder: React.FC<FolderProps> = (props) => {
         onClose={handleAddSyncClose}
         onSync={handleAddSyncSync}
       />
-    </div>
+    </React.Fragment>
   );
 };
 

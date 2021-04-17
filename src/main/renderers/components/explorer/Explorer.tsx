@@ -68,8 +68,9 @@ const Explorer: React.FC = () => {
     if (root.type === ExplorerItemType.Folder) {
       return (
         <Folder
-          key={root.id}
           {...root}
+          key={root.id}
+          nodeId={`/${root.id}`}
           parentFolder={state.rootFolder}
           path={`/${root.name}`}
           eventHandler={explorerEventHandler}

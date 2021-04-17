@@ -1,7 +1,7 @@
 import { createStyles, IconButton, makeStyles, Theme } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import { TreeItem } from "@material-ui/lab";
+import { TreeItem, TreeItemProps } from "@material-ui/lab";
 import React from "react";
 import { ExplorerItemFile, ExplorerItemFolder } from "stores/ExplorerState";
 import {
@@ -14,7 +14,8 @@ export type FileProps = {
   eventHandler: ExplorerEventHandler;
   parentFolder: ExplorerItemFolder;
   path: string;
-} & ExplorerItemFile;
+} & ExplorerItemFile &
+  TreeItemProps;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -79,13 +80,23 @@ const File: React.FC<FileProps> = (props) => {
     }
   };
 
-  const nodeId = `${props.path}/${props.id}`;
+  const handleItemKeyDown = (e: React.KeyboardEvent<HTMLLIElement>) => {
+    if (e.key === "Enter" && props.parameters) {
+      props.eventHandler({
+        type: ExplorerEventType.FileLoad,
+        payload: {
+          parameters: props.parameters,
+        },
+      });
+    }
+  };
+
   const { path, eventHandler, parentFolder, ...file } = props;
   return (
-    <div>
+    <React.Fragment>
       <TreeItem
         className="ignore-hotkey"
-        nodeId={nodeId}
+        nodeId={props.nodeId}
         label={
           <div className={classes.labelRoot} onClick={handleItemClick}>
             {props.name}
@@ -99,6 +110,7 @@ const File: React.FC<FileProps> = (props) => {
             </div>
           </div>
         }
+        onKeyDown={handleItemKeyDown}
       />
       <EditFileForm
         file={file}
@@ -107,7 +119,7 @@ const File: React.FC<FileProps> = (props) => {
         onClose={handleEditClose}
         onSave={handleEditSave}
       />
-    </div>
+    </React.Fragment>
   );
 };
 
