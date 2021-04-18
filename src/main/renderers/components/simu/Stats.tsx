@@ -1,5 +1,4 @@
 import { FormLabel } from "@material-ui/core";
-import clsx from "clsx";
 import { getStats } from "ducks/simu/selectors";
 import React from "react";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
@@ -13,17 +12,17 @@ type StatsProps = {
 };
 
 const Stats: React.FC<StatsProps> = (props) => {
+  if (!props.opens) {
+    return null;
+  }
+
   const { state: rootState } = React.useContext(RootContext);
   const state = rootState.simu;
 
   const stats = React.useMemo(() => getStats(state), [state.step]);
   const classes = useStyles();
   return (
-    <div
-      className={clsx(classes.root, {
-        [classes.opens]: props.opens,
-      })}
-    >
+    <div className={classes.root}>
       <FormLabel component="legend" className={classes.settingGroupTitle}>
         Stats
       </FormLabel>

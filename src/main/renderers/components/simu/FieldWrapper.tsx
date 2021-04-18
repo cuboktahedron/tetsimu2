@@ -1,8 +1,8 @@
 import { createStyles, makeStyles } from "@material-ui/core";
 import React from "react";
-import { SimuContext } from "./Simu";
 import ActiveField from "./ActiveField";
 import Field from "./Field";
+import { SimuContext } from "./Simu";
 
 type StyleProps = {
   zoom: number;
@@ -29,7 +29,7 @@ const FieldWrapper: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      <Field />
+      <Field field={state.field} isDead={state.isDead} zoom={state.zoom} />
       <ActiveField />
     </div>
   );

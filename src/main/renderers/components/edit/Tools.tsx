@@ -6,7 +6,6 @@ import {
   FormControlLabel
 } from "@material-ui/core";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
-import clsx from "clsx";
 import {
   buildUpField,
   changeNextBaseNo,
@@ -36,6 +35,10 @@ type ToolsProps = {
 };
 
 const Tools: React.FC<ToolsProps> = (props) => {
+  if (!props.opens) {
+    return null;
+  }
+
   const { state: rootState, dispatch } = React.useContext(RootContext);
   const state = rootState.edit;
   const [nextsPattern, setNextsPattern] = React.useState({
@@ -144,11 +147,7 @@ const Tools: React.FC<ToolsProps> = (props) => {
   const classes = useStyles();
 
   return (
-    <div
-      className={clsx(classes.root, {
-        [classes.opens]: props.opens,
-      })}
-    >
+    <div className={classes.root}>
       <div className={classes.buttons}>
         <div>
           <div>

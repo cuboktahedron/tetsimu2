@@ -82,6 +82,8 @@ const Simu: React.FC = () => {
   })();
 
   const classes = useStyles();
+  const stateRef = React.useRef(state);
+  stateRef.current = state;
 
   if (small) {
     return (
@@ -90,7 +92,13 @@ const Simu: React.FC = () => {
           <div style={{ display: "flex" }}>
             <FieldWrapper />
             <HoldNexts />
-            <Operation />
+            <Operation
+              dispatch={dispatch}
+              histories={state.histories}
+              stateRef={stateRef}
+              step={state.step}
+              zoom={state.zoom}
+            />
           </div>
           <HotKey />
           {virtualController}
@@ -112,7 +120,13 @@ const Simu: React.FC = () => {
               <div className={classes.nextsOnly}>
                 <NextsOnly />
               </div>
-              <Operation />
+              <Operation
+                dispatch={dispatch}
+                histories={state.histories}
+                stateRef={stateRef}
+                step={state.step}
+                zoom={state.zoom}
+              />
             </div>
           </div>
           <HotKey />

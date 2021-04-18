@@ -20,7 +20,7 @@ import React from "react";
 import { SidePanelContext } from "../App";
 import Explorer from "../explorer/Explorer";
 import Help from "../Help";
-import Settings from "./Settings";
+import Settings from "./settings/Settings";
 import Stats from "./Stats";
 import Tools from "./Tools";
 
@@ -80,7 +80,7 @@ const SidePanel: React.FC = () => {
   });
 
   React.useLayoutEffect(() => {
-    if (!(IconNames.includes(selectedMenuName as any))) {
+    if (!IconNames.includes(selectedMenuName as any)) {
       setSelectedMenuName("simu/tools");
     }
 

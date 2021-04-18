@@ -13,15 +13,16 @@ import ReplayIcon from "@material-ui/icons/Replay";
 import { redo, retry, superRetry, undo } from "ducks/simu/actions";
 import { canRedo, canUndo, getSimuConductor } from "ducks/simu/selectors";
 import React from "react";
-import { SimuContext } from "./Simu";
+import { SimuState, SimuStateHistory } from "stores/SimuState";
+import { Action } from "types/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       background: "white",
       color: "white",
-      height: (props: StyleProps) => 672 * props.zoom,
-      width: (props: StyleProps) => 64 * props.zoom,
+      height: (props: OperationProps) => 672 * props.zoom,
+      width: (props: OperationProps) => 64 * props.zoom,
     },
 
     listItem: {
@@ -36,26 +37,30 @@ const useStyles = makeStyles((theme: Theme) =>
     },
 
     icon: {
-      height: (props: StyleProps) => 64 * props.zoom,
-      width: (props: StyleProps) => 64 * props.zoom,
+      height: (props: OperationProps) => 64 * props.zoom,
+      width: (props: OperationProps) => 64 * props.zoom,
     },
   })
 );
 
-type StyleProps = {
+type OperationProps = {
+  dispatch: React.Dispatch<Action>;
+  histories: SimuStateHistory[];
+  stateRef: React.MutableRefObject<SimuState>;
+  step: number;
   zoom: number;
 };
 
-const Operation: React.FC = () => {
-  const { state, dispatch } = React.useContext(SimuContext);
-  const styleProps = { zoom: state.zoom };
+const Operation = React.memo<OperationProps>((props) => {
+  const state = props.stateRef.current;
+  const { dispatch, histories, step } = props;
 
   const handleUndo = () => {
-    dispatch(undo(state.step, state.histories));
+    dispatch(undo(step, histories));
   };
 
   const handleRedo = () => {
-    dispatch(redo(state.step, state.histories));
+    dispatch(redo(step, histories));
   };
 
   const handleRetry = () => {
@@ -66,7 +71,7 @@ const Operation: React.FC = () => {
     dispatch(superRetry(getSimuConductor(state)));
   };
 
-  const classes = useStyles(styleProps);
+  const classes = useStyles(props);
 
   return (
     <List className={classes.root} disablePadding={true}>
@@ -100,6 +105,6 @@ const Operation: React.FC = () => {
       </ListItem>
     </List>
   );
-};
+});
 
 export default Operation;

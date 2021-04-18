@@ -8,7 +8,6 @@ import {
 type SidePanelProperties =
   | "buttons"
   | "longTapButton"
-  | "opens"
   | "root"
   | "section"
   | "settingGroupTitle";
@@ -23,7 +22,6 @@ export const useSidePanelStyles = <
     const defaultStyle = {
       root: {
         background: "white",
-        display: "none",
         flexGrow: 1,
         padding: 8,
 
@@ -69,10 +67,6 @@ export const useSidePanelStyles = <
 
       longTapButton: {
         touchAction: "none",
-      },
-
-      opens: {
-        display: "block",
       },
     };
 

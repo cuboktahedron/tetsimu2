@@ -21,7 +21,13 @@ const NextsOnly: React.FC<NextsOnlyProps> = () => {
 
   return (
     <div className={classes.root}>
-      <Nexts height={672 * state.zoom} />
+      <Nexts
+        config={state.config}
+        garbages={state.garbages}
+        height={672 * state.zoom}
+        nexts={state.nexts}
+        zoom={state.zoom}
+      />
     </div>
   );
 };

@@ -9,16 +9,17 @@ import {
   syncFolder,
 } from "ducks/explorer/actions";
 import { error, initializeApp } from "ducks/root/actions";
-import React from "react";
-import { RootContext } from "renderers/components/App";
+import { RootState } from "stores/RootState";
 import {
   ExplorerEvent,
   ExplorerEventType,
 } from "utils/tetsimu/explorer/explorerEvent";
 import { UnsupportedUrlError } from "utils/tetsimu/unsupportedUrlError";
 
-export const useExplorerEventHandler = () => {
-  const { state: rootState, dispatch } = React.useContext(RootContext);
+export const useExplorerEventHandler = (
+  rootState: RootState,
+  dispatch: any
+) => {
   const state = rootState.explorer;
 
   return (event: ExplorerEvent) => {

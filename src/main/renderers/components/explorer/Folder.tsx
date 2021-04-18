@@ -10,8 +10,8 @@ import { getOrderedItems } from "ducks/explorer/selectors";
 import React from "react";
 import { ExplorerItemFolder, ExplorerItemType } from "stores/ExplorerState";
 import {
-  ExplorerEventHandler,
-  ExplorerEventType,
+  ExplorerEvent,
+  ExplorerEventType
 } from "utils/tetsimu/explorer/explorerEvent";
 import { fetchExplorerItemFolder } from "utils/tetsimu/explorer/fetchUtils";
 import { validateSyncedData } from "utils/tetsimu/explorer/validator";
@@ -20,7 +20,7 @@ import EditFolderForm from "./EditFolderForm";
 import File from "./File";
 
 export type FolderProps = {
-  eventHandler: ExplorerEventHandler;
+  eventHandler: React.MutableRefObject<(event: ExplorerEvent) => void>;
   parentFolder: ExplorerItemFolder;
   path: string;
 } & ExplorerItemFolder &
@@ -78,43 +78,50 @@ const Folder: React.FC<FolderProps> = (props) => {
     state: SyncState.Ready,
   });
 
-  const itemsInFolder = getOrderedItems(props.items);
-  const { path, eventHandler, parentFolder, ...thisFolder } = props;
+  const {
+    path,
+    eventHandler: eventHandler,
+    parentFolder,
+    ...thisFolder
+  } = props;
 
-  const items = itemsInFolder.map((item) => {
-    if (item.type === ExplorerItemType.Folder) {
-      return (
-        <Folder
-          {...item}
-          key={item.id}
-          nodeId={`${props.nodeId}/${item.id}`}
-          parentFolder={thisFolder}
-          path={`${props.path}/${item.name}`}
-          eventHandler={props.eventHandler}
-        />
-      );
-    } else if (item.type === ExplorerItemType.File) {
-      return (
-        <File
-          {...item}
-          key={item.id}
-          nodeId={`${props.nodeId}/${item.id}`}
-          parentFolder={thisFolder}
-          path={`${props.path}/${item.name}`}
-          eventHandler={props.eventHandler}
-        />
-      );
-    } else {
-      return "";
-    }
-  });
+  const items = React.useMemo(() => {
+    const itemsInFolder = getOrderedItems(props.items);
+    return itemsInFolder.map((item) => {
+      if (item.type === ExplorerItemType.Folder) {
+        return (
+          <Folder
+            {...item}
+            key={item.id}
+            nodeId={`${props.nodeId}/${item.id}`}
+            parentFolder={thisFolder}
+            path={`${props.path}/${item.name}`}
+            eventHandler={props.eventHandler}
+          />
+        );
+      } else if (item.type === ExplorerItemType.File) {
+        return (
+          <File
+            {...item}
+            key={item.id}
+            nodeId={`${props.nodeId}/${item.id}`}
+            parentFolder={thisFolder}
+            path={`${props.path}/${item.name}`}
+            eventHandler={props.eventHandler}
+          />
+        );
+      } else {
+        return "";
+      }
+    });
+  }, [props.items]);
 
   const handleEditClick = () => {
     setOpensEditForm(true);
   };
 
   const handleAddFolderClick = () => {
-    props.eventHandler({
+    props.eventHandler.current({
       type: ExplorerEventType.FolderAdd,
       payload: {
         newFolderName: "NewFolder",
@@ -124,7 +131,7 @@ const Folder: React.FC<FolderProps> = (props) => {
   };
 
   const handleRemoveFolderClick = () => {
-    props.eventHandler({
+    props.eventHandler.current({
       type: ExplorerEventType.FolderRemove,
       payload: {
         pathToDelete: props.path,
@@ -133,7 +140,7 @@ const Folder: React.FC<FolderProps> = (props) => {
   };
 
   const handleAddFileClick = () => {
-    props.eventHandler({
+    props.eventHandler.current({
       type: ExplorerEventType.FileAdd,
       payload: {
         dest: props.path,
@@ -167,7 +174,7 @@ const Folder: React.FC<FolderProps> = (props) => {
   const handleEditSave = (folder: ExplorerItemFolder) => {
     setOpensEditForm(false);
 
-    props.eventHandler({
+    props.eventHandler.current({
       type: ExplorerEventType.FolderSave,
       payload: {
         folder,
@@ -239,7 +246,7 @@ const Folder: React.FC<FolderProps> = (props) => {
   React.useEffect(() => {
     if (syncState.state === SyncState.Suceeded) {
       if (syncState.addSync) {
-        props.eventHandler({
+        props.eventHandler.current({
           type: ExplorerEventType.SyncFolderAdd,
           payload: {
             dest: props.path,
@@ -247,7 +254,7 @@ const Folder: React.FC<FolderProps> = (props) => {
           },
         });
       } else {
-        props.eventHandler({
+        props.eventHandler.current({
           type: ExplorerEventType.FolderSync,
           payload: {
             pathToSync: props.path,
@@ -268,7 +275,7 @@ const Folder: React.FC<FolderProps> = (props) => {
         state: SyncState.Ready,
       });
 
-      props.eventHandler({
+      props.eventHandler.current({
         type: ExplorerEventType.ErrorOccured,
         payload: {
           reason: syncState.reason,

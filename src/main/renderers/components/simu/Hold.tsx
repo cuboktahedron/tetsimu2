@@ -1,15 +1,11 @@
 import { createStyles, makeStyles } from "@material-ui/core";
 import React from "react";
-import { Tetromino } from "types/core";
+import { HoldState } from "types/core";
 import TetrominoBlocks from "../core/TetrominoBlocks";
-import { SimuContext } from "./Simu";
 
-type HoldProps = {};
-
-type StyleProps = {
-  type: Tetromino;
-  canHold: boolean;
-} & HoldProps;
+type HoldProps = {
+  hold: HoldState;
+};
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -19,18 +15,17 @@ const useStyles = makeStyles(() =>
     },
 
     blocks: {
-      background: (props: StyleProps) => (props.canHold ? "black" : "#800"),
+      background: (props: HoldProps) => (props.hold.canHold ? "black" : "#800"),
       height: "100%",
       width: "100%",
     },
   })
 );
 
-const Hold: React.FC<HoldProps> = () => {
-  const { state } = React.useContext(SimuContext);
-  const hold = state.hold;
+const Hold = React.memo<HoldProps>((props) => {
+  const hold = props.hold;
 
-  const classes = useStyles(hold);
+  const classes = useStyles(props);
   return (
     <div className={classes.root}>
       <div className={classes.blocks}>
@@ -38,6 +33,6 @@ const Hold: React.FC<HoldProps> = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Hold;

@@ -1,11 +1,10 @@
 import { Button, Divider } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
-import clsx from "clsx";
 import {
   changeTetsimuMode,
   simuToEditMode,
-  simuToReplayMode
+  simuToReplayMode,
 } from "ducks/root/actions";
 import { clearSimu } from "ducks/simu/actions";
 import React from "react";
@@ -23,6 +22,10 @@ type ToolsProps = {
 };
 
 const Tools: React.FC<ToolsProps> = (props) => {
+  if (!props.opens) {
+    return null;
+  }
+
   const { state: rootState, dispatch } = React.useContext(RootContext);
   const state = rootState.simu;
   const [stateUrl, setStateUrl] = React.useState("");
@@ -54,11 +57,7 @@ const Tools: React.FC<ToolsProps> = (props) => {
 
   const classes = useStyles();
   return (
-    <div
-      className={clsx(classes.root, {
-        [classes.opens]: props.opens,
-      })}
-    >
+    <div className={classes.root}>
       <div className={classes.buttons}>
         <div>
           <div>

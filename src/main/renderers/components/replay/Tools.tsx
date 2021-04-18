@@ -10,7 +10,6 @@ import PauseIcon from "@material-ui/icons/Pause";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
-import clsx from "clsx";
 import {
   changeAutoPlaying,
   changeStep,
@@ -63,6 +62,10 @@ type ToolsProps = {
 };
 
 const Tools: React.FC<ToolsProps> = (props) => {
+  if (!props.opens) {
+    return null;
+  }
+
   const { state: rootState, dispatch } = React.useContext(RootContext);
   const state = rootState.replay;
   const [stateUrl, setStateUrl] = React.useState("");
@@ -109,11 +112,7 @@ const Tools: React.FC<ToolsProps> = (props) => {
   const classes = useStyles();
   const stepNum = state.replaySteps.length;
   return (
-    <div
-      className={clsx(classes.root, {
-        [classes.opens]: props.opens,
-      })}
-    >
+    <div className={classes.root}>
       <div className={classes.buttons}>
         <div>
           <div>

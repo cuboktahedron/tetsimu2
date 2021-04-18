@@ -2,6 +2,7 @@ import { createStyles, makeStyles } from "@material-ui/core";
 import React from "react";
 import Hold from "./Hold";
 import PlayLog from "./PlayLog";
+import { SimuContext } from "./Simu";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -21,15 +22,20 @@ const useStyles = makeStyles(() =>
 );
 
 const FieldLeft: React.FC = () => {
+  const { state } = React.useContext(SimuContext);
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <div className={classes.hold}>
-        <Hold />
+        <Hold hold={state.hold} />
       </div>
       <div>
-        <PlayLog />
+        <PlayLog
+          attackTypes={state.attackTypes}
+          btbState={state.btbState}
+          ren={state.ren}
+        />
       </div>
     </div>
   );

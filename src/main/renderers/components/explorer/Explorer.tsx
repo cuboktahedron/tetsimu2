@@ -11,16 +11,11 @@ import clsx from "clsx";
 import { getOrderedItems } from "ducks/explorer/selectors";
 import React from "react";
 import { useExplorerEventHandler } from "renderers/hooks/explorer/useExplorerEventHandler";
-import { ExplorerItemType, initialExplorerState } from "stores/ExplorerState";
-import { Action } from "types/core";
+import { useValueRef } from "renderers/hooks/useValueRef";
+import { ExplorerItemType } from "stores/ExplorerState";
 import { ExplorerEventType } from "utils/tetsimu/explorer/explorerEvent";
 import { RootContext } from "../App";
 import Folder from "./Folder";
-
-export const ExplorerContext = React.createContext({
-  state: initialExplorerState,
-  dispatch: (_: Action) => {},
-});
 
 const MinusSquare: React.FC = (props: SvgIconProps) => {
   return (
@@ -62,10 +57,12 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
   const { state: rootState, dispatch } = React.useContext(RootContext);
   const state = rootState.explorer;
   const classes = useStyles();
-  const explorerEventHandler = useExplorerEventHandler();
+  const eventHandler = useValueRef(
+    useExplorerEventHandler(rootState, dispatch)
+  );
 
   const handleNewFolderClick = () => {
-    explorerEventHandler({
+    eventHandler.current({
       type: ExplorerEventType.FolderAdd,
       payload: {
         newFolderName: "NewFolder",
@@ -74,46 +71,52 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
     });
   };
 
-  const rootItems = getOrderedItems(state.rootFolder.items);
-  const rootFolders = rootItems.map((root) => {
-    if (root.type === ExplorerItemType.Folder) {
-      return (
-        <Folder
-          {...root}
-          key={root.id}
-          nodeId={`/${root.id}`}
-          parentFolder={state.rootFolder}
-          path={`/${root.name}`}
-          eventHandler={explorerEventHandler}
-        />
-      );
-    } else {
-      return "";
-    }
-  });
+  const rootFolders = React.useMemo(() => {
+    const rootItems = getOrderedItems(state.rootFolder.items);
+    return rootItems.map((root) => {
+      if (root.type === ExplorerItemType.Folder) {
+        return (
+          <Folder
+            {...root}
+            key={root.id}
+            nodeId={`/${root.id}`}
+            parentFolder={state.rootFolder}
+            path={`/${root.name}`}
+            eventHandler={eventHandler}
+          />
+        );
+      } else {
+        return "";
+      }
+    });
+  }, [state.rootFolder.items]);
+
+  const treeView = React.useMemo(() => {
+    return (
+      <TreeView
+        className="ignore-hotkey"
+        defaultCollapseIcon={<MinusSquare />}
+        defaultExpandIcon={<PlusSquare />}
+      >
+        {rootFolders}
+      </TreeView>
+    );
+  }, [rootFolders]);
 
   return (
-    <ExplorerContext.Provider value={{ state, dispatch }}>
-      <div
-        className={clsx(classes.root, {
-          [classes.opens]: props.opens,
-        })}
-      >
-        <div>
-          <IconButton onClick={handleNewFolderClick}>
-            <CreateNewFolderIcon />
-          </IconButton>
-        </div>
-
-        <TreeView
-          className="ignore-hotkey"
-          defaultCollapseIcon={<MinusSquare />}
-          defaultExpandIcon={<PlusSquare />}
-        >
-          {rootFolders}
-        </TreeView>
+    <div
+      className={clsx(classes.root, {
+        [classes.opens]: props.opens,
+      })}
+    >
+      <div>
+        <IconButton onClick={handleNewFolderClick}>
+          <CreateNewFolderIcon />
+        </IconButton>
       </div>
-    </ExplorerContext.Provider>
+
+      {treeView}
+    </div>
   );
 };
 

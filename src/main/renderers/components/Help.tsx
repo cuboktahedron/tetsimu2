@@ -1,5 +1,4 @@
 import { makeStyles, Theme } from "@material-ui/core";
-import clsx from "clsx";
 import React from "react";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -7,12 +6,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     "& p": {
       margin: theme.spacing(1),
     },
-
-    display: "none",
-  },
-
-  opens: {
-    display: "block",
   },
 }));
 
@@ -21,14 +14,14 @@ export type HelpProps = {
 };
 
 const Help: React.FC<HelpProps> = (props) => {
+  if (!props.opens) {
+    return null;
+  }
+
   const classes = useStyles();
 
   return (
-    <div
-      className={clsx(classes.root, {
-        [classes.opens]: props.opens,
-      })}
-    >
+    <div className={classes.root}>
       <h2>Tetsimu2</h2>
       <p>version: 2.03</p>
       <div>

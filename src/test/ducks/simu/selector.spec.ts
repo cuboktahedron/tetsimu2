@@ -1,14 +1,14 @@
 import {
   getNextAttacks,
   getStats,
-  getUrgentAttack,
+  getUrgentAttack
 } from "ducks/simu/selectors";
 import { AttackType, Direction, PlayStats } from "types/core";
 import { makeGarbage } from "../../utils/tetsimu/testUtils/makeGarbage";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
-  makeReplayHoldStep,
+  makeReplayHoldStep
 } from "../../utils/tetsimu/testUtils/makeReplayStep";
 import { makeSimuHistory } from "../../utils/tetsimu/testUtils/makeSimuHistory";
 import { makeSimuState } from "../../utils/tetsimu/testUtils/makeSimuState";
@@ -16,28 +16,14 @@ import { makeSimuState } from "../../utils/tetsimu/testUtils/makeSimuState";
 describe("selector", () => {
   describe("getNextAttacks", () => {
     it("should return amount of each next(steps < nextNum)", () => {
-      const actual = getNextAttacks(
-        makeSimuState({
-          config: {
-            nextNum: 8,
-          },
-          garbages: [makeGarbage(0, 3), makeGarbage(5, 2)],
-        })
-      );
+      const actual = getNextAttacks([makeGarbage(0, 3), makeGarbage(5, 2)], 8);
 
       const expected = [0, 0, 0, 0, 2, 0, 0, 0];
       expect(actual).toEqual(expected);
     });
 
     it("should return amount of each next(step >= nextNum)", () => {
-      const actual = getNextAttacks(
-        makeSimuState({
-          config: {
-            nextNum: 4,
-          },
-          garbages: [makeGarbage(1, 3), makeGarbage(4, 2)],
-        })
-      );
+      const actual = getNextAttacks([makeGarbage(1, 3), makeGarbage(4, 2)], 4);
 
       const expected = [3, 0, 0, 0];
       expect(actual).toEqual(expected);

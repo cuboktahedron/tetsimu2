@@ -74,6 +74,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const SidePanel: React.FC = () => {
+  const { state: rootState, dispatch } = React.useContext(RootContext);
   const [drawerWidth, setDrawerWidth] = React.useContext(
     SidePanelContext
   ).drawerWidth;
@@ -91,12 +92,15 @@ const SidePanel: React.FC = () => {
   });
 
   React.useLayoutEffect(() => {
-    if (!(IconNames.includes(selectedMenuName as any))) {
+    if (!IconNames.includes(selectedMenuName as any)) {
       setSelectedMenuName("replay/tools");
     }
 
     setMenuMains([
-      <Explorer key="explorer" opens={selectedMenuName === "explorer"} />,
+      <Explorer
+        key="explorer"
+        opens={selectedMenuName === "explorer"}
+      />,
       <Help key="help" opens={selectedMenuName === "help"} />,
       <Settings
         key="replay/settings"
@@ -107,7 +111,6 @@ const SidePanel: React.FC = () => {
     ]);
   }, [selectedMenuName]);
 
-  const { state: rootState, dispatch } = React.useContext(RootContext);
   const state = rootState.replay;
   const refState = useValueRef(state);
   const [replayTimerId, setReplayTimerId] = React.useState<number | null>(null);

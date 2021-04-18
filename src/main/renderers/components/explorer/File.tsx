@@ -5,13 +5,13 @@ import { TreeItem, TreeItemProps } from "@material-ui/lab";
 import React from "react";
 import { ExplorerItemFile, ExplorerItemFolder } from "stores/ExplorerState";
 import {
-  ExplorerEventHandler,
+  ExplorerEvent,
   ExplorerEventType
 } from "utils/tetsimu/explorer/explorerEvent";
 import EditFileForm from "./EditFileForm";
 
 export type FileProps = {
-  eventHandler: ExplorerEventHandler;
+  eventHandler: React.MutableRefObject<(event: ExplorerEvent) => void>;
   parentFolder: ExplorerItemFolder;
   path: string;
 } & ExplorerItemFile &
@@ -44,7 +44,7 @@ const File: React.FC<FileProps> = (props) => {
   const handleRemoveFileClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
 
-    props.eventHandler({
+    props.eventHandler.current({
       type: ExplorerEventType.FileRemove,
       payload: {
         pathToDelete: props.path,
@@ -59,7 +59,7 @@ const File: React.FC<FileProps> = (props) => {
   };
 
   const handleEditSave = (file: ExplorerItemFile) => {
-    props.eventHandler({
+    props.eventHandler.current({
       type: ExplorerEventType.FileSave,
       payload: {
         file,
@@ -71,7 +71,7 @@ const File: React.FC<FileProps> = (props) => {
 
   const handleItemClick = () => {
     if (props.parameters) {
-      props.eventHandler({
+      props.eventHandler.current({
         type: ExplorerEventType.FileLoad,
         payload: {
           parameters: props.parameters,
@@ -82,7 +82,7 @@ const File: React.FC<FileProps> = (props) => {
 
   const handleItemKeyDown = (e: React.KeyboardEvent<HTMLLIElement>) => {
     if (e.key === "Enter" && props.parameters) {
-      props.eventHandler({
+      props.eventHandler.current({
         type: ExplorerEventType.FileLoad,
         payload: {
           parameters: props.parameters,
@@ -91,7 +91,7 @@ const File: React.FC<FileProps> = (props) => {
     }
   };
 
-  const { path, eventHandler, parentFolder, ...file } = props;
+  const { path, eventHandler: eventHandler, parentFolder, ...file } = props;
   return (
     <React.Fragment>
       <TreeItem

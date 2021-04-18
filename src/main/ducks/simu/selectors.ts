@@ -1,4 +1,4 @@
-import { SimuState } from "stores/SimuState";
+import { GarbageInfo, SimuState } from "stores/SimuState";
 import { AttackType, PlayStats, ReplayStepType } from "types/core";
 import { Pytt2Strategy } from "utils/tetsimu/putt2Strategy";
 import { SimuConductor } from "utils/tetsimu/simu/simuConductor";
@@ -15,8 +15,11 @@ export const canRedo = (state: SimuState) => {
   return state.step < state.histories.length - 1;
 };
 
-export const getNextAttacks = (state: SimuState): number[] => {
-  const attacks = state.garbages.flatMap((garbage) => {
+export const getNextAttacks = (
+  garbages: GarbageInfo[],
+  nextNum: number
+): number[] => {
+  const attacks = garbages.flatMap((garbage) => {
     if (garbage.restStep === 0) {
       return [];
     }
@@ -26,14 +29,12 @@ export const getNextAttacks = (state: SimuState): number[] => {
     return attacks;
   });
 
-  if (attacks.length < state.config.nextNum) {
-    const extras: number[] = new Array(
-      state.config.nextNum - attacks.length
-    ).fill(0);
+  if (attacks.length < nextNum) {
+    const extras: number[] = new Array(nextNum - attacks.length).fill(0);
 
     return attacks.concat(extras);
   } else {
-    return attacks.slice(0, state.config.nextNum);
+    return attacks.slice(0, nextNum);
   }
 };
 

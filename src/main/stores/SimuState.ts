@@ -12,7 +12,7 @@ import {
   ReplayStep,
   SpinType,
   TapControllerType,
-  Tetromino,
+  Tetromino
 } from "types/core";
 import { PlayMode, SimuConfig, SimuRetryState } from "types/simu";
 import { makeFullNextNote } from "utils/tetsimu/functions";
@@ -45,6 +45,12 @@ export type GarbageInfo = {
   restStep: number;
 };
 
+export type NextsInfo = {
+  settled: Tetromino[];
+  unsettled: NextNote[];
+  bag: NextNote;
+};
+
 export type SimuState = {
   attackTypes: AttackType[];
   btbState: BtbState;
@@ -59,11 +65,7 @@ export type SimuState = {
   hold: HoldState;
   isDead: boolean;
   lastRoseUpColumn: number;
-  nexts: {
-    settled: Tetromino[];
-    unsettled: NextNote[];
-    bag: NextNote;
-  };
+  nexts: NextsInfo;
   ren: number;
   replayNextStep: number;
   replayNexts: Tetromino[];

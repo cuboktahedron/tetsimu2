@@ -1,7 +1,6 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core";
 import React from "react";
 import { AttackType, BtbState } from "types/core";
-import { SimuContext } from "./Simu";
 
 const attackLogs = {
   [AttackType.Single]: "Single",
@@ -36,22 +35,25 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const PlayLog: React.FC = () => {
-  const { state } = React.useContext(SimuContext);
+type PlayLogProps = {
+  attackTypes: AttackType[];
+  btbState: BtbState;
+  ren: number;
+};
 
+const PlayLog = React.memo<PlayLogProps>((props) => {
+  const { attackTypes, btbState, ren } = props;
   const classes = useStyles();
 
   const logContents: string[] = [];
-  if (state.btbState !== BtbState.None) {
+  if (btbState !== BtbState.None) {
     logContents.push("BtB: ON");
   }
-  if (state.ren >= 1) {
-    logContents.push(`${state.ren} Ren`);
+  if (ren >= 1) {
+    logContents.push(`${ren} Ren`);
   }
 
-  logContents.push(
-    ...state.attackTypes.map((attackType) => attackLogs[attackType])
-  );
+  logContents.push(...attackTypes.map((attackType) => attackLogs[attackType]));
 
   const playLogs = logContents.map((logContent, index) => (
     <p className={classes.playLog} key={index}>
@@ -60,6 +62,6 @@ const PlayLog: React.FC = () => {
   ));
 
   return <div className={classes.root}>{playLogs}</div>;
-};
+});
 
 export default PlayLog;

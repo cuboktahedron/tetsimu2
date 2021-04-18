@@ -52,11 +52,17 @@ const HoldNexts: React.FC<HoldNexts> = () => {
   return (
     <div className={classes.root}>
       <div className={classes.nexts}>
-        <Nexts height={672 * styleProps.zoom - holdSize(styleProps) - 32 - 8} />
+        <Nexts
+          config={state.config}
+          height={672 * styleProps.zoom - holdSize(styleProps) - 32 - 8}
+          garbages={state.garbages}
+          nexts={state.nexts}
+          zoom={state.zoom}
+        />
       </div>
       <div className={classes.holdTitle}>Hold</div>
       <div className={classes.hold}>
-        <Hold />
+        <Hold hold={state.hold} />
       </div>
     </div>
   );
