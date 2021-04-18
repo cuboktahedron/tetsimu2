@@ -96,9 +96,7 @@ const SidePanel: React.FC = () => {
   const resizeHandlerRef = React.useRef<HTMLDivElement>(null);
   const [open, setOpen] = React.useContext(SidePanelContext).open;
   const [prevDragX, setPrevDragX] = React.useState<number | null>(null);
-  const [selectedMenuMain] = React.useContext(
-    SidePanelContext
-  ).selectedMenuMain;
+  const [menuMains] = React.useContext(SidePanelContext).menuMains;
 
   const classes = useStyles({
     drawerWidth,
@@ -212,7 +210,8 @@ const SidePanel: React.FC = () => {
           onTouchMove={handleResizeHandleTouchMove}
           onTouchEnd={handleResizeHandleTouchEnd}
         >
-          {open ? selectedMenuMain : <div />}
+          {/* {open ? selectedMenuMain : <div />} */}
+          {menuMains}
         </div>
         <div className={classes.iconBar}>
           <List disablePadding>{sidePanel}</List>

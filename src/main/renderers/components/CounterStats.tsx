@@ -1,10 +1,9 @@
-import { Grid } from "@material-ui/core";
+import { Grid, makeStyles } from "@material-ui/core";
 import { blue } from "@material-ui/core/colors";
 import React from "react";
-import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { AttackType, PlayStats } from "types/core";
 
-const useStyles = useSidePanelStyles({
+const useStyles = makeStyles({
   container: {
     "& > :nth-child(odd)": {
       background: blue[700],
@@ -32,7 +31,7 @@ const CounterStats: React.FC<CounterStatsProps> = (props) => {
   const attacks = stats.attacks.reduce((acc, cur) => acc + cur, 0);
 
   return (
-    <div className={classes.root}>
+    <div>
       <Grid container spacing={1} className={classes.container}>
         <Grid item xs={6}>
           Drops

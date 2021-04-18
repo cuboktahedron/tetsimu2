@@ -6,11 +6,12 @@ import {
 } from "@material-ui/core/styles/withStyles";
 
 type SidePanelProperties =
+  | "buttons"
+  | "longTapButton"
+  | "opens"
   | "root"
   | "section"
-  | "buttons"
-  | "settingGroupTitle"
-  | "longTapButton";
+  | "settingGroupTitle";
 
 export const useSidePanelStyles = <
   ClassKey extends string = string,
@@ -22,6 +23,7 @@ export const useSidePanelStyles = <
     const defaultStyle = {
       root: {
         background: "white",
+        display: "none",
         flexGrow: 1,
         padding: 8,
 
@@ -67,6 +69,10 @@ export const useSidePanelStyles = <
 
       longTapButton: {
         touchAction: "none",
+      },
+
+      opens: {
+        display: "block",
       },
     };
 

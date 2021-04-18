@@ -11,14 +11,15 @@ import {
   MenuItem,
   Radio,
   RadioGroup,
-  Select
+  Select,
 } from "@material-ui/core";
+import clsx from "clsx";
 import {
   changeConfig,
   changeGarbageLevel,
   clearSimu,
   resetSimuConfigToDefault,
-  saveSimuConfig
+  saveSimuConfig,
 } from "ducks/simu/actions";
 import { getSimuConductor } from "ducks/simu/selectors";
 import React, { useEffect } from "react";
@@ -32,9 +33,17 @@ const useStyles = useSidePanelStyles({
   formControl: {
     minWidth: 120,
   },
+
+  opens: {
+    display: "block",
+  },
 });
 
-const Settings: React.FC = () => {
+type SettingProps = {
+  opens: boolean;
+};
+
+const Settings: React.FC<SettingProps> = (props) => {
   const { state: rootState, dispatch } = React.useContext(RootContext);
   const state = rootState.simu;
   const config = state.config;
@@ -224,7 +233,11 @@ const Settings: React.FC = () => {
   })();
 
   return (
-    <div className={classes.root}>
+    <div
+      className={clsx(classes.root, {
+        [classes.opens]: props.opens,
+      })}
+    >
       <div>
         <FormLabel component="legend" className={classes.settingGroupTitle}>
           Display

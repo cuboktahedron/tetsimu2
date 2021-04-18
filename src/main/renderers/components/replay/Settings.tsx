@@ -5,6 +5,7 @@ import {
   FormControlLabel,
   FormLabel
 } from "@material-ui/core";
+import clsx from "clsx";
 import {
   changeConfig,
   resetReplayConfigToDefault,
@@ -14,9 +15,17 @@ import React from "react";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { RootContext } from "../App";
 
-const useStyles = useSidePanelStyles();
+const useStyles = useSidePanelStyles({
+  opens: {
+    display: "block",
+  },
+});
 
-const Settings: React.FC = () => {
+type SettingProps = {
+  opens: boolean;
+};
+
+const Settings: React.FC<SettingProps> = (props) => {
   const { state: rootState, dispatch } = React.useContext(RootContext);
   const state = rootState.replay;
   const config = state.config;
@@ -68,7 +77,11 @@ const Settings: React.FC = () => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <div
+      className={clsx(classes.root, {
+        [classes.opens]: props.opens,
+      })}
+    >
       <div>
         <FormLabel component="legend" className={classes.settingGroupTitle}>
           Display

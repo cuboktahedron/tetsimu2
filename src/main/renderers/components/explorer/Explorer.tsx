@@ -7,6 +7,7 @@ import {
 } from "@material-ui/core";
 import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
 import TreeView from "@material-ui/lab/TreeView";
+import clsx from "clsx";
 import { getOrderedItems } from "ducks/explorer/selectors";
 import React from "react";
 import { useExplorerEventHandler } from "renderers/hooks/explorer/useExplorerEventHandler";
@@ -44,10 +45,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     "& .MuiIconButton-root": {
       padding: theme.spacing(0.5),
     },
+
+    display: "none",
+  },
+
+  opens: {
+    display: "block",
   },
 }));
 
-const Explorer: React.FC = () => {
+export type ExplorerProps = {
+  opens: boolean;
+};
+
+const Explorer: React.FC<ExplorerProps> = (props) => {
   const { state: rootState, dispatch } = React.useContext(RootContext);
   const state = rootState.explorer;
   const classes = useStyles();
@@ -83,7 +94,11 @@ const Explorer: React.FC = () => {
 
   return (
     <ExplorerContext.Provider value={{ state, dispatch }}>
-      <div className={classes.root}>
+      <div
+        className={clsx(classes.root, {
+          [classes.opens]: props.opens,
+        })}
+      >
         <div>
           <IconButton onClick={handleNewFolderClick}>
             <CreateNewFolderIcon />
@@ -91,7 +106,7 @@ const Explorer: React.FC = () => {
         </div>
 
         <TreeView
-          className={`${classes.root} ignore-hotkey`}
+          className="ignore-hotkey"
           defaultCollapseIcon={<MinusSquare />}
           defaultExpandIcon={<PlusSquare />}
         >

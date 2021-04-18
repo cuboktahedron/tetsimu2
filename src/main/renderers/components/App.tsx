@@ -41,11 +41,11 @@ export const RootContext = React.createContext({
 
 type SidePanelContext = {
   drawerWidth: [number, React.Dispatch<React.SetStateAction<number>>];
-  open: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-  selectedMenuMain: [
-    JSX.Element | null,
-    React.Dispatch<React.SetStateAction<JSX.Element | null>>
+  menuMains: [
+    JSX.Element[],
+    React.Dispatch<React.SetStateAction<JSX.Element[]>>
   ];
+  open: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   selectedMenuName: [string, React.Dispatch<React.SetStateAction<string>>];
 };
 export const SidePanelContext = React.createContext({} as SidePanelContext);
@@ -57,12 +57,9 @@ const App: React.FC = () => {
   const [drawerWidth, setDrawerWidth] = React.useState(
     Math.min(480, window.innerWidth)
   );
+  const [menuMains, setMenuMains] = React.useState<JSX.Element[]>([]);
   const [open, setOpen] = React.useState(false);
   const [selectedMenuName, setSelectedMenuName] = React.useState("");
-  const [
-    selectedMenuMain,
-    setSelectedMenuMain,
-  ] = React.useState<JSX.Element | null>(null);
   const [loadedConfigs, setLoadedConfigs] = React.useState(false);
   const [loadedExplorer, setLoadedExplorer] = React.useState(false);
   const mathces = useMediaQuery("(min-width:1168px)", { noSsr: true });
@@ -145,8 +142,8 @@ const App: React.FC = () => {
         <SidePanelContext.Provider
           value={{
             drawerWidth: [drawerWidth, setDrawerWidth],
+            menuMains: [menuMains, setMenuMains],
             open: [open, setOpen],
-            selectedMenuMain: [selectedMenuMain, setSelectedMenuMain],
             selectedMenuName: [selectedMenuName, setSelectedMenuName],
           }}
         >

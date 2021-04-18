@@ -1,10 +1,7 @@
-import {
-  Button,
-
-  Divider
-} from "@material-ui/core";
+import { Button, Divider } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
+import clsx from "clsx";
 import {
   changeTetsimuMode,
   simuToEditMode,
@@ -21,9 +18,13 @@ import TextFieldEx from "../ext/TextFieldEx";
 
 const useStyles = useSidePanelStyles();
 
-const Tools: React.FC = () => {
+type ToolsProps = {
+  opens: boolean;
+};
+
+const Tools: React.FC<ToolsProps> = (props) => {
   const { state: rootState, dispatch } = React.useContext(RootContext);
-  const state = rootState.simu
+  const state = rootState.simu;
   const [stateUrl, setStateUrl] = React.useState("");
 
   const handleEditClick = () => {
@@ -53,7 +54,11 @@ const Tools: React.FC = () => {
 
   const classes = useStyles();
   return (
-    <div className={classes.root}>
+    <div
+      className={clsx(classes.root, {
+        [classes.opens]: props.opens,
+      })}
+    >
       <div className={classes.buttons}>
         <div>
           <div>

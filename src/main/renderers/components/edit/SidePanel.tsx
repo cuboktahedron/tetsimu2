@@ -20,7 +20,8 @@ import Explorer from "../explorer/Explorer";
 import Help from "../Help";
 import Tools from "./Tools";
 
-type IconNames = "edit/tools" | "explorer" | "explorer" | "help";
+const IconNames = ["edit/tools", "explorer", "explorer", "help"] as const;
+type IconNames = typeof IconNames[number];
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,12 +51,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const mains = {
-  "edit/tools": <Tools />,
-  explorer: <Explorer />,
-  help: <Help />,
-};
-
 const SidePanel: React.FC = () => {
   const [drawerWidth, setDrawerWidth] = React.useContext(
     SidePanelContext
@@ -64,9 +59,7 @@ const SidePanel: React.FC = () => {
   const [selectedMenuName, setSelectedMenuName] = React.useContext(
     SidePanelContext
   ).selectedMenuName;
-  const [, setSelectedMenuMain] = React.useContext(
-    SidePanelContext
-  ).selectedMenuMain;
+  const [, setMenuMains] = React.useContext(SidePanelContext).menuMains;
 
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("xs"));
@@ -76,10 +69,15 @@ const SidePanel: React.FC = () => {
   });
 
   React.useLayoutEffect(() => {
-    if (!(selectedMenuName in mains)) {
+    if (!IconNames.includes(selectedMenuName as any)) {
       setSelectedMenuName("edit/tools");
-      setSelectedMenuMain(mains["edit/tools"]);
     }
+
+    setMenuMains([
+      <Explorer key="explorer" opens={selectedMenuName === "explorer"} />,
+      <Help key="help" opens={selectedMenuName === "help"} />,
+      <Tools key="edit/tools" opens={selectedMenuName === "edit/tools"} />,
+    ]);
   }, [selectedMenuName]);
 
   const handleMenuIconClick = (iconName: IconNames) => {
@@ -90,7 +88,6 @@ const SidePanel: React.FC = () => {
         } else {
           setDrawerWidth(Math.max(drawerWidth, 240));
         }
-        setSelectedMenuMain(mains[iconName]);
       }
 
       setSelectedMenuName(iconName);
@@ -102,7 +99,6 @@ const SidePanel: React.FC = () => {
         setDrawerWidth(Math.max(drawerWidth, 240));
       }
       setSelectedMenuName(iconName);
-      setSelectedMenuMain(mains[iconName]);
       setOpen(true);
     }
   };

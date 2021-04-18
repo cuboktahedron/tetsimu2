@@ -10,6 +10,7 @@ import PauseIcon from "@material-ui/icons/Pause";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
+import clsx from "clsx";
 import {
   changeAutoPlaying,
   changeStep,
@@ -57,7 +58,11 @@ const useStyles = useSidePanelStyles({
   },
 });
 
-const Tools: React.FC = () => {
+type ToolsProps = {
+  opens: boolean;
+};
+
+const Tools: React.FC<ToolsProps> = (props) => {
   const { state: rootState, dispatch } = React.useContext(RootContext);
   const state = rootState.replay;
   const [stateUrl, setStateUrl] = React.useState("");
@@ -104,7 +109,11 @@ const Tools: React.FC = () => {
   const classes = useStyles();
   const stepNum = state.replaySteps.length;
   return (
-    <div className={classes.root}>
+    <div
+      className={clsx(classes.root, {
+        [classes.opens]: props.opens,
+      })}
+    >
       <div className={classes.buttons}>
         <div>
           <div>

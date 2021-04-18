@@ -6,6 +6,7 @@ import {
   FormControlLabel
 } from "@material-ui/core";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
+import clsx from "clsx";
 import {
   buildUpField,
   changeNextBaseNo,
@@ -30,7 +31,11 @@ const useStyles = useSidePanelStyles();
 
 const MAX_NEXT_BASE_NO = 1000 - 7;
 
-const Tools: React.FC = () => {
+type ToolsProps = {
+  opens: boolean;
+};
+
+const Tools: React.FC<ToolsProps> = (props) => {
   const { state: rootState, dispatch } = React.useContext(RootContext);
   const state = rootState.edit;
   const [nextsPattern, setNextsPattern] = React.useState({
@@ -139,7 +144,11 @@ const Tools: React.FC = () => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <div
+      className={clsx(classes.root, {
+        [classes.opens]: props.opens,
+      })}
+    >
       <div className={classes.buttons}>
         <div>
           <div>

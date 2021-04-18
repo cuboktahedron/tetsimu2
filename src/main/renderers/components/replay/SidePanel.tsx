@@ -27,12 +27,15 @@ import Settings from "./Settings";
 import Stats from "./Stats";
 import Tools from "./Tools";
 
-type IconNames =
-  | "explorer"
-  | "help"
-  | "replay/tools"
-  | "replay/settings"
-  | "replay/stats";
+const IconNames = [
+  "explorer",
+  "help",
+  "replay/tools",
+  "replay/settings",
+  "replay/stats",
+] as const;
+
+type IconNames = typeof IconNames[number];
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,25 +73,15 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const mains = {
-  explorer: <Explorer />,
-  help: <Help />,
-  "replay/settings": <Settings />,
-  "replay/stats": <Stats />,
-  "replay/tools": <Tools />,
-};
-
 const SidePanel: React.FC = () => {
   const [drawerWidth, setDrawerWidth] = React.useContext(
     SidePanelContext
   ).drawerWidth;
+  const [, setMenuMains] = React.useContext(SidePanelContext).menuMains;
   const [open, setOpen] = React.useContext(SidePanelContext).open;
   const [selectedMenuName, setSelectedMenuName] = React.useContext(
     SidePanelContext
   ).selectedMenuName;
-  const [, setSelectedMenuMain] = React.useContext(
-    SidePanelContext
-  ).selectedMenuMain;
 
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("xs"));
@@ -98,11 +91,22 @@ const SidePanel: React.FC = () => {
   });
 
   React.useLayoutEffect(() => {
-    if (!(selectedMenuName in mains)) {
+    if (!(IconNames.includes(selectedMenuName as any))) {
       setSelectedMenuName("replay/tools");
-      setSelectedMenuMain(mains["replay/tools"]);
     }
+
+    setMenuMains([
+      <Explorer key="explorer" opens={selectedMenuName === "explorer"} />,
+      <Help key="help" opens={selectedMenuName === "help"} />,
+      <Settings
+        key="replay/settings"
+        opens={selectedMenuName === "replay/settings"}
+      />,
+      <Stats key="replay/stats" opens={selectedMenuName === "replay/stats"} />,
+      <Tools key="replay/tools" opens={selectedMenuName === "replay/tools"} />,
+    ]);
   }, [selectedMenuName]);
+
   const { state: rootState, dispatch } = React.useContext(RootContext);
   const state = rootState.replay;
   const refState = useValueRef(state);
@@ -143,7 +147,6 @@ const SidePanel: React.FC = () => {
         } else {
           setDrawerWidth(Math.max(drawerWidth, 240));
         }
-        setSelectedMenuMain(mains[iconName]);
       }
 
       setSelectedMenuName(iconName);
@@ -155,7 +158,6 @@ const SidePanel: React.FC = () => {
         setDrawerWidth(Math.max(drawerWidth, 240));
       }
       setSelectedMenuName(iconName);
-      setSelectedMenuMain(mains[iconName]);
       setOpen(true);
     }
   };
