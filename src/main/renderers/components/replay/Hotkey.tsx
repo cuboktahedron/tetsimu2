@@ -2,10 +2,11 @@ import { backwardStep, changeStep, forwardStep } from "ducks/replay/actions";
 import { getReplayConductor } from "ducks/replay/selectors";
 import React from "react";
 import { OperationKey } from "utils/tetsimu/operationKey";
-import { ReplayContext } from "./Replay";
+import { RootContext } from "../App";
 
 const HotKey: React.FC = () => {
-  const { state, dispatch } = React.useContext(ReplayContext);
+  const { state: rootState, dispatch } = React.useContext(RootContext);
+  const state = rootState.replay;
 
   const initialKeys = {
     ArrowLeft: new OperationKey({ interval1: 200, interval2: 100 }),

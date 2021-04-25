@@ -1,11 +1,12 @@
 import { doSimu, undo } from "ducks/simu/actions";
 import { getSimuConductor } from "ducks/simu/selectors";
 import React, { useEffect } from "react";
-import { SimuContext } from "renderers/components/simu/Simu";
+import { RootContext } from "renderers/components/App";
 import { ControllerKeys } from "types/core";
 
 export const useControl = (keys: ControllerKeys) => {
-  const { state, dispatch } = React.useContext(SimuContext);
+  const { state: rootState, dispatch } = React.useContext(RootContext);
+  const state = rootState.simu;
 
   useEffect(() => {
     if (keys.b.active) {

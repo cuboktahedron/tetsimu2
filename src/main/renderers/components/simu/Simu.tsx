@@ -4,8 +4,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { changeZoom } from "ducks/simu/actions";
 import React from "react";
 import useSimutatorZoom from "renderers/hooks/useSimutatorZoom";
-import { initialSimuState } from "stores/SimuState";
-import { Action, TapControllerType } from "types/core";
+import { TapControllerType } from "types/core";
 import { RootContext } from "../App";
 import FieldLeft from "./FieldLeft";
 import FieldWrapper from "./FieldWrapper";
@@ -15,11 +14,6 @@ import NextsOnly from "./NextsOnly";
 import Operation from "./Operation";
 import VirtualControllerTypeA from "./VirtualControllerTypeA";
 import VirtualControllerTypeB from "./VirtualControllerTypeB";
-
-export const SimuContext = React.createContext({
-  state: initialSimuState,
-  dispatch: (_: Action) => {},
-});
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -87,11 +81,36 @@ const Simu: React.FC = () => {
 
   if (small) {
     return (
-      <SimuContext.Provider value={{ state, dispatch }}>
-        <div className={classes.root}>
+      <div className={classes.root}>
+        <div style={{ display: "flex" }}>
+          <FieldWrapper />
+          <HoldNexts />
+          <Operation
+            dispatch={dispatch}
+            histories={state.histories}
+            stateRef={stateRef}
+            step={state.step}
+            zoom={state.zoom}
+          />
+        </div>
+        <HotKey />
+        {virtualController}
+      </div>
+    );
+  } else {
+    return (
+      <div className={classes.root} style={{ display: "flex" }}>
+        <div style={{ flexGrow: 0 }}>
           <div style={{ display: "flex" }}>
-            <FieldWrapper />
-            <HoldNexts />
+            <div className={classes.fieldLeft}>
+              <FieldLeft />
+            </div>
+            <div className={classes.field}>
+              <FieldWrapper />
+            </div>
+            <div className={classes.nextsOnly}>
+              <NextsOnly />
+            </div>
             <Operation
               dispatch={dispatch}
               histories={state.histories}
@@ -100,39 +119,10 @@ const Simu: React.FC = () => {
               zoom={state.zoom}
             />
           </div>
-          <HotKey />
-          {virtualController}
         </div>
-      </SimuContext.Provider>
-    );
-  } else {
-    return (
-      <SimuContext.Provider value={{ state, dispatch }}>
-        <div className={classes.root} style={{ display: "flex" }}>
-          <div style={{ flexGrow: 0 }}>
-            <div style={{ display: "flex" }}>
-              <div className={classes.fieldLeft}>
-                <FieldLeft />
-              </div>
-              <div className={classes.field}>
-                <FieldWrapper />
-              </div>
-              <div className={classes.nextsOnly}>
-                <NextsOnly />
-              </div>
-              <Operation
-                dispatch={dispatch}
-                histories={state.histories}
-                stateRef={stateRef}
-                step={state.step}
-                zoom={state.zoom}
-              />
-            </div>
-          </div>
-          <HotKey />
-          {virtualController}
-        </div>
-      </SimuContext.Provider>
+        <HotKey />
+        {virtualController}
+      </div>
     );
   }
 };

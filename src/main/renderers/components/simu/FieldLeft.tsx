@@ -1,8 +1,8 @@
 import { createStyles, makeStyles } from "@material-ui/core";
 import React from "react";
+import { RootContext } from "../App";
 import Hold from "./Hold";
 import PlayLog from "./PlayLog";
-import { SimuContext } from "./Simu";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -22,7 +22,7 @@ const useStyles = makeStyles(() =>
 );
 
 const FieldLeft: React.FC = () => {
-  const { state } = React.useContext(SimuContext);
+  const state = React.useContext(RootContext).state.simu;
   const classes = useStyles();
 
   return (

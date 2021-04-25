@@ -1,8 +1,8 @@
 import { createStyles, makeStyles } from "@material-ui/core";
 import React from "react";
 import { Tetromino } from "types/core";
+import { RootContext } from "../App";
 import TetrominoBlocks from "../core/TetrominoBlocks";
-import { ReplayContext } from "./Replay";
 
 type HoldProps = {};
 
@@ -27,7 +27,7 @@ const useStyles = makeStyles(() =>
 );
 
 const Hold: React.FC<HoldProps> = () => {
-  const { state } = React.useContext(ReplayContext);
+  const state = React.useContext(RootContext).state.replay;
   const hold = state.hold;
 
   const classes = useStyles(hold);

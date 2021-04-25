@@ -18,7 +18,7 @@ import {
   Tetromino,
   Vector2
 } from "types/core";
-import { SimuContext } from "./Simu";
+import { RootContext } from "../App";
 
 const blockBackground = {
   [Tetromino.None]: "transparent",
@@ -87,7 +87,7 @@ type StyleProps = {
 } & ActiveFieldProps;
 
 const ActiveField: React.FC<ActiveFieldProps> = () => {
-  const { state } = React.useContext(SimuContext);
+  const state = React.useContext(RootContext).state.simu;
   const current = state.current;
   const isDead = state.isDead;
   const styleProps = { zoom: state.zoom };

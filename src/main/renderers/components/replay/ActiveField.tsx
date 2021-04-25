@@ -1,19 +1,24 @@
 import { createStyles, makeStyles } from "@material-ui/core";
-import React from "react";
-import { ReplayContext } from "./Replay";
-import { TetrominoShape } from "constants/tetromino";
-import { Tetromino, Vector2, FieldCellValue, MAX_VISIBLE_FIELD_HEIGHT } from "types/core";
 import {
   blue,
-  orange,
-  lightBlue,
-  yellow,
   green,
   grey,
+  lightBlue,
+  orange,
   purple,
   red,
+  yellow
 } from "@material-ui/core/colors";
+import { TetrominoShape } from "constants/tetromino";
 import { getUrgentAttack } from "ducks/replay/selectors";
+import React from "react";
+import {
+  FieldCellValue,
+  MAX_VISIBLE_FIELD_HEIGHT,
+  Tetromino,
+  Vector2
+} from "types/core";
+import { RootContext } from "../App";
 
 const blockBackground = {
   [Tetromino.None]: "transparent",
@@ -82,7 +87,7 @@ type StyleProps = {
 } & ActiveFieldProps;
 
 const ActiveField: React.FC<ActiveFieldProps> = () => {
-  const { state } = React.useContext(ReplayContext);
+  const state = React.useContext(RootContext).state.replay;
   const current = state.current;
   const isDead = state.isDead;
   const styleProps = { zoom: state.zoom };

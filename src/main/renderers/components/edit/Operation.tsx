@@ -1,9 +1,4 @@
-import {
-  createStyles,
-  List,
-  ListItem,
-  makeStyles
-} from "@material-ui/core";
+import { createStyles, List, ListItem, makeStyles } from "@material-ui/core";
 import {
   blue,
   green,
@@ -24,7 +19,7 @@ import {
 import React from "react";
 import { useLongTap } from "renderers/hooks/useLongTap";
 import { FieldCellValue } from "types/core";
-import { EditContext } from "./Edit";
+import { RootContext } from "../App";
 
 const fieldCellColors = {
   [FieldCellValue.None]: "#000",
@@ -102,7 +97,8 @@ type StyleProps = {
 };
 
 const Operation: React.FC = () => {
-  const { state, dispatch } = React.useContext(EditContext);
+  const { state: rootState, dispatch } = React.useContext(RootContext);
+  const state = rootState.edit;
   const styleProps = { zoom: state.zoom };
 
   const handleToolCellPress = (

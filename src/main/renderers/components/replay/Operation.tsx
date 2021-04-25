@@ -4,7 +4,7 @@ import {
   List,
   ListItem,
   makeStyles,
-  Theme
+  Theme,
 } from "@material-ui/core";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
@@ -12,10 +12,10 @@ import { backwardStep, forwardStep } from "ducks/replay/actions";
 import {
   canBackward,
   canForward,
-  getReplayConductor
+  getReplayConductor,
 } from "ducks/replay/selectors";
 import React from "react";
-import { ReplayContext } from "./Replay";
+import { RootContext } from "../App";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,7 +49,8 @@ type StyleProps = {
 };
 
 const Operation: React.FC = () => {
-  const { state, dispatch } = React.useContext(ReplayContext);
+  const { state: rootState, dispatch } = React.useContext(RootContext);
+  const state = rootState.replay;
   const styleProps = { zoom: state.zoom };
 
   const handleForward = () => {

@@ -1,6 +1,6 @@
 import { createStyles, makeStyles } from "@material-ui/core";
 import React from "react";
-import { EditContext } from "./Edit";
+import { RootContext } from "../App";
 import Hold from "./Hold";
 import Nexts from "./Nexts";
 
@@ -43,7 +43,7 @@ type StyleProps = {
 } & HoldNexts;
 
 const HoldNexts: React.FC<HoldNexts> = () => {
-  const { state } = React.useContext(EditContext);
+  const state = React.useContext(RootContext).state.edit;
 
   const styleProps = { nextNums: 7, zoom: state.zoom };
   const classes = useStyles(styleProps);

@@ -3,8 +3,8 @@ import clsx from "clsx";
 import { getNextAttacks } from "ducks/replay/selectors";
 import React from "react";
 import { Tetromino } from "types/core";
+import { RootContext } from "../App";
 import Next from "./Next";
-import { ReplayContext } from "./Replay";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -44,7 +44,7 @@ type StyleProps = {
 } & NextsProps;
 
 const Nexts: React.FC<NextsProps> = (props) => {
-  const { state } = React.useContext(ReplayContext);
+  const state = React.useContext(RootContext).state.replay;
 
   const classes = useStyles({
     nextNums: state.replayInfo.nextNum,

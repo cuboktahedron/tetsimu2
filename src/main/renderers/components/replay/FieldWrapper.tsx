@@ -1,6 +1,6 @@
 import { createStyles, makeStyles } from "@material-ui/core";
 import React from "react";
-import { ReplayContext } from "./Replay";
+import { RootContext } from "../App";
 import ActiveField from "./ActiveField";
 import Field from "./Field";
 
@@ -23,7 +23,7 @@ const useStyles = makeStyles(() =>
 );
 
 const FieldWrapper: React.FC = () => {
-  const { state } = React.useContext(ReplayContext);
+  const state = React.useContext(RootContext).state.replay;
   const styleProps = { zoom: state.zoom };
   const classes = useStyles(styleProps);
 

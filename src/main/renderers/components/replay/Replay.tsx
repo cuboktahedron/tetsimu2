@@ -4,8 +4,6 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { changeZoom } from "ducks/replay/actions";
 import React from "react";
 import useReplaytatorZoom from "renderers/hooks/useSimutatorZoom";
-import { initialReplayState } from "stores/ReplayState";
-import { Action } from "types/core";
 import { RootContext } from "../App";
 import FieldLeft from "./FieldLeft";
 import FieldWrapper from "./FieldWrapper";
@@ -13,11 +11,6 @@ import HoldNexts from "./HoldNexts";
 import HotKey from "./Hotkey";
 import NextsOnly from "./NextsOnly";
 import Operation from "./Operation";
-
-export const ReplayContext = React.createContext({
-  state: initialReplayState,
-  dispatch: (_: Action) => {},
-});
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -68,38 +61,34 @@ const Replay: React.FC = () => {
 
   if (small) {
     return (
-      <ReplayContext.Provider value={{ state, dispatch }}>
-        <div className={classes.root}>
-          <div style={{ display: "flex" }}>
-            <FieldWrapper />
-            <HoldNexts />
-            <Operation />
-          </div>
-          <HotKey />
+      <div className={classes.root}>
+        <div style={{ display: "flex" }}>
+          <FieldWrapper />
+          <HoldNexts />
+          <Operation />
         </div>
-      </ReplayContext.Provider>
+        <HotKey />
+      </div>
     );
   } else {
     return (
-      <ReplayContext.Provider value={{ state, dispatch }}>
-        <div className={classes.root} style={{ display: "flex" }}>
-          <div style={{ flexGrow: 0 }}>
-            <div style={{ display: "flex" }}>
-              <div className={classes.fieldLeft}>
-                <FieldLeft />
-              </div>
-              <div className={classes.field}>
-                <FieldWrapper />
-              </div>
-              <div className={classes.nextsOnly}>
-                <NextsOnly />
-              </div>
-              <Operation />
+      <div className={classes.root} style={{ display: "flex" }}>
+        <div style={{ flexGrow: 0 }}>
+          <div style={{ display: "flex" }}>
+            <div className={classes.fieldLeft}>
+              <FieldLeft />
             </div>
+            <div className={classes.field}>
+              <FieldWrapper />
+            </div>
+            <div className={classes.nextsOnly}>
+              <NextsOnly />
+            </div>
+            <Operation />
           </div>
-          <HotKey />
         </div>
-      </ReplayContext.Provider>
+        <HotKey />
+      </div>
     );
   }
 };

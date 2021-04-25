@@ -1,8 +1,8 @@
 import { createStyles, makeStyles } from "@material-ui/core";
 import React from "react";
+import { RootContext } from "../App";
 import Hold from "./Hold";
 import Nexts from "./Nexts";
-import { ReplayContext } from "./Replay";
 
 const holdSize = (props: StyleProps): number => {
   return (96 - 4 * Math.max(props.nextNums - 4, 0)) * props.zoom;
@@ -43,7 +43,7 @@ type StyleProps = {
 } & HoldNexts;
 
 const HoldNexts: React.FC<HoldNexts> = () => {
-  const { state } = React.useContext(ReplayContext);
+  const state = React.useContext(RootContext).state.replay;
 
   const styleProps = { nextNums: state.replayInfo.nextNum, zoom: state.zoom };
   const classes = useStyles(styleProps);

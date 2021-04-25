@@ -4,10 +4,11 @@ import React from "react";
 import { useControl } from "renderers/hooks/useControl";
 import { useKey } from "renderers/hooks/useKey";
 import { OperationKey } from "utils/tetsimu/operationKey";
-import { SimuContext } from "./Simu";
+import { RootContext } from "../App";
 
 const HotKey: React.FC = () => {
-  const { state, dispatch } = React.useContext(SimuContext);
+  const { state: rootState, dispatch } = React.useContext(RootContext);
+  const state = rootState.simu;
   const keys = useKey();
 
   useControl(keys);

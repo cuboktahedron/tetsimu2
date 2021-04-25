@@ -2,9 +2,9 @@ import { createStyles, makeStyles } from "@material-ui/core";
 import { changeNext, changeNextBaseNo } from "ducks/edit/actions";
 import React from "react";
 import { FieldCellValue, MouseButton, NextNote, Tetromino } from "types/core";
+import { RootContext } from "../App";
 import Block from "../core/Block";
 import TetrominoBlocks from "../core/TetrominoBlocks";
-import { EditContext } from "./Edit";
 
 type NextProps = {
   note: NextNote;
@@ -50,7 +50,8 @@ const useStyles = makeStyles(() =>
 const MAX_NEXT_BASE_NO = 1000 - 7;
 
 const Next: React.FC<NextProps> = (props) => {
-  const { state, dispatch } = React.useContext(EditContext);
+  const { state: rootState, dispatch } = React.useContext(RootContext);
+  const state = rootState.edit;
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button !== MouseButton.Left && e.button !== MouseButton.Right) {

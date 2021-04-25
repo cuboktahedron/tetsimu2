@@ -1,7 +1,7 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core";
 import React from "react";
-import { ReplayContext } from "renderers/components/replay/Replay";
 import { AttackType, BtbState } from "types/core";
+import { RootContext } from "../App";
 
 const attackLogs = {
   [AttackType.Single]: "Single",
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const PlayLog: React.FC = () => {
-  const { state } = React.useContext(ReplayContext);
+  const state = React.useContext(RootContext).state.replay;
 
   const classes = useStyles();
 

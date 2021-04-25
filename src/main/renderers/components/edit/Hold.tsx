@@ -2,8 +2,8 @@ import { createStyles, makeStyles } from "@material-ui/core";
 import { changeHold } from "ducks/edit/actions";
 import React from "react";
 import { FieldCellValue, MouseButton, Tetromino } from "types/core";
+import { RootContext } from "../App";
 import TetrominoBlocks from "../core/TetrominoBlocks";
-import { EditContext } from "./Edit";
 
 type HoldProps = {};
 
@@ -29,8 +29,8 @@ const useStyles = makeStyles(() =>
 );
 
 const Hold: React.FC<HoldProps> = () => {
-  const { state, dispatch } = React.useContext(EditContext);
-  const hold = state.hold;
+  const { state: rootState, dispatch } = React.useContext(RootContext);
+  const state = rootState.edit;
 
   const typeToSet = state.tools.selectedCellValues[0];
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -48,7 +48,7 @@ const Hold: React.FC<HoldProps> = () => {
     }
   };
 
-  const classes = useStyles(hold);
+  const classes = useStyles(state.hold);
   return (
     <div
       className={classes.root}
@@ -58,7 +58,7 @@ const Hold: React.FC<HoldProps> = () => {
       }}
     >
       <div className={classes.blocks}>
-        <TetrominoBlocks type={hold.type}></TetrominoBlocks>
+        <TetrominoBlocks type={state.hold.type}></TetrominoBlocks>
       </div>
     </div>
   );

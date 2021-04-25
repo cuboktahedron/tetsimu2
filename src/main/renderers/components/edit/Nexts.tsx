@@ -2,7 +2,7 @@ import { createStyles, makeStyles } from "@material-ui/core";
 import clsx from "clsx";
 import { getClippedEditNexts } from "ducks/edit/selectors";
 import React from "react";
-import { EditContext } from "./Edit";
+import { RootContext } from "../App";
 import Next from "./Next";
 
 const useStyles = makeStyles(() =>
@@ -39,7 +39,7 @@ type StyleProps = {
 } & NextsProps;
 
 const Nexts: React.FC<NextsProps> = (props) => {
-  const { state } = React.useContext(EditContext);
+  const state = React.useContext(RootContext).state.edit;
   const nextNotes = getClippedEditNexts(state);
 
   const classes = useStyles({

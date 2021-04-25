@@ -4,8 +4,6 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { changeZoom } from "ducks/edit/actions";
 import React from "react";
 import useSimutatorZoom from "renderers/hooks/useSimutatorZoom";
-import { initialEditState } from "stores/EditState";
-import { Action } from "types/core";
 import { RootContext } from "../App";
 import FieldLeft from "./FieldLeft";
 import FieldWrapper from "./FieldWrapper";
@@ -13,11 +11,6 @@ import HoldNexts from "./HoldNexts";
 import HotKey from "./Hotkey";
 import NextsOnly from "./NextsOnly";
 import Operation from "./Operation";
-
-export const EditContext = React.createContext({
-  state: initialEditState,
-  dispatch: (_: Action) => {},
-});
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -68,38 +61,34 @@ const Edit: React.FC = () => {
 
   if (small) {
     return (
-      <EditContext.Provider value={{ state, dispatch }}>
-        <div className={classes.root}>
-          <div style={{ display: "flex" }}>
-            <FieldWrapper />
-            <HoldNexts />
-            <Operation />
-          </div>
-          <HotKey />
+      <div className={classes.root}>
+        <div style={{ display: "flex" }}>
+          <FieldWrapper />
+          <HoldNexts />
+          <Operation />
         </div>
-      </EditContext.Provider>
+        <HotKey />
+      </div>
     );
   } else {
     return (
-      <EditContext.Provider value={{ state, dispatch }}>
-        <div className={classes.root} style={{ display: "flex" }}>
-          <div style={{ flexGrow: 0 }}>
-            <div style={{ display: "flex" }}>
-              <div className={classes.fieldLeft}>
-                <FieldLeft />
-              </div>
-              <div className={classes.field}>
-                <FieldWrapper />
-              </div>
-              <div className={classes.nextsOnly}>
-                <NextsOnly />
-              </div>
-              <Operation />
+      <div className={classes.root} style={{ display: "flex" }}>
+        <div style={{ flexGrow: 0 }}>
+          <div style={{ display: "flex" }}>
+            <div className={classes.fieldLeft}>
+              <FieldLeft />
             </div>
+            <div className={classes.field}>
+              <FieldWrapper />
+            </div>
+            <div className={classes.nextsOnly}>
+              <NextsOnly />
+            </div>
+            <Operation />
           </div>
-          <HotKey />
         </div>
-      </EditContext.Provider>
+        <HotKey />
+      </div>
     );
   }
 };

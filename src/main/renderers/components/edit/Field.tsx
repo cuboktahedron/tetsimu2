@@ -7,7 +7,7 @@ import {
   orange,
   purple,
   red,
-  yellow,
+  yellow
 } from "@material-ui/core/colors";
 import { buildUpField, changeField } from "ducks/edit/actions";
 import React from "react";
@@ -16,9 +16,9 @@ import {
   MAX_FIELD_WIDTH,
   MAX_VISIBLE_FIELD_HEIGHT,
   MouseButton,
-  Vector2,
+  Vector2
 } from "types/core";
-import { EditContext } from "./Edit";
+import { RootContext } from "../App";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -65,7 +65,8 @@ type StyleProps = {
 } & FieldProps;
 
 const Field: React.FC<FieldProps> = () => {
-  const { state, dispatch } = React.useContext(EditContext);
+  const { state: rootState, dispatch } = React.useContext(RootContext);
+  const state = rootState.edit;
   const [editPointerState, setEditPointerState] = React.useState({
     downed: false,
     isLeft: false,

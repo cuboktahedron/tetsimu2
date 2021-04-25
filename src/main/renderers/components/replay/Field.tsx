@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core/colors";
 import React from "react";
 import { FieldCellValue, MAX_VISIBLE_FIELD_HEIGHT } from "types/core";
-import { ReplayContext } from "./Replay";
+import { RootContext } from "../App";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -57,7 +57,7 @@ type StyleProps = {
 } & FieldProps;
 
 const Field: React.FC<FieldProps> = () => {
-  const { state } = React.useContext(ReplayContext);
+  const state = React.useContext(RootContext).state.replay;
 
   const field = state.field;
   const isDead = state.isDead;
