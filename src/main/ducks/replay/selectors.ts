@@ -1,5 +1,5 @@
-import { ReplayState } from "stores/ReplayState";
-import { AttackType, PlayStats, ReplayStepType } from "types/core";
+import { GarbageInfo, ReplayState } from "stores/ReplayState";
+import { AttackType, PlayStats, ReplayStep, ReplayStepType } from "types/core";
 import { Pytt2Strategy } from "utils/tetsimu/putt2Strategy";
 import { ReplayConductor } from "utils/tetsimu/replay/replayConductor";
 
@@ -7,16 +7,19 @@ export const getReplayConductor = (state: ReplayState) => {
   return new ReplayConductor(state);
 };
 
-export const canForward = (state: ReplayState) => {
-  return state.step < state.replaySteps.length;
+export const canForward = (step: number, replaySteps: ReplayStep[]) => {
+  return step < replaySteps.length;
 };
 
-export const canBackward = (state: ReplayState) => {
-  return state.step > 0;
+export const canBackward = (step: number) => {
+  return step > 0;
 };
 
-export const getNextAttacks = (state: ReplayState): number[] => {
-  const attacks = state.garbages.flatMap((garbage) => {
+export const getNextAttacks = (
+  garbages: GarbageInfo[],
+  nextNum: number
+): number[] => {
+  const attacks = garbages.flatMap((garbage) => {
     if (garbage.restStep === 0) {
       return [];
     }
@@ -26,14 +29,12 @@ export const getNextAttacks = (state: ReplayState): number[] => {
     return attacks;
   });
 
-  if (attacks.length < state.replayInfo.nextNum) {
-    const extras: number[] = new Array(
-      state.replayInfo.nextNum - attacks.length
-    ).fill(0);
+  if (attacks.length < nextNum) {
+    const extras: number[] = new Array(nextNum - attacks.length).fill(0);
 
     return attacks.concat(extras);
   } else {
-    return attacks.slice(0, state.replayInfo.nextNum);
+    return attacks.slice(0, nextNum);
   }
 };
 

@@ -9,9 +9,14 @@ import {
   MAX_FIELD_WIDTH,
   ReplayStep,
   SpinType,
-  Tetromino,
+  Tetromino
 } from "types/core";
 import { ReplayConfig, ReplayInfo, ReplayStateHistory } from "types/replay";
+
+export type ReplayAuto = {
+  playing: boolean;
+  speed: number;
+};
 
 export type GarbageInfo = {
   amount: number;
@@ -20,10 +25,7 @@ export type GarbageInfo = {
 };
 
 export type ReplayState = {
-  auto: {
-    playing: boolean;
-    speed: number;
-  };
+  auto: ReplayAuto;
   attackTypes: AttackType[];
   btbState: BtbState;
   config: ReplayConfig;

@@ -18,8 +18,8 @@ import {
 } from "ducks/edit/actions";
 import React from "react";
 import { useLongTap } from "renderers/hooks/useLongTap";
-import { FieldCellValue } from "types/core";
-import { RootContext } from "../App";
+import { EditStateTools } from "stores/EditState";
+import { Action, FieldCellValue } from "types/core";
 
 const fieldCellColors = {
   [FieldCellValue.None]: "#000",
@@ -37,8 +37,8 @@ const useStyles = makeStyles(() =>
   createStyles({
     root: {
       background: "white",
-      height: (props: StyleProps) => 672 * props.zoom,
-      width: (props: StyleProps) => 64 * props.zoom,
+      height: (props: OperationProps) => 672 * props.zoom,
+      width: (props: OperationProps) => 64 * props.zoom,
     },
 
     listItem: {
@@ -52,11 +52,11 @@ const useStyles = makeStyles(() =>
       boxSizing: "border-box",
       fontSize: "24px",
       fontWeight: "bold",
-      height: (props: StyleProps) => 48 * props.zoom,
+      height: (props: OperationProps) => 48 * props.zoom,
       margin: "2px auto",
       opacity: 0.7,
       textAlign: "center",
-      width: (props: StyleProps) => 48 * props.zoom,
+      width: (props: OperationProps) => 48 * props.zoom,
 
       "&:hover": {
         border: "solid 4px grey",
@@ -70,9 +70,9 @@ const useStyles = makeStyles(() =>
     },
 
     endMultiSelection: {
-      height: (props: StyleProps) => 48 * props.zoom,
+      height: (props: OperationProps) => 48 * props.zoom,
       margin: "2px auto",
-      width: (props: StyleProps) => 48 * props.zoom,
+      width: (props: OperationProps) => 48 * props.zoom,
     },
 
     hide: {
@@ -92,21 +92,21 @@ const useStyles = makeStyles(() =>
   })
 );
 
-type StyleProps = {
+type OperationProps = {
+  dispatch: React.Dispatch<Action>;
+  tools: EditStateTools;
   zoom: number;
 };
 
-const Operation: React.FC = () => {
-  const { state: rootState, dispatch } = React.useContext(RootContext);
-  const state = rootState.edit;
-  const styleProps = { zoom: state.zoom };
+const Operation = React.memo<OperationProps>((props) => {
+  const dispatch = props.dispatch;
 
   const handleToolCellPress = (
     e: React.MouseEvent | React.TouchEvent,
     cellValue: FieldCellValue
   ) => {
-    const selectedCellValues = state.tools.selectedCellValues;
-    if (e.ctrlKey || e.metaKey || state.tools.isCellValueMultiSelection) {
+    const selectedCellValues = props.tools.selectedCellValues;
+    if (e.ctrlKey || e.metaKey || props.tools.isCellValueMultiSelection) {
       if (selectedCellValues.some((selected) => selected === cellValue)) {
         if (selectedCellValues.length === 1) {
           return;
@@ -132,7 +132,7 @@ const Operation: React.FC = () => {
     }
   };
 
-  const classes = useStyles(styleProps);
+  const classes = useStyles(props);
 
   const cellTypes = [
     { type: FieldCellValue.I, letter: "I" },
@@ -153,7 +153,7 @@ const Operation: React.FC = () => {
           classes.cellType,
           classes.longTapButton,
           {
-            selected: state.tools.selectedCellValues.some(
+            selected: props.tools.selectedCellValues.some(
               (type) => type === cellType.type
             ),
           }
@@ -186,7 +186,7 @@ const Operation: React.FC = () => {
         disableGutters={true}
         key={Number.MAX_SAFE_INTEGER}
         className={clsx(classes.listItem, classes.endMultiSelection, {
-          [classes.hide]: !state.tools.isCellValueMultiSelection,
+          [classes.hide]: !props.tools.isCellValueMultiSelection,
         })}
         onClick={handleEndMultiSelection}
       >
@@ -194,6 +194,6 @@ const Operation: React.FC = () => {
       </ListItem>
     </List>
   );
-};
+});
 
 export default Operation;

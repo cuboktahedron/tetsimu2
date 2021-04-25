@@ -11,17 +11,23 @@ const useStyles = makeStyles(() =>
   })
 );
 
-type NextsOnlyProps = {};
-type StyleProps = { zoom: number } & NextsOnlyProps;
+type StyleProps = { zoom: number };
 
-const NextsOnly: React.FC<NextsOnlyProps> = () => {
-  const state = React.useContext(RootContext).state.edit;
+const NextsOnly: React.FC = () => {
+  const { state: rootState, dispatch } = React.useContext(RootContext);
+  const state = rootState.edit;
   const styleProps = { zoom: state.zoom };
   const classes = useStyles(styleProps);
 
   return (
     <div className={classes.root}>
-      <Nexts height={672 * state.zoom} />
+      <Nexts
+        dispatch={dispatch}
+        height={672 * state.zoom}
+        nexts={state.nexts}
+        tools={state.tools}
+        zoom={state.zoom}
+      />
     </div>
   );
 };

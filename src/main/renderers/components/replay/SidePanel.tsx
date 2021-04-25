@@ -8,7 +8,7 @@ import {
   useMediaQuery,
   useTheme
 } from "@material-ui/core";
-import { blueGrey, grey } from "@material-ui/core/colors";
+import { blueGrey } from "@material-ui/core/colors";
 import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
 import CallToActionIcon from "@material-ui/icons/CallToAction";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
@@ -44,14 +44,6 @@ type IconNames = typeof IconNames[number];
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    iconBar: {
-      background: grey[200],
-      flexGrow: 0,
-      height: "100%",
-      marginLeft: "auto",
-      width: 48,
-    },
-
     listIcon: {
       alignItems: "center",
       minWidth: "unset",
@@ -77,6 +69,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+
 type SidePanelProps = {
   dispatch: React.Dispatch<Action>;
   drawerWidth: number;
@@ -87,7 +80,7 @@ type SidePanelProps = {
   >;
 };
 
-const SidePanel: React.FC<SidePanelProps> = (props) => {
+const SidePanel = React.memo<SidePanelProps>((props) => {
   const dispatch = props.dispatch;
 
   const { state: rootState } = React.useContext(RootContext);
@@ -123,7 +116,7 @@ const SidePanel: React.FC<SidePanelProps> = (props) => {
   }, [state.auto.playing, state.auto.speed]);
 
   return <InnerSidePanel {...props} />;
-};
+});
 
 const InnerSidePanel = React.memo<SidePanelProps>((props) => {
   const dispatch = props.dispatch;
@@ -182,6 +175,7 @@ const InnerSidePanel = React.memo<SidePanelProps>((props) => {
       dispatch(changeDrawerState(drawerWidth, true, iconName));
     }
   };
+
   return (
     <React.Fragment>
       <ListItem disableGutters style={{ background: blueGrey[800] }}>
@@ -197,7 +191,7 @@ const InnerSidePanel = React.memo<SidePanelProps>((props) => {
         <ListItemIcon className={classes.listIcon}>
           <CallToActionIcon
             className={clsx(classes.icon, {
-              selected: props.selectedMenuName === "replay/tools" && open,
+              selected: props.selectedMenuName === "replay/tools" && props.open,
             })}
           />
         </ListItemIcon>
@@ -210,7 +204,8 @@ const InnerSidePanel = React.memo<SidePanelProps>((props) => {
         <ListItemIcon className={classes.listIcon}>
           <SettingsIcon
             className={clsx(classes.icon, {
-              selected: props.selectedMenuName === "replay/settings" && open,
+              selected:
+                props.selectedMenuName === "replay/settings" && props.open,
             })}
           />
         </ListItemIcon>
@@ -223,7 +218,7 @@ const InnerSidePanel = React.memo<SidePanelProps>((props) => {
         <ListItemIcon className={classes.listIcon}>
           <AssessmentOutlinedIcon
             className={clsx(classes.icon, {
-              selected: props.selectedMenuName === "replay/stats" && open,
+              selected: props.selectedMenuName === "replay/stats" && props.open,
             })}
           />
         </ListItemIcon>
@@ -237,7 +232,7 @@ const InnerSidePanel = React.memo<SidePanelProps>((props) => {
         <ListItemIcon className={classes.listIcon}>
           <PageviewIcon
             className={clsx(classes.icon, {
-              selected: props.selectedMenuName === "explorer" && open,
+              selected: props.selectedMenuName === "explorer" && props.open,
             })}
           />
         </ListItemIcon>
@@ -250,7 +245,7 @@ const InnerSidePanel = React.memo<SidePanelProps>((props) => {
         <ListItemIcon className={classes.listIcon}>
           <HelpOutlineIcon
             className={clsx(classes.icon, {
-              selected: props.selectedMenuName === "help" && open,
+              selected: props.selectedMenuName === "help" && props.open,
             })}
           />
         </ListItemIcon>

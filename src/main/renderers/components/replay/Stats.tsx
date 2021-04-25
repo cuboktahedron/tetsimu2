@@ -11,7 +11,7 @@ type StatsProps = {
   opens: boolean;
 };
 
-const Stats: React.FC<StatsProps> = (props: StatsProps) => {
+const Stats: React.FC<StatsProps> = (props) => {
   if (!props.opens) {
     return null;
   }

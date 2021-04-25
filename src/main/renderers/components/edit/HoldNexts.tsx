@@ -43,7 +43,8 @@ type StyleProps = {
 } & HoldNexts;
 
 const HoldNexts: React.FC<HoldNexts> = () => {
-  const state = React.useContext(RootContext).state.edit;
+  const { state: rootState, dispatch } = React.useContext(RootContext);
+  const state = rootState.edit;
 
   const styleProps = { nextNums: 7, zoom: state.zoom };
   const classes = useStyles(styleProps);
@@ -51,11 +52,21 @@ const HoldNexts: React.FC<HoldNexts> = () => {
   return (
     <div className={classes.root}>
       <div className={classes.nexts}>
-        <Nexts height={672 * styleProps.zoom - holdSize(styleProps) - 32 - 8} />
+        <Nexts
+          dispatch={dispatch}
+          height={672 * styleProps.zoom - holdSize(styleProps) - 32 - 8}
+          nexts={state.nexts}
+          tools={state.tools}
+          zoom={state.zoom}
+        />
       </div>
       <div className={classes.holdTitle}>Hold</div>
       <div className={classes.hold}>
-        <Hold />
+        <Hold
+          dispatch={dispatch}
+          hold={state.hold}
+          selectedCellValues={state.tools.selectedCellValues}
+        />
       </div>
     </div>
   );

@@ -1,14 +1,23 @@
 import { createStyles, makeStyles } from "@material-ui/core";
 import { changeNext, changeNextBaseNo } from "ducks/edit/actions";
 import React from "react";
-import { FieldCellValue, MouseButton, NextNote, Tetromino } from "types/core";
-import { RootContext } from "../App";
+import { EditStateTools } from "stores/EditState";
+import {
+  Action,
+  FieldCellValue,
+  MouseButton,
+  NextNote,
+  Tetromino
+} from "types/core";
 import Block from "../core/Block";
 import TetrominoBlocks from "../core/TetrominoBlocks";
 
 type NextProps = {
-  note: NextNote;
+  dispatch: React.Dispatch<Action>;
   nextNo: number;
+  nexts: { nextNotes: NextNote[] };
+  note: NextNote;
+  tools: EditStateTools;
 };
 
 const useStyles = makeStyles(() =>
@@ -49,9 +58,8 @@ const useStyles = makeStyles(() =>
 
 const MAX_NEXT_BASE_NO = 1000 - 7;
 
-const Next: React.FC<NextProps> = (props) => {
-  const { state: rootState, dispatch } = React.useContext(RootContext);
-  const state = rootState.edit;
+const Next = React.memo<NextProps>((props) => {
+  const dispatch = props.dispatch;
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button !== MouseButton.Left && e.button !== MouseButton.Right) {
@@ -59,14 +67,14 @@ const Next: React.FC<NextProps> = (props) => {
     }
 
     const isLeft = e.button === MouseButton.Left;
-    const cellValuesToSet = state.tools.selectedCellValues;
+    const cellValuesToSet = props.tools.selectedCellValues;
 
     if (isLeft) {
       if (
         cellValuesToSet[0] === FieldCellValue.None ||
         cellValuesToSet[0] === FieldCellValue.Garbage
       ) {
-        dispatch(changeNext(state.nexts.nextNotes, props.nextNo, []));
+        dispatch(changeNext(props.nexts.nextNotes, props.nextNo, []));
       } else {
         const typesToSet = cellValuesToSet
           .filter((cellValue) => {
@@ -77,22 +85,22 @@ const Next: React.FC<NextProps> = (props) => {
           })
           .map((cellValue) => cellValue as Tetromino);
 
-        dispatch(changeNext(state.nexts.nextNotes, props.nextNo, typesToSet));
+        dispatch(changeNext(props.nexts.nextNotes, props.nextNo, typesToSet));
       }
     } else {
-      dispatch(changeNext(state.nexts.nextNotes, props.nextNo, []));
+      dispatch(changeNext(props.nexts.nextNotes, props.nextNo, []));
     }
   };
 
   const handleWheel = (e: React.WheelEvent) => {
-    let newNextBaseNo = state.tools.nextBaseNo;
+    let newNextBaseNo = props.tools.nextBaseNo;
     if (e.deltaY < 0) {
       newNextBaseNo = Math.max(newNextBaseNo - 1, 1);
     } else {
       newNextBaseNo = Math.min(newNextBaseNo + 1, MAX_NEXT_BASE_NO);
     }
 
-    if (state.tools.nextBaseNo !== newNextBaseNo) {
+    if (props.tools.nextBaseNo !== newNextBaseNo) {
       dispatch(changeNextBaseNo(newNextBaseNo));
     }
   };
@@ -140,6 +148,6 @@ const Next: React.FC<NextProps> = (props) => {
       {blocksElem}
     </div>
   );
-};
+});
 
 export default Next;

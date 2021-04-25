@@ -10,8 +10,11 @@ import {
   yellow
 } from "@material-ui/core/colors";
 import React from "react";
-import { FieldCellValue, MAX_VISIBLE_FIELD_HEIGHT } from "types/core";
-import { RootContext } from "../App";
+import {
+  FieldCellValue,
+  FieldState,
+  MAX_VISIBLE_FIELD_HEIGHT
+} from "types/core";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -25,7 +28,7 @@ const useStyles = makeStyles(() =>
 
     topRow: {
       borderBottom: "solid 3px red",
-      height: (props: StyleProps) => 32 * props.zoom,
+      height: (props: FieldProps) => 32 * props.zoom,
       position: "absolute",
       width: "100%",
     },
@@ -34,7 +37,7 @@ const useStyles = makeStyles(() =>
       boxSizing: "border-box",
       borderTop: "solid 1px grey",
       borderLeft: "solid 1px grey",
-      height: (props: StyleProps) => 32 * props.zoom,
+      height: (props: FieldProps) => 32 * props.zoom,
     },
   })
 );
@@ -51,18 +54,15 @@ const cellBackground = {
   [FieldCellValue.Garbage]: grey.A100,
 };
 
-type FieldProps = {};
-type StyleProps = {
+type FieldProps = {
+  field: FieldState;
+  isDead: boolean;
   zoom: number;
-} & FieldProps;
+};
 
-const Field: React.FC<FieldProps> = () => {
-  const state = React.useContext(RootContext).state.replay;
-
-  const field = state.field;
-  const isDead = state.isDead;
-  const styleProps = { zoom: state.zoom };
-  const classes = useStyles(styleProps);
+const Field = React.memo<FieldProps>((props) => {
+  const { field, isDead } = props;
+  const classes = useStyles(props);
 
   const rows = field.slice(0, MAX_VISIBLE_FIELD_HEIGHT).map((row, rowIndex) => {
     const cols = row.map((cell, colIndex) => {
@@ -97,6 +97,6 @@ const Field: React.FC<FieldProps> = () => {
       <div>{rows.reverse()}</div>
     </div>
   );
-};
+});
 
 export default Field;

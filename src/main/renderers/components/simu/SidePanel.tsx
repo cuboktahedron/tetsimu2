@@ -71,7 +71,9 @@ type SidePanelProps = {
   drawerWidth: number;
   open: boolean;
   selectedMenuName: string;
-  onMenuMainsChanged: React.MutableRefObject<(menuMains: JSX.Element[]) => void>;
+  onMenuMainsChanged: React.MutableRefObject<
+    (menuMains: JSX.Element[]) => void
+  >;
 };
 
 const SidePanel = React.memo<SidePanelProps>((props) => {

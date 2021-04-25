@@ -2,7 +2,8 @@ import { createStyles, makeStyles } from "@material-ui/core";
 import clsx from "clsx";
 import { getClippedEditNexts } from "ducks/edit/selectors";
 import React from "react";
-import { RootContext } from "../App";
+import { EditStateTools } from "stores/EditState";
+import { Action, NextNote } from "types/core";
 import Next from "./Next";
 
 const useStyles = makeStyles(() =>
@@ -13,10 +14,9 @@ const useStyles = makeStyles(() =>
 
     next: {
       boxShadow: "0 0 0 1px grey",
-      height: (props: StyleProps) =>
-        Math.min(96 * props.zoom, props.height / props.nextNums),
-      width: (props: StyleProps) =>
-        Math.min(96 * props.zoom, props.height / props.nextNums),
+      height: (props: NextsProps) =>
+        Math.min(96 * props.zoom, props.height / 7),
+      width: (props: NextsProps) => Math.min(96 * props.zoom, props.height / 7),
     },
 
     cycleBegin: {
@@ -30,64 +30,70 @@ const useStyles = makeStyles(() =>
 );
 
 type NextsProps = {
+  dispatch: React.Dispatch<Action>;
   height: number;
+  nexts: { nextNotes: NextNote[] };
+  tools: EditStateTools;
+  zoom: number;
 };
 
-type StyleProps = {
-  nextNums: number;
-  zoom: number;
-} & NextsProps;
+const Nexts = React.memo<NextsProps>((props) => {
+  const nextNotes = React.useMemo(
+    () => getClippedEditNexts(props.nexts.nextNotes, props.tools.nextBaseNo),
+    [props.nexts, props.tools.nextBaseNo]
+  );
+  const classes = useStyles(props);
 
-const Nexts: React.FC<NextsProps> = (props) => {
-  const state = React.useContext(RootContext).state.edit;
-  const nextNotes = getClippedEditNexts(state);
+  const nextDives = React.useMemo(() => {
+    let nextNo = props.tools.nextBaseNo;
+    const fixedNoOfCycle = props.tools.noOfCycle !== 0;
+    const noOfCycleBase =
+      (props.tools.nextBaseNo - 1 + props.tools.noOfCycle - 1) % 7;
+    let i = 0;
+    const nextDives = nextNotes.flatMap((note) => {
+      const nexts: JSX.Element[] = [];
+      let take = note.take;
 
-  const classes = useStyles({
-    nextNums: 7,
-    zoom: state.zoom,
-    ...props,
-  });
+      while (take > 0) {
+        take--;
+        const noOfCycle = (noOfCycleBase + i) % 7;
 
-  let nextNo = state.tools.nextBaseNo;
-  const fixedNoOfCycle = state.tools.noOfCycle !== 0;
-  const noOfCycleBase =
-    (state.tools.nextBaseNo - 1 + state.tools.noOfCycle - 1) % 7;
-  let i = 0;
-  const nextdives = nextNotes.flatMap((note) => {
-    const nexts: JSX.Element[] = [];
-    let take = note.take;
+        nexts.push(
+          <div
+            key={nextNo}
+            className={clsx(classes.next, {
+              [classes.cycleBegin]: fixedNoOfCycle && noOfCycle === 0,
+              [classes.cycleEnd]: fixedNoOfCycle && noOfCycle === 6,
+            })}
+          >
+            <Next
+              dispatch={props.dispatch}
+              nextNo={nextNo}
+              nexts={props.nexts}
+              note={note}
+              tools={props.tools}
+            />
+          </div>
+        );
 
-    while (take > 0) {
-      take--;
-      const noOfCycle = (noOfCycleBase + i) % 7;
+        nextNo++;
+        i++;
+      }
 
-      nexts.push(
-        <div
-          key={nextNo}
-          className={clsx(classes.next, {
-            [classes.cycleBegin]: fixedNoOfCycle && noOfCycle === 0,
-            [classes.cycleEnd]: fixedNoOfCycle && noOfCycle === 6,
-          })}
-        >
-          <Next nextNo={nextNo} note={note} />
-        </div>
-      );
+      return nexts;
+    });
 
-      nextNo++;
-      i++;
-    }
-
-    return nexts;
-  });
+    return nextDives;
+  }, [props.tools, nextNotes]);
 
   return (
     <div
       className={classes.root}
       style={{ alignItems: "center", display: "flex", flexDirection: "column" }}
     >
-      {nextdives}
+      {nextDives}
     </div>
   );
-};
+});
 
 export default Nexts;

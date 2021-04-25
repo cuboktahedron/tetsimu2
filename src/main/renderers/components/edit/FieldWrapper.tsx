@@ -22,7 +22,8 @@ const useStyles = makeStyles(() =>
 );
 
 const FieldWrapper: React.FC = () => {
-  const state = React.useContext(RootContext).state.edit;
+  const { state: rootState, dispatch } = React.useContext(RootContext);
+  const state = rootState.edit;
   const styleProps = { zoom: state.zoom };
   const classes = useStyles(styleProps);
 
@@ -33,7 +34,13 @@ const FieldWrapper: React.FC = () => {
         e.preventDefault();
       }}
     >
-      <Field />
+      <Field
+        dispatch={dispatch}
+        field={state.field}
+        isTouchDevice={state.env.isTouchDevice}
+        selectedCellValues={state.tools.selectedCellValues}
+        zoom={state.zoom}
+      />
     </div>
   );
 };

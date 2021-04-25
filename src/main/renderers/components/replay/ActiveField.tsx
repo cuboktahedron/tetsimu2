@@ -88,86 +88,102 @@ type StyleProps = {
 
 const ActiveField: React.FC<ActiveFieldProps> = () => {
   const state = React.useContext(RootContext).state.replay;
-  const current = state.current;
-  const isDead = state.isDead;
   const styleProps = { zoom: state.zoom };
   const classes = useStyles(styleProps);
-  const maxRow = MAX_VISIBLE_FIELD_HEIGHT - 1;
 
-  if (current.type === Tetromino.None) {
+  if (state.current.type === Tetromino.None) {
     return <div></div>;
   }
 
-  const blocks = [...TetrominoShape[current.type][current.direction]];
-  const currentBlocks = blocks.map((block: Vector2) => {
-    const row = block.y + current.pos.y;
-    const col = block.x + current.pos.x;
-    const key = `${row}:${col}`;
-    if (row > maxRow) {
-      return <div key={key} />;
-    }
+  const maxRow = MAX_VISIBLE_FIELD_HEIGHT - 1;
+  const blocks = [
+    ...TetrominoShape[state.current.type][state.current.direction],
+  ];
+  const currentBlocks = React.useMemo(() => {
+    return blocks.map((block: Vector2) => {
+      const row = block.y + state.current.pos.y;
+      const col = block.x + state.current.pos.x;
+      const key = `${row}:${col}`;
+      if (row > maxRow) {
+        return <div key={key} />;
+      }
 
-    const top = 32 * state.zoom * (maxRow - row);
-    const left = 32 * state.zoom * col;
-    const isPivot =
-      state.config.showsPivot &&
-      block.x === blocks[0].x &&
-      block.y === blocks[0].y;
+      const top = 32 * state.zoom * (maxRow - row);
+      const left = 32 * state.zoom * col;
+      const isPivot =
+        state.config.showsPivot &&
+        block.x === blocks[0].x &&
+        block.y === blocks[0].y;
 
-    let background: string;
-    if (isDead) {
-      background = grey.A200;
-    } else {
-      background = blockBackground[current.type];
-    }
+      let background: string;
+      if (state.isDead) {
+        background = grey.A200;
+      } else {
+        background = blockBackground[state.current.type];
+      }
 
-    return (
-      <div
-        key={key}
-        className={classes.block}
-        style={{ background, left, top }}
-      >
-        {isPivot ? <div className={classes.pivot}></div> : " "}
-      </div>
-    );
-  });
+      return (
+        <div
+          key={key}
+          className={classes.block}
+          style={{ background, left, top }}
+        >
+          {isPivot ? <div className={classes.pivot}></div> : " "}
+        </div>
+      );
+    });
+  }, [
+    blocks,
+    state.config.showsPivot,
+    state.current,
+    state.isDead,
+    state.zoom,
+  ]);
 
   // search ground row index for ghost
-  let ghostRow = current.pos.y;
-  for (; ghostRow >= 1; ghostRow--) {
-    if (
-      blocks.some((block: Vector2) => {
-        const blockRow = block.y + ghostRow - 1;
-        const blockCol = block.x + current.pos.x;
-        return (
-          blockRow < 0 ||
-          state.field[blockRow][blockCol] !== FieldCellValue.None
-        );
-      })
-    ) {
-      break;
-    }
-  }
-
-  const ghostBlocks = blocks.map((block: Vector2) => {
-    const row = block.y + ghostRow;
-    const col = block.x + current.pos.x;
-    const key = `${row}:${col}`;
-    if (row > maxRow) {
-      return <div key={key} />;
+  const ghostBlocks = React.useMemo(() => {
+    if (!state.config.showsGhost) {
+      return null;
     }
 
-    const top = 32 * state.zoom * (maxRow - row);
-    const left = 32 * state.zoom * col;
+    let ghostRow = state.current.pos.y;
+    for (; ghostRow >= 1; ghostRow--) {
+      if (
+        blocks.some((block: Vector2) => {
+          const blockRow = block.y + ghostRow - 1;
+          const blockCol = block.x + state.current.pos.x;
+          return (
+            blockRow < 0 ||
+            state.field[blockRow][blockCol] !== FieldCellValue.None
+          );
+        })
+      ) {
+        break;
+      }
+    }
 
-    return (
-      <div
-        key={key}
-        className={classes.ghost}
-        style={{ background: blockBackground[current.type], left, top }}
-      />
-    );
-  });
+    const ghostBlocks = blocks.map((block: Vector2) => {
+      const row = block.y + ghostRow;
+      const col = block.x + state.current.pos.x;
+      const key = `${row}:${col}`;
+      if (row > maxRow) {
+        return <div key={key} />;
+      }
+
+      const top = 32 * state.zoom * (maxRow - row);
+      const left = 32 * state.zoom * col;
+
+      return (
+        <div
+          key={key}
+          className={classes.ghost}
+          style={{ background: blockBackground[state.current.type], left, top }}
+        />
+      );
+    });
+
+    return ghostBlocks;
+  }, [blocks, state.config.showsGhost, state.current, state.field, state.zoom]);
 
   const attacks = getUrgentAttack(state);
   const attackNotice = (() => {
@@ -182,7 +198,7 @@ const ActiveField: React.FC<ActiveFieldProps> = () => {
     <div className={classes.root}>
       <div>{attackNotice}</div>
       <div>{currentBlocks}</div>
-      <div>{state.config.showsGhost ? ghostBlocks : ""}</div>
+      <div>{ghostBlocks}</div>
     </div>
   );
 };

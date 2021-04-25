@@ -4,7 +4,7 @@ import {
   List,
   ListItem,
   makeStyles,
-  Theme,
+  Theme
 } from "@material-ui/core";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
@@ -12,18 +12,19 @@ import { backwardStep, forwardStep } from "ducks/replay/actions";
 import {
   canBackward,
   canForward,
-  getReplayConductor,
+  getReplayConductor
 } from "ducks/replay/selectors";
 import React from "react";
-import { RootContext } from "../App";
+import { ReplayState } from "stores/ReplayState";
+import { Action, ReplayStep } from "types/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       background: "white",
       color: "white",
-      height: (props: StyleProps) => 672 * props.zoom,
-      width: (props: StyleProps) => 64 * props.zoom,
+      height: (props: OperationProps) => 672 * props.zoom,
+      width: (props: OperationProps) => 64 * props.zoom,
     },
 
     listItem: {
@@ -38,37 +39,39 @@ const useStyles = makeStyles((theme: Theme) =>
     },
 
     icon: {
-      height: (props: StyleProps) => 64 * props.zoom,
-      width: (props: StyleProps) => 64 * props.zoom,
+      height: (props: OperationProps) => 64 * props.zoom,
+      width: (props: OperationProps) => 64 * props.zoom,
     },
   })
 );
 
-type StyleProps = {
+type OperationProps = {
+  dispatch: React.Dispatch<Action>;
+  replaySteps: ReplayStep[];
+  stateRef: React.MutableRefObject<ReplayState>;
+  step: number;
   zoom: number;
 };
-
-const Operation: React.FC = () => {
-  const { state: rootState, dispatch } = React.useContext(RootContext);
-  const state = rootState.replay;
-  const styleProps = { zoom: state.zoom };
+const Operation = React.memo<OperationProps>((props) => {
+  const stateRef = props.stateRef;
+  const { dispatch } = props;
 
   const handleForward = () => {
-    dispatch(forwardStep(getReplayConductor(state)));
+    dispatch(forwardStep(getReplayConductor(stateRef.current)));
   };
 
   const handleBackward = () => {
-    dispatch(backwardStep(getReplayConductor(state)));
+    dispatch(backwardStep(getReplayConductor(stateRef.current)));
   };
 
-  const classes = useStyles(styleProps);
+  const classes = useStyles(props);
 
   return (
     <List className={classes.root} disablePadding={true}>
       <ListItem className={classes.listItem} disableGutters={true}>
         <IconButton
           className={classes.iconButton}
-          disabled={!canForward(state)}
+          disabled={!canForward(props.step, props.replaySteps)}
           onClick={handleForward}
         >
           <NavigateNextIcon className={classes.icon} />
@@ -77,7 +80,7 @@ const Operation: React.FC = () => {
       <ListItem className={classes.listItem} disableGutters={true}>
         <IconButton
           className={classes.iconButton}
-          disabled={!canBackward(state)}
+          disabled={!canBackward(props.step)}
           onClick={handleBackward}
         >
           <NavigateBeforeIcon className={classes.icon} />
@@ -85,6 +88,6 @@ const Operation: React.FC = () => {
       </ListItem>
     </List>
   );
-};
+});
 
 export default Operation;

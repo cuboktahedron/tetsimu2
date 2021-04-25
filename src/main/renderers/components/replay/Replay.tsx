@@ -58,6 +58,8 @@ const Replay: React.FC = () => {
   }, [zoom]);
 
   const classes = useStyles();
+  const stateRef = React.useRef(state);
+  stateRef.current = state;
 
   if (small) {
     return (
@@ -65,7 +67,13 @@ const Replay: React.FC = () => {
         <div style={{ display: "flex" }}>
           <FieldWrapper />
           <HoldNexts />
-          <Operation />
+          <Operation
+            dispatch={dispatch}
+            replaySteps={state.replaySteps}
+            stateRef={stateRef}
+            step={state.step}
+            zoom={state.zoom}
+          />
         </div>
         <HotKey />
       </div>
@@ -84,7 +92,13 @@ const Replay: React.FC = () => {
             <div className={classes.nextsOnly}>
               <NextsOnly />
             </div>
-            <Operation />
+            <Operation
+              dispatch={dispatch}
+              replaySteps={state.replaySteps}
+              stateRef={stateRef}
+              step={state.step}
+              zoom={state.zoom}
+            />
           </div>
         </div>
         <HotKey />

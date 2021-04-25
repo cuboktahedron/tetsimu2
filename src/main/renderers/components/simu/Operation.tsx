@@ -52,7 +52,7 @@ type OperationProps = {
 };
 
 const Operation = React.memo<OperationProps>((props) => {
-  const state = props.stateRef.current;
+  const stateRef = props.stateRef;
   const { dispatch, histories, step } = props;
 
   const handleUndo = () => {
@@ -64,11 +64,11 @@ const Operation = React.memo<OperationProps>((props) => {
   };
 
   const handleRetry = () => {
-    dispatch(retry(getSimuConductor(state)));
+    dispatch(retry(getSimuConductor(stateRef.current)));
   };
 
   const handleSuperRetry = () => {
-    dispatch(superRetry(getSimuConductor(state)));
+    dispatch(superRetry(getSimuConductor(stateRef.current)));
   };
 
   const classes = useStyles(props);
@@ -78,7 +78,7 @@ const Operation = React.memo<OperationProps>((props) => {
       <ListItem className={classes.listItem} disableGutters={true}>
         <IconButton
           className={classes.iconButton}
-          disabled={!canUndo(state)}
+          disabled={!canUndo(stateRef.current)}
           onClick={handleUndo}
         >
           <NavigateBeforeIcon className={classes.icon} />
@@ -87,7 +87,7 @@ const Operation = React.memo<OperationProps>((props) => {
       <ListItem className={classes.listItem} disableGutters={true}>
         <IconButton
           className={classes.iconButton}
-          disabled={!canRedo(state)}
+          disabled={!canRedo(stateRef.current)}
           onClick={handleRedo}
         >
           <NavigateNextIcon className={classes.icon} />

@@ -65,7 +65,11 @@ const Edit: React.FC = () => {
         <div style={{ display: "flex" }}>
           <FieldWrapper />
           <HoldNexts />
-          <Operation />
+          <Operation
+            dispatch={dispatch}
+            tools={state.tools}
+            zoom={state.zoom}
+          />
         </div>
         <HotKey />
       </div>
@@ -84,7 +88,11 @@ const Edit: React.FC = () => {
             <div className={classes.nextsOnly}>
               <NextsOnly />
             </div>
-            <Operation />
+            <Operation
+              dispatch={dispatch}
+              tools={state.tools}
+              zoom={state.zoom}
+            />
           </div>
         </div>
         <HotKey />

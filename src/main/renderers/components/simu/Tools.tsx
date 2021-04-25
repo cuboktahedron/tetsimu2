@@ -4,12 +4,14 @@ import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 import {
   changeTetsimuMode,
   simuToEditMode,
-  simuToReplayMode,
+  simuToReplayMode
 } from "ducks/root/actions";
 import { clearSimu } from "ducks/simu/actions";
 import React from "react";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
-import { TetsimuMode } from "types/core";
+import { useValueRef } from "renderers/hooks/useValueRef";
+import { SimuState } from "stores/SimuState";
+import { Action, TetsimuMode } from "types/core";
 import { SimuConductor } from "utils/tetsimu/simu/simuConductor";
 import SimuUrl from "utils/tetsimu/simu/simuUrl";
 import { RootContext } from "../App";
@@ -27,15 +29,31 @@ const Tools: React.FC<ToolsProps> = (props) => {
   }
 
   const { state: rootState, dispatch } = React.useContext(RootContext);
-  const state = rootState.simu;
+  const stateRef = useValueRef(rootState.simu);
+
+  return <InnerTools dispatch={dispatch} stateRef={stateRef} {...props} />;
+};
+
+type InnerToolsProps = {
+  dispatch: React.Dispatch<Action>;
+  stateRef: React.MutableRefObject<SimuState>;
+} & ToolsProps;
+
+const InnerTools = React.memo<InnerToolsProps>((props) => {
+  if (!props.opens) {
+    return null;
+  }
+
+  const stateRef = props.stateRef;
+  const dispatch = props.dispatch;
   const [stateUrl, setStateUrl] = React.useState("");
 
   const handleEditClick = () => {
-    dispatch(simuToEditMode(state));
+    dispatch(simuToEditMode(stateRef.current));
   };
 
   const handleReplayClick = () => {
-    dispatch(simuToReplayMode(state));
+    dispatch(simuToReplayMode(stateRef.current));
   };
 
   const handleEditNoResetClick = () => {
@@ -47,12 +65,12 @@ const Tools: React.FC<ToolsProps> = (props) => {
   };
 
   const handleUrlClick = () => {
-    const url = new SimuUrl().fromState(state);
+    const url = new SimuUrl().fromState(stateRef.current);
     setStateUrl(url);
   };
 
   const handleClearClick = () => {
-    dispatch(clearSimu(new SimuConductor(state)));
+    dispatch(clearSimu(new SimuConductor(stateRef.current)));
   };
 
   const classes = useStyles();
@@ -125,6 +143,6 @@ const Tools: React.FC<ToolsProps> = (props) => {
       </Button>
     </div>
   );
-};
+});
 
 export default Tools;

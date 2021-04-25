@@ -12,13 +12,14 @@ import {
 import { buildUpField, changeField } from "ducks/edit/actions";
 import React from "react";
 import {
+  Action,
   FieldCellValue,
+  FieldState,
   MAX_FIELD_WIDTH,
   MAX_VISIBLE_FIELD_HEIGHT,
   MouseButton,
   Vector2
 } from "types/core";
-import { RootContext } from "../App";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -33,7 +34,7 @@ const useStyles = makeStyles(() =>
 
     topRow: {
       borderBottom: "solid 3px red",
-      height: (props: StyleProps) => 32 * props.zoom,
+      height: (props: FieldProps) => 32 * props.zoom,
       position: "absolute",
       width: "100%",
     },
@@ -42,7 +43,7 @@ const useStyles = makeStyles(() =>
       boxSizing: "border-box",
       borderTop: "solid 1px grey",
       borderLeft: "solid 1px grey",
-      height: (props: StyleProps) => 32 * props.zoom,
+      height: (props: FieldProps) => 32 * props.zoom,
     },
   })
 );
@@ -59,22 +60,24 @@ const cellBackground = {
   [FieldCellValue.Garbage]: grey.A100,
 };
 
-type FieldProps = {};
-type StyleProps = {
+type FieldProps = {
+  dispatch: React.Dispatch<Action>;
+  field: FieldState;
+  isTouchDevice: boolean;
+  selectedCellValues: FieldCellValue[];
   zoom: number;
-} & FieldProps;
+};
 
-const Field: React.FC<FieldProps> = () => {
-  const { state: rootState, dispatch } = React.useContext(RootContext);
-  const state = rootState.edit;
+const Field = React.memo<FieldProps>((props) => {
+  const dispatch = props.dispatch;
+
   const [editPointerState, setEditPointerState] = React.useState({
     downed: false,
     isLeft: false,
   });
   const fieldRef = React.createRef<HTMLDivElement>();
 
-  const styleProps = { zoom: state.zoom };
-  const classes = useStyles(styleProps);
+  const classes = useStyles(props);
 
   const calculatePos = (absX: number, absY: number): Vector2 => {
     if (!fieldRef.current) {
@@ -97,10 +100,10 @@ const Field: React.FC<FieldProps> = () => {
     };
   };
 
-  const cellValueToSet = state.tools.selectedCellValues[0];
+  const cellValueToSet = props.selectedCellValues[0];
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (state.env.isTouchDevice || editPointerState.downed) {
+    if (props.isTouchDevice || editPointerState.downed) {
       return;
     }
 
@@ -116,9 +119,9 @@ const Field: React.FC<FieldProps> = () => {
 
     const pos = calculatePos(e.pageX, e.pageY);
     if (isLeft) {
-      dispatch(changeField(state.field, cellValueToSet, pos));
+      dispatch(changeField(props.field, cellValueToSet, pos));
     } else {
-      dispatch(changeField(state.field, FieldCellValue.None, pos));
+      dispatch(changeField(props.field, FieldCellValue.None, pos));
     }
   };
 
@@ -129,9 +132,9 @@ const Field: React.FC<FieldProps> = () => {
 
     const pos = calculatePos(e.pageX, e.pageY);
     if (editPointerState.isLeft) {
-      dispatch(changeField(state.field, cellValueToSet, pos));
+      dispatch(changeField(props.field, cellValueToSet, pos));
     } else {
-      dispatch(changeField(state.field, FieldCellValue.None, pos));
+      dispatch(changeField(props.field, FieldCellValue.None, pos));
     }
   };
 
@@ -156,14 +159,14 @@ const Field: React.FC<FieldProps> = () => {
     return (): void => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [state.field, editPointerState]);
+  }, [props.field, editPointerState]);
 
   React.useEffect(() => {
     window.addEventListener("mouseup", handleMouseUp);
     return (): void => {
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [state.field, editPointerState]);
+  }, [props.field, editPointerState]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
@@ -174,7 +177,7 @@ const Field: React.FC<FieldProps> = () => {
     });
 
     const pos = calculatePos(touch.pageX, touch.pageY);
-    dispatch(changeField(state.field, cellValueToSet, pos));
+    dispatch(changeField(props.field, cellValueToSet, pos));
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -184,7 +187,7 @@ const Field: React.FC<FieldProps> = () => {
 
     const touch = e.touches[0];
     const pos = calculatePos(touch.pageX, touch.pageY);
-    dispatch(changeField(state.field, cellValueToSet, pos));
+    dispatch(changeField(props.field, cellValueToSet, pos));
   };
 
   const handleTouchEnd = () => {
@@ -196,35 +199,40 @@ const Field: React.FC<FieldProps> = () => {
 
   const handleWheel = (e: React.WheelEvent) => {
     if (e.deltaY < 0) {
-      dispatch(buildUpField(state.field, 1));
+      dispatch(buildUpField(props.field, 1));
     } else {
-      dispatch(buildUpField(state.field, -1));
+      dispatch(buildUpField(props.field, -1));
     }
   };
 
-  const rows = state.field
-    .slice(0, MAX_VISIBLE_FIELD_HEIGHT)
-    .map((row, rowIndex) => {
-      const cols = row.map((cell, colIndex) => {
-        const background = cellBackground[cell];
+  const rows = React.useMemo(
+    () =>
+      props.field
+        .slice(0, MAX_VISIBLE_FIELD_HEIGHT)
+        .map((row, rowIndex) => {
+          const cols = row.map((cell, colIndex) => {
+            const background = cellBackground[cell];
 
-        return (
-          <div
-            key={`${rowIndex}:${colIndex}`}
-            className={classes.row}
-            style={{ background, flex: 1 }}
-          >
-            <div>&nbsp;</div>
-          </div>
-        );
-      });
+            return (
+              <div
+                key={`${rowIndex}:${colIndex}`}
+                className={classes.row}
+                style={{ background, flex: 1 }}
+              >
+                <div>&nbsp;</div>
+              </div>
+            );
+          });
 
-      return (
-        <div style={{ display: "flex" }} key={rowIndex}>
-          {cols}
-        </div>
-      );
-    });
+          return (
+            <div style={{ display: "flex" }} key={rowIndex}>
+              {cols}
+            </div>
+          );
+        })
+        .reverse(),
+    [props.field]
+  );
 
   return (
     <div
@@ -237,9 +245,9 @@ const Field: React.FC<FieldProps> = () => {
       onWheel={handleWheel}
     >
       <div className={classes.topRow} />
-      <div>{rows.reverse()}</div>
+      <div>{rows}</div>
     </div>
   );
-};
+});
 
 export default Field;

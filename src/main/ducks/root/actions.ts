@@ -659,7 +659,7 @@ export const replayToSimuMode = (
       fixedGarbages.push({ amount: topAttack, offset: 0, restStep: 0 });
     }
 
-    let nextAttacks = getNextAttacks(state);
+    let nextAttacks = getNextAttacks(state.garbages, state.replayInfo.nextNum);
     if (state.config.passesAllToSimu) {
       nextAttacks = state.garbages.flatMap((garbage) => {
         if (garbage.restStep === 0) {
@@ -671,7 +671,7 @@ export const replayToSimuMode = (
         return attacks;
       });
     } else {
-      nextAttacks = getNextAttacks(state);
+      nextAttacks = getNextAttacks(state.garbages, state.replayInfo.nextNum);
     }
     while (nextAttacks.length > 0) {
       const index = nextAttacks.findIndex((value) => value > 0);

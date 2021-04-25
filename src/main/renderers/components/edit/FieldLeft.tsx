@@ -1,5 +1,6 @@
 import { createStyles, makeStyles } from "@material-ui/core";
 import React from "react";
+import { RootContext } from "../App";
 import Hold from "./Hold";
 
 const useStyles = makeStyles(() =>
@@ -20,12 +21,19 @@ const useStyles = makeStyles(() =>
 );
 
 const FieldLeft: React.FC = () => {
+  const { state: rootState, dispatch } = React.useContext(RootContext);
+  const state = rootState.edit;
+
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <div className={classes.hold}>
-        <Hold />
+        <Hold
+          dispatch={dispatch}
+          hold={state.hold}
+          selectedCellValues={state.tools.selectedCellValues}
+        />
       </div>
     </div>
   );

@@ -20,7 +20,10 @@ import { getReplayConductor } from "ducks/replay/selectors";
 import { changeTetsimuMode, replayToSimuMode } from "ducks/root/actions";
 import React from "react";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
-import { TetsimuMode } from "types/core";
+import { useValueRef } from "renderers/hooks/useValueRef";
+import { ReplayAuto } from "stores/ReplayState";
+import { RootState } from "stores/RootState";
+import { Action, ReplayStep, TetsimuMode } from "types/core";
 import ReplayUrl from "utils/tetsimu/replay/replayUrl";
 import { RootContext } from "../App";
 import NumberTextField from "../ext/NumberTextField";
@@ -67,11 +70,41 @@ const Tools: React.FC<ToolsProps> = (props) => {
   }
 
   const { state: rootState, dispatch } = React.useContext(RootContext);
+  const rootStateRef = useValueRef(rootState);
   const state = rootState.replay;
+
+  return (
+    <InnerTools
+      auto={state.auto}
+      dispatch={dispatch}
+      replaySteps={state.replaySteps}
+      rootStateRef={rootStateRef}
+      step={state.step}
+      {...props}
+    />
+  );
+};
+
+type InnerToolsProps = {
+  auto: ReplayAuto;
+  dispatch: React.Dispatch<Action>;
+  replaySteps: ReplayStep[];
+  rootStateRef: React.MutableRefObject<RootState>;
+  step: number;
+} & ToolsProps;
+
+const InnerTools = React.memo<InnerToolsProps>((props) => {
+  if (!props.opens) {
+    return null;
+  }
+
+  const rootStateRef = props.rootStateRef;
+  const dispatch = props.dispatch;
   const [stateUrl, setStateUrl] = React.useState("");
 
   const handleSimuClick = () => {
-    dispatch(replayToSimuMode(state, rootState.simu));
+    const rootState = rootStateRef.current;
+    dispatch(replayToSimuMode(rootState.replay, rootState.simu));
   };
 
   const handleSimuNoResetClick = () => {
@@ -79,16 +112,19 @@ const Tools: React.FC<ToolsProps> = (props) => {
   };
 
   const handleStepChange = (value: number): void => {
+    const state = rootStateRef.current.replay;
     if (value !== state.step) {
       dispatch(changeStep(getReplayConductor(state), value));
     }
   };
 
   const handleBackToHeadClick = () => {
+    const state = rootStateRef.current.replay;
     dispatch(changeStep(getReplayConductor(state), 0));
   };
 
   const handleFastRewindClick = () => {
+    const state = rootStateRef.current.replay;
     dispatch(downReplaySpeed(state.auto.speed));
   };
 
@@ -101,16 +137,19 @@ const Tools: React.FC<ToolsProps> = (props) => {
   };
 
   const handleFastForwardClick = () => {
+    const state = rootStateRef.current.replay;
     dispatch(upReplaySpeed(state.auto.speed));
   };
 
   const handleUrlClick = () => {
+    const state = rootStateRef.current.replay;
     const url = new ReplayUrl().fromState(state);
     setStateUrl(url);
   };
 
   const classes = useStyles();
-  const stepNum = state.replaySteps.length;
+
+  const stepNum = props.replaySteps.length;
   return (
     <div className={classes.root}>
       <div className={classes.buttons}>
@@ -152,7 +191,7 @@ const Tools: React.FC<ToolsProps> = (props) => {
             label="step"
             numberProps={{
               min: 0,
-              max: state.replaySteps.length,
+              max: props.replaySteps.length,
               change: handleStepChange,
               endAdornment: (
                 <InputAdornment position="end">/ {stepNum}</InputAdornment>
@@ -162,7 +201,7 @@ const Tools: React.FC<ToolsProps> = (props) => {
               shrink: true,
             }}
             style={{ minWidth: 100 }}
-            value={"" + state.step}
+            value={"" + props.step}
             variant="outlined"
           />
         </FormControl>
@@ -180,7 +219,7 @@ const Tools: React.FC<ToolsProps> = (props) => {
           </div>
           <div>
             {(() => {
-              if (state.auto.playing) {
+              if (props.auto.playing) {
                 return (
                   <Button
                     variant="contained"
@@ -235,6 +274,6 @@ const Tools: React.FC<ToolsProps> = (props) => {
       </div>
     </div>
   );
-};
+});
 
 export default Tools;

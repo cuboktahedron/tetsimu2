@@ -2,8 +2,9 @@ import { createStyles, makeStyles } from "@material-ui/core";
 import clsx from "clsx";
 import { getNextAttacks } from "ducks/replay/selectors";
 import React from "react";
+import { GarbageInfo } from "stores/ReplayState";
 import { Tetromino } from "types/core";
-import { RootContext } from "../App";
+import { ReplayConfig, ReplayInfo } from "types/replay";
 import Next from "./Next";
 
 const useStyles = makeStyles(() =>
@@ -17,11 +18,11 @@ const useStyles = makeStyles(() =>
 
     next: {
       boxShadow: "0 0 0 1px grey",
-      height: (props: StyleProps) =>
-        Math.min(96 * props.zoom, props.height / props.nextNums),
+      height: (props: NextsProps) =>
+        Math.min(96 * props.zoom, props.height / props.replayInfo.nextNum),
       position: "relative",
-      width: (props: StyleProps) =>
-        Math.min(96 * props.zoom, props.height / props.nextNums),
+      width: (props: NextsProps) =>
+        Math.min(96 * props.zoom, props.height / props.replayInfo.nextNum),
     },
 
     cycleBegin: {
@@ -35,49 +36,44 @@ const useStyles = makeStyles(() =>
 );
 
 type NextsProps = {
+  config: ReplayConfig;
   height: number;
+  garbages: GarbageInfo[];
+  nexts: Tetromino[];
+  noOfCycle: number;
+  replayInfo: ReplayInfo;
+  zoom: number;
 };
 
-type StyleProps = {
-  nextNums: number;
-  zoom: number;
-} & NextsProps;
-
-const Nexts: React.FC<NextsProps> = (props) => {
-  const state = React.useContext(RootContext).state.replay;
-
-  const classes = useStyles({
-    nextNums: state.replayInfo.nextNum,
-    zoom: state.zoom,
-    ...props,
-  });
+const Nexts = React.memo<NextsProps>((props) => {
+  const classes = useStyles(props);
 
   const nexts = (() => {
-    if (state.nexts.length >= state.replayInfo.nextNum) {
-      return state.nexts.slice(0, state.replayInfo.nextNum);
+    if (props.nexts.length >= props.replayInfo.nextNum) {
+      return props.nexts.slice(0, props.replayInfo.nextNum);
     } else {
-      return state.nexts.concat(
-        new Array(state.replayInfo.nextNum - state.nexts.length).fill(
+      return props.nexts.concat(
+        new Array(props.replayInfo.nextNum - props.nexts.length).fill(
           Tetromino.None
         )
       );
     }
   })();
 
-  const attacks = getNextAttacks(state);
+  const attacks = getNextAttacks(props.garbages, props.replayInfo.nextNum);
   const nextdives = nexts.map((next, index) => {
-    const noOfCycle = (state.noOfCycle - 1 + index) % 7;
+    const noOfCycle = (props.noOfCycle - 1 + index) % 7;
     return (
       <div
         key={index}
         className={clsx(classes.next, {
-          [classes.cycleBegin]: state.config.showsCycle && noOfCycle === 0,
-          [classes.cycleEnd]: state.config.showsCycle && noOfCycle === 6,
+          [classes.cycleBegin]: props.config.showsCycle && noOfCycle === 0,
+          [classes.cycleEnd]: props.config.showsCycle && noOfCycle === 6,
         })}
       >
         <Next
           attack={attacks[index]}
-          inOffsetRange={index < state.replayInfo.offsetRange}
+          inOffsetRange={index < props.replayInfo.offsetRange}
           type={next}
         />
       </div>
@@ -87,9 +83,8 @@ const Nexts: React.FC<NextsProps> = (props) => {
   return (
     <div className={classes.root}>
       <div>{nextdives}</div>
-      <div></div>
     </div>
   );
-};
+});
 
 export default Nexts;

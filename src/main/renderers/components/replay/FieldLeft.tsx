@@ -1,5 +1,6 @@
 import { createStyles, makeStyles } from "@material-ui/core";
 import React from "react";
+import { RootContext } from "../App";
 import Hold from "./Hold";
 import PlayLog from "./PlayLog";
 
@@ -21,12 +22,13 @@ const useStyles = makeStyles(() =>
 );
 
 const FieldLeft: React.FC = () => {
+  const state = React.useContext(RootContext).state.replay;
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <div className={classes.hold}>
-        <Hold />
+        <Hold hold={state.hold} />
       </div>
       <div>
         <PlayLog />

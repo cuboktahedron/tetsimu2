@@ -14,12 +14,15 @@ import EditIcon from "@material-ui/icons/Edit";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import clsx from "clsx";
-import { changeDrawerState, changeSelectedMenuName } from "ducks/sidePanel/actions";
+import {
+  changeDrawerState,
+  changeSelectedMenuName
+} from "ducks/sidePanel/actions";
 import React from "react";
 import { Action } from "types/core";
 import Explorer from "../explorer/Explorer";
 import Help from "../Help";
-import Tools from "./Tools";
+import Tools from "./tools/Tools";
 
 const IconNames = ["edit/tools", "explorer", "explorer", "help"] as const;
 type IconNames = typeof IconNames[number];
@@ -57,7 +60,9 @@ type SidePanelProps = {
   drawerWidth: number;
   open: boolean;
   selectedMenuName: string;
-  onMenuMainsChanged: React.MutableRefObject<(menuMains: JSX.Element[]) => void>;
+  onMenuMainsChanged: React.MutableRefObject<
+    (menuMains: JSX.Element[]) => void
+  >;
 };
 
 const SidePanel = React.memo<SidePanelProps>((props) => {
@@ -73,13 +78,15 @@ const SidePanel = React.memo<SidePanelProps>((props) => {
   React.useLayoutEffect(() => {
     if (!IconNames.includes(props.selectedMenuName as any)) {
       dispatch(changeSelectedMenuName("edit/tools"));
-
     }
 
     props.onMenuMainsChanged.current([
       <Explorer key="explorer" opens={props.selectedMenuName === "explorer"} />,
       <Help key="help" opens={props.selectedMenuName === "help"} />,
-      <Tools key="edit/tools" opens={props.selectedMenuName === "edit/tools"} />,
+      <Tools
+        key="edit/tools"
+        opens={props.selectedMenuName === "edit/tools"}
+      />,
     ]);
   }, [props.selectedMenuName]);
 

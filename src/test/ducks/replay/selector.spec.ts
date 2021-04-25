@@ -1,7 +1,7 @@
 import {
   getNextAttacks,
   getStats,
-  getUrgentAttack,
+  getUrgentAttack
 } from "ducks/replay/selectors";
 import { AttackType, Direction, PlayStats } from "types/core";
 import { makeGarbage } from "../../utils/tetsimu/testUtils/makeGarbage";
@@ -10,36 +10,20 @@ import { makeReplayState } from "../../utils/tetsimu/testUtils/makeReplayState";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
-  makeReplayHoldStep,
+  makeReplayHoldStep
 } from "../../utils/tetsimu/testUtils/makeReplayStep";
 
 describe("selector", () => {
   describe("getNextAttacks", () => {
     it("should return amount of each next(steps < nextNum)", () => {
-      const actual = getNextAttacks(
-        makeReplayState({
-          replayInfo: {
-            nextNum: 8,
-            offsetRange: 2,
-          },
-          garbages: [makeGarbage(0, 3), makeGarbage(5, 2)],
-        })
-      );
+      const actual = getNextAttacks([makeGarbage(0, 3), makeGarbage(5, 2)], 8);
 
       const expected = [0, 0, 0, 0, 2, 0, 0, 0];
       expect(actual).toEqual(expected);
     });
 
     it("should return amount of each next(step >= nextNum)", () => {
-      const actual = getNextAttacks(
-        makeReplayState({
-          replayInfo: {
-            nextNum: 4,
-            offsetRange: 2,
-          },
-          garbages: [makeGarbage(1, 3), makeGarbage(4, 2)],
-        })
-      );
+      const actual = getNextAttacks([makeGarbage(1, 3), makeGarbage(4, 2)], 4);
 
       const expected = [3, 0, 0, 0];
       expect(actual).toEqual(expected);

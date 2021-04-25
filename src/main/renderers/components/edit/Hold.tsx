@@ -1,16 +1,20 @@
 import { createStyles, makeStyles } from "@material-ui/core";
 import { changeHold } from "ducks/edit/actions";
 import React from "react";
-import { FieldCellValue, MouseButton, Tetromino } from "types/core";
-import { RootContext } from "../App";
+import {
+  Action,
+  FieldCellValue,
+  HoldState,
+  MouseButton,
+  Tetromino,
+} from "types/core";
 import TetrominoBlocks from "../core/TetrominoBlocks";
 
-type HoldProps = {};
-
-type StyleProps = {
-  type: Tetromino;
-  canHold: boolean;
-} & HoldProps;
+type HoldProps = {
+  dispatch: React.Dispatch<Action>;
+  hold: HoldState;
+  selectedCellValues: FieldCellValue[];
+};
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -21,34 +25,33 @@ const useStyles = makeStyles(() =>
     },
 
     blocks: {
-      background: (props: StyleProps) => (props.canHold ? "black" : "#800"),
+      background: (props: HoldProps) => (props.hold.canHold ? "black" : "#800"),
       height: "100%",
       width: "100%",
     },
   })
 );
 
-const Hold: React.FC<HoldProps> = () => {
-  const { state: rootState, dispatch } = React.useContext(RootContext);
-  const state = rootState.edit;
+const Hold = React.memo<HoldProps>((props) => {
+  const dispatch = props.dispatch;
 
-  const typeToSet = state.tools.selectedCellValues[0];
+  const typeToSet = props.selectedCellValues[0];
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === MouseButton.Left) {
       if (
         typeToSet === FieldCellValue.None ||
         typeToSet === FieldCellValue.Garbage
       ) {
-        dispatch(changeHold(state.hold, Tetromino.None));
+        dispatch(changeHold(props.hold, Tetromino.None));
       } else {
-        dispatch(changeHold(state.hold, typeToSet));
+        dispatch(changeHold(props.hold, typeToSet));
       }
     } else if (e.button === MouseButton.Right) {
-      dispatch(changeHold(state.hold, Tetromino.None));
+      dispatch(changeHold(props.hold, Tetromino.None));
     }
   };
 
-  const classes = useStyles(state.hold);
+  const classes = useStyles(props);
   return (
     <div
       className={classes.root}
@@ -58,10 +61,10 @@ const Hold: React.FC<HoldProps> = () => {
       }}
     >
       <div className={classes.blocks}>
-        <TetrominoBlocks type={state.hold.type}></TetrominoBlocks>
+        <TetrominoBlocks type={props.hold.type}></TetrominoBlocks>
       </div>
     </div>
   );
-};
+});
 
 export default Hold;

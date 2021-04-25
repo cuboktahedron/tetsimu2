@@ -5,8 +5,16 @@ import {
   MAX_FIELD_HEIGHT,
   MAX_FIELD_WIDTH,
   NextNote,
-  Tetromino,
+  Tetromino
 } from "types/core";
+
+export type EditStateTools = {
+  isCellValueMultiSelection: boolean;
+  nextBaseNo: number;
+  nextsPattern: string;
+  noOfCycle: number;
+  selectedCellValues: FieldCellValue[];
+};
 
 export type EditState = {
   env: {
@@ -17,13 +25,7 @@ export type EditState = {
   nexts: {
     nextNotes: NextNote[];
   };
-  tools: {
-    isCellValueMultiSelection: boolean;
-    nextBaseNo: number;
-    nextsPattern: string;
-    noOfCycle: number;
-    selectedCellValues: FieldCellValue[];
-  };
+  tools: EditStateTools;
   zoom: number;
 };
 
