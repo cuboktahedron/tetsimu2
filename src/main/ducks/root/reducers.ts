@@ -1,6 +1,7 @@
 import editReducer from "ducks/edit";
 import explorerReducer from "ducks/explorer";
 import replayReducer from "ducks/replay";
+import sidePanelReducer from "ducks/sidePanel";
 import simuReducer from "ducks/simu";
 import { RootState } from "stores/RootState";
 import { Action, BtbState, FieldCellValue, TetsimuMode } from "types/core";
@@ -11,6 +12,7 @@ const reducers = {
   edit: editReducer,
   explorer: explorerReducer,
   replay: replayReducer,
+  sidePanel: sidePanelReducer,
   simu: simuReducer,
 };
 
@@ -251,6 +253,18 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
   }
 
   if (reducerName === "explorer") {
+    const newState = reducers[reducerName](state[reducerName], anyAction);
+    if (newState !== state[reducerName]) {
+      return {
+        ...state,
+        [reducerName]: newState,
+      };
+    } else {
+      return state;
+    }
+  }
+
+  if (reducerName === "sidePanel") {
     const newState = reducers[reducerName](state[reducerName], anyAction);
     if (newState !== state[reducerName]) {
       return {

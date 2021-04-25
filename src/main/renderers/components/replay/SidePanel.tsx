@@ -18,9 +18,14 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import clsx from "clsx";
 import { forwardStepAuto } from "ducks/replay/actions";
 import { getReplayConductor } from "ducks/replay/selectors";
+import {
+  changeDrawerState,
+  changeSelectedMenuName
+} from "ducks/sidePanel/actions";
 import React from "react";
 import { useValueRef } from "renderers/hooks/useValueRef";
-import { RootContext, SidePanelContext } from "../App";
+import { Action } from "types/core";
+import { RootContext } from "../App";
 import Explorer from "../explorer/Explorer";
 import Help from "../Help";
 import Settings from "./Settings";
@@ -72,52 +77,27 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+type SidePanelProps = {
+  dispatch: React.Dispatch<Action>;
+  drawerWidth: number;
+  open: boolean;
+  selectedMenuName: string;
+  onMenuMainsChanged: React.MutableRefObject<
+    (menuMains: JSX.Element[]) => void
+  >;
+};
 
-const SidePanel: React.FC = () => {
-  const { state: rootState, dispatch } = React.useContext(RootContext);
-  const [drawerWidth, setDrawerWidth] = React.useContext(
-    SidePanelContext
-  ).drawerWidth;
-  const [, setMenuMains] = React.useContext(SidePanelContext).menuMains;
-  const [open, setOpen] = React.useContext(SidePanelContext).open;
-  const [selectedMenuName, setSelectedMenuName] = React.useContext(
-    SidePanelContext
-  ).selectedMenuName;
+const SidePanel: React.FC<SidePanelProps> = (props) => {
+  const dispatch = props.dispatch;
 
-  const theme = useTheme();
-  const small = useMediaQuery(theme.breakpoints.down("xs"));
-  const classes = useStyles({
-    drawerWidth,
-    maxDrawerWidth: window.innerWidth,
-  });
-
-  React.useLayoutEffect(() => {
-    if (!IconNames.includes(selectedMenuName as any)) {
-      setSelectedMenuName("replay/tools");
-    }
-
-    setMenuMains([
-      <Explorer
-        key="explorer"
-        opens={selectedMenuName === "explorer"}
-      />,
-      <Help key="help" opens={selectedMenuName === "help"} />,
-      <Settings
-        key="replay/settings"
-        opens={selectedMenuName === "replay/settings"}
-      />,
-      <Stats key="replay/stats" opens={selectedMenuName === "replay/stats"} />,
-      <Tools key="replay/tools" opens={selectedMenuName === "replay/tools"} />,
-    ]);
-  }, [selectedMenuName]);
-
+  const { state: rootState } = React.useContext(RootContext);
   const state = rootState.replay;
   const refState = useValueRef(state);
   const [replayTimerId, setReplayTimerId] = React.useState<number | null>(null);
   const refReplayTimerId = useValueRef(replayTimerId);
 
   React.useEffect(() => {
-    if (state.auto.playing) {
+    if (refState.current.auto.playing) {
       if (refReplayTimerId.current) {
         window.clearInterval(refReplayTimerId.current);
       }
@@ -142,29 +122,66 @@ const SidePanel: React.FC = () => {
     };
   }, [state.auto.playing, state.auto.speed]);
 
+  return <InnerSidePanel {...props} />;
+};
+
+const InnerSidePanel = React.memo<SidePanelProps>((props) => {
+  const dispatch = props.dispatch;
+
+  const theme = useTheme();
+  const small = useMediaQuery(theme.breakpoints.down("xs"));
+  const classes = useStyles({
+    drawerWidth: props.drawerWidth,
+    maxDrawerWidth: window.innerWidth,
+  });
+
+  React.useLayoutEffect(() => {
+    if (!IconNames.includes(props.selectedMenuName as any)) {
+      dispatch(changeSelectedMenuName("replay/tools"));
+    }
+
+    props.onMenuMainsChanged.current([
+      <Explorer key="explorer" opens={props.selectedMenuName === "explorer"} />,
+      <Help key="help" opens={props.selectedMenuName === "help"} />,
+      <Settings
+        key="replay/settings"
+        opens={props.selectedMenuName === "replay/settings"}
+      />,
+      <Stats
+        key="replay/stats"
+        opens={props.selectedMenuName === "replay/stats"}
+      />,
+      <Tools
+        key="replay/tools"
+        opens={props.selectedMenuName === "replay/tools"}
+      />,
+    ]);
+  }, [props.selectedMenuName]);
+
   const handleMenuIconClick = (iconName: IconNames) => {
-    if (iconName === selectedMenuName) {
-      if (!open) {
+    if (iconName === props.selectedMenuName) {
+      let drawerWidth = props.drawerWidth;
+      if (!props.open) {
         if (small) {
-          setDrawerWidth(window.innerWidth);
+          drawerWidth = window.innerWidth;
         } else {
-          setDrawerWidth(Math.max(drawerWidth, 240));
+          drawerWidth = Math.max(drawerWidth, 240);
         }
       }
 
-      setSelectedMenuName(iconName);
-      setOpen(!open);
+      dispatch(changeDrawerState(drawerWidth, !props.open, iconName));
     } else {
+      let drawerWidth = props.drawerWidth;
+
       if (small) {
-        setDrawerWidth(window.innerWidth);
+        drawerWidth = window.innerWidth;
       } else {
-        setDrawerWidth(Math.max(drawerWidth, 240));
+        drawerWidth = Math.max(drawerWidth, 240);
       }
-      setSelectedMenuName(iconName);
-      setOpen(true);
+
+      dispatch(changeDrawerState(drawerWidth, true, iconName));
     }
   };
-
   return (
     <React.Fragment>
       <ListItem disableGutters style={{ background: blueGrey[800] }}>
@@ -180,7 +197,7 @@ const SidePanel: React.FC = () => {
         <ListItemIcon className={classes.listIcon}>
           <CallToActionIcon
             className={clsx(classes.icon, {
-              selected: selectedMenuName === "replay/tools" && open,
+              selected: props.selectedMenuName === "replay/tools" && open,
             })}
           />
         </ListItemIcon>
@@ -193,7 +210,7 @@ const SidePanel: React.FC = () => {
         <ListItemIcon className={classes.listIcon}>
           <SettingsIcon
             className={clsx(classes.icon, {
-              selected: selectedMenuName === "replay/settings" && open,
+              selected: props.selectedMenuName === "replay/settings" && open,
             })}
           />
         </ListItemIcon>
@@ -206,7 +223,7 @@ const SidePanel: React.FC = () => {
         <ListItemIcon className={classes.listIcon}>
           <AssessmentOutlinedIcon
             className={clsx(classes.icon, {
-              selected: selectedMenuName === "replay/stats" && open,
+              selected: props.selectedMenuName === "replay/stats" && open,
             })}
           />
         </ListItemIcon>
@@ -220,7 +237,7 @@ const SidePanel: React.FC = () => {
         <ListItemIcon className={classes.listIcon}>
           <PageviewIcon
             className={clsx(classes.icon, {
-              selected: selectedMenuName === "explorer" && open,
+              selected: props.selectedMenuName === "explorer" && open,
             })}
           />
         </ListItemIcon>
@@ -233,13 +250,13 @@ const SidePanel: React.FC = () => {
         <ListItemIcon className={classes.listIcon}>
           <HelpOutlineIcon
             className={clsx(classes.icon, {
-              selected: selectedMenuName === "help" && open,
+              selected: props.selectedMenuName === "help" && open,
             })}
           />
         </ListItemIcon>
       </ListItem>
     </React.Fragment>
   );
-};
+});
 
 export default SidePanel;

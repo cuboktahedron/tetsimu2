@@ -7,9 +7,11 @@ import {
 } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
 import clsx from "clsx";
+import { changeDrawerState } from "ducks/sidePanel/actions";
 import React from "react";
+import { useValueRef } from "renderers/hooks/useValueRef";
 import { TetsimuMode } from "types/core";
-import { RootContext, SidePanelContext } from "../App";
+import { RootContext } from "../App";
 import EditSidePanel from "../edit/SidePanel";
 import ReplaySidePanel from "../replay/SidePanel";
 import SimuSidePanel from "../simu/SidePanel";
@@ -89,17 +91,15 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const SidePanel: React.FC = () => {
-  const { state } = React.useContext(RootContext);
-  const [drawerWidth, setDrawerWidth] = React.useContext(
-    SidePanelContext
-  ).drawerWidth;
+  const { state: rootState, dispatch } = React.useContext(RootContext);
+  const state = rootState.sidePanel;
+  const [menuMains, setMenuMains] = React.useState<JSX.Element[]>([]);
+
   const resizeHandlerRef = React.useRef<HTMLDivElement>(null);
-  const [open, setOpen] = React.useContext(SidePanelContext).open;
   const [prevDragX, setPrevDragX] = React.useState<number | null>(null);
-  const [menuMains] = React.useContext(SidePanelContext).menuMains;
 
   const classes = useStyles({
-    drawerWidth,
+    drawerWidth: state.drawerWidth,
     maxDrawerWidth: window.innerWidth,
   });
 
@@ -118,12 +118,17 @@ const SidePanel: React.FC = () => {
     }
 
     const nextDrawWidth = Math.min(
-      drawerWidth + (prevDragX - e.pageX),
+      state.drawerWidth + (prevDragX - e.pageX),
       window.innerWidth
     );
 
-    setDrawerWidth(nextDrawWidth);
-    setOpen(nextDrawWidth > 240);
+    dispatch(
+      changeDrawerState(
+        nextDrawWidth,
+        nextDrawWidth > 240,
+        state.selectedMenuNames
+      )
+    );
     setPrevDragX(e.pageX);
   };
 
@@ -156,12 +161,17 @@ const SidePanel: React.FC = () => {
 
     const touch = e.touches[0];
     let nextDrawWidth = Math.min(
-      drawerWidth + (prevDragX - touch.pageX),
+      state.drawerWidth + (prevDragX - touch.pageX),
       window.innerWidth
     );
 
-    setDrawerWidth(nextDrawWidth);
-    setOpen(nextDrawWidth > 240);
+    dispatch(
+      changeDrawerState(
+        nextDrawWidth,
+        nextDrawWidth > 240,
+        state.selectedMenuNames
+      )
+    );
     setPrevDragX(touch.pageX);
   };
 
@@ -169,13 +179,25 @@ const SidePanel: React.FC = () => {
     setPrevDragX(null);
   };
 
+  const menuMainsChangedHandler = useValueRef((menuMains: JSX.Element[]) =>
+    setMenuMains(menuMains)
+  );
+
+  const panelProps = {
+    dispatch: dispatch,
+    drawerWidth: state.drawerWidth,
+    open: state.opens,
+    selectedMenuName: state.selectedMenuNames,
+    onMenuMainsChanged: menuMainsChangedHandler,
+  };
+
   const sidePanel = (() => {
-    if (state.mode === TetsimuMode.Simu) {
-      return <SimuSidePanel />;
-    } else if (state.mode === TetsimuMode.Edit) {
-      return <EditSidePanel />;
-    } else if (state.mode === TetsimuMode.Replay) {
-      return <ReplaySidePanel />;
+    if (rootState.mode === TetsimuMode.Simu) {
+      return <SimuSidePanel {...panelProps} />;
+    } else if (rootState.mode === TetsimuMode.Edit) {
+      return <EditSidePanel {...panelProps} />;
+    } else if (rootState.mode === TetsimuMode.Replay) {
+      return <ReplaySidePanel {...panelProps} />;
     } else {
       return <div />;
     }
@@ -187,13 +209,13 @@ const SidePanel: React.FC = () => {
         anchor="right"
         variant="permanent"
         className={clsx({
-          [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open,
+          [classes.drawerOpen]: state.opens,
+          [classes.drawerClose]: !state.opens,
         })}
         classes={{
           paper: clsx(classes.drawerPaper, {
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open,
+            [classes.drawerOpen]: state.opens,
+            [classes.drawerClose]: !state.opens,
           }),
         }}
       >
@@ -210,7 +232,6 @@ const SidePanel: React.FC = () => {
           onTouchMove={handleResizeHandleTouchMove}
           onTouchEnd={handleResizeHandleTouchEnd}
         >
-          {/* {open ? selectedMenuMain : <div />} */}
           {menuMains}
         </div>
         <div className={classes.iconBar}>

@@ -14,8 +14,9 @@ import EditIcon from "@material-ui/icons/Edit";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import clsx from "clsx";
+import { changeDrawerState, changeSelectedMenuName } from "ducks/sidePanel/actions";
 import React from "react";
-import { SidePanelContext } from "../App";
+import { Action } from "types/core";
 import Explorer from "../explorer/Explorer";
 import Help from "../Help";
 import Tools from "./Tools";
@@ -51,55 +52,59 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const SidePanel: React.FC = () => {
-  const [drawerWidth, setDrawerWidth] = React.useContext(
-    SidePanelContext
-  ).drawerWidth;
-  const [open, setOpen] = React.useContext(SidePanelContext).open;
-  const [selectedMenuName, setSelectedMenuName] = React.useContext(
-    SidePanelContext
-  ).selectedMenuName;
-  const [, setMenuMains] = React.useContext(SidePanelContext).menuMains;
+type SidePanelProps = {
+  dispatch: React.Dispatch<Action>;
+  drawerWidth: number;
+  open: boolean;
+  selectedMenuName: string;
+  onMenuMainsChanged: React.MutableRefObject<(menuMains: JSX.Element[]) => void>;
+};
+
+const SidePanel = React.memo<SidePanelProps>((props) => {
+  const dispatch = props.dispatch;
 
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("xs"));
   const classes = useStyles({
-    drawerWidth,
+    drawerWidth: props.drawerWidth,
     maxDrawerWidth: window.innerWidth,
   });
 
   React.useLayoutEffect(() => {
-    if (!IconNames.includes(selectedMenuName as any)) {
-      setSelectedMenuName("edit/tools");
+    if (!IconNames.includes(props.selectedMenuName as any)) {
+      dispatch(changeSelectedMenuName("edit/tools"));
+
     }
 
-    setMenuMains([
-      <Explorer key="explorer" opens={selectedMenuName === "explorer"} />,
-      <Help key="help" opens={selectedMenuName === "help"} />,
-      <Tools key="edit/tools" opens={selectedMenuName === "edit/tools"} />,
+    props.onMenuMainsChanged.current([
+      <Explorer key="explorer" opens={props.selectedMenuName === "explorer"} />,
+      <Help key="help" opens={props.selectedMenuName === "help"} />,
+      <Tools key="edit/tools" opens={props.selectedMenuName === "edit/tools"} />,
     ]);
-  }, [selectedMenuName]);
+  }, [props.selectedMenuName]);
 
   const handleMenuIconClick = (iconName: IconNames) => {
-    if (iconName === selectedMenuName) {
-      if (!open) {
+    if (iconName === props.selectedMenuName) {
+      let drawerWidth = props.drawerWidth;
+      if (!props.open) {
         if (small) {
-          setDrawerWidth(window.innerWidth);
+          drawerWidth = window.innerWidth;
         } else {
-          setDrawerWidth(Math.max(drawerWidth, 240));
+          drawerWidth = Math.max(drawerWidth, 240);
         }
       }
 
-      setSelectedMenuName(iconName);
-      setOpen(!open);
+      dispatch(changeDrawerState(drawerWidth, !props.open, iconName));
     } else {
+      let drawerWidth = props.drawerWidth;
+
       if (small) {
-        setDrawerWidth(window.innerWidth);
+        drawerWidth = window.innerWidth;
       } else {
-        setDrawerWidth(Math.max(drawerWidth, 240));
+        drawerWidth = Math.max(drawerWidth, 240);
       }
-      setSelectedMenuName(iconName);
-      setOpen(true);
+
+      dispatch(changeDrawerState(drawerWidth, true, iconName));
     }
   };
 
@@ -118,7 +123,7 @@ const SidePanel: React.FC = () => {
         <ListItemIcon className={classes.listIcon}>
           <CallToActionIcon
             className={clsx(classes.icon, {
-              selected: selectedMenuName === "edit/tools" && open,
+              selected: props.selectedMenuName === "edit/tools" && props.open,
             })}
           />
         </ListItemIcon>
@@ -132,7 +137,7 @@ const SidePanel: React.FC = () => {
         <ListItemIcon className={classes.listIcon}>
           <PageviewIcon
             className={clsx(classes.icon, {
-              selected: selectedMenuName === "explorer" && open,
+              selected: props.selectedMenuName === "explorer" && props.open,
             })}
           />
         </ListItemIcon>
@@ -145,13 +150,13 @@ const SidePanel: React.FC = () => {
         <ListItemIcon className={classes.listIcon}>
           <HelpOutlineIcon
             className={clsx(classes.icon, {
-              selected: selectedMenuName === "help" && open,
+              selected: props.selectedMenuName === "help" && props.open,
             })}
           />
         </ListItemIcon>
       </ListItem>
     </React.Fragment>
   );
-};
+});
 
 export default SidePanel;

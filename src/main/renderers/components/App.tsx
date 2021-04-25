@@ -1,7 +1,7 @@
 import {
   createMuiTheme,
   MuiThemeProvider,
-  useMediaQuery,
+  useMediaQuery
 } from "@material-ui/core";
 import reducer from "ducks/root";
 import {
@@ -10,8 +10,9 @@ import {
   error,
   initializeApp,
   loadConfigs,
-  loadExplorer,
+  loadExplorer
 } from "ducks/root/actions";
+import { changeOpened } from "ducks/sidePanel/actions";
 import React from "react";
 import { initialRootState } from "stores/RootState";
 import { Action, TetsimuMode } from "types/core";
@@ -39,27 +40,10 @@ export const RootContext = React.createContext({
   dispatch: (_: Action) => {},
 });
 
-type SidePanelContext = {
-  drawerWidth: [number, React.Dispatch<React.SetStateAction<number>>];
-  menuMains: [
-    JSX.Element[],
-    React.Dispatch<React.SetStateAction<JSX.Element[]>>
-  ];
-  open: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-  selectedMenuName: [string, React.Dispatch<React.SetStateAction<string>>];
-};
-export const SidePanelContext = React.createContext({} as SidePanelContext);
-
 const wrappedReducer = reducerLogger(reducer);
 
 const App: React.FC = () => {
   const [state, dispatch] = React.useReducer(wrappedReducer, initialRootState);
-  const [drawerWidth, setDrawerWidth] = React.useState(
-    Math.min(480, window.innerWidth)
-  );
-  const [menuMains, setMenuMains] = React.useState<JSX.Element[]>([]);
-  const [open, setOpen] = React.useState(false);
-  const [selectedMenuName, setSelectedMenuName] = React.useState("");
   const [loadedConfigs, setLoadedConfigs] = React.useState(false);
   const [loadedExplorer, setLoadedExplorer] = React.useState(false);
   const mathces = useMediaQuery("(min-width:1168px)", { noSsr: true });
@@ -72,6 +56,12 @@ const App: React.FC = () => {
   React.useEffect(() => {
     dispatch(loadExplorer());
     setLoadedExplorer(true);
+  }, []);
+
+  React.useEffect(() => {
+    if (mathces) {
+      dispatch(changeOpened(true));
+    }
   }, []);
 
   React.useEffect(() => {
@@ -94,10 +84,6 @@ const App: React.FC = () => {
       }
 
       dispatch(changeTetsimuMode(TetsimuMode.Simu));
-    }
-
-    if (mathces) {
-      setOpen(true);
     }
   }, [loadedConfigs, loadedExplorer]);
 
@@ -139,16 +125,7 @@ const App: React.FC = () => {
         ) : (
           ""
         )}
-        <SidePanelContext.Provider
-          value={{
-            drawerWidth: [drawerWidth, setDrawerWidth],
-            menuMains: [menuMains, setMenuMains],
-            open: [open, setOpen],
-            selectedMenuName: [selectedMenuName, setSelectedMenuName],
-          }}
-        >
-          {sidePanel}
-        </SidePanelContext.Provider>
+        {sidePanel}
       </RootContext.Provider>
     </MuiThemeProvider>
   );
