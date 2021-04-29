@@ -1,7 +1,14 @@
-import { createStyles, IconButton, makeStyles, Theme } from "@material-ui/core";
+import {
+  createStyles,
+  IconButton,
+  makeStyles,
+  Menu,
+  Theme
+} from "@material-ui/core";
 import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import NoteAddIcon from "@material-ui/icons/NoteAdd";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import SyncIcon from "@material-ui/icons/Sync";
@@ -28,6 +35,32 @@ export type FolderProps = {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    folder: {
+      "&.MuiTreeItem-root.Mui-selected": {
+        "& > .MuiTreeItem-content": {
+          "& $menuIcon": {
+            visibility: "visible",
+          },
+        },
+      },
+
+      "&.MuiTreeItem-root:focus": {
+        "& > .MuiTreeItem-content": {
+          "& $menuIcon": {
+            visibility: "visible",
+          },
+        },
+      },
+
+      "&.MuiTreeItem-root": {
+        "& > .MuiTreeItem-content:hover": {
+          "& $menuIcon": {
+            visibility: "visible",
+          },
+        },
+      },
+    },
+
     labelRoot: {
       display: "flex",
       alignItems: "center",
@@ -36,6 +69,10 @@ const useStyles = makeStyles((theme: Theme) =>
       "& .MuiIconButton-root": {
         padding: theme.spacing(0.5),
       },
+    },
+
+    menuIcon: {
+      visibility: "hidden",
     },
   })
 );
@@ -72,7 +109,10 @@ type SyncStateWith = {
 const Folder: React.FC<FolderProps> = (props) => {
   const [opensEditForm, setOpensEditForm] = React.useState(false);
   const [opensAddSyncForm, setOpensAddSyncForm] = React.useState(false);
-  const classes = useStyles();
+  const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(
+    null
+  );
+
   const [syncState, setSyncState] = React.useState<SyncStateWith>({
     addSync: false,
     state: SyncState.Ready,
@@ -116,11 +156,39 @@ const Folder: React.FC<FolderProps> = (props) => {
     });
   }, [props.items]);
 
+  const handleItemKeyDown = (e: React.KeyboardEvent<HTMLLIElement>) => {
+    if (e.key === "Delete") {
+      removeFolder();
+      e.preventDefault();
+    } else if (e.key === "F2") {
+      openEditForm();
+      e.preventDefault();
+    }
+
+    if (e.shiftKey) {
+      if (e.key === "F") {
+        addFolder();
+        e.preventDefault();
+      } else if (e.key === "N") {
+        addFile();
+        e.preventDefault();
+      }
+    }
+  };
+
   const handleEditClick = () => {
+    openEditForm();
+  };
+
+  const openEditForm = () => {
     setOpensEditForm(true);
   };
 
-  const handleAddFolderClick = () => {
+  const handleAddFolderClick = React.useCallback(() => {
+    addFolder();
+  }, []);
+
+  const addFolder = React.useCallback(() => {
     props.eventHandler.current({
       type: ExplorerEventType.FolderAdd,
       payload: {
@@ -128,18 +196,26 @@ const Folder: React.FC<FolderProps> = (props) => {
         dest: props.path,
       },
     });
-  };
+  }, []);
 
-  const handleRemoveFolderClick = () => {
+  const handleRemoveFolderClick = React.useCallback(() => {
+    removeFolder();
+  }, []);
+
+  const removeFolder = React.useCallback(() => {
     props.eventHandler.current({
       type: ExplorerEventType.FolderRemove,
       payload: {
         pathToDelete: props.path,
       },
     });
-  };
+  }, []);
 
-  const handleAddFileClick = () => {
+  const handleAddFileClick = React.useCallback(() => {
+    addFile();
+  }, []);
+
+  const addFile = React.useCallback(() => {
     props.eventHandler.current({
       type: ExplorerEventType.FileAdd,
       payload: {
@@ -147,7 +223,7 @@ const Folder: React.FC<FolderProps> = (props) => {
         newFileName: "NewFile",
       },
     });
-  };
+  }, []);
 
   const handleAddSyncClick = () => {
     setOpensAddSyncForm(true);
@@ -285,10 +361,16 @@ const Folder: React.FC<FolderProps> = (props) => {
     }
   }, [syncState]);
 
+  const handleOpenMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setMenuAnchorEl(event.currentTarget);
+  };
+
+  const classes = useStyles();
+
   return (
     <React.Fragment>
       <TreeItem
-        className="ignore-hotkey"
+        className={`${classes.folder} ignore-hotkey`}
         nodeId={props.nodeId}
         label={
           <div
@@ -297,33 +379,32 @@ const Folder: React.FC<FolderProps> = (props) => {
           >
             <div>{props.name}</div>
             <div style={{ marginLeft: "auto" }}>
-              <IconButton onClick={handleEditClick}>
-                <EditIcon />
-              </IconButton>
-              <IconButton onClick={handleAddFolderClick}>
-                <CreateNewFolderIcon />
-              </IconButton>
-              <IconButton onClick={handleAddFileClick}>
-                <NoteAddIcon />
-              </IconButton>
-              <IconButton onClick={handleAddSyncClick}>
-                <PlaylistAddIcon />
-              </IconButton>
               <IconButton
-                onClick={handleSyncClick}
-                disabled={!props.syncUrl || syncState.state !== SyncState.Ready}
+                className={classes.menuIcon}
+                onClick={handleOpenMenuClick}
               >
-                <SyncIcon />
-              </IconButton>
-              <IconButton onClick={handleRemoveFolderClick}>
-                <DeleteIcon />
+                <MoreHorizIcon />
               </IconButton>
             </div>
           </div>
         }
+        onKeyDown={handleItemKeyDown}
       >
         {items}
       </TreeItem>
+      <FolderMenu
+        anchorEl={menuAnchorEl}
+        syncState={syncState.state}
+        syncUrl={props.syncUrl}
+        onAddFileClick={handleAddFileClick}
+        onEditClick={handleEditClick}
+        onAddFolderClick={handleAddFolderClick}
+        onAddSyncClick={handleAddSyncClick}
+        onRemoveFolderClick={handleRemoveFolderClick}
+        onSyncClick={handleSyncClick}
+        onClose={() => setMenuAnchorEl(null)}
+      />
+
       <EditFolderForm
         folder={thisFolder}
         parentFolder={parentFolder}
@@ -339,5 +420,61 @@ const Folder: React.FC<FolderProps> = (props) => {
     </React.Fragment>
   );
 };
+
+type FolderMenuProps = {
+  anchorEl: Element | null;
+  syncState: SyncState;
+  syncUrl: string;
+  onAddFileClick: () => void;
+  onAddFolderClick: () => void;
+  onAddSyncClick: () => void;
+  onEditClick: () => void;
+  onRemoveFolderClick: () => void;
+  onSyncClick: () => void;
+  onClose: () => void;
+};
+
+const FolderMenu = React.memo<FolderMenuProps>((props) => {
+  const handleMenuClick = (handler: () => void) => {
+    return () => {
+      handler();
+      props.onClose();
+    };
+  };
+
+  return (
+    <Menu
+      anchorEl={props.anchorEl}
+      open={Boolean(props.anchorEl)}
+      onClose={props.onClose}
+    >
+      <div>
+        <IconButton onClick={handleMenuClick(props.onEditClick)}>
+          <EditIcon />
+        </IconButton>
+        <IconButton onClick={handleMenuClick(props.onAddFolderClick)}>
+          <CreateNewFolderIcon />
+        </IconButton>
+        <IconButton onClick={handleMenuClick(props.onAddFileClick)}>
+          <NoteAddIcon />
+        </IconButton>
+      </div>
+      <div>
+        <IconButton onClick={handleMenuClick(props.onAddSyncClick)}>
+          <PlaylistAddIcon />
+        </IconButton>
+        <IconButton
+          onClick={handleMenuClick(props.onSyncClick)}
+          disabled={!props.syncUrl || props.syncState !== SyncState.Ready}
+        >
+          <SyncIcon />
+        </IconButton>
+        <IconButton onClick={handleMenuClick(props.onRemoveFolderClick)}>
+          <DeleteIcon />
+        </IconButton>
+      </div>
+    </Menu>
+  );
+});
 
 export default Folder;

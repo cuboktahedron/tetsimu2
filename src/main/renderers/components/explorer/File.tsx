@@ -1,6 +1,13 @@
-import { createStyles, IconButton, makeStyles, Theme } from "@material-ui/core";
+import {
+  createStyles,
+  IconButton,
+  makeStyles,
+  Menu,
+  Theme
+} from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { TreeItem, TreeItemProps } from "@material-ui/lab";
 import React from "react";
 import { ExplorerItemFile, ExplorerItemFolder } from "stores/ExplorerState";
@@ -19,6 +26,32 @@ export type FileProps = {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    file: {
+      "&.MuiTreeItem-root.Mui-selected": {
+        "& > .MuiTreeItem-content": {
+          "& $menuIcon": {
+            visibility: "visible",
+          },
+        },
+      },
+
+      "&.MuiTreeItem-root:focus": {
+        "& > .MuiTreeItem-content": {
+          "& $menuIcon": {
+            visibility: "visible",
+          },
+        },
+      },
+
+      "&.MuiTreeItem-root": {
+        "& > .MuiTreeItem-content:hover": {
+          "& $menuIcon": {
+            visibility: "visible",
+          },
+        },
+      },
+    },
+
     labelRoot: {
       display: "flex",
       alignItems: "center",
@@ -28,30 +61,39 @@ const useStyles = makeStyles((theme: Theme) =>
         padding: theme.spacing(0.5),
       },
     },
+
+    menuIcon: {
+      visibility: "hidden",
+    },
   })
 );
 
 const File: React.FC<FileProps> = (props) => {
   const [opensEditForm, setOpensEditForm] = React.useState(false);
-  const classes = useStyles();
+  const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(
+    null
+  );
 
-  const handleEditClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
+  const handleEditClick = () => {
+    openEditForm();
+  };
 
+  const openEditForm = () => {
     setOpensEditForm(true);
   };
 
-  const handleRemoveFileClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
+  const handleRemoveFileClick = () => {
+    removeFile();
+    return false;
+  };
 
+  const removeFile = () => {
     props.eventHandler.current({
       type: ExplorerEventType.FileRemove,
       payload: {
         pathToDelete: props.path,
       },
     });
-
-    return false;
   };
 
   const handleEditClose = () => {
@@ -88,29 +130,50 @@ const File: React.FC<FileProps> = (props) => {
           parameters: props.parameters,
         },
       });
+      e.preventDefault();
+    } else if (e.key === "Delete") {
+      removeFile();
+      e.preventDefault();
+    } else if (e.key === "F2") {
+      openEditForm();
+      e.preventDefault();
     }
   };
 
+  const handleOpenMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+
+    setMenuAnchorEl(event.currentTarget);
+  };
+
+  const classes = useStyles();
   const { path, eventHandler: eventHandler, parentFolder, ...file } = props;
+
   return (
     <React.Fragment>
       <TreeItem
-        className="ignore-hotkey"
+        className={`${classes.file} ignore-hotkey`}
         nodeId={props.nodeId}
         label={
           <div className={classes.labelRoot} onClick={handleItemClick}>
             {props.name}
             <div style={{ marginLeft: "auto" }}>
-              <IconButton onClick={handleEditClick}>
-                <EditIcon />
-              </IconButton>
-              <IconButton onClick={handleRemoveFileClick}>
-                <DeleteIcon />
+              <IconButton
+                className={classes.menuIcon}
+                onClick={handleOpenMenuClick}
+              >
+                <MoreHorizIcon />
               </IconButton>
             </div>
           </div>
         }
         onKeyDown={handleItemKeyDown}
+      />
+      <FileMenu
+        anchorEl={menuAnchorEl}
+        onEditClick={handleEditClick}
+        onRemoveFileClick={handleRemoveFileClick}
+        onClose={() => setMenuAnchorEl(null)}
       />
       <EditFileForm
         file={file}
@@ -122,5 +185,38 @@ const File: React.FC<FileProps> = (props) => {
     </React.Fragment>
   );
 };
+
+type FileMenuProps = {
+  anchorEl: Element | null;
+  onEditClick: () => void;
+  onRemoveFileClick: () => void;
+  onClose: () => void;
+};
+
+const FileMenu = React.memo<FileMenuProps>((props) => {
+  const handleMenuClick = (handler: () => void) => {
+    return () => {
+      handler();
+      props.onClose();
+    };
+  };
+
+  return (
+    <Menu
+      anchorEl={props.anchorEl}
+      open={Boolean(props.anchorEl)}
+      onClose={props.onClose}
+    >
+      <div>
+        <IconButton onClick={handleMenuClick(props.onEditClick)}>
+          <EditIcon />
+        </IconButton>
+        <IconButton onClick={handleMenuClick(props.onRemoveFileClick)}>
+          <DeleteIcon />
+        </IconButton>
+      </div>
+    </Menu>
+  );
+});
 
 export default File;
