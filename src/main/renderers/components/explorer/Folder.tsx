@@ -5,6 +5,7 @@ import {
   Menu,
   Theme,
 } from "@material-ui/core";
+import { blue } from "@material-ui/core/colors";
 import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -15,8 +16,10 @@ import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import SyncIcon from "@material-ui/icons/Sync";
 import { TreeItem, TreeItemProps } from "@material-ui/lab";
 import { getOrderedItems } from "ducks/explorer/selectors";
-import React from "react";
+import React, { useRef } from "react";
+import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import { ExplorerItemFolder, ExplorerItemType } from "stores/ExplorerState";
+import { DragItemData, DragItemTypes } from "types/explorer";
 import {
   ExplorerEvent,
   ExplorerEventType,
@@ -114,6 +117,76 @@ const Folder: React.FC<FolderProps> = (props) => {
     null
   );
   const downloadAnchorRef = React.useRef<HTMLAnchorElement | null>(null);
+  const dragDropRef = useRef<HTMLDivElement>(null);
+
+  const [, drag] = useDrag(
+    () => ({
+      item: {
+        id: props.id,
+        name: props.name,
+        nodeId: props.nodeId,
+        path: props.path,
+        type: ExplorerItemType.Folder,
+      },
+      type: DragItemTypes.Folder,
+      collect: (monitor) => ({
+        isDragging: !!monitor.isDragging(),
+      }),
+    }),
+    [props]
+  );
+
+  const [{ isOver, canDrop }, drop] = useDrop(
+    () => ({
+      accept: [DragItemTypes.Folder, DragItemTypes.File],
+      canDrop: (item: DragItemData, monitor) => canDropItem(item, monitor),
+      drop: (item: DragItemData, monitor) => {
+        if (monitor.didDrop()) {
+          return;
+        }
+
+        props.eventHandler.current({
+          type: ExplorerEventType.ItemMove,
+          payload: {
+            from: item.path,
+            itemType: item.type,
+            to: props.path,
+          },
+        });
+      },
+
+      collect: (monitor) => ({
+        isOver: !!monitor.isOver(),
+        canDrop: !!monitor.canDrop(),
+      }),
+    }),
+    [props]
+  );
+
+  drag(drop(dragDropRef));
+
+  const canDropItem = (
+    dragItem: DragItemData,
+    monitor: DropTargetMonitor<unknown, unknown>
+  ): boolean => {
+    if (!monitor.isOver({ shallow: true })) {
+      return false;
+    }
+
+    if (props.nodeId.startsWith(dragItem.nodeId)) {
+      return false;
+    }
+
+    if (
+      Object.values(props.items).some(
+        (item) => item.id === dragItem.id || item.name === dragItem.name
+      )
+    ) {
+      return false;
+    }
+
+    return true;
+  };
 
   const [syncState, setSyncState] = React.useState<SyncStateWith>({
     addSync: false,
@@ -271,7 +344,7 @@ const Folder: React.FC<FolderProps> = (props) => {
 
   const handleDownloadClick = () => {
     if (downloadAnchorRef.current === null) {
-      return;      
+      return;
     }
 
     const saveData = JSON.stringify({
@@ -393,7 +466,10 @@ const Folder: React.FC<FolderProps> = (props) => {
   const classes = useStyles();
 
   return (
-    <React.Fragment>
+    <div
+      ref={dragDropRef}
+      style={isOver && canDrop ? { background: `${blue[700]}40` } : {}}
+    >
       <TreeItem
         className={`${classes.folder} ignore-hotkey`}
         nodeId={props.nodeId}
@@ -443,8 +519,8 @@ const Folder: React.FC<FolderProps> = (props) => {
         onClose={handleAddSyncClose}
         onSync={handleAddSyncSync}
       />
-      <a ref={downloadAnchorRef} style={{display: "none"}} />
-    </React.Fragment>
+      <a ref={downloadAnchorRef} style={{ display: "none" }} />
+    </div>
   );
 };
 

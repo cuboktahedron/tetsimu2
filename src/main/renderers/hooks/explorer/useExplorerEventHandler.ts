@@ -2,6 +2,7 @@ import {
   addFile,
   addFolder,
   addSyncFolder,
+  moveItem,
   removeFile,
   removeFolder,
   saveFile,
@@ -98,6 +99,17 @@ export const useExplorerEventHandler = (
           syncFolder(
             event.payload.pathToSync,
             event.payload.syncData,
+            state.rootFolder
+          )
+        );
+        break;
+      }
+      case ExplorerEventType.ItemMove: {
+        dispatch(
+          moveItem(
+            event.payload.itemType,
+            event.payload.from,
+            event.payload.to,
             state.rootFolder
           )
         );

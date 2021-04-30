@@ -3,12 +3,12 @@ import {
   ExplorerItemFolder,
   ExplorerItemType,
   ExplorerRootFolder,
-  Path,
+  Path
 } from "stores/ExplorerState";
 import {
   ExplorerHelper,
   FileHelper,
-  FolderHelper,
+  FolderHelper
 } from "utils/tetsimu/explorer/explorerHelper";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -16,11 +16,12 @@ import {
   AddFolderAction,
   AddSyncFolderAction,
   ExplorerActionsType,
+  MoveItemAction,
   RemoveFileAction,
   RemoveFolderAction,
   SaveFileAction,
   SaveFolderAction,
-  SyncFolderAction,
+  SyncFolderAction
 } from "./types";
 
 export const addFile = (
@@ -93,6 +94,37 @@ export const addSyncFolder = (
     type: ExplorerActionsType.AddSyncFolder,
     payload: {
       rootFolder: folder.root,
+    },
+  };
+};
+
+export const moveItem = (
+  itemType: ExplorerItemType,
+  from: Path,
+  to: Path,
+  rootFolder: ExplorerRootFolder
+): MoveItemAction => {
+  const helper = new ExplorerHelper(rootFolder);
+  if (itemType === ExplorerItemType.File) {
+    const fromFile = helper.file(from) as FileHelper;
+    const toFolder = helper.folder(to) as FolderHelper;
+    toFolder.addFile(fromFile.raw);
+    fromFile.remove();
+  } else if (itemType === ExplorerItemType.Folder) {
+    const fromFolder = helper.folder(from) as FolderHelper;
+    const toFolder = helper.folder(to) as FolderHelper;
+    toFolder.addFolder(fromFolder.raw);
+    fromFolder.remove();
+  } else {
+    throw new Error(`Invalid explorer item type(${itemType}) passed.`);
+  }
+
+  localStorage.setItem("explorer.rootFolder", JSON.stringify(helper.root));
+
+  return {
+    type: ExplorerActionsType.MoveItem,
+    payload: {
+      rootFolder: helper.root,
     },
   };
 };

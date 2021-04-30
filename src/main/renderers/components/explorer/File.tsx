@@ -3,17 +3,23 @@ import {
   IconButton,
   makeStyles,
   Menu,
-  Theme
+  Theme,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { TreeItem, TreeItemProps } from "@material-ui/lab";
 import React from "react";
-import { ExplorerItemFile, ExplorerItemFolder } from "stores/ExplorerState";
+import { useDrag } from "react-dnd";
+import {
+  ExplorerItemFile,
+  ExplorerItemFolder,
+  ExplorerItemType,
+} from "stores/ExplorerState";
+import { DragItemTypes as DragItemTypes } from "types/explorer";
 import {
   ExplorerEvent,
-  ExplorerEventType
+  ExplorerEventType,
 } from "utils/tetsimu/explorer/explorerEvent";
 import EditFileForm from "./EditFileForm";
 
@@ -72,6 +78,23 @@ const File: React.FC<FileProps> = (props) => {
   const [opensEditForm, setOpensEditForm] = React.useState(false);
   const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(
     null
+  );
+
+  const [, drag] = useDrag(
+    () => ({
+      item: {
+        id: props.id,
+        name: props.name,
+        nodeId: props.nodeId,
+        path: props.path,
+        type: ExplorerItemType.File,
+      },
+      type: DragItemTypes.File,
+      collect: (monitor) => ({
+        isDragging: !!monitor.isDragging(),
+      }),
+    }),
+    [props]
   );
 
   const handleEditClick = () => {
@@ -150,7 +173,7 @@ const File: React.FC<FileProps> = (props) => {
   const { path, eventHandler: eventHandler, parentFolder, ...file } = props;
 
   return (
-    <React.Fragment>
+    <div ref={drag}>
       <TreeItem
         className={`${classes.file} ignore-hotkey`}
         nodeId={props.nodeId}
@@ -182,7 +205,7 @@ const File: React.FC<FileProps> = (props) => {
         onClose={handleEditClose}
         onSave={handleEditSave}
       />
-    </React.Fragment>
+    </div>
   );
 };
 

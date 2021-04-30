@@ -14,6 +14,8 @@ import {
 } from "ducks/root/actions";
 import { changeOpened } from "ducks/sidePanel/actions";
 import React from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { initialRootState } from "stores/RootState";
 import { Action, TetsimuMode } from "types/core";
 import { reducerLogger } from "utils/reducerLogger";
@@ -115,17 +117,19 @@ const App: React.FC = () => {
   return (
     <MuiThemeProvider theme={theme}>
       <RootContext.Provider value={{ state, dispatch }}>
-        {main}
-        {state.dialog.error ? (
-          <ErrorDialog
-            title={state.dialog.error.title}
-            message={state.dialog.error.message}
-            onClose={handleErrorDialogClose}
-          />
-        ) : (
-          ""
-        )}
-        {sidePanel}
+        <DndProvider backend={HTML5Backend}>
+          {main}
+          {state.dialog.error ? (
+            <ErrorDialog
+              title={state.dialog.error.title}
+              message={state.dialog.error.message}
+              onClose={handleErrorDialogClose}
+            />
+          ) : (
+            ""
+          )}
+          {sidePanel}
+        </DndProvider>
       </RootContext.Provider>
     </MuiThemeProvider>
   );

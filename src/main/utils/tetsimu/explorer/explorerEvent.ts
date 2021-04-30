@@ -1,7 +1,8 @@
 import {
   ExplorerItemFile,
   ExplorerItemFolder,
-  Path
+  ExplorerItemType,
+  Path,
 } from "stores/ExplorerState";
 
 export const ExplorerEventType = {
@@ -14,6 +15,7 @@ export const ExplorerEventType = {
   FolderRemove: "folderRemove",
   FolderSave: "folderSave",
   FolderSync: "folderSync",
+  ItemMove: "itemMove",
   SyncFolderAdd: "syncFolderAdd",
 } as const;
 
@@ -88,6 +90,15 @@ export type FolderSync = {
   };
 };
 
+export type ItemMove = {
+  type: typeof ExplorerEventType.ItemMove;
+  payload: {
+    from: Path;
+    itemType: ExplorerItemType;
+    to: Path;
+  };
+};
+
 export type SyncFolderAdd = {
   type: typeof ExplorerEventType.SyncFolderAdd;
   payload: {
@@ -97,8 +108,8 @@ export type SyncFolderAdd = {
 };
 
 export type ExplorerEvent =
-| ErrorOccured
-| FileAdd
+  | ErrorOccured
+  | FileAdd
   | FileLoad
   | FileRemove
   | FileSave
@@ -106,6 +117,7 @@ export type ExplorerEvent =
   | FolderRemove
   | FolderSave
   | FolderSync
+  | ItemMove
   | SyncFolderAdd;
 
 export type ExplorerEventHandler = (event: ExplorerEvent) => void;

@@ -4,14 +4,19 @@ import {
   ExplorerItemType,
   ExplorerRootFolder,
   FolderItems,
-  Path,
+  Path
 } from "stores/ExplorerState";
 
 export class ExplorerHelper {
   private rootFolder: ExplorerRootFolder;
+  private markAsProtected: { [key: string]: boolean } = {};
 
   constructor(_rootFolder: ExplorerRootFolder) {
     this.rootFolder = { ..._rootFolder, items: { ..._rootFolder.items } };
+  }
+
+  get root(): ExplorerRootFolder {
+    return this.rootFolder;
   }
 
   folder(path: Path): FolderHelper | null {
@@ -19,6 +24,7 @@ export class ExplorerHelper {
       return null;
     }
 
+    let idPath = this.root.id;
     const dirs = [...path.split("/")].filter((dir) => dir !== "");
     let currentFolder = this.rootFolder;
     let parentFolder: ExplorerItemFolder | null = null;
@@ -37,11 +43,17 @@ export class ExplorerHelper {
         return null;
       }
 
-      const orgFolder = currentFolder.items[folder.id] as ExplorerItemFolder;
-      currentFolder.items[folder.id] = {
-        ...orgFolder,
-        items: { ...orgFolder.items },
-      };
+      idPath += `/${folder.id}`;
+      if (!this.markAsProtected[idPath]) {
+        const orgFolder = currentFolder.items[folder.id] as ExplorerItemFolder;
+        currentFolder.items[folder.id] = {
+          ...orgFolder,
+          items: { ...orgFolder.items },
+        };
+
+        this.markAsProtected[idPath] = true;
+      }
+
       parentFolder = currentFolder;
       currentFolder = currentFolder.items[folder.id] as ExplorerItemFolder;
     }
@@ -157,7 +169,7 @@ export class FolderHelper {
       }
     }
 
-    let newName = nameBody + ((suffixCount === 0) ? "" : "" + suffixCount);
+    let newName = nameBody + (suffixCount === 0 ? "" : "" + suffixCount);
 
     while (true) {
       const item = Object.values(this.folder.items).find(
@@ -181,6 +193,10 @@ export class FileHelper {
     private parentFolder: ExplorerItemFolder,
     private rootFolder: ExplorerRootFolder
   ) {}
+
+  get raw(): ExplorerItemFile {
+    return this.file;
+  }
 
   get id(): string {
     return this.file.id;

@@ -3,7 +3,7 @@ import {
   makeStyles,
   SvgIcon,
   SvgIconProps,
-  Theme,
+  Theme
 } from "@material-ui/core";
 import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
 import TreeView from "@material-ui/lab/TreeView";

@@ -38,9 +38,7 @@ const PlayModeSettings = React.memo<PlayModeSettingsProps>((props) => {
     );
   };
 
-  console.log("out", props.stateRef.current);
   React.useLayoutEffect(() => {
-    console.log("in", props.stateRef.current);
     if (playMode !== config.playMode) {
       dispatch(clearSimu(getSimuConductor(props.stateRef.current)));
       setPlayMode(config.playMode);

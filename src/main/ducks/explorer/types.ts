@@ -5,6 +5,7 @@ export const ExplorerActionsType = {
   AddFile: "explorer/addFile",
   AddFolder: "explorer/addFolder",
   AddSyncFolder: "explorer/addSyncFolder",
+  MoveItem: "explorer/moveItem",
   RemoveFile: "explorer/removeFile",
   RemoveFolder: "explorer/removeFolder",
   SaveFile: "explorer/saveFile",
@@ -16,6 +17,7 @@ export type ExplorerActions =
   | AddFileAction
   | AddFolderAction
   | AddSyncFolderAction
+  | MoveItemAction
   | RemoveFileAction
   | RemoveFolderAction
   | SaveFileAction
@@ -38,6 +40,13 @@ export type AddFolderAction = {
 
 export type AddSyncFolderAction = {
   type: typeof ExplorerActionsType.AddSyncFolder;
+  payload: {
+    rootFolder: ExplorerRootFolder;
+  };
+} & Action;
+
+export type MoveItemAction = {
+  type: typeof ExplorerActionsType.MoveItem;
   payload: {
     rootFolder: ExplorerRootFolder;
   };
