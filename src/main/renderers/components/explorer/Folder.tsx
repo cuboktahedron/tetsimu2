@@ -3,11 +3,12 @@ import {
   IconButton,
   makeStyles,
   Menu,
-  Theme
+  Theme,
 } from "@material-ui/core";
 import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import GetAppIcon from "@material-ui/icons/GetApp";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import NoteAddIcon from "@material-ui/icons/NoteAdd";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
@@ -18,7 +19,7 @@ import React from "react";
 import { ExplorerItemFolder, ExplorerItemType } from "stores/ExplorerState";
 import {
   ExplorerEvent,
-  ExplorerEventType
+  ExplorerEventType,
 } from "utils/tetsimu/explorer/explorerEvent";
 import { fetchExplorerItemFolder } from "utils/tetsimu/explorer/fetchUtils";
 import { validateSyncedData } from "utils/tetsimu/explorer/validator";
@@ -112,6 +113,7 @@ const Folder: React.FC<FolderProps> = (props) => {
   const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(
     null
   );
+  const downloadAnchorRef = React.useRef<HTMLAnchorElement | null>(null);
 
   const [syncState, setSyncState] = React.useState<SyncStateWith>({
     addSync: false,
@@ -267,6 +269,29 @@ const Folder: React.FC<FolderProps> = (props) => {
     });
   };
 
+  const handleDownloadClick = () => {
+    if (downloadAnchorRef.current === null) {
+      return;      
+    }
+
+    const saveData = JSON.stringify({
+      type: ExplorerItemType.Folder,
+      description: props.description,
+      id: props.id,
+      items: props.items,
+      name: props.name,
+      syncUrl: props.syncUrl,
+    });
+
+    const href = URL.createObjectURL(
+      new Blob([saveData], { type: "text/json" })
+    );
+    const download = `${props.name}_${new Date().getTime()}.dat`;
+    downloadAnchorRef.current.href = href;
+    downloadAnchorRef.current.download = download;
+    downloadAnchorRef.current.click();
+  };
+
   React.useEffect(() => {
     let unmounted = false;
 
@@ -400,6 +425,7 @@ const Folder: React.FC<FolderProps> = (props) => {
         onEditClick={handleEditClick}
         onAddFolderClick={handleAddFolderClick}
         onAddSyncClick={handleAddSyncClick}
+        onDownloadClick={handleDownloadClick}
         onRemoveFolderClick={handleRemoveFolderClick}
         onSyncClick={handleSyncClick}
         onClose={() => setMenuAnchorEl(null)}
@@ -417,6 +443,7 @@ const Folder: React.FC<FolderProps> = (props) => {
         onClose={handleAddSyncClose}
         onSync={handleAddSyncSync}
       />
+      <a ref={downloadAnchorRef} style={{display: "none"}} />
     </React.Fragment>
   );
 };
@@ -428,6 +455,7 @@ type FolderMenuProps = {
   onAddFileClick: () => void;
   onAddFolderClick: () => void;
   onAddSyncClick: () => void;
+  onDownloadClick: () => void;
   onEditClick: () => void;
   onRemoveFolderClick: () => void;
   onSyncClick: () => void;
@@ -469,6 +497,11 @@ const FolderMenu = React.memo<FolderMenuProps>((props) => {
         >
           <SyncIcon />
         </IconButton>
+        <IconButton onClick={handleMenuClick(props.onDownloadClick)}>
+          <GetAppIcon />
+        </IconButton>
+      </div>
+      <div>
         <IconButton onClick={handleMenuClick(props.onRemoveFolderClick)}>
           <DeleteIcon />
         </IconButton>
