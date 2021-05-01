@@ -74,7 +74,7 @@ describe("replayUrl", () => {
       const nn = "12";
       const or = "3";
       const m = TetsimuMode.Replay;
-      const v = "2.03";
+      const v = "2.04";
       const expected = `${loc}?f=${f}&ns=${ns}&ss=${ss}&h=${h}&nc=${nc}&nn=${nn}&or=${or}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
@@ -115,7 +115,7 @@ describe("replayUrl", () => {
       const loc = location.href.replace(/\?.*$/, "");
       const ns = "IA__";
       const m = TetsimuMode.Replay;
-      const v = "2.03";
+      const v = "2.04";
       const expected = `${loc}?ns=${ns}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
@@ -165,6 +165,7 @@ describe("replayUrl", () => {
           makeReplayDropStep(Direction.Left, 8, 20, SpinType.Spin),
           makeReplayHardDropStep({ cols: [1, 2, 3], line: 5 }),
         ],
+        syncUrl: "",
       };
 
       expect(actual).toEqual(expected);
@@ -182,6 +183,7 @@ describe("replayUrl", () => {
         numberOfCycle: 1,
         replayNexts: makeTetrominos(""),
         replaySteps: [],
+        syncUrl: "",
       };
 
       expect(actual).toEqual(expected);
@@ -224,6 +226,7 @@ describe("replayUrl", () => {
           makeReplayDropStep(Direction.Down, 2, 1, SpinType.Spin),
           makeReplayHardDropStep(),
         ],
+        syncUrl: "",
       };
 
       expect(actual).toEqual(expected);

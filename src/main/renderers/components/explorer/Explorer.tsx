@@ -13,6 +13,7 @@ import React from "react";
 import { useExplorerEventHandler } from "renderers/hooks/explorer/useExplorerEventHandler";
 import { useValueRef } from "renderers/hooks/useValueRef";
 import { ExplorerItemType } from "stores/ExplorerState";
+import { ExplorerIds } from "types/explorer";
 import { ExplorerEventType } from "utils/tetsimu/explorer/explorerEvent";
 import { RootContext } from "../App";
 import Folder from "./Folder";
@@ -78,6 +79,9 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
         return (
           <Folder
             {...root}
+            initialSyncUrl={
+              root.id === ExplorerIds.TempFolder ? state.initialSyncUrl : ""
+            }
             key={root.id}
             nodeId={`/${root.id}`}
             parentFolder={state.rootFolder}

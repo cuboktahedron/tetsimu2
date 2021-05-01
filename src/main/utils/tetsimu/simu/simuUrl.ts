@@ -4,24 +4,24 @@ import {
   HoldState,
   NextNote,
   Tetromino,
-  TetsimuMode
+  TetsimuMode,
 } from "types/core";
 import {
   deserializeField as deserializeField097,
   deserializeHold as deserializeHold097,
-  deserializeNexts as deserializeNexts097
+  deserializeNexts as deserializeNexts097,
 } from "../097/deserializer";
 import {
   deserializeField,
   deserializeHold,
-  deserializeNexts
+  deserializeNexts,
 } from "../deserializer";
 import NextNotesInterpreter from "../nextNotesInterpreter";
 import {
   serializeField,
   serializeHold,
   serializeNexts,
-  serializeSteps
+  serializeSteps,
 } from "../serializer";
 import { UnsupportedUrlError } from "../unsupportedUrlError";
 
@@ -35,10 +35,11 @@ export type SimuStateFragments = {
   numberOfCycle: number;
   nextNotes: NextNote[];
   seed: number;
+  syncUrl: string;
 };
 
 class SimuUrl {
-  private static DefaultVersion = "2.03";
+  private static DefaultVersion = "2.04";
 
   fromState(state: SimuState): string {
     const gen = new SimuUrl201();
@@ -62,13 +63,14 @@ class SimuUrl {
 }
 
 class SimuUrl201 {
-  public static Version = "2.03";
+  public static Version = "2.04";
 
   toState(params: { [key: string]: string }): SimuStateFragments {
     const f = params.f ?? "";
     const ns = params.ns ?? "";
     const np = params.np ?? "";
     const h = params.h ?? "0";
+    const syncUrl = params.surl ?? "";
 
     const numberOfCycle = (() => {
       const nc = parseInt(params.nc);
@@ -123,6 +125,7 @@ class SimuUrl201 {
       numberOfCycle,
       nextNotes,
       seed,
+      syncUrl,
     };
   }
 
@@ -214,6 +217,7 @@ class SimuUrl097 {
       numberOfCycle: 1,
       nextNotes,
       seed,
+      syncUrl: "",
     };
   }
 }

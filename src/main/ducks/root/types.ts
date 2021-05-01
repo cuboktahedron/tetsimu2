@@ -1,6 +1,7 @@
 import { EditState } from "stores/EditState";
-import { ExplorerRootFolder } from "stores/ExplorerState";
+import { ExplorerRootFolder, ExplorerState } from "stores/ExplorerState";
 import { ReplayState } from "stores/ReplayState";
+import { SidePanelState } from "stores/SidePanelState";
 import { GarbageInfo, SimuState } from "stores/SimuState";
 import {
   Action,
@@ -12,7 +13,7 @@ import {
   NextNote,
   ReplayStep,
   Tetromino,
-  TetsimuMode
+  TetsimuMode,
 } from "types/core";
 import { ReplayConfig, ReplayStateHistory } from "types/replay";
 import { SimuConfig, SimuRetryState } from "types/simu";
@@ -84,8 +85,10 @@ export type InitializeAppAction = {
   type: typeof RootActionsType.InitializeApp;
   payload: {
     edit: EditState;
+    explorer: ExplorerState;
     mode: TetsimuMode;
     replay: ReplayState;
+    sidePanel: SidePanelState;
     simu: SimuState;
   };
 } & Action;

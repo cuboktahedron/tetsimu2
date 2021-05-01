@@ -2,12 +2,18 @@ import merge from "deepmerge";
 import {
   getNextAttacks,
   getReplayConductor,
-  getUrgentAttack,
+  getUrgentAttack
 } from "ducks/replay/selectors";
 import { EditState } from "stores/EditState";
-import { ExplorerRootFolder, initialExplorerState } from "stores/ExplorerState";
+import {
+  ExplorerItemType,
+  ExplorerRootFolder,
+  ExplorerState,
+  initialExplorerState
+} from "stores/ExplorerState";
 import { initialReplayState, ReplayState } from "stores/ReplayState";
 import { RootState } from "stores/RootState";
+import { SidePanelState } from "stores/SidePanelState";
 import { GarbageInfo, initialSimuState, SimuState } from "stores/SimuState";
 import {
   ActiveTetromino,
@@ -21,8 +27,9 @@ import {
   ReplayStepType,
   SpinType,
   Tetromino,
-  TetsimuMode,
+  TetsimuMode
 } from "types/core";
+import { ExplorerIds } from "types/explorer";
 import { ReplayConfig } from "types/replay";
 import { SimuConfig } from "types/simu";
 import { getItemOrDefault } from "utils/localStorage";
@@ -33,12 +40,12 @@ import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 import { ReplayConductor } from "utils/tetsimu/replay/replayConductor";
 import ReplayUrl, {
-  ReplayStateFragments,
+  ReplayStateFragments
 } from "utils/tetsimu/replay/replayUrl";
 import GarbageGenerator from "utils/tetsimu/simu/garbageGenerator";
 import SimuUrl, {
   SimuStateFragments,
-  UNSPECIFIED_SEED,
+  UNSPECIFIED_SEED
 } from "utils/tetsimu/simu/simuUrl";
 import {
   ChangeTetsimuModeAction,
@@ -51,7 +58,7 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction,
+  SimuToReplayAction
 } from "./types";
 
 export const changeTetsimuMode = (
@@ -192,8 +199,13 @@ export const initializeApp = (
         type: RootActionsType.InitializeApp,
         payload: {
           ...state,
-          mode: TetsimuMode.Edit,
           edit: initializeEditState(state.edit, fragments),
+          explorer: initializeExplorerState(
+            state.explorer,
+            fragments.syncUrl ?? ""
+          ),
+          mode: TetsimuMode.Edit,
+          sidePanel: initializeEditSidePanelState(state.sidePanel, fragments),
         },
       };
     }
@@ -203,8 +215,13 @@ export const initializeApp = (
         type: RootActionsType.InitializeApp,
         payload: {
           ...state,
+          explorer: initializeExplorerState(
+            state.explorer,
+            fragments.syncUrl ?? ""
+          ),
           mode: TetsimuMode.Replay,
           replay: initializeReplayState(state.replay, fragments),
+          sidePanel: initializeReplaySidePanelState(state.sidePanel, fragments),
         },
       };
     }
@@ -214,7 +231,12 @@ export const initializeApp = (
         type: RootActionsType.InitializeApp,
         payload: {
           ...state,
+          explorer: initializeExplorerState(
+            state.explorer,
+            fragments.syncUrl ?? ""
+          ),
           mode: TetsimuMode.Simu,
+          sidePanel: initializeSimuSidePanelState(state.sidePanel, fragments),
           simu: initializeSimuState(state.simu, fragments),
         },
       };
@@ -524,6 +546,58 @@ const convertReplaySteps = (conductor: ReplayConductor): ReplayStep[] => {
   return conductor.state.replaySteps;
 };
 
+const initializeExplorerState = (
+  state: ExplorerState,
+  syncUrl: string
+): ExplorerState => {
+  return {
+    ...state,
+    initialSyncUrl: syncUrl,
+  };
+};
+
+const initializeEditSidePanelState = (
+  state: SidePanelState,
+  fragments: EditStateFragments
+): SidePanelState => {
+  if (fragments.syncUrl) {
+    return {
+      ...state,
+      selectedMenuNames: "explorer",
+    };
+  } else {
+    return state;
+  }
+};
+
+const initializeReplaySidePanelState = (
+  state: SidePanelState,
+  fragments: ReplayStateFragments
+): SidePanelState => {
+  if (fragments.syncUrl) {
+    return {
+      ...state,
+      selectedMenuNames: "explorer",
+    };
+  } else {
+    return state;
+  }
+};
+
+const initializeSimuSidePanelState = (
+  state: SidePanelState,
+  fragments: SimuStateFragments
+): SidePanelState => {
+  if (fragments.syncUrl) {
+    return {
+      ...state,
+      selectedMenuNames: "explorer",
+    };
+  } else {
+    return state;
+  }
+};
+
 export const loadConfigs = (): LoadConfigsAction => {
   const replay = (() => {
     const config = getItemOrDefault<ReplayConfig>(
@@ -558,6 +632,15 @@ export const loadExplorer = (): LoadExplorerAction => {
       "explorer.rootFolder",
       initialExplorerState.rootFolder
     );
+
+    rootFolder.items[ExplorerIds.TempFolder] = {
+      description: "The contents of this folder will not be saved.",
+      id: ExplorerIds.TempFolder,
+      items: {},
+      name: "Temp",
+      syncUrl: "",
+      type: ExplorerItemType.Folder,
+    };
 
     return rootFolder;
   })();

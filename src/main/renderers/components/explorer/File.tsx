@@ -3,7 +3,7 @@ import {
   IconButton,
   makeStyles,
   Menu,
-  Theme,
+  Theme
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -14,12 +14,12 @@ import { useDrag } from "react-dnd";
 import {
   ExplorerItemFile,
   ExplorerItemFolder,
-  ExplorerItemType,
+  ExplorerItemType
 } from "stores/ExplorerState";
 import { DragItemTypes as DragItemTypes } from "types/explorer";
 import {
   ExplorerEvent,
-  ExplorerEventType,
+  ExplorerEventType
 } from "utils/tetsimu/explorer/explorerEvent";
 import EditFileForm from "./EditFileForm";
 

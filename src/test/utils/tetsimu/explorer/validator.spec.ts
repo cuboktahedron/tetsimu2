@@ -1,3 +1,4 @@
+import { ExplorerIds } from "types/explorer";
 import {
   validateFileData,
   validateFolderData,
@@ -12,7 +13,7 @@ describe("validate", () => {
   //     + 1-2: folder1-2
   //     1-3: file1-3
   //   + 2: folder2
-  const root = makeFolder("__root__", "roor");
+  const root = makeFolder(ExplorerIds.Root, "roor");
   const folder1 = makeFolder("1", "folder1");
   folder1.items["1-1"] = makeFolder("1-1", "folder1-1");
   folder1.items["1-2"] = makeFolder("1-2", "folder1-2");

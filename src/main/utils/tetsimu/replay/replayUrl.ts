@@ -34,10 +34,11 @@ export type ReplayStateFragments = {
   numberOfCycle: number;
   replayNexts: Tetromino[];
   replaySteps: ReplayStep[];
+  syncUrl: string;
 };
 
 class ReplayUrl {
-  private static DefaultVersion = "2.03";
+  private static DefaultVersion = "2.04";
 
   fromState(state: ReplayState): string {
     const gen = new ReplayUrl201();
@@ -61,13 +62,14 @@ class ReplayUrl {
 }
 
 class ReplayUrl201 {
-  public static Version = "2.03";
+  public static Version = "2.04";
 
   toState(params: { [key: string]: string }): ReplayStateFragments {
     const f = params.f ?? "";
     const ns = params.ns ?? "";
     const ss = params.ss ?? "";
     const h = params.h ?? "0";
+    const syncUrl = params.surl ?? "";
 
     const paramToNumber = (
       param: string,
@@ -99,6 +101,7 @@ class ReplayUrl201 {
       numberOfCycle,
       replayNexts,
       replaySteps,
+      syncUrl,
     };
   }
 
@@ -165,6 +168,7 @@ class ReplayUrl097 {
       numberOfCycle: 1,
       replayNexts,
       replaySteps,
+      syncUrl: "",
     };
   }
 }

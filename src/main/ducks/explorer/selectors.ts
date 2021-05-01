@@ -1,13 +1,17 @@
 import { ExplorerItem, FolderItems } from "stores/ExplorerState";
+import { ExplorerIds } from "types/explorer";
 
 export const getOrderedItems = (items: FolderItems): ExplorerItem[] => {
-  // TODO: order variation
   const orderedItems = Object.values(items)
     .map((item: ExplorerItem) => {
       return item;
     })
     .sort((item1, item2) => {
-      if (item1.type !== item2.type) {
+      if (item1.id === ExplorerIds.TempFolder) {
+        return 1;
+      } else if (item2.id === ExplorerIds.TempFolder) {
+        return -1
+      } else if (item1.type !== item2.type) {
         return item1.type - item2.type;
       } else if (item1.name < item2.name) {
         return -1;

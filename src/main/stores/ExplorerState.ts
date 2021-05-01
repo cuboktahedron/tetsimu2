@@ -1,4 +1,7 @@
+import { ExplorerIds } from "types/explorer";
+
 export type ExplorerState = {
+  initialSyncUrl: string;
   rootFolder: ExplorerRootFolder;
 };
 
@@ -34,9 +37,10 @@ export type ExplorerItem = ExplorerItemFile | ExplorerItemFolder;
 
 export const initialExplorerState: ExplorerState = ((): ExplorerState => {
   return {
+    initialSyncUrl: "",
     rootFolder: {
       description: "",
-      id: "__root__",
+      id: ExplorerIds.Root,
       items: {},
       name: "root",
       syncUrl: "",

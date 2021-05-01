@@ -92,8 +92,10 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
         return {
           ...state,
           edit: action.payload.edit,
+          explorer: action.payload.explorer,
           mode: action.payload.mode,
           replay: action.payload.replay,
+          sidePanel: action.payload.sidePanel,
           simu: action.payload.simu,
         };
       }
@@ -114,6 +116,7 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
         return {
           ...state,
           explorer: {
+            ...state.explorer,
             rootFolder: action.payload.rootFolder,
           },
         };

@@ -42,7 +42,7 @@ describe("editUrl", () => {
       const nc = "3";
       const nn = "5";
       const m = TetsimuMode.Simu;
-      const v = "2.03";
+      const v = "2.04";
       const expected = `${loc}?f=${f}&np=${np}&h=${h}&nc=${nc}&nn=${nn}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
@@ -68,7 +68,7 @@ describe("editUrl", () => {
       const loc = location.href.replace(/\?.*$/, "");
       const nn = "5";
       const m = TetsimuMode.Simu;
-      const v = "2.03";
+      const v = "2.04";
       const expected = `${loc}?nn=${nn}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
@@ -103,6 +103,7 @@ describe("editUrl", () => {
         hold: makeHold(Tetromino.I, false),
         nextsPattern: "q2[IJ]p2LOS$",
         numberOfCycle: 6,
+        syncUrl: "",
       };
 
       expect(actual).toEqual(expected);
@@ -124,11 +125,12 @@ describe("editUrl", () => {
       const expected: EditStateFragments = {
         field: makeField(
           // prettier-ignore
-          "NNNNNNNNNN",
+          "NNNNNNNNNN"
         ),
         hold: makeHold(Tetromino.None, true),
         nextsPattern: "IJLOSTZ",
         numberOfCycle: 1,
+        syncUrl: "",
       };
 
       expect(actual).toEqual(expected);
@@ -143,6 +145,7 @@ describe("editUrl", () => {
         hold: makeHold(Tetromino.None, true),
         nextsPattern: "",
         numberOfCycle: 1,
+        syncUrl: "",
       };
 
       expect(actual).toEqual(expected);
@@ -176,6 +179,7 @@ describe("editUrl", () => {
         hold: makeHold(Tetromino.J, false),
         numberOfCycle: 1,
         nextsPattern: "IJq1q1LOq1TS",
+        syncUrl: "",
       };
 
       expect(actual).toEqual(expected);

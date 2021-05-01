@@ -18,10 +18,11 @@ export type EditStateFragments = {
   hold: HoldState;
   nextsPattern: string;
   numberOfCycle: number;
+  syncUrl: string;
 };
 
 class EditUrl {
-  private static DefaultVersion = "2.03";
+  private static DefaultVersion = "2.04";
 
   fromState(state: EditState): string {
     const gen = new EditUrl201();
@@ -45,13 +46,14 @@ class EditUrl {
 }
 
 class EditUrl201 {
-  public static Version = "2.03";
+  public static Version = "2.04";
 
   toState(params: { [key: string]: string }): EditStateFragments {
     const f = params.f ?? "";
     const np = params.np ?? "";
     const ns = params.ns ?? "";
     const h = params.h ?? "0";
+    const syncUrl = params.surl ?? "";
 
     const numberOfCycle = (() => {
       const nc = parseInt(params.nc);
@@ -84,6 +86,7 @@ class EditUrl201 {
       hold,
       nextsPattern,
       numberOfCycle,
+      syncUrl,
     };
   }
 
@@ -150,6 +153,7 @@ class EditUrl097 {
       hold,
       nextsPattern,
       numberOfCycle: 1,
+      syncUrl: "",
     };
   }
 }

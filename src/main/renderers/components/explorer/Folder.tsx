@@ -3,7 +3,7 @@ import {
   IconButton,
   makeStyles,
   Menu,
-  Theme,
+  Theme
 } from "@material-ui/core";
 import { blue } from "@material-ui/core/colors";
 import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
@@ -19,10 +19,10 @@ import { getOrderedItems } from "ducks/explorer/selectors";
 import React, { useRef } from "react";
 import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import { ExplorerItemFolder, ExplorerItemType } from "stores/ExplorerState";
-import { DragItemData, DragItemTypes } from "types/explorer";
+import { DragItemData, DragItemTypes, ExplorerIds } from "types/explorer";
 import {
   ExplorerEvent,
-  ExplorerEventType,
+  ExplorerEventType
 } from "utils/tetsimu/explorer/explorerEvent";
 import { fetchExplorerItemFolder } from "utils/tetsimu/explorer/fetchUtils";
 import { validateSyncedData } from "utils/tetsimu/explorer/validator";
@@ -32,6 +32,7 @@ import File from "./File";
 
 export type FolderProps = {
   eventHandler: React.MutableRefObject<(event: ExplorerEvent) => void>;
+  initialSyncUrl?: string;
   parentFolder: ExplorerItemFolder;
   path: string;
 } & ExplorerItemFolder &
@@ -118,6 +119,7 @@ const Folder: React.FC<FolderProps> = (props) => {
   );
   const downloadAnchorRef = React.useRef<HTMLAnchorElement | null>(null);
   const dragDropRef = useRef<HTMLDivElement>(null);
+  const isTempFolder = props.id === ExplorerIds.TempFolder;
 
   const [, drag] = useDrag(
     () => ({
@@ -128,6 +130,7 @@ const Folder: React.FC<FolderProps> = (props) => {
         path: props.path,
         type: ExplorerItemType.Folder,
       },
+      canDrag: () => canDragItem(),
       type: DragItemTypes.Folder,
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging(),
@@ -164,6 +167,10 @@ const Folder: React.FC<FolderProps> = (props) => {
   );
 
   drag(drop(dragDropRef));
+
+  const canDragItem = (): boolean => {
+    return props.nodeId.split("/").length > 2;
+  };
 
   const canDropItem = (
     dragItem: DragItemData,
@@ -232,7 +239,7 @@ const Folder: React.FC<FolderProps> = (props) => {
   }, [props.items]);
 
   const handleItemKeyDown = (e: React.KeyboardEvent<HTMLLIElement>) => {
-    if (e.key === "Delete") {
+    if (e.key === "Delete" && !isTempFolder) {
       removeFolder();
       e.preventDefault();
     } else if (e.key === "F2") {
@@ -366,6 +373,16 @@ const Folder: React.FC<FolderProps> = (props) => {
   };
 
   React.useEffect(() => {
+    if (props.initialSyncUrl) {
+      setSyncState({
+        addSync: true,
+        state: SyncState.Started,
+        syncUrl: props.initialSyncUrl,
+      });
+    }
+  }, []);
+
+  React.useEffect(() => {
     let unmounted = false;
 
     if (syncState.state === SyncState.Ready) {
@@ -480,12 +497,16 @@ const Folder: React.FC<FolderProps> = (props) => {
           >
             <div>{props.name}</div>
             <div style={{ marginLeft: "auto" }}>
-              <IconButton
-                className={classes.menuIcon}
-                onClick={handleOpenMenuClick}
-              >
-                <MoreHorizIcon />
-              </IconButton>
+              {isTempFolder ? (
+                ""
+              ) : (
+                <IconButton
+                  className={classes.menuIcon}
+                  onClick={handleOpenMenuClick}
+                >
+                  <MoreHorizIcon />
+                </IconButton>
+              )}
             </div>
           </div>
         }

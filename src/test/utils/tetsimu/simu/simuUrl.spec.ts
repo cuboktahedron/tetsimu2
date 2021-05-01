@@ -76,7 +76,7 @@ describe("simuUrl", () => {
       const nn = "12";
       const or = "3";
       const m = TetsimuMode.Replay;
-      const v = "2.03";
+      const v = "2.04";
       const expected = `${loc}?f=${f}&ns=${ns}&ss=${ss}&h=${h}&nc=${nc}&nn=${nn}&or=${or}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
@@ -118,7 +118,7 @@ describe("simuUrl", () => {
       const or = 2;
       const ns = "IA__";
       const m = TetsimuMode.Replay;
-      const v = "2.03";
+      const v = "2.04";
       const expected = `${loc}?ns=${ns}&nn=${nn}&or=${or}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
@@ -162,6 +162,7 @@ describe("simuUrl", () => {
         numberOfCycle: 6,
         nextNotes: makeNextNotes("IJLOSTZ"),
         seed: 1,
+        syncUrl: "",
       };
 
       expect(actual).toEqual(expected);
@@ -190,6 +191,7 @@ describe("simuUrl", () => {
         numberOfCycle: 1,
         nextNotes: makeNextNotes("q2 [IJ]p2 LOS $"),
         seed: UNSPECIFIED_SEED,
+        syncUrl: "",
       };
 
       expect(actual).toEqual(expected);
@@ -207,6 +209,7 @@ describe("simuUrl", () => {
         numberOfCycle: 1,
         nextNotes: [],
         seed: UNSPECIFIED_SEED,
+        syncUrl: "",
       };
 
       expect(actual).toEqual(expected);
@@ -244,6 +247,7 @@ describe("simuUrl", () => {
       numberOfCycle: 1,
       nextNotes: makeNextNotes("IJq1q1LOq1TS"),
       seed: 3,
+      syncUrl: "",
     };
 
     expect(actual).toEqual(expected);
