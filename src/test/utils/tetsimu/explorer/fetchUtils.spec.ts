@@ -29,6 +29,42 @@ describe("valifetchExplorerItemFolder", () => {
             },
             type: 1,
           },
+          "1-2": {
+            description: "",
+            name: "syncFolder",
+            syncUrl: "http://localhost/test2.json",
+            id: "1-2",
+            items: {},
+            type: 1,
+          },
+        },
+        type: 1,
+      },
+    });
+
+    fetchMock.get("http://localhost/test2.json", {
+      status: 200,
+      body: {
+        description: "nested sync folder1 description",
+        name: "nestedSyncFolder1",
+        syncUrl: "",
+        id: "n1",
+        items: {
+          "n1-1 ": {
+            description: "",
+            name: "nestedFolder1-1",
+            syncUrl: "",
+            id: "n1-1",
+            items: {},
+            type: 1,
+          },
+          "n1-2 ": {
+            name: "nestedFile1-2",
+            description: "",
+            parameters: "np=I&m=0&v=2.03",
+            id: "n1-2",
+            type: 2,
+          },
         },
         type: 1,
       },
@@ -55,6 +91,30 @@ describe("valifetchExplorerItemFolder", () => {
                 description: "file1-1-1 description",
                 parameters: "np=I&m=0&v=2.03",
                 id: "1-1-1",
+                type: 2,
+              },
+            },
+            type: 1,
+          },
+          "n1": {
+            description: "nested sync folder1 description",
+            name: "nestedSyncFolder1",
+            syncUrl: "http://localhost/test2.json",
+            id: "n1",
+            items: {
+              "n1-1": {
+                description: "",
+                name: "nestedFolder1-1",
+                syncUrl: "",
+                id: "n1-1",
+                items: {},
+                type: 1,
+              },
+              "n1-2": {
+                name: "nestedFile1-2",
+                description: "",
+                parameters: "np=I&m=0&v=2.03",
+                id: "n1-2",
                 type: 2,
               },
             },

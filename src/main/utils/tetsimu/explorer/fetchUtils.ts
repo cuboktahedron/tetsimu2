@@ -1,4 +1,5 @@
 import {
+  ExplorerItem,
   ExplorerItemFile,
   ExplorerItemFolder,
   ExplorerItemType
@@ -39,6 +40,31 @@ export const fetchExplorerItemFolder = async (
       } else if (isExplorerItemFolder(data)) {
         correctFolderData(data);
         data.syncUrl = syncUrl;
+
+        const items = await Promise.all(
+          Object.values(data.items).map(async (item) => {
+            if (item.type === ExplorerItemType.Folder && item.syncUrl) {
+              const nested = await fetchExplorerItemFolder(item.syncUrl);
+              if (nested.succeeded) {
+                return nested.data;
+              } else {
+                // TODO: error handling
+                throw new Error(nested.reason);
+//                return item;
+              }
+            } else {
+              return item;
+            }
+          })
+        );
+
+        data.items = (() => {
+          const itemObjs: { [key: string]: ExplorerItem } = {};
+          items.forEach((item) => {
+            itemObjs[item.id] = item;
+          });
+          return itemObjs;
+        })();
 
         return {
           succeeded: true,
