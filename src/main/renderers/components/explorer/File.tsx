@@ -7,10 +7,12 @@ import {
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import FlashOnSharpIcon from "@material-ui/icons/FlashOnSharp";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { TreeItem, TreeItemProps } from "@material-ui/lab";
 import React from "react";
 import { useDrag } from "react-dnd";
+import { useLongTap } from "renderers/hooks/useLongTap";
 import {
   ExplorerItemFile,
   ExplorerItemFolder,
@@ -97,6 +99,10 @@ const File: React.FC<FileProps> = (props) => {
     [props]
   );
 
+  const handleApplyClick = () => {
+    applyParameters();
+  };
+
   const handleEditClick = () => {
     openEditForm();
   };
@@ -134,7 +140,7 @@ const File: React.FC<FileProps> = (props) => {
     setOpensEditForm(false);
   };
 
-  const handleItemClick = () => {
+  const applyParameters = () => {
     if (props.parameters) {
       props.eventHandler.current({
         type: ExplorerEventType.FileLoad,
@@ -143,6 +149,14 @@ const File: React.FC<FileProps> = (props) => {
         },
       });
     }
+  };
+
+  const handleItemDoubleClick = () => {
+    applyParameters();
+  };
+
+  const handleItemLongPress = () => {
+    applyParameters();
   };
 
   const handleItemKeyDown = (e: React.KeyboardEvent<HTMLLIElement>) => {
@@ -178,7 +192,14 @@ const File: React.FC<FileProps> = (props) => {
         className={`${classes.file} ignore-hotkey`}
         nodeId={props.nodeId}
         label={
-          <div className={classes.labelRoot} onClick={handleItemClick}>
+          <div
+            className={classes.labelRoot}
+            onDoubleClick={handleItemDoubleClick}
+            {...useLongTap({
+              onLongPress: handleItemLongPress,
+              interval1: 500,
+            })}
+          >
             {props.name}
             <div style={{ marginLeft: "auto" }}>
               <IconButton
@@ -194,6 +215,7 @@ const File: React.FC<FileProps> = (props) => {
       />
       <FileMenu
         anchorEl={menuAnchorEl}
+        onApplyClick={handleApplyClick}
         onEditClick={handleEditClick}
         onRemoveFileClick={handleRemoveFileClick}
         onClose={() => setMenuAnchorEl(null)}
@@ -211,9 +233,10 @@ const File: React.FC<FileProps> = (props) => {
 
 type FileMenuProps = {
   anchorEl: Element | null;
+  onApplyClick: () => void;
+  onClose: () => void;
   onEditClick: () => void;
   onRemoveFileClick: () => void;
-  onClose: () => void;
 };
 
 const FileMenu = React.memo<FileMenuProps>((props) => {
@@ -231,6 +254,9 @@ const FileMenu = React.memo<FileMenuProps>((props) => {
       onClose={props.onClose}
     >
       <div>
+        <IconButton onClick={handleMenuClick(props.onApplyClick)}>
+          <FlashOnSharpIcon />
+        </IconButton>
         <IconButton onClick={handleMenuClick(props.onEditClick)}>
           <EditIcon />
         </IconButton>

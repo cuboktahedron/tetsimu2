@@ -15,7 +15,7 @@ export const useLongTap = (props: LongTapProps) => {
   const targetRef = React.useRef<Element | null>(null);
   const propsRef = React.useRef<LongTapProps>(props);
   const interval1 = props.interval1 || 500;
-  const interval2 = props.interval2 || Number.MAX_SAFE_INTEGER;
+  const interval2 = props.interval2 || 0x7FFFFFFF;
 
   useEffect(() => {
     propsRef.current = props;
