@@ -354,19 +354,23 @@ const Folder: React.FC<FolderProps> = (props) => {
       return;
     }
 
-    const saveData = JSON.stringify({
-      type: ExplorerItemType.Folder,
-      description: props.description,
-      id: props.id,
-      items: props.items,
-      name: props.name,
-      syncUrl: props.syncUrl,
-    });
+    const saveData = JSON.stringify(
+      {
+        type: ExplorerItemType.Folder,
+        description: props.description,
+        id: props.id,
+        items: props.items,
+        name: props.name,
+        syncUrl: props.syncUrl,
+      },
+      null,
+      2
+    );
 
     const href = URL.createObjectURL(
       new Blob([saveData], { type: "text/json" })
     );
-    const download = `${props.name}_${new Date().getTime()}.dat`;
+    const download = `${props.name}_${new Date().getTime()}.json`;
     downloadAnchorRef.current.href = href;
     downloadAnchorRef.current.download = download;
     downloadAnchorRef.current.click();
