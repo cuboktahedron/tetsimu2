@@ -69,6 +69,7 @@ const Replay: React.FC = () => {
           <HoldNexts />
           <Operation
             dispatch={dispatch}
+            playing={state.auto.playing}
             replaySteps={state.replaySteps}
             stateRef={stateRef}
             step={state.step}
@@ -94,6 +95,7 @@ const Replay: React.FC = () => {
             </div>
             <Operation
               dispatch={dispatch}
+              playing={state.auto.playing}
               replaySteps={state.replaySteps}
               stateRef={stateRef}
               step={state.step}

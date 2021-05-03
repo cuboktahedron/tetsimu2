@@ -8,7 +8,15 @@ import {
 } from "@material-ui/core";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import { backwardStep, forwardStep } from "ducks/replay/actions";
+import PauseIcon from "@material-ui/icons/Pause";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
+import {
+  backwardStep,
+  changeAutoPlaying,
+  changeStep,
+  forwardStep
+} from "ducks/replay/actions";
 import {
   canBackward,
   canForward,
@@ -47,6 +55,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type OperationProps = {
   dispatch: React.Dispatch<Action>;
+  playing: boolean;
   replaySteps: ReplayStep[];
   stateRef: React.MutableRefObject<ReplayState>;
   step: number;
@@ -62,6 +71,18 @@ const Operation = React.memo<OperationProps>((props) => {
 
   const handleBackward = () => {
     dispatch(backwardStep(getReplayConductor(stateRef.current)));
+  };
+
+  const handleBackToHeadClick = () => {
+    dispatch(changeStep(getReplayConductor(stateRef.current), 0));
+  };
+
+  const handlePauseClick = () => {
+    dispatch(changeAutoPlaying(false));
+  };
+
+  const handlePlayClick = () => {
+    dispatch(changeAutoPlaying(true));
   };
 
   const classes = useStyles(props);
@@ -85,6 +106,25 @@ const Operation = React.memo<OperationProps>((props) => {
         >
           <NavigateBeforeIcon className={classes.icon} />
         </IconButton>
+      </ListItem>
+      <ListItem className={classes.listItem} disableGutters={true}>
+        <IconButton
+          className={classes.iconButton}
+          onClick={handleBackToHeadClick}
+        >
+          <SkipPreviousIcon className={classes.icon} />
+        </IconButton>
+      </ListItem>
+      <ListItem className={classes.listItem} disableGutters={true}>
+        {props.playing ? (
+          <IconButton className={classes.iconButton} onClick={handlePauseClick}>
+            <PauseIcon className={classes.icon} />
+          </IconButton>
+        ) : (
+          <IconButton className={classes.iconButton} onClick={handlePlayClick}>
+            <PlayArrowIcon className={classes.icon} />
+          </IconButton>
+        )}
       </ListItem>
     </List>
   );
