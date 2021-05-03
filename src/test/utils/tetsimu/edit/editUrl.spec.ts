@@ -81,7 +81,8 @@ describe("editUrl", () => {
       const nc = "6";
       const np = "q2_IJ.p2LOS-";
       const m = `${TetsimuMode.Edit}`;
-      const v = "2.03";
+      const surl = "http://localhost/test.json";
+      const v = "2.04";
 
       const params = {
         f,
@@ -89,6 +90,7 @@ describe("editUrl", () => {
         nc,
         np,
         m,
+        surl,
         v,
       };
       const gen = new EditUrl();
@@ -103,7 +105,7 @@ describe("editUrl", () => {
         hold: makeHold(Tetromino.I, false),
         nextsPattern: "q2[IJ]p2LOS$",
         numberOfCycle: 6,
-        syncUrl: "",
+        syncUrl: "http://localhost/test.json",
       };
 
       expect(actual).toEqual(expected);

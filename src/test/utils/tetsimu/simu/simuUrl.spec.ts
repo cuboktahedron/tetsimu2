@@ -3,11 +3,11 @@ import {
   Direction,
   SpinType,
   Tetromino,
-  TetsimuMode
+  TetsimuMode,
 } from "types/core";
 import SimuUrl, {
   SimuStateFragments,
-  UNSPECIFIED_SEED
+  UNSPECIFIED_SEED,
 } from "utils/tetsimu/simu/simuUrl";
 import { makeField } from "../testUtils/makeField";
 import { makeHold } from "../testUtils/makeHold";
@@ -15,7 +15,7 @@ import { makeNextNote, makeNextNotes } from "../testUtils/makeNextNote";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
-  makeReplayHoldStep
+  makeReplayHoldStep,
 } from "../testUtils/makeReplayStep";
 import { makeSimuState } from "../testUtils/makeSimuState";
 import { makeTetrominos } from "../testUtils/makeTetrominos";
@@ -134,7 +134,8 @@ describe("simuUrl", () => {
       const or = "3";
       const s = "1";
       const m = `${TetsimuMode.Simu}`;
-      const v = "2.02";
+      const surl = "http://localhost/test.json";
+      const v = "2.04";
 
       const params = {
         f,
@@ -145,6 +146,7 @@ describe("simuUrl", () => {
         or,
         m,
         s,
+        surl,
         v,
       };
       const gen = new SimuUrl();
@@ -162,7 +164,7 @@ describe("simuUrl", () => {
         numberOfCycle: 6,
         nextNotes: makeNextNotes("IJLOSTZ"),
         seed: 1,
-        syncUrl: "",
+        syncUrl: "http://localhost/test.json",
       };
 
       expect(actual).toEqual(expected);

@@ -131,7 +131,8 @@ describe("replayUrl", () => {
       const nn = "12";
       const or = "3";
       const m = `${TetsimuMode.Replay}`;
-      const v = "2.02";
+      const surl = "http://localhost/test.json";
+      const v = "2.04";
 
       const params = {
         f,
@@ -142,6 +143,7 @@ describe("replayUrl", () => {
         nn,
         or,
         m,
+        surl,
         v,
       };
       const gen = new ReplayUrl();
@@ -165,7 +167,7 @@ describe("replayUrl", () => {
           makeReplayDropStep(Direction.Left, 8, 20, SpinType.Spin),
           makeReplayHardDropStep({ cols: [1, 2, 3], line: 5 }),
         ],
-        syncUrl: "",
+        syncUrl: "http://localhost/test.json",
       };
 
       expect(actual).toEqual(expected);
