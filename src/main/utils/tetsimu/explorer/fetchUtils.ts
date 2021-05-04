@@ -18,7 +18,9 @@ export type FetchExplorerItemFolderResult =
 export const fetchExplorerItemFolder = async (
   syncUrl: string
 ): Promise<FetchExplorerItemFolderResult> => {
-  const result = await fetch(syncUrl).catch((err: Error) => {
+  const result = await fetch(syncUrl, {
+    cache: "no-cache",
+  }).catch((err: Error) => {
     return {
       succeeded: false,
       reason: err.message,
@@ -50,7 +52,6 @@ export const fetchExplorerItemFolder = async (
               } else {
                 // TODO: error handling
                 throw new Error(nested.reason);
-//                return item;
               }
             } else {
               return item;
