@@ -136,7 +136,7 @@ const Folder: React.FC<FolderProps> = (props) => {
         isDragging: !!monitor.isDragging(),
       }),
     }),
-    [props]
+    [props.id, props.name, props.nodeId, props.path, props.items]
   );
 
   const [{ isOver, canDrop }, drop] = useDrop(
@@ -163,7 +163,7 @@ const Folder: React.FC<FolderProps> = (props) => {
         canDrop: !!monitor.canDrop(),
       }),
     }),
-    [props]
+    [props.id, props.name, props.nodeId, props.path, props.items]
   );
 
   drag(drop(dragDropRef));
@@ -236,7 +236,7 @@ const Folder: React.FC<FolderProps> = (props) => {
         return "";
       }
     });
-  }, [props.items]);
+  }, [props.items, props.nodeId, props.path]);
 
   const handleItemKeyDown = (e: React.KeyboardEvent<HTMLLIElement>) => {
     if (e.key === "Delete" && !isTempFolder) {
@@ -266,11 +266,11 @@ const Folder: React.FC<FolderProps> = (props) => {
     setOpensEditForm(true);
   };
 
-  const handleAddFolderClick = React.useCallback(() => {
+  const handleAddFolderClick = () => {
     addFolder();
-  }, []);
+  };
 
-  const addFolder = React.useCallback(() => {
+  const addFolder = () => {
     props.eventHandler.current({
       type: ExplorerEventType.FolderAdd,
       payload: {
@@ -278,26 +278,26 @@ const Folder: React.FC<FolderProps> = (props) => {
         dest: props.path,
       },
     });
-  }, []);
+  };
 
-  const handleRemoveFolderClick = React.useCallback(() => {
+  const handleRemoveFolderClick = () => {
     removeFolder();
-  }, []);
+  };
 
-  const removeFolder = React.useCallback(() => {
+  const removeFolder = () => {
     props.eventHandler.current({
       type: ExplorerEventType.FolderRemove,
       payload: {
         pathToDelete: props.path,
       },
     });
-  }, []);
+  };
 
-  const handleAddFileClick = React.useCallback(() => {
+  const handleAddFileClick = () => {
     addFile();
-  }, []);
+  };
 
-  const addFile = React.useCallback(() => {
+  const addFile = () => {
     props.eventHandler.current({
       type: ExplorerEventType.FileAdd,
       payload: {
@@ -305,7 +305,7 @@ const Folder: React.FC<FolderProps> = (props) => {
         newFileName: "NewFile",
       },
     });
-  }, []);
+  };
 
   const handleAddSyncClick = () => {
     setOpensAddSyncForm(true);

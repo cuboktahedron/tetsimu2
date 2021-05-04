@@ -12,7 +12,6 @@ import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { TreeItem, TreeItemProps } from "@material-ui/lab";
 import React from "react";
 import { useDrag } from "react-dnd";
-import { useLongTap } from "renderers/hooks/useLongTap";
 import {
   ExplorerItemFile,
   ExplorerItemFolder,
@@ -96,7 +95,7 @@ const File: React.FC<FileProps> = (props) => {
         isDragging: !!monitor.isDragging(),
       }),
     }),
-    [props]
+    [props.id, props.name, props.nodeId, props.path]
   );
 
   const handleApplyClick = () => {
@@ -155,10 +154,6 @@ const File: React.FC<FileProps> = (props) => {
     applyParameters();
   };
 
-  const handleItemLongPress = () => {
-    applyParameters();
-  };
-
   const handleItemKeyDown = (e: React.KeyboardEvent<HTMLLIElement>) => {
     if (e.key === "Enter" && props.parameters) {
       props.eventHandler.current({
@@ -195,10 +190,6 @@ const File: React.FC<FileProps> = (props) => {
           <div
             className={classes.labelRoot}
             onDoubleClick={handleItemDoubleClick}
-            {...useLongTap({
-              onLongPress: handleItemLongPress,
-              interval1: 500,
-            })}
           >
             {props.name}
             <div style={{ marginLeft: "auto" }}>
