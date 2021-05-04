@@ -91,14 +91,15 @@ const ActiveField: React.FC<ActiveFieldProps> = () => {
   const styleProps = { zoom: state.zoom };
   const classes = useStyles(styleProps);
 
-  if (state.current.type === Tetromino.None) {
-    return <div></div>;
-  }
-
   const maxRow = MAX_VISIBLE_FIELD_HEIGHT - 1;
-  const blocks = [
-    ...TetrominoShape[state.current.type][state.current.direction],
-  ];
+  const blocks = (() => {
+    if (state.current.type === Tetromino.None) {
+      return [];
+    } else {
+      return [...TetrominoShape[state.current.type][state.current.direction]];
+    }
+  })();
+  
   const currentBlocks = React.useMemo(() => {
     return blocks.map((block: Vector2) => {
       const row = block.y + state.current.pos.y;
