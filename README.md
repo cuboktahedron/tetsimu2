@@ -5,7 +5,7 @@
 
 # デモ
  
-https://cuboktahedron.github.io/q/tetsimu2/
+[こちら](https://cuboktahedron.github.io/q/tetsimu2/?surl=https://raw.githubusercontent.com/cuboktahedron/tetsimu2-data/main/explorer/Default.json)
 
 # 動作環境
 
