@@ -5,19 +5,20 @@ import {
   SvgIconProps,
   Theme
 } from "@material-ui/core";
+import { blue } from "@material-ui/core/colors";
 import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
 import TreeView from "@material-ui/lab/TreeView";
 import clsx from "clsx";
 import { getOrderedItems } from "ducks/explorer/selectors";
 import React from "react";
+import { DropTargetMonitor, useDrop } from "react-dnd";
 import { useExplorerEventHandler } from "renderers/hooks/explorer/useExplorerEventHandler";
 import { useValueRef } from "renderers/hooks/useValueRef";
 import { ExplorerItemType } from "stores/ExplorerState";
-import { ExplorerIds } from "types/explorer";
+import { DragItemData, DragItemTypes, ExplorerIds } from "types/explorer";
 import { ExplorerEventType } from "utils/tetsimu/explorer/explorerEvent";
 import { RootContext } from "../App";
 import Folder from "./Folder";
-
 const MinusSquare: React.FC = (props: SvgIconProps) => {
   return (
     <SvgIcon fontSize="inherit" style={{ width: 14, height: 14 }} {...props}>
@@ -38,6 +39,8 @@ const PlusSquare: React.FC = (props: SvgIconProps) => {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    paddingBottom: 64,
+
     "& .MuiIconButton-root": {
       padding: theme.spacing(0.5),
     },
@@ -61,6 +64,56 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
   const eventHandler = useValueRef(
     useExplorerEventHandler(rootState, dispatch)
   );
+
+  const [{ isOver, canDrop }, drop] = useDrop(
+    () => ({
+      accept: [DragItemTypes.Folder, DragItemTypes.File],
+      canDrop: (item: DragItemData, monitor) => canDropItem(item, monitor),
+      drop: (item: DragItemData, monitor) => {
+        if (monitor.didDrop()) {
+          return;
+        }
+
+        eventHandler.current({
+          type: ExplorerEventType.ItemMove,
+          payload: {
+            from: item.path,
+            itemType: item.type,
+            to: "/",
+          },
+        });
+      },
+
+      collect: (monitor) => ({
+        isOver: !!monitor.isOver(),
+        canDrop: !!monitor.canDrop(),
+      }),
+    }),
+    [state.rootFolder.items]
+  );
+
+  const canDropItem = (
+    dragItem: DragItemData,
+    monitor: DropTargetMonitor<unknown, unknown>
+  ): boolean => {
+    if (!monitor.isOver({ shallow: true })) {
+      return false;
+    }
+
+    if (dragItem.type !== ExplorerItemType.Folder) {
+      return false;
+    }
+
+    if (
+      Object.values(state.rootFolder.items).some(
+        (item) => item.id === dragItem.id || item.name === dragItem.name
+      )
+    ) {
+      return false;
+    }
+
+    return true;
+  };
 
   const handleNewFolderClick = () => {
     eventHandler.current({
@@ -109,6 +162,7 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
 
   return (
     <div
+      ref={drop}
       className={clsx(classes.root, {
         [classes.opens]: props.opens,
       })}
@@ -118,8 +172,9 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
           <CreateNewFolderIcon />
         </IconButton>
       </div>
-
-      {treeView}
+      <div style={isOver && canDrop ? { background: `${blue[700]}40` } : {}}>
+        {treeView}
+      </div>
     </div>
   );
 };

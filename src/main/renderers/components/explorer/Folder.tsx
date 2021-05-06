@@ -169,7 +169,7 @@ const Folder: React.FC<FolderProps> = (props) => {
   drag(drop(dragDropRef));
 
   const canDragItem = (): boolean => {
-    return props.nodeId.split("/").length > 2;
+    return props.id !== ExplorerIds.TempFolder;
   };
 
   const canDropItem = (
