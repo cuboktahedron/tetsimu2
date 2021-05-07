@@ -3,22 +3,30 @@ import {
   makeStyles,
   SvgIcon,
   SvgIconProps,
-  Theme
+  Theme,
 } from "@material-ui/core";
 import { blue } from "@material-ui/core/colors";
 import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
+import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import TreeView from "@material-ui/lab/TreeView";
 import clsx from "clsx";
 import { getOrderedItems } from "ducks/explorer/selectors";
 import React from "react";
 import { DropTargetMonitor, useDrop } from "react-dnd";
 import { useExplorerEventHandler } from "renderers/hooks/explorer/useExplorerEventHandler";
+import { useSync } from "renderers/hooks/explorer/useSync";
 import { useValueRef } from "renderers/hooks/useValueRef";
 import { ExplorerItemType } from "stores/ExplorerState";
-import { DragItemData, DragItemTypes, ExplorerIds } from "types/explorer";
+import {
+  DragItemData,
+  DragItemTypes,
+  ExplorerIds,
+  SyncState,
+} from "types/explorer";
 import { ExplorerEventType } from "utils/tetsimu/explorer/explorerEvent";
 import { RootContext } from "../App";
-import Folder from "./Folder";
+import AddSyncForm from "./AddSyncForm";
+import Folder, { FolderUniqueProps } from "./Folder";
 const MinusSquare: React.FC = (props: SvgIconProps) => {
   return (
     <SvgIcon fontSize="inherit" style={{ width: 14, height: 14 }} {...props}>
@@ -59,11 +67,31 @@ export type ExplorerProps = {
 
 const Explorer: React.FC<ExplorerProps> = (props) => {
   const { state: rootState, dispatch } = React.useContext(RootContext);
+  const [opensAddSyncForm, setOpensAddSyncForm] = React.useState(false);
+
   const state = rootState.explorer;
   const classes = useStyles();
   const eventHandler = useValueRef(
     useExplorerEventHandler(rootState, dispatch)
   );
+
+  const dummyParentFolder = {};
+  const [, setSyncState] = useSync({
+    ...state.rootFolder,
+    eventHandler: eventHandler,
+    parentFolder: dummyParentFolder as FolderUniqueProps,
+    path: "/",
+  });
+
+  React.useEffect(() => {
+    if (state.initialSyncUrl) {
+      setSyncState({
+        addSync: true,
+        state: SyncState.Started,
+        syncUrl: state.initialSyncUrl,
+      });
+    }
+  }, []);
 
   const [{ isOver, canDrop }, drop] = useDrop(
     () => ({
@@ -125,6 +153,24 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
     });
   };
 
+  const handleAddSyncClick = () => {
+    setOpensAddSyncForm(true);
+  };
+
+  const handleAddSyncClose = () => {
+    setOpensAddSyncForm(false);
+  };
+
+  const handleAddSyncSync = (syncUrl: string) => {
+    setOpensAddSyncForm(false);
+
+    setSyncState({
+      addSync: true,
+      state: SyncState.Started,
+      syncUrl,
+    });
+  };
+
   const rootFolders = React.useMemo(() => {
     const rootItems = getOrderedItems(state.rootFolder.items);
     return rootItems.map((root) => {
@@ -171,10 +217,18 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
         <IconButton onClick={handleNewFolderClick}>
           <CreateNewFolderIcon />
         </IconButton>
+        <IconButton onClick={handleAddSyncClick}>
+          <PlaylistAddIcon />
+        </IconButton>
       </div>
       <div style={isOver && canDrop ? { background: `${blue[700]}40` } : {}}>
         {treeView}
       </div>
+      <AddSyncForm
+        open={opensAddSyncForm}
+        onClose={handleAddSyncClose}
+        onSync={handleAddSyncSync}
+      />
     </div>
   );
 };

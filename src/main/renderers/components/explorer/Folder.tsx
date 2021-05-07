@@ -18,25 +18,30 @@ import { TreeItem, TreeItemProps } from "@material-ui/lab";
 import { getOrderedItems } from "ducks/explorer/selectors";
 import React, { useRef } from "react";
 import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
+import { useSync } from "renderers/hooks/explorer/useSync";
 import { ExplorerItemFolder, ExplorerItemType } from "stores/ExplorerState";
-import { DragItemData, DragItemTypes, ExplorerIds } from "types/explorer";
+import {
+  DragItemData,
+  DragItemTypes,
+  ExplorerIds,
+  SyncState
+} from "types/explorer";
 import {
   ExplorerEvent,
   ExplorerEventType
 } from "utils/tetsimu/explorer/explorerEvent";
-import { fetchExplorerItemFolder } from "utils/tetsimu/explorer/fetchUtils";
-import { validateSyncedData } from "utils/tetsimu/explorer/validator";
 import AddSyncForm from "./AddSyncForm";
 import EditFolderForm from "./EditFolderForm";
 import File from "./File";
 
-export type FolderProps = {
+export type FolderUniqueProps = {
   eventHandler: React.MutableRefObject<(event: ExplorerEvent) => void>;
   initialSyncUrl?: string;
   parentFolder: ExplorerItemFolder;
   path: string;
-} & ExplorerItemFolder &
-  TreeItemProps;
+} & ExplorerItemFolder;
+
+export type FolderProps = FolderUniqueProps & TreeItemProps;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -82,35 +87,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const SyncState = {
-  Ready: 0,
-  Started: 1,
-  Suceeded: 2,
-  Failed: 3,
-} as const;
-
-type SyncState = typeof SyncState[keyof typeof SyncState];
-
-type SyncStateWith = {
-  addSync: boolean;
-} & (
-  | {
-      state: typeof SyncState.Ready;
-    }
-  | {
-      state: typeof SyncState.Started;
-      syncUrl: string;
-    }
-  | {
-      state: typeof SyncState.Suceeded;
-      folder: ExplorerItemFolder;
-    }
-  | {
-      state: typeof SyncState.Failed;
-      reason: string;
-    }
-);
-
 const Folder: React.FC<FolderProps> = (props) => {
   const [opensEditForm, setOpensEditForm] = React.useState(false);
   const [opensAddSyncForm, setOpensAddSyncForm] = React.useState(false);
@@ -120,6 +96,8 @@ const Folder: React.FC<FolderProps> = (props) => {
   const downloadAnchorRef = React.useRef<HTMLAnchorElement | null>(null);
   const dragDropRef = useRef<HTMLDivElement>(null);
   const isTempFolder = props.id === ExplorerIds.TempFolder;
+
+  const [syncState, setSyncState] = useSync(props);
 
   const [, drag] = useDrag(
     () => ({
@@ -194,11 +172,6 @@ const Folder: React.FC<FolderProps> = (props) => {
 
     return true;
   };
-
-  const [syncState, setSyncState] = React.useState<SyncStateWith>({
-    addSync: false,
-    state: SyncState.Ready,
-  });
 
   const {
     path,
@@ -385,100 +358,6 @@ const Folder: React.FC<FolderProps> = (props) => {
       });
     }
   }, []);
-
-  React.useEffect(() => {
-    let unmounted = false;
-
-    if (syncState.state === SyncState.Ready) {
-      return;
-    }
-
-    const changeSyncState = (newSyncStateWith: SyncStateWith) => {
-      if (unmounted) {
-        return;
-      }
-
-      setSyncState(newSyncStateWith);
-    };
-
-    if (syncState.state === SyncState.Started) {
-      (async () => {
-        const fetchResult = await fetchExplorerItemFolder(syncState.syncUrl);
-        if (fetchResult.succeeded) {
-          const validateResult = validateSyncedData(
-            syncState.addSync ? null : props,
-            syncState.addSync ? props : props.parentFolder,
-            fetchResult.data
-          );
-          if (validateResult.isValid) {
-            changeSyncState({
-              addSync: syncState.addSync,
-              state: SyncState.Suceeded,
-              folder: fetchResult.data,
-            });
-          } else {
-            changeSyncState({
-              addSync: syncState.addSync,
-              state: SyncState.Failed,
-              reason: validateResult.errorMessage,
-            });
-          }
-        } else {
-          changeSyncState({
-            addSync: syncState.addSync,
-            state: SyncState.Failed,
-            reason: fetchResult.reason,
-          });
-        }
-      })();
-    }
-
-    return () => {
-      unmounted = true;
-    };
-  }, [syncState]);
-
-  React.useEffect(() => {
-    if (syncState.state === SyncState.Suceeded) {
-      if (syncState.addSync) {
-        props.eventHandler.current({
-          type: ExplorerEventType.SyncFolderAdd,
-          payload: {
-            dest: props.path,
-            syncData: syncState.folder,
-          },
-        });
-      } else {
-        props.eventHandler.current({
-          type: ExplorerEventType.FolderSync,
-          payload: {
-            pathToSync: props.path,
-            syncData: syncState.folder,
-          },
-        });
-      }
-
-      setSyncState({
-        addSync: false,
-        state: SyncState.Ready,
-      });
-    }
-
-    if (syncState.state === SyncState.Failed) {
-      setSyncState({
-        addSync: false,
-        state: SyncState.Ready,
-      });
-
-      props.eventHandler.current({
-        type: ExplorerEventType.ErrorOccured,
-        payload: {
-          reason: syncState.reason,
-          title: "Sync failed",
-        },
-      });
-    }
-  }, [syncState]);
 
   const handleOpenMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setMenuAnchorEl(event.currentTarget);
