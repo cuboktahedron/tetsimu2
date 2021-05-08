@@ -3,7 +3,7 @@ import {
   makeStyles,
   SvgIcon,
   SvgIconProps,
-  Theme,
+  Theme
 } from "@material-ui/core";
 import { blue } from "@material-ui/core/colors";
 import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
@@ -13,20 +13,32 @@ import clsx from "clsx";
 import { getOrderedItems } from "ducks/explorer/selectors";
 import React from "react";
 import { DropTargetMonitor, useDrop } from "react-dnd";
+import { useDropzone } from "react-dropzone";
 import { useExplorerEventHandler } from "renderers/hooks/explorer/useExplorerEventHandler";
 import { useSync } from "renderers/hooks/explorer/useSync";
 import { useValueRef } from "renderers/hooks/useValueRef";
-import { ExplorerItemType } from "stores/ExplorerState";
+import { ExplorerItemFolder, ExplorerItemType } from "stores/ExplorerState";
 import {
   DragItemData,
   DragItemTypes,
   ExplorerIds,
-  SyncState,
+  SyncState
 } from "types/explorer";
 import { ExplorerEventType } from "utils/tetsimu/explorer/explorerEvent";
+import {
+  correctFileData,
+  correctFolderData,
+  isExplorerItemFile,
+  isExplorerItemFolder
+} from "utils/tetsimu/explorer/explorerItemFunctions";
+import {
+  validateLoadedFileData,
+  validateLoadedFolderData
+} from "utils/tetsimu/explorer/validator";
 import { RootContext } from "../App";
 import AddSyncForm from "./AddSyncForm";
 import Folder, { FolderUniqueProps } from "./Folder";
+
 const MinusSquare: React.FC = (props: SvgIconProps) => {
   return (
     <SvgIcon fontSize="inherit" style={{ width: 14, height: 14 }} {...props}>
@@ -47,13 +59,23 @@ const PlusSquare: React.FC = (props: SvgIconProps) => {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    display: "none",
+    height: "calc(100% - 64px)",
+    overflowY: "auto",
     paddingBottom: 64,
 
     "& .MuiIconButton-root": {
       padding: theme.spacing(0.5),
     },
+  },
 
-    display: "none",
+  dropzone: {
+    boxSizing: "border-box",
+    height: "100%",
+
+    "&.active": {
+      border: `dashed 4px ${blue[700]}`,
+    },
   },
 
   opens: {
@@ -143,6 +165,103 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
     return true;
   };
 
+  const { acceptedFiles, isDragActive, getRootProps } = useDropzone({
+    maxFiles: 1,
+  });
+
+  const [loadFile, setLoadFile] = React.useState<File | null>(null);
+  React.useEffect(() => {
+    if (acceptedFiles.length > 0) {
+      setLoadFile(acceptedFiles[0]);
+    } else {
+      setLoadFile(null);
+    }
+  }, [acceptedFiles]);
+
+  React.useEffect(() => {
+    if (loadFile === null) {
+      return;
+    }
+
+    const fileReader = new FileReader();
+    fileReader.addEventListener("load", () => {
+      const textData = fileReader.result as string;
+      try {
+        const droppedData = JSON.parse(textData);
+        const tempFolder = state.rootFolder.items[
+          ExplorerIds.TempFolder
+        ] as ExplorerItemFolder;
+
+        if (isExplorerItemFolder(droppedData)) {
+          correctFolderData(droppedData);
+          const validateResult = validateLoadedFolderData(
+            tempFolder,
+            droppedData
+          );
+
+          if (validateResult.isValid) {
+            eventHandler.current({
+              type: ExplorerEventType.FolderMerge,
+              payload: {
+                data: droppedData,
+                to: `/${tempFolder.name}`,
+              },
+            });
+          } else {
+            eventHandler.current({
+              type: ExplorerEventType.ErrorOccured,
+              payload: {
+                reason: validateResult.errorMessage,
+                title: "Load error",
+              },
+            });
+          }
+        } else if (isExplorerItemFile(droppedData)) {
+          correctFileData(droppedData);
+          const validateResult = validateLoadedFileData(
+            tempFolder,
+            droppedData
+          );
+
+          if (validateResult.isValid) {
+            eventHandler.current({
+              type: ExplorerEventType.FileMerge,
+              payload: {
+                data: droppedData,
+                to: `/${tempFolder.name}`,
+              },
+            });
+          } else {
+            eventHandler.current({
+              type: ExplorerEventType.ErrorOccured,
+              payload: {
+                reason: validateResult.errorMessage,
+                title: "Load error",
+              },
+            });
+          }
+        } else {
+          eventHandler.current({
+            type: ExplorerEventType.ErrorOccured,
+            payload: {
+              reason: "This file is not valid format.",
+              title: "Load error",
+            },
+          });
+        }
+      } catch (error) {
+        eventHandler.current({
+          type: ExplorerEventType.ErrorOccured,
+          payload: {
+            reason: error.message,
+            title: "Load error",
+          },
+        });
+      }
+    });
+    fileReader.readAsText(loadFile);
+  }, [loadFile]);
+
   const handleNewFolderClick = () => {
     eventHandler.current({
       type: ExplorerEventType.FolderAdd,
@@ -213,22 +332,30 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
         [classes.opens]: props.opens,
       })}
     >
-      <div>
-        <IconButton onClick={handleNewFolderClick}>
-          <CreateNewFolderIcon />
-        </IconButton>
-        <IconButton onClick={handleAddSyncClick}>
-          <PlaylistAddIcon />
-        </IconButton>
+      <div
+        {...getRootProps({
+          className: clsx(classes.dropzone, {
+            active: isDragActive,
+          }),
+        })}
+      >
+        <div>
+          <IconButton onClick={handleNewFolderClick}>
+            <CreateNewFolderIcon />
+          </IconButton>
+          <IconButton onClick={handleAddSyncClick}>
+            <PlaylistAddIcon />
+          </IconButton>
+        </div>
+        <div style={isOver && canDrop ? { background: `${blue[700]}40` } : {}}>
+          {treeView}
+        </div>
+        <AddSyncForm
+          open={opensAddSyncForm}
+          onClose={handleAddSyncClose}
+          onSync={handleAddSyncSync}
+        />
       </div>
-      <div style={isOver && canDrop ? { background: `${blue[700]}40` } : {}}>
-        {treeView}
-      </div>
-      <AddSyncForm
-        open={opensAddSyncForm}
-        onClose={handleAddSyncClose}
-        onSync={handleAddSyncSync}
-      />
     </div>
   );
 };

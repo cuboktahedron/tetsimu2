@@ -2,16 +2,18 @@ import {
   ExplorerItemFile,
   ExplorerItemFolder,
   ExplorerItemType,
-  Path,
+  Path
 } from "stores/ExplorerState";
 
 export const ExplorerEventType = {
   ErrorOccured: "errorOccured",
   FileAdd: "fileAdd",
   FileLoad: "fileLoad",
+  FileMerge: "fileMerge",
   FileRemove: "fileRemove",
   FileSave: "fileSave",
   FolderAdd: "folderAdd",
+  FolderMerge: "folderMerge",
   FolderRemove: "folderRemove",
   FolderSave: "folderSave",
   FolderSync: "folderSync",
@@ -44,6 +46,14 @@ export type FileLoad = {
   };
 };
 
+export type FileMerge = {
+  type: typeof ExplorerEventType.FileMerge;
+  payload: {
+    data: ExplorerItemFile;
+    to: Path;
+  };
+};
+
 export type FileRemove = {
   type: typeof ExplorerEventType.FileRemove;
   payload: {
@@ -64,6 +74,14 @@ export type FolderAdd = {
   payload: {
     dest: Path;
     newFolderName: string;
+  };
+};
+
+export type FolderMerge = {
+  type: typeof ExplorerEventType.FolderMerge;
+  payload: {
+    data: ExplorerItemFolder;
+    to: Path;
   };
 };
 
@@ -111,9 +129,11 @@ export type ExplorerEvent =
   | ErrorOccured
   | FileAdd
   | FileLoad
+  | FileMerge
   | FileRemove
   | FileSave
   | FolderAdd
+  | FolderMerge
   | FolderRemove
   | FolderSave
   | FolderSync

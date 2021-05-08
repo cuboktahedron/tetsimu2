@@ -2,18 +2,20 @@ import {
   addFile,
   addFolder,
   addSyncFolder,
+  mergeFile,
+  mergeFolder,
   moveItem,
   removeFile,
   removeFolder,
   saveFile,
   saveFolder,
-  syncFolder,
+  syncFolder
 } from "ducks/explorer/actions";
 import { error, initializeApp } from "ducks/root/actions";
 import { RootState } from "stores/RootState";
 import {
   ExplorerEvent,
-  ExplorerEventType,
+  ExplorerEventType
 } from "utils/tetsimu/explorer/explorerEvent";
 import { UnsupportedUrlError } from "utils/tetsimu/unsupportedUrlError";
 
@@ -56,6 +58,12 @@ export const useExplorerEventHandler = (
         }
         break;
       }
+      case ExplorerEventType.FileMerge: {
+        dispatch(
+          mergeFile(event.payload.data, event.payload.to, state.rootFolder)
+        );
+        break;
+      }
       case ExplorerEventType.FileRemove: {
         dispatch(removeFile(event.payload.pathToDelete, state.rootFolder));
         break;
@@ -77,6 +85,12 @@ export const useExplorerEventHandler = (
             event.payload.dest,
             state.rootFolder
           )
+        );
+        break;
+      }
+      case ExplorerEventType.FolderMerge: {
+        dispatch(
+          mergeFolder(event.payload.data, event.payload.to, state.rootFolder)
         );
         break;
       }

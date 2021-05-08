@@ -16,6 +16,8 @@ import {
   AddFolderAction,
   AddSyncFolderAction,
   ExplorerActionsType,
+  MergeFileAction,
+  MergeFolderAction,
   MoveItemAction,
   RemoveFileAction,
   RemoveFolderAction,
@@ -92,6 +94,40 @@ export const addSyncFolder = (
 
   return {
     type: ExplorerActionsType.AddSyncFolder,
+    payload: {
+      rootFolder: folder.root,
+    },
+  };
+};
+
+export const mergeFile = (
+  data: ExplorerItemFile,
+  to: Path,
+  rootFolder: ExplorerRootFolder
+): MergeFileAction => {
+  const folder = new ExplorerHelper(rootFolder).folder(to) as FolderHelper;
+  folder.addFile(data);
+  localStorage.setItem("explorer.rootFolder", JSON.stringify(folder.root));
+
+  return {
+    type: ExplorerActionsType.MergeFile,
+    payload: {
+      rootFolder: folder.root,
+    },
+  };
+};
+
+export const mergeFolder = (
+  data: ExplorerItemFolder,
+  to: Path,
+  rootFolder: ExplorerRootFolder
+): MergeFolderAction => {
+  const folder = new ExplorerHelper(rootFolder).folder(to) as FolderHelper;
+  folder.addFolder(data);
+  localStorage.setItem("explorer.rootFolder", JSON.stringify(folder.root));
+
+  return {
+    type: ExplorerActionsType.MergeFolder,
     payload: {
       rootFolder: folder.root,
     },

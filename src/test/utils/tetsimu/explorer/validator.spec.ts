@@ -2,7 +2,9 @@ import { ExplorerIds } from "types/explorer";
 import {
   validateFileData,
   validateFolderData,
-  validateSyncedData,
+  validateLoadedFileData,
+  validateLoadedFolderData,
+  validateSyncedData
 } from "utils/tetsimu/explorer/validator";
 import { makeFile, makeFolder } from "./testHelper/factories";
 
@@ -33,6 +35,55 @@ describe("validate", () => {
       expect(result).toEqual({
         isValid: false,
         errorMessage: `Same item(1-1) already exist.`,
+      });
+    });
+  });
+
+  describe("validateLoadedFolderData", () => {
+    it("Should return invalid due to duplicate item exists", () => {
+      const result = validateLoadedFolderData(
+        root,
+        makeFolder("1", "loadedData")
+      );
+
+      expect(result).toEqual({
+        isValid: false,
+        errorMessage: `Same item(1) already exist in folder(__root__).`,
+      });
+    });
+
+    it("Should return invalid due to duplicate item names exist", () => {
+      const result = validateLoadedFolderData(
+        root,
+        makeFolder("loaded1-1", "folder1")
+      );
+
+      expect(result).toEqual({
+        isValid: false,
+        errorMessage: `Duplicate item names exist in folder(__root__).`,
+      });
+    });
+  });
+
+  describe("validateLoadedFileData", () => {
+    it("Should return invalid due to duplicate item exists", () => {
+      const result = validateLoadedFileData(folder1, makeFile("1-3", "loadedData"));
+
+      expect(result).toEqual({
+        isValid: false,
+        errorMessage: `Same item(1-3) already exist in folder(1).`,
+      });
+    });
+
+    it("Should return invalid due to duplicate item names exist", () => {
+      const result = validateLoadedFileData(
+        folder1,
+        makeFile("loaded1-3", "file1-3")
+      );
+
+      expect(result).toEqual({
+        isValid: false,
+        errorMessage: `Duplicate item names exist in folder(1).`,
       });
     });
   });
@@ -93,7 +144,10 @@ describe("validate", () => {
     it("Should return valid", () => {
       const folder = makeFolder("sync1", "syncFolder");
       folder.items["sync1-1"] = makeFolder("sync1-1", "syncFolder1-1");
-      folder.items["sync1-1"].items["sync1-1-1"] = makeFile("sync1-1-1", "syncFile1-1-1");
+      folder.items["sync1-1"].items["sync1-1-1"] = makeFile(
+        "sync1-1-1",
+        "syncFile1-1-1"
+      );
       folder.items["sync1-2"] = makeFolder("sync1-2", "syncFolder1-2");
       folder.items["sync1-3"] = makeFile("sync1-3", "syncFile1-3");
 

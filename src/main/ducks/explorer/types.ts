@@ -5,6 +5,8 @@ export const ExplorerActionsType = {
   AddFile: "explorer/addFile",
   AddFolder: "explorer/addFolder",
   AddSyncFolder: "explorer/addSyncFolder",
+  MergeFile: "explorer/mergeFile",
+  MergeFolder: "explorer/mergeFolder",
   MoveItem: "explorer/moveItem",
   RemoveFile: "explorer/removeFile",
   RemoveFolder: "explorer/removeFolder",
@@ -17,6 +19,8 @@ export type ExplorerActions =
   | AddFileAction
   | AddFolderAction
   | AddSyncFolderAction
+  | MergeFileAction
+  | MergeFolderAction
   | MoveItemAction
   | RemoveFileAction
   | RemoveFolderAction
@@ -40,6 +44,20 @@ export type AddFolderAction = {
 
 export type AddSyncFolderAction = {
   type: typeof ExplorerActionsType.AddSyncFolder;
+  payload: {
+    rootFolder: ExplorerRootFolder;
+  };
+} & Action;
+
+export type MergeFileAction = {
+  type: typeof ExplorerActionsType.MergeFile;
+  payload: {
+    rootFolder: ExplorerRootFolder;
+  };
+} & Action;
+
+export type MergeFolderAction = {
+  type: typeof ExplorerActionsType.MergeFolder;
   payload: {
     rootFolder: ExplorerRootFolder;
   };

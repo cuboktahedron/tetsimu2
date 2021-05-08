@@ -21,6 +21,16 @@ const reducer = (state: ExplorerState, anyAction: Action): ExplorerState => {
         ...state,
         rootFolder: action.payload.rootFolder,
       };
+    case ExplorerActionsType.MergeFile:
+      return {
+        ...state,
+        rootFolder: action.payload.rootFolder,
+      };
+    case ExplorerActionsType.MergeFolder:
+      return {
+        ...state,
+        rootFolder: action.payload.rootFolder,
+      };
     case ExplorerActionsType.MoveItem:
       return {
         ...state,

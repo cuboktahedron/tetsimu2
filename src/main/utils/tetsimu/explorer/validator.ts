@@ -1,7 +1,7 @@
 import {
   ExplorerItemFile,
   ExplorerItemFolder,
-  ExplorerItemType,
+  ExplorerItemType
 } from "stores/ExplorerState";
 
 export type ExplorerItemValidatorReulst =
@@ -30,6 +30,66 @@ export const validateSyncedData = (
   }
 
   return validateFolderData(data);
+};
+
+export const validateLoadedFolderData = (
+  parentFolder: ExplorerItemFolder,
+  data: ExplorerItemFolder
+): ExplorerItemValidatorReulst => {
+  const entries = Object.entries(parentFolder.items);
+  if (
+    entries.some(([key]) => {
+      return key === data.id;
+    })
+  ) {
+    return {
+      isValid: false,
+      errorMessage: `Same item(${data.id}) already exist in folder(${parentFolder.id}).`,
+    };
+  }
+
+  if (
+    entries.some(([, item]) => {
+      return item.name === data.name;
+    })
+  ) {
+    return {
+      isValid: false,
+      errorMessage: `Duplicate item names exist in folder(${parentFolder.id}).`,
+    };
+  }
+
+  return validateFolderData(data);
+};
+
+export const validateLoadedFileData = (
+  parentFolder: ExplorerItemFolder,
+  data: ExplorerItemFile
+): ExplorerItemValidatorReulst => {
+  const entries = Object.entries(parentFolder.items);
+  if (
+    entries.some(([key]) => {
+      return key === data.id;
+    })
+  ) {
+    return {
+      isValid: false,
+      errorMessage: `Same item(${data.id}) already exist in folder(${parentFolder.id}).`,
+    };
+  }
+
+  if (
+    entries.some(([, item]) => {
+      return item.name === data.name;
+    })
+  ) {
+    return {
+      isValid: false,
+      errorMessage: `Duplicate item names exist in folder(${parentFolder.id}).`,
+    };
+  }
+
+  return validateFileData(data);
 };
 
 export const validateFolderData = (
