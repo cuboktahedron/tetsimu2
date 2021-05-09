@@ -8,6 +8,7 @@ import {
 import { blue } from "@material-ui/core/colors";
 import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
 import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
+import PublishIcon from "@material-ui/icons/Publish";
 import TreeView from "@material-ui/lab/TreeView";
 import clsx from "clsx";
 import { getOrderedItems } from "ducks/explorer/selectors";
@@ -165,8 +166,16 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
     return true;
   };
 
-  const { acceptedFiles, isDragActive, getRootProps } = useDropzone({
+  const {
+    acceptedFiles,
+    isDragActive,
+    getRootProps,
+    getInputProps,
+    inputRef,
+  } = useDropzone({
     maxFiles: 1,
+    noClick: true,
+    noKeyboard: true,
   });
 
   const [loadFile, setLoadFile] = React.useState<File | null>(null);
@@ -276,6 +285,12 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
     setOpensAddSyncForm(true);
   };
 
+  const handleUploadClick = () => {
+    if (inputRef.current) {
+      inputRef.current.click();
+    }
+  };
+
   const handleAddSyncClose = () => {
     setOpensAddSyncForm(false);
   };
@@ -339,12 +354,16 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
           }),
         })}
       >
+        <input {...getInputProps()} />
         <div>
           <IconButton onClick={handleNewFolderClick}>
             <CreateNewFolderIcon />
           </IconButton>
           <IconButton onClick={handleAddSyncClick}>
             <PlaylistAddIcon />
+          </IconButton>
+          <IconButton onClick={handleUploadClick}>
+            <PublishIcon />
           </IconButton>
         </div>
         <div style={isOver && canDrop ? { background: `${blue[700]}40` } : {}}>
