@@ -258,6 +258,7 @@ export class FieldHelper {
 
       return (
         blockRow < 0 ||
+        blockRow >= MAX_FIELD_HEIGHT ||
         blockCol < 0 ||
         blockCol >= MAX_FIELD_WIDTH ||
         (blockRow < this.field.length &&
