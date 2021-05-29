@@ -1,6 +1,7 @@
 import { Direction, SpinType, Tetromino } from "types/core";
+import { SearchRouteAction } from "types/replay";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
-import { RouteSearcher, SearchRouteAction } from "utils/tetsimu/routeSearcher";
+import { RouteSearcher } from "utils/tetsimu/routeSearcher";
 import { makeCurrent } from "./testUtils/makeCurrent";
 import { makeField } from "./testUtils/makeField";
 

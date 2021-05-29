@@ -11,10 +11,16 @@ import {
   SpinType,
   Tetromino
 } from "types/core";
-import { ReplayConfig, ReplayInfo, ReplayStateHistory } from "types/replay";
+import {
+  ReplayConfig,
+  ReplayInfo,
+  ReplayStateHistory,
+  SearchRouteAction
+} from "types/replay";
 
 export type ReplayAuto = {
   playing: boolean;
+  routes: SearchRouteAction[];
   speed: number;
 };
 
@@ -76,11 +82,13 @@ export const initialReplayState: ReplayState = ((): ReplayState => {
     showsCycle: false,
     showsGhost: true,
     showsPivot: true,
+    showsTrace: false,
   };
   return {
     attackTypes: [],
     auto: {
       playing: false,
+      routes: [],
       speed: 1,
     },
     btbState: BtbState.None,

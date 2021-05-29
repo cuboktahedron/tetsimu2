@@ -56,6 +56,15 @@ const Settings: React.FC<SettingProps> = (props) => {
     );
   };
 
+  const handleShowTraceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(
+      changeConfig({
+        ...config,
+        showsTrace: e.target.checked,
+      })
+    );
+  };
+
   const handlePassesAllToSimu = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(
       changeConfig({
@@ -113,6 +122,17 @@ const Settings: React.FC<SettingProps> = (props) => {
             />
           }
           label="Show cycle"
+        />
+      </div>
+      <div>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={config.showsTrace}
+              onChange={handleShowTraceChange}
+            />
+          }
+          label="Show trace"
         />
       </div>
       <Divider />

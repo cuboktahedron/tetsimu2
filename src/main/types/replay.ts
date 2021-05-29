@@ -14,6 +14,7 @@ export type ReplayConfig = {
   showsCycle: boolean;
   showsGhost: boolean;
   showsPivot: boolean;
+  showsTrace: boolean,
 };
 
 export type ReplayRetryState = {
@@ -39,3 +40,13 @@ export type ReplayInfo = {
   nextNum: number;
   offsetRange: number;
 };
+
+export const SearchRouteAction = {
+  MoveLeft: 1,
+  MoveRight: 2,
+  TurnLeft: 3,
+  TurnRight: 4,
+  SoftDrop: 5,
+} as const;
+
+export type SearchRouteAction = typeof SearchRouteAction[keyof typeof SearchRouteAction];

@@ -10,12 +10,17 @@ import {
   ReplayStep,
   Tetromino,
 } from "types/core";
-import { ReplayInfo, ReplayStateHistory } from "types/replay";
+import {
+  ReplayInfo,
+  ReplayStateHistory,
+  SearchRouteAction,
+} from "types/replay";
 
 export const makeReplayState = (state: {
   attackTypes?: AttackType[];
   auto?: {
     playing: boolean;
+    routes: SearchRouteAction[];
     speed: number;
   };
   btbState?: BtbState;
@@ -24,7 +29,8 @@ export const makeReplayState = (state: {
     showsCycle?: boolean;
     showsGhost?: boolean;
     showsPivot?: boolean;
-  },
+    showsTrace?: boolean;
+  };
   current?: ActiveTetromino;
   field?: FieldState;
   garbages?: GarbageInfo[];
@@ -51,6 +57,7 @@ export const makeReplayState = (state: {
         showsCycle: false,
         showsGhost: false,
         showsPivot: true,
+        showsTrace: false,
       },
       current: {
         direction: Direction.Up,
