@@ -9,6 +9,7 @@ import {
   ChangeReplaySpeedAction,
   ChangeStepAction,
   ChangeZoomAction,
+  ForwardAutoAction,
   ForwardStepAction,
   ForwardStepAutoAction,
   ReplayActionsType,
@@ -223,6 +224,44 @@ export const forwardStep = (conductor: ReplayConductor): ForwardStepAction => {
     };
   }
 };
+
+export const forwardAuto = (
+  conductor: ReplayConductor
+): ForwardAutoAction => {
+  if (conductor.forward()) {
+    const newState = conductor.state;
+    const playing = newState.step < newState.replaySteps.length;
+
+    return {
+      type: ReplayActionsType.ForwardAuto,
+      payload: {
+        attackTypes: newState.attackTypes,
+        btbState: newState.btbState,
+        current: newState.current,
+        field: newState.field,
+        garbages: newState.garbages,
+        histories: newState.histories,
+        hold: newState.hold,
+        isDead: newState.isDead,
+        nexts: newState.nexts,
+        noOfCycle: newState.noOfCycle,
+        playing,
+        ren: newState.ren,
+        step: newState.step,
+        progressStep: true,
+        succeeded: true,
+      },
+    };
+  } else {
+    return {
+      type: ReplayActionsType.ForwardAuto,
+      payload: {
+        succeeded: false,
+      },
+    };
+  }
+};
+
 
 export const forwardStepAuto = (
   conductor: ReplayConductor

@@ -17,6 +17,7 @@ export const ReplayActionsType = {
   ChangeReplaySpeed: "replay/changeReplaySpeed",
   ChangeStep: "replay/changeStep",
   ChangeZoom: "replay/changeZoom",
+  ForwardAuto: "replay/forwardAuto",
   ForwardStep: "replay/forwardStep",
   ForwardStepAuto: "replay/forwardStepAuto",
   ResetConfigToDefault: "replay/resetConfigToDefault",
@@ -30,6 +31,7 @@ export type ReplayActions =
   | ChangeReplaySpeedAction
   | ChangeStepAction
   | ChangeZoomAction
+  | ForwardAutoAction
   | ForwardStepAction
   | ForwardStepAutoAction
   | ResetConfigToDefaultAction
@@ -106,6 +108,20 @@ export type ChangeZoomAction = {
   payload: {
     zoom: number;
   };
+} & Action;
+
+export type ForwardAutoAction = {
+  type: typeof ReplayActionsType.ForwardAuto;
+  payload:
+    | {
+        current: ActiveTetromino;
+        progressStep: false;
+        succeeded: true;
+      }
+    | (ForwardStepAutoAction["payload"] & { progressStep: true })
+    | {
+        succeeded: false;
+      };
 } & Action;
 
 export type ForwardStepAction = {

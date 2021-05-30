@@ -74,6 +74,35 @@ const reducer = (state: ReplayState, anyAction: Action): ReplayState => {
           },
         };
       }
+    case ReplayActionsType.ForwardAuto:
+      if (!action.payload.succeeded) {
+        return {
+          ...state,
+          auto: {
+            ...state.auto,
+            playing: false,
+          },
+        };
+      } else {
+        const { succeeded, ...payload } = action.payload;
+        if (payload.progressStep) {
+          const { progressStep, ...restOfPayload } = payload;
+          return {
+            ...state,
+            ...restOfPayload,
+            auto: {
+              ...state.auto,
+              playing: payload.playing,
+            },
+          };
+        } else {
+          const { progressStep, ...restOfPayload } = payload;
+          return {
+            ...state,
+            ...restOfPayload,
+          };
+        }
+      }
     case ReplayActionsType.ForwardStepAuto:
       if (!action.payload.succeeded) {
         return {

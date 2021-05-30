@@ -7,10 +7,12 @@ import {
   ReplayStepHardDrop,
   ReplayStepType,
   SpinType,
-  Tetromino,
+  Tetromino
 } from "types/core";
+import { SearchRouteAction } from "types/replay";
 import { FieldHelper } from "../fieldHelper";
 import { Pytt2Strategy } from "../putt2Strategy";
+import { RouteSearcher } from "../routeSearcher";
 
 export class ReplayConductor {
   private _state: ReplayState;
@@ -26,7 +28,128 @@ export class ReplayConductor {
     return this._state;
   }
 
-  forwardStep = (): boolean => {
+  forward(): boolean {
+    const step = this.state.replaySteps[this.state.step];
+    if (step === undefined) {
+      return false;
+    }
+
+    if (step.type !== ReplayStepType.Drop) {
+      return this.forwardStep();
+    }
+
+    const routeSearchter = new RouteSearcher(
+      this.fieldHelper,
+      this.state.current,
+      {
+        type: this.state.current.type,
+        direction: step.dir,
+        pos: step.pos,
+        spinType: step.spinType,
+      }
+    );
+
+    const routes = routeSearchter.search();
+    if (routes === null) {
+      return this.forwardStep();
+    }
+
+    if (routes.length === 0) {
+      return this.forwardStep();
+    }
+
+    switch (routes[0]) {
+      case SearchRouteAction.MoveLeft:
+        return this.moveLeft();
+      case SearchRouteAction.MoveRight:
+        return this.moveRight();
+      case SearchRouteAction.SoftDrop:
+        return this.softDrop();
+      case SearchRouteAction.TurnLeft:
+        return this.turnLeft();
+      case SearchRouteAction.TurnRight:
+        return this.turnRight();
+    }
+  }
+
+  moveLeft(): boolean {
+    const current = this.state.current;
+    const newCurrent: ActiveTetromino = {
+      ...current,
+      pos: {
+        ...current.pos,
+        x: current.pos.x - 1,
+      },
+      spinType: SpinType.None,
+    };
+
+    if (this.fieldHelper.isOverlapping(newCurrent)) {
+      return false;
+    }
+
+    this.state.current = newCurrent;
+    return true;
+  }
+
+  moveRight(): boolean {
+    const current = this.state.current;
+    const newCurrent: ActiveTetromino = {
+      ...current,
+      pos: {
+        ...current.pos,
+        x: current.pos.x + 1,
+      },
+      spinType: SpinType.None,
+    };
+
+    if (this.fieldHelper.isOverlapping(newCurrent)) {
+      return false;
+    }
+
+    this.state.current = newCurrent;
+    return true;
+  }
+
+  softDrop(): boolean {
+    const current = this.state.current;
+    const newCurrent: ActiveTetromino = {
+      ...current,
+      pos: {
+        ...current.pos,
+        y: current.pos.y - 1,
+      },
+      spinType: SpinType.None,
+    };
+
+    if (this.fieldHelper.isOverlapping(newCurrent)) {
+      return false;
+    }
+
+    this.state.current = newCurrent;
+    return true;
+  }
+
+  turnLeft(): boolean {
+    const newCurrent = this.fieldHelper.rotateLeft(this.state.current);
+    if (newCurrent === null) {
+      return false;
+    }
+
+    this.state.current = newCurrent;
+    return true;
+  }
+
+  turnRight(): boolean {
+    const newCurrent = this.fieldHelper.rotateRight(this.state.current);
+    if (newCurrent === null) {
+      return false;
+    }
+
+    this.state.current = newCurrent;
+    return true;
+  }
+
+  forwardStep(): boolean {
     const step = this.state.replaySteps[this.state.step];
     if (step === undefined) {
       return false;
@@ -42,7 +165,7 @@ export class ReplayConductor {
     }
 
     return false;
-  };
+  }
 
   private forwardDropStep(step: ReplayStepDrop): boolean {
     if (this.state.isDead) {

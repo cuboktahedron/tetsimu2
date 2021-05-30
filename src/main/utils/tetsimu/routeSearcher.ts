@@ -45,6 +45,20 @@ export class RouteSearcher {
         }
 
         {
+          let result = this.searchWithTurnLeft(next);
+          if (result !== null) {
+            return result;
+          }
+        }
+
+        {
+          let result = this.searchWithTurnRight(next);
+          if (result !== null) {
+            return result;
+          }
+        }
+
+        {
           let result = this.searchWithLeftMove(next);
           if (result !== null) {
             return result;
@@ -60,20 +74,6 @@ export class RouteSearcher {
 
         {
           let result = this.searchWithSoftDrop(next);
-          if (result !== null) {
-            return result;
-          }
-        }
-
-        {
-          let result = this.searchWithTurnLeft(next);
-          if (result !== null) {
-            return result;
-          }
-        }
-
-        {
-          let result = this.searchWithTurnRight(next);
           if (result !== null) {
             return result;
           }

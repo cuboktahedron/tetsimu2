@@ -14,13 +14,11 @@ import {
 import {
   ReplayConfig,
   ReplayInfo,
-  ReplayStateHistory,
-  SearchRouteAction
+  ReplayStateHistory
 } from "types/replay";
 
 export type ReplayAuto = {
   playing: boolean;
-  routes: SearchRouteAction[];
   speed: number;
 };
 
@@ -88,7 +86,6 @@ export const initialReplayState: ReplayState = ((): ReplayState => {
     attackTypes: [],
     auto: {
       playing: false,
-      routes: [],
       speed: 1,
     },
     btbState: BtbState.None,

@@ -4,7 +4,7 @@ import {
   initializeApp,
   replayToSimuMode,
   simuToEditMode,
-  simuToReplayMode
+  simuToReplayMode,
 } from "ducks/root/actions";
 import {
   ChangeTetsimuModeAction,
@@ -13,7 +13,7 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction
+  SimuToReplayAction,
 } from "ducks/root/types";
 import { EditState, initialEditState } from "stores/EditState";
 import { initialReplayState, ReplayState } from "stores/ReplayState";
@@ -25,7 +25,7 @@ import {
   Direction,
   SpinType,
   Tetromino,
-  TetsimuMode
+  TetsimuMode,
 } from "types/core";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { makeCurrent } from "../../utils/tetsimu/testUtils/makeCurrent";
@@ -36,13 +36,13 @@ import { makeHold } from "../../utils/tetsimu/testUtils/makeHold";
 import {
   makeNextNote,
   makeNextNotes,
-  makeTerminalNote
+  makeTerminalNote,
 } from "../../utils/tetsimu/testUtils/makeNextNote";
 import { makeReplayState } from "../../utils/tetsimu/testUtils/makeReplayState";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
-  makeReplayHoldStep
+  makeReplayHoldStep,
 } from "../../utils/tetsimu/testUtils/makeReplayStep";
 import { makeSimuState } from "../../utils/tetsimu/testUtils/makeSimuState";
 import { makeTetrominos } from "../../utils/tetsimu/testUtils/makeTetrominos";
@@ -308,6 +308,7 @@ describe("rootModule", () => {
         showsCycle: false,
         showsGhost: true,
         showsPivot: true,
+        showsTrace: false,
       };
 
       const actual = replayToSimuMode(state, initialSimuState);

@@ -1,6 +1,6 @@
 import { getReplayConductor } from "ducks/replay/selectors";
 import { ReplayState } from "stores/ReplayState";
-import { AttackType, BtbState, Direction, Tetromino } from "types/core";
+import { AttackType, BtbState, Direction, SpinType, Tetromino } from "types/core";
 import { makeCurrent } from "../testUtils/makeCurrent";
 import { makeField } from "../testUtils/makeField";
 import { makeGarbage } from "../testUtils/makeGarbage";
@@ -9,13 +9,107 @@ import { makeReplayState } from "../testUtils/makeReplayState";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
-  makeReplayHoldStep,
+  makeReplayHoldStep
 } from "../testUtils/makeReplayStep";
 import { makeTetrominos } from "../testUtils/makeTetrominos";
 
 describe("replayConductor", () => {
+  describe("forward", () => {
+    it("should forward", () => {
+      const state = makeReplayState({
+        attackTypes: [],
+        btbState: BtbState.None,
+        current: makeCurrent(Direction.Up, 3, 11, Tetromino.T),
+        field: makeField(
+          // prettier-ignore
+          "NNNNGGGGGG",
+          "NNNNNGGGGG",
+          "GGGGNGGGGG",
+          "GGGNNGGGGG",
+          "GGGNNGGGGG",
+          "GGNNNGGGGG",
+          "GGNGGGGGGG",
+          "GGNNNNGGGG",
+          "GGNNNNGGGG",
+          "GGGGNNNGGG",
+          "GGGGGNGGGG"
+        ),
+        garbages: [],
+        histories: [
+          {
+            attackTypes: [],
+            btbState: BtbState.None,
+            current: makeCurrent(Direction.Up, 3, 11, Tetromino.T),
+            field: makeField(
+              // prettier-ignore
+              "NNNNGGGGGG",
+              "NNNNNGGGGG",
+              "GGGGNGGGGG",
+              "GGGNNGGGGG",
+              "GGGNNGGGGG",
+              "GGNNNGGGGG",
+              "GGNGGGGGGG",
+              "GGNNNNGGGG",
+              "GGNNNNGGGG",
+              "GGGGNNNGGG",
+              "GGGGGNGGGG"
+            ),
+            garbages: [],
+            hold: makeHold(Tetromino.None, true),
+            isDead: false,
+            nexts: makeTetrominos(""),
+            noOfCycle: 1,
+            ren: 0,
+          },
+        ],
+        hold: makeHold(Tetromino.None, true),
+        nexts: makeTetrominos(""),
+        ren: 0,
+        replaySteps: [makeReplayDropStep(Direction.Down, 5, 1, SpinType.Spin)],
+      });
+      const conductor = getReplayConductor(state);
+
+      expect(conductor.forward()).toBeTruthy();
+      expect(conductor.state.current).toEqual({
+        direction: Direction.Up,
+        pos: {
+          x: 2,
+          y: 11
+        },
+        spinType: SpinType.None,
+        type: Tetromino.T 
+      });
+
+      conductor.forward();
+      conductor.forward();
+      conductor.forward();
+      conductor.forward();
+      conductor.forward();
+      conductor.forward();
+      conductor.forward();
+      conductor.forward();
+      conductor.forward();
+      conductor.forward();
+      conductor.forward();
+
+      expect(conductor.state.current).toEqual({
+        direction: Direction.Down,
+        pos: {
+          x: 5,
+          y: 1, 
+        },
+        spinType: SpinType.Spin,
+        type: Tetromino.T 
+      });
+
+      expect(conductor.state.step).toBe(0);
+      conductor.forward();
+      expect(conductor.state.step).toBe(1);
+    });
+  });
+
   describe("forwardStep", () => {
-    it("should be forward drop step", () => {
+    it("should forward drop step", () => {
       const state = makeReplayState({
         attackTypes: [AttackType.BtbTst],
         btbState: BtbState.Btb,
@@ -67,7 +161,7 @@ describe("replayConductor", () => {
       expect(actual).toEqual(expected);
     });
 
-    it("should be forward hold step", () => {
+    it("should forward hold step", () => {
       const state = makeReplayState({
         attackTypes: [AttackType.BtbTsd],
         btbState: BtbState.Btb,
@@ -127,7 +221,7 @@ describe("replayConductor", () => {
       expect(actual).toEqual(expected);
     });
 
-    it("should be forward hard drop step without attacked", () => {
+    it("should forward hard drop step without attacked", () => {
       const state = makeReplayState({
         attackTypes: [],
         btbState: BtbState.None,
@@ -193,7 +287,7 @@ describe("replayConductor", () => {
       expect(actual).toEqual(expected);
     });
 
-    it("should be forward drop step with attacked", () => {
+    it("should forward drop step with attacked", () => {
       const state = makeReplayState({
         attackTypes: [AttackType.BtbTetris],
         btbState: BtbState.Btb,
@@ -272,7 +366,7 @@ describe("replayConductor", () => {
   });
 
   describe("backwardStep", () => {
-    it("should be backward step", () => {
+    it("should backward step", () => {
       const state = makeReplayState({
         attackTypes: [],
         btbState: BtbState.Btb,

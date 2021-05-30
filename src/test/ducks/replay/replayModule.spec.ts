@@ -64,7 +64,7 @@ describe("replayModule", () => {
   });
 
   describe("changeStep", () => {
-    it("should be change forward without histories", () => {
+    it("should change forward without histories", () => {
       const state = makeReplayState({
         attackTypes: [AttackType.Single],
         btbState: BtbState.Btb,
@@ -165,7 +165,7 @@ describe("replayModule", () => {
       expect(actual).toEqual(expected);
     });
 
-    it.skip("should be change forward with histories", () => {
+    it.skip("should change forward with histories", () => {
       const state = makeReplayState({
         attackTypes: [],
         btbState: BtbState.Btb,
@@ -245,7 +245,7 @@ describe("replayModule", () => {
       expect(actual).toEqual(expected);
     });
 
-    it("should be change backward", () => {
+    it("should change backward", () => {
       const state = makeReplayState({
         attackTypes: [],
         btbState: BtbState.Btb,

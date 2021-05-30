@@ -6,7 +6,7 @@ import {
   FieldState,
   HoldState,
   NextNote,
-  Tetromino
+  Tetromino,
 } from "./core";
 
 export type ReplayConfig = {
@@ -14,7 +14,7 @@ export type ReplayConfig = {
   showsCycle: boolean;
   showsGhost: boolean;
   showsPivot: boolean;
-  showsTrace: boolean,
+  showsTrace: boolean;
 };
 
 export type ReplayRetryState = {

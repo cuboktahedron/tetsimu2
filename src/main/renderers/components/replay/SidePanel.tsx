@@ -16,7 +16,7 @@ import PageviewIcon from "@material-ui/icons/Pageview";
 import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 import SettingsIcon from "@material-ui/icons/Settings";
 import clsx from "clsx";
-import { forwardStepAuto } from "ducks/replay/actions";
+import { forwardAuto, forwardStepAuto } from "ducks/replay/actions";
 import { getReplayConductor } from "ducks/replay/selectors";
 import {
   changeDrawerState,
@@ -95,11 +95,19 @@ const SidePanel = React.memo<SidePanelProps>((props) => {
         window.clearInterval(refReplayTimerId.current);
       }
 
-      const timerId = window.setInterval(() => {
-        dispatch(forwardStepAuto(getReplayConductor(refState.current)));
-      }, (1 / refState.current.auto.speed) * 500);
+      if (refState.current.config.showsTrace) {
+        const timerId = window.setInterval(() => {
+          dispatch(forwardAuto(getReplayConductor(refState.current)));
+        }, (1 / refState.current.auto.speed) * 100);
 
-      setReplayTimerId(timerId);
+        setReplayTimerId(timerId);
+      } else {
+        const timerId = window.setInterval(() => {
+          dispatch(forwardStepAuto(getReplayConductor(refState.current)));
+        }, (1 / refState.current.auto.speed) * 500);
+
+        setReplayTimerId(timerId);
+      }
     } else {
       if (refReplayTimerId.current) {
         window.clearInterval(refReplayTimerId.current);
@@ -113,7 +121,7 @@ const SidePanel = React.memo<SidePanelProps>((props) => {
         setReplayTimerId(null);
       }
     };
-  }, [state.auto.playing, state.auto.speed]);
+  }, [state.auto.playing, state.auto.speed, state.config.showsTrace]);
 
   return <InnerSidePanel {...props} />;
 });
