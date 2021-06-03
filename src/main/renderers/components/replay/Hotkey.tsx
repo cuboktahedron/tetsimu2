@@ -1,4 +1,11 @@
-import { backwardStep, changeStep, forwardStep } from "ducks/replay/actions";
+import {
+  backwardStep,
+  changeAutoPlaying,
+  changeStep,
+  downReplaySpeed,
+  forwardStep,
+  upReplaySpeed,
+} from "ducks/replay/actions";
 import { getReplayConductor } from "ducks/replay/selectors";
 import React from "react";
 import { OperationKey } from "utils/tetsimu/operationKey";
@@ -11,7 +18,10 @@ const HotKey: React.FC = () => {
   const initialKeys = {
     ArrowLeft: new OperationKey({ interval1: 200, interval2: 100 }),
     ArrowRight: new OperationKey({ interval1: 200, interval2: 100 }),
+    f: new OperationKey({}),
+    p: new OperationKey({}),
     r: new OperationKey({}),
+    s: new OperationKey({}),
   };
 
   const [subKeys, setSubKeys] = React.useState(initialKeys);
@@ -44,8 +54,17 @@ const HotKey: React.FC = () => {
         case "arrowright":
           subKeys["ArrowRight"].down();
           break;
+        case "f":
+          subKeys["f"].down();
+          break;
+        case "p":
+          subKeys["p"].down();
+          break;
         case "r":
           subKeys["r"].down();
+          break;
+        case "s":
+          subKeys["s"].down();
           break;
       }
     };
@@ -81,8 +100,17 @@ const HotKey: React.FC = () => {
         case "arrowright":
           subKeys["ArrowRight"].up();
           break;
+        case "f":
+          subKeys["f"].up();
+          break;
+        case "p":
+          subKeys["p"].up();
+          break;
         case "r":
           subKeys["r"].up();
+          break;
+        case "s":
+          subKeys["s"].up();
           break;
       }
     };
@@ -111,14 +139,32 @@ const HotKey: React.FC = () => {
   React.useEffect(() => {
     if (subKeys["ArrowLeft"].active) {
       dispatch(backwardStep(getReplayConductor(state)));
+      return;
     }
 
     if (subKeys["ArrowRight"].active) {
       dispatch(forwardStep(getReplayConductor(state)));
+      return;
+    }
+
+    if (subKeys["f"].active) {
+      dispatch(upReplaySpeed(state.auto.speed));
+      return;
+    }
+
+    if (subKeys["p"].active) {
+      dispatch(changeAutoPlaying(!state.auto.playing));
+      return;
     }
 
     if (subKeys["r"].active) {
       dispatch(changeStep(getReplayConductor(state), 0));
+      return;
+    }
+
+    if (subKeys["s"].active) {
+      dispatch(downReplaySpeed(state.auto.speed));
+      return;
     }
   }, [subKeys]);
 
