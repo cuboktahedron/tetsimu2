@@ -123,14 +123,17 @@ const HotKey: React.FC = () => {
   React.useEffect(() => {
     if (subKeys["r"].active) {
       dispatch(retry(getSimuConductor(state)));
+      return;
     }
 
     if (subKeys["shift + b"].active) {
       dispatch(redo(state.step, state.histories));
+      return;
     }
 
     if (subKeys["shift + r"].active) {
       dispatch(superRetry(getSimuConductor(state)));
+      return;
     }
   }, [subKeys]);
 
