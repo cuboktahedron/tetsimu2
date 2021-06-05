@@ -34,7 +34,7 @@ describe("validate", () => {
 
       expect(result).toEqual({
         isValid: false,
-        errorMessage: `Same item(1-1) already exist.`,
+        errorMessage: `Same item(1-1) already exists.`,
       });
     });
   });
@@ -48,7 +48,7 @@ describe("validate", () => {
 
       expect(result).toEqual({
         isValid: false,
-        errorMessage: `Same item(1) already exist in folder(__root__).`,
+        errorMessage: `Same item(1) already exists in folder(__root__).`,
       });
     });
 
@@ -60,7 +60,7 @@ describe("validate", () => {
 
       expect(result).toEqual({
         isValid: false,
-        errorMessage: `Duplicate item names exist in folder(__root__).`,
+        errorMessage: `Duplicated item name(folder1) exists in folder(__root__).`,
       });
     });
   });
@@ -71,7 +71,7 @@ describe("validate", () => {
 
       expect(result).toEqual({
         isValid: false,
-        errorMessage: `Same item(1-3) already exist in folder(1).`,
+        errorMessage: `Same item(1-3) already exists in folder(1).`,
       });
     });
 
@@ -83,7 +83,7 @@ describe("validate", () => {
 
       expect(result).toEqual({
         isValid: false,
-        errorMessage: `Duplicate item names exist in folder(1).`,
+        errorMessage: `Duplicated item name exists in folder(1).`,
       });
     });
   });
@@ -111,7 +111,7 @@ describe("validate", () => {
 
       expect(result).toEqual({
         isValid: false,
-        errorMessage: `Duplicate item names exist in folder(sync1).`,
+        errorMessage: `Duplicated item name(syncFolder1-1) exists in folder(sync1).`,
       });
     });
 

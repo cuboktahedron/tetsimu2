@@ -1,7 +1,7 @@
 import {
   ExplorerItemFile,
   ExplorerItemFolder,
-  ExplorerItemType
+  ExplorerItemType,
 } from "stores/ExplorerState";
 
 export type ExplorerItemValidatorReulst =
@@ -25,7 +25,7 @@ export const validateSyncedData = (
   ) {
     return {
       isValid: false,
-      errorMessage: `Same item(${data.id}) already exist.`,
+      errorMessage: `Same item(${data.id}) already exists.`,
     };
   }
 
@@ -44,18 +44,17 @@ export const validateLoadedFolderData = (
   ) {
     return {
       isValid: false,
-      errorMessage: `Same item(${data.id}) already exist in folder(${parentFolder.id}).`,
+      errorMessage: `Same item(${data.id}) already exists in folder(${parentFolder.id}).`,
     };
   }
 
-  if (
-    entries.some(([, item]) => {
-      return item.name === data.name;
-    })
-  ) {
+  const duplicatedNameItem = entries
+    .map(([, item]) => item)
+    .find((item) => item.name === data.name);
+  if (duplicatedNameItem) {
     return {
       isValid: false,
-      errorMessage: `Duplicate item names exist in folder(${parentFolder.id}).`,
+      errorMessage: `Duplicated item name(${duplicatedNameItem.name}) exists in folder(${parentFolder.id}).`,
     };
   }
 
@@ -74,18 +73,17 @@ export const validateLoadedFileData = (
   ) {
     return {
       isValid: false,
-      errorMessage: `Same item(${data.id}) already exist in folder(${parentFolder.id}).`,
+      errorMessage: `Same item(${data.id}) already exists in folder(${parentFolder.id}).`,
     };
   }
 
-  if (
-    entries.some(([, item]) => {
-      return item.name === data.name;
-    })
-  ) {
+  const duplicatedNameItem = entries
+    .map(([, item]) => item)
+    .find((item) => item.name === data.name);
+  if (duplicatedNameItem) {
     return {
       isValid: false,
-      errorMessage: `Duplicate item names exist in folder(${parentFolder.id}).`,
+      errorMessage: `Duplicated item name exists in folder(${parentFolder.id}).`,
     };
   }
 
@@ -106,11 +104,24 @@ export const validateFolderData = (
     }
   }
 
-  const nameSet = new Set(entries.map(([_, value]) => value.name));
-  if (nameSet.size !== entries.length) {
+  const duplicatedName = (() => {
+    const entryNames = entries.map(([_, item]) => item.name).sort();
+    let prevEntryName = null;
+    for (let entryName of entryNames) {
+      if (entryName === prevEntryName) {
+        return entryName;
+      }
+
+      prevEntryName = entryName;
+    }
+
+    return null;
+  })();
+
+  if (!!duplicatedName) {
     return {
       isValid: false,
-      errorMessage: `Duplicate item names exist in folder(${data.id}).`,
+      errorMessage: `Duplicated item name(${duplicatedName}) exists in folder(${data.id}).`,
     };
   }
 
