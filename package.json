@@ -61,6 +61,7 @@
     "uuid": "^8.3.2"
   },
   "resolutions": {
-    "cacache": "^15.0.6"
+    "cacache": "^15.0.6",
+    "postcss": "^8.2.10"
   }
 }
