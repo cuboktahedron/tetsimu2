@@ -106,16 +106,6 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
     path: "/",
   });
 
-  React.useEffect(() => {
-    if (state.initialSyncUrl) {
-      setSyncState({
-        addSync: true,
-        state: SyncState.Started,
-        syncUrl: state.initialSyncUrl,
-      });
-    }
-  }, []);
-
   const [{ isOver, canDrop }, drop] = useDrop(
     () => ({
       accept: [DragItemTypes.Folder, DragItemTypes.File],
