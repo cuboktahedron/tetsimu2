@@ -4,6 +4,7 @@ import React from "react";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { RootContext } from "../../App";
 import DisplaySettings from "./DisplaySettings";
+import ExternalSettings from "./ExternalSettings";
 import GarbageSettings from "./GarbageSettings";
 import InputSettings from "./InputSettings";
 import PlayModeSettings from "./PlayModeSetting";
@@ -56,6 +57,11 @@ const Settings: React.FC<SettingsProps> = (props) => {
         isTouchDevice={state.env.isTouchDevice}
       />
       <Divider />
+      <ExternalSettings
+        config={state.config}
+        dispatch={dispatch}
+        stateRef={stateRef}
+      />
       <div className={classes.buttons}>
         <div>
           <div>

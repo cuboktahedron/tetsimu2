@@ -29,6 +29,10 @@ export type GarbageConfig = {
 };
 
 export type SimuConfig = {
+  external: {
+    host: string,
+    port: string,
+  },
   garbage: GarbageConfig;
   offsetRange: number;
   nextNum: number;

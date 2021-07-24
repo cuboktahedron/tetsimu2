@@ -21,9 +21,13 @@ import {
 import { makeNextNote } from "./makeNextNote";
 
 export const makeSimuState = (state: {
-  attackTypes?: AttackType[],
+  attackTypes?: AttackType[];
   btbState?: BtbState;
   config?: {
+    external?: {
+      host: string;
+      port: string;
+    };
     garbage?: GarbageConfig;
     nextNum?: number;
     offsetRange?: number;
@@ -61,6 +65,10 @@ export const makeSimuState = (state: {
       attackTypes: [],
       btbState: BtbState.None,
       config: {
+        external: {
+          host: "",
+          port: "",
+        },
         garbage: {
           a1: 0,
           a2: 1,

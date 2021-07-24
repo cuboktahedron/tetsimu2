@@ -139,7 +139,10 @@ export const initialSimuState: SimuState = ((): SimuState => {
 
   const isTouchDevice = "ontouchstart" in window;
   const config: SimuConfig = {
-    offsetRange: 2,
+    external: {
+      host: "",
+      port: "",
+    },
     garbage: {
       a1: 30,
       a2: 20,
@@ -149,6 +152,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
       level: 0,
     },
     nextNum: 5,
+    offsetRange: 2,
     playMode: PlayMode.Normal,
     riseUpRate: {
       first: 10,
