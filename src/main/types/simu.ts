@@ -9,7 +9,7 @@ import {
   NextNote,
   TapControllerType,
   Tetromino,
-  Vector2,
+  Vector2
 } from "./core";
 
 export const PlayMode = {
@@ -30,9 +30,9 @@ export type GarbageConfig = {
 
 export type SimuConfig = {
   external: {
-    host: string,
-    port: string,
-  },
+    host: string;
+    port: string;
+  };
   garbage: GarbageConfig;
   offsetRange: number;
   nextNum: number;

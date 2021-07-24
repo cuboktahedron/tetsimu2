@@ -10,12 +10,12 @@ import { clearSimu } from "ducks/simu/actions";
 import React from "react";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { useValueRef } from "renderers/hooks/useValueRef";
-import { SimuState } from "stores/SimuState";
+import { RootState } from "stores/RootState";
 import { Action, TetsimuMode } from "types/core";
 import { SimuConductor } from "utils/tetsimu/simu/simuConductor";
 import SimuUrl from "utils/tetsimu/simu/simuUrl";
-import { RootContext } from "../App";
-import TextFieldEx from "../ext/TextFieldEx";
+import { RootContext } from "../../App";
+import TextFieldEx from "../../ext/TextFieldEx";
 
 const useStyles = useSidePanelStyles();
 
@@ -29,14 +29,14 @@ const Tools: React.FC<ToolsProps> = (props) => {
   }
 
   const { state: rootState, dispatch } = React.useContext(RootContext);
-  const stateRef = useValueRef(rootState.simu);
+  const stateRef = useValueRef(rootState);
 
   return <InnerTools dispatch={dispatch} stateRef={stateRef} {...props} />;
 };
 
 type InnerToolsProps = {
   dispatch: React.Dispatch<Action>;
-  stateRef: React.MutableRefObject<SimuState>;
+  stateRef: React.MutableRefObject<RootState>;
 } & ToolsProps;
 
 const InnerTools = React.memo<InnerToolsProps>((props) => {
@@ -44,16 +44,16 @@ const InnerTools = React.memo<InnerToolsProps>((props) => {
     return null;
   }
 
-  const stateRef = props.stateRef;
+  const state = props.stateRef.current.simu;
   const dispatch = props.dispatch;
   const [stateUrl, setStateUrl] = React.useState("");
 
   const handleEditClick = () => {
-    dispatch(simuToEditMode(stateRef.current));
+    dispatch(simuToEditMode(state));
   };
 
   const handleReplayClick = () => {
-    dispatch(simuToReplayMode(stateRef.current));
+    dispatch(simuToReplayMode(state));
   };
 
   const handleEditNoResetClick = () => {
@@ -65,12 +65,12 @@ const InnerTools = React.memo<InnerToolsProps>((props) => {
   };
 
   const handleUrlClick = () => {
-    const url = new SimuUrl().fromState(stateRef.current);
+    const url = new SimuUrl().fromState(state);
     setStateUrl(url);
   };
 
   const handleClearClick = () => {
-    dispatch(clearSimu(new SimuConductor(stateRef.current)));
+    dispatch(clearSimu(new SimuConductor(state)));
   };
 
   const classes = useStyles();

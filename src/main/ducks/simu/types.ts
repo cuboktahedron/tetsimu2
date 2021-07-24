@@ -26,6 +26,7 @@ export const SimuActionsType = {
   Retry: "simu/retry",
   RotateTetromino: "simu/rotateTetromino",
   SaveConfig: "simu/saveConfig",
+  SetSettleSteps: "simu/setSettleSteps",
   SuperRetry: "simu/superRetry",
   Undo: "simu/undo",
 } as const;
@@ -40,6 +41,7 @@ export type SimuActions =
   | ResetConfigToDefaultAction
   | RetryAction
   | SaveConfigAction
+  | SetSettleStepsAction
   | SuperRetryAction
   | UndoAction;
 
@@ -162,11 +164,6 @@ export type ResetConfigToDefaultAction = {
   };
 } & Action;
 
-export type SaveConfigAction = {
-  type: typeof SimuActionsType.SaveConfig;
-  payload: {};
-} & Action;
-
 export type RetryAction = {
   type: typeof SimuActionsType.Retry;
   payload: {
@@ -192,6 +189,18 @@ export type RetryAction = {
     seed: number;
     settleSteps: SettleStep[];
     step: number;
+  };
+} & Action;
+
+export type SaveConfigAction = {
+  type: typeof SimuActionsType.SaveConfig;
+  payload: {};
+} & Action;
+
+export type SetSettleStepsAction = {
+  type: typeof SimuActionsType.SetSettleSteps;
+  payload: {
+    settleSteps: SettleStep[];
   };
 } & Action;
 

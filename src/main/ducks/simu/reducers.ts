@@ -63,12 +63,22 @@ const reducer = (state: SimuState, anyAction: Action): SimuState => {
         ...state,
         ...action.payload,
       };
+    case SimuActionsType.SetSettleSteps: {
+      const histories = [...state.histories];
+      histories.slice(-1)[0].settleSteps = action.payload.settleSteps;
+
+      return {
+        ...state,
+        histories,
+        ...action.payload,
+      };
+    }
+
     case SimuActionsType.SuperRetry:
       return {
         ...state,
         ...action.payload,
       };
-
     case SimuActionsType.Undo: {
       return {
         ...state,

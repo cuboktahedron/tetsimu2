@@ -11,6 +11,7 @@ import {
 import { blueGrey } from "@material-ui/core/colors";
 import AssessmentOutlinedIcon from "@material-ui/icons/AssessmentOutlined";
 import CallToActionIcon from "@material-ui/icons/CallToAction";
+import DeviceHubIcon from "@material-ui/icons/DeviceHub";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -24,13 +25,15 @@ import React from "react";
 import { Action } from "types/core";
 import Explorer from "../explorer/Explorer";
 import Help from "../Help";
+import Hub from "./hub/Hub";
 import Settings from "./settings/Settings";
 import Stats from "./Stats";
-import Tools from "./Tools";
+import Tools from "./tools/Tools";
 
 const IconNames = [
   "explorer",
   "help",
+  "hub",
   "simu/tools",
   "simu/settings",
   "simu/stats",
@@ -94,6 +97,7 @@ const SidePanel = React.memo<SidePanelProps>((props) => {
     props.onMenuMainsChanged.current([
       <Explorer key="explorer" opens={props.selectedMenuName === "explorer"} />,
       <Help key="help" opens={props.selectedMenuName === "help"} />,
+      <Hub key="hub" opens={props.selectedMenuName === "hub"} />,
       <Settings
         key="simu/settings"
         opens={props.selectedMenuName === "simu/settings"}
@@ -177,6 +181,19 @@ const SidePanel = React.memo<SidePanelProps>((props) => {
           <AssessmentOutlinedIcon
             className={clsx(classes.icon, {
               selected: props.selectedMenuName === "simu/stats" && props.open,
+            })}
+          />
+        </ListItemIcon>
+      </ListItem>
+      <ListItem
+        button
+        disableGutters
+        onClick={() => handleMenuIconClick("hub")}
+      >
+        <ListItemIcon className={classes.listIcon}>
+          <DeviceHubIcon
+            className={clsx(classes.icon, {
+              selected: props.selectedMenuName === "hub" && props.open,
             })}
           />
         </ListItemIcon>

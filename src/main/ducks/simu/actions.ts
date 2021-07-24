@@ -1,6 +1,6 @@
 import { initialSimuState, SimuStateHistory } from "stores/SimuState";
 import { ControllerKeys, Direction } from "types/core";
-import { SimuConfig } from "types/simu";
+import { SettleStep, SimuConfig } from "types/simu";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import { SimuConductor } from "utils/tetsimu/simu/simuConductor";
 import {
@@ -13,6 +13,7 @@ import {
   ResetConfigToDefaultAction,
   RetryAction,
   SaveConfigAction,
+  SetSettleStepsAction,
   SimuActionsType,
   SuperRetryAction,
   UndoAction,
@@ -237,6 +238,17 @@ export const saveSimuConfig = (config: SimuConfig): SaveConfigAction => {
   return {
     type: SimuActionsType.SaveConfig,
     payload: {},
+  };
+};
+
+export const setSettleSteps = (
+  settleSteps: SettleStep[]
+): SetSettleStepsAction => {
+  return {
+    type: SimuActionsType.SetSettleSteps,
+    payload: {
+      settleSteps,
+    },
   };
 };
 
