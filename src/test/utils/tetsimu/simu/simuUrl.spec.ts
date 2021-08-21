@@ -3,11 +3,11 @@ import {
   Direction,
   SpinType,
   Tetromino,
-  TetsimuMode,
+  TetsimuMode
 } from "types/core";
 import SimuUrl, {
   SimuStateFragments,
-  UNSPECIFIED_SEED,
+  UNSPECIFIED_SEED
 } from "utils/tetsimu/simu/simuUrl";
 import { makeField } from "../testUtils/makeField";
 import { makeHold } from "../testUtils/makeHold";
@@ -15,7 +15,7 @@ import { makeNextNote, makeNextNotes } from "../testUtils/makeNextNote";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
-  makeReplayHoldStep,
+  makeReplayHoldStep
 } from "../testUtils/makeReplayStep";
 import { makeSimuState } from "../testUtils/makeSimuState";
 import { makeTetrominos } from "../testUtils/makeTetrominos";
@@ -52,6 +52,7 @@ describe("simuUrl", () => {
             replayNextStep: 5,
             replayStep: 3,
             seed: 0,
+            settleSteps: [],
           },
         ],
         replayNexts: makeTetrominos("JLOSTZ"),
@@ -105,6 +106,7 @@ describe("simuUrl", () => {
             replayNextStep: 0,
             replayStep: 0,
             seed: 0,
+            settleSteps: [],
           },
         ],
         replayNexts: [],

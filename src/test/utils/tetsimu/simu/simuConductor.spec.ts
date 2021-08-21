@@ -22,6 +22,7 @@ import {
   makeReplayHardDropStep,
   makeReplayHoldStep,
 } from "../testUtils/makeReplayStep";
+import { makeSettleStep } from "../testUtils/makeSettleStep";
 import { makeTetrominos } from "../testUtils/makeTetrominos";
 
 describe("simuConductor", () => {
@@ -73,6 +74,7 @@ describe("simuConductor", () => {
             replayNextStep: 3,
             replayStep: 1,
             seed: makeSeed(41702199),
+            settleSteps: [],
           },
         ],
         hold: makeHold(Tetromino.I, false),
@@ -141,6 +143,7 @@ describe("simuConductor", () => {
             replayNextStep: 2,
             replayStep: 1,
             seed: makeSeed(2),
+            settleSteps: [],
           },
         ],
         hold: makeHold(Tetromino.T, false),
@@ -195,8 +198,6 @@ describe("simuConductor", () => {
           ),
           // prettier-ignore
           field: makeField(
-            "NNNNNNNNNN",
-            "NNNNNNNNNN",
             "NNNNNGGNNG",
             "GGGGGGNNNG",
             "IJLOSTZNGG"
@@ -216,6 +217,10 @@ describe("simuConductor", () => {
           replayNexts: makeTetrominos("SZ"),
           replayNextStep: 2,
           seed: makeSeed(3),
+          settleSteps: [
+            makeSettleStep(Direction.Down, 7, 1, Tetromino.T),
+            makeSettleStep(Direction.Up, 1, 0, Tetromino.L),
+          ],
         });
         const conductor = getSimuConductor(state);
         expect(conductor.hardDropTetromino()).toBeTruthy();
@@ -258,6 +263,7 @@ describe("simuConductor", () => {
               replayNextStep: 3,
               replayStep: 2,
               seed: makeSeed(55079790),
+              settleSteps: [makeSettleStep(Direction.Up, 1, 0, Tetromino.L)],
             },
           ],
           hold: makeHold(Tetromino.I, true),
@@ -280,6 +286,7 @@ describe("simuConductor", () => {
           ],
           seed: makeSeed(actual.seed),
           step: 1,
+          settleSteps: [makeSettleStep(Direction.Up, 1, 0, Tetromino.L)],
         };
 
         expect(actual).toEqual(expected);

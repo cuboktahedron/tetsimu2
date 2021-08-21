@@ -3,22 +3,26 @@ import {
   ActiveTetromino,
   Direction,
   FieldCellValue,
+  FieldState,
   MAX_FIELD_HEIGHT,
   MAX_FIELD_WIDTH,
   SpinType,
   Tetromino,
-  Vector2
+  Vector2,
 } from "types/core";
 import { RandomNumberGenerator } from "./randomNumberGenerator";
 
 export class FieldHelper {
-  private orgField: FieldCellValue[][];
+  private orgField: FieldState;
+  private isKeepLineMode: boolean = false;
+  private keepingLinesField: FieldState = [];
+  private rowToKeepRow: number[] = [];
 
-  constructor(private _field: FieldCellValue[][]) {
+  constructor(private _field: FieldState) {
     this.orgField = _field;
   }
 
-  get field(): FieldCellValue[][] {
+  get field(): FieldState {
     if (this.orgField !== this._field) {
       return this._field;
     }
@@ -27,19 +31,44 @@ export class FieldHelper {
     return this._field;
   }
 
-  settleTetromino(tetromino: ActiveTetromino) {
+  settleTetromino(tetromino: ActiveTetromino): Vector2[] {
     if (tetromino.type === Tetromino.None) {
       throw new Error(`Specified invalid tetromino(${tetromino.type})`);
     }
 
-    const blocks = TetrominoShape[tetromino.type][tetromino.direction];
+    const blocks = [...TetrominoShape[tetromino.type][tetromino.direction]].map(
+      (shape: Vector2) => {
+        return {
+          x: shape.x + tetromino.pos.x,
+          y: shape.y + tetromino.pos.y,
+        };
+      }
+    );
 
     blocks.forEach((block: Vector2) => {
-      if (this.field[block.y + tetromino.pos.y]) {
-        this.field[block.y + tetromino.pos.y][block.x + tetromino.pos.x] =
-          tetromino.type;
+      if (this.field[block.y]) {
+        this.field[block.y][block.x] = tetromino.type;
       }
     });
+
+    if (this.isKeepLineMode) {
+      const keepBlocks = blocks.map((block) => {
+        return {
+          x: block.x,
+          y: this.rowToKeepRow[block.y],
+        };
+      });
+
+      keepBlocks.forEach((keepBlock) => {
+        if (keepBlock.y < MAX_FIELD_HEIGHT) {
+          this.keepingLinesField[keepBlock.y][keepBlock.x] = tetromino.type;
+        }
+      });
+
+      return keepBlocks;
+    } else {
+      return blocks;
+    }
   }
 
   clear() {
@@ -59,11 +88,20 @@ export class FieldHelper {
       }
     }
 
+    erasedLines.reverse();
+
     if (erasedLines.length > 0) {
-      erasedLines.reverse().forEach((row) => {
+      erasedLines.forEach((row) => {
         this.field.splice(row, 1);
         this.field.push(new Array(MAX_FIELD_WIDTH).fill(FieldCellValue.None));
         row--;
+      });
+    }
+
+    if (this.isKeepLineMode) {
+      erasedLines.forEach((row) => {
+        this.rowToKeepRow.splice(row, 1);
+        this.rowToKeepRow.push(this.rowToKeepRow.slice(-1)[0] + 1);
       });
     }
 
@@ -363,7 +401,22 @@ export class FieldHelper {
     );
   }
 
+  startKeepingLines() {
+    this.isKeepLineMode = true;
+    this.rowToKeepRow = new Array(MAX_FIELD_HEIGHT)
+      .fill(0)
+      .map((_, row) => row);
+    this.keepingLinesField = this.field.map((row) => [...row]);
+  }
+
   get state(): FieldCellValue[][] {
     return this.field;
+  }
+
+  get keepLinesState(): FieldCellValue[][] {
+    if (!this.isKeepLineMode) {
+      throw new Error("Cannot get state before call startKeeping.");
+    }
+    return this.keepingLinesField;
   }
 }

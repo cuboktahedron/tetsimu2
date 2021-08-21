@@ -15,7 +15,7 @@ import {
   SaveConfigAction,
   SimuActionsType,
   SuperRetryAction,
-  UndoAction
+  UndoAction,
 } from "./types";
 
 export const changeConfig = (config: SimuConfig): ChangeConfigAction => {
@@ -87,6 +87,7 @@ export const clearSimu = (conductor: SimuConductor): ClearSimuAction => {
       retryState: newState.retryState,
       seed: newState.seed,
       step: newState.step,
+      settleSteps: newState.settleSteps,
     },
   };
 };
@@ -146,6 +147,7 @@ export const doSimu = (
         replayStep: newState.replayStep,
         replaySteps: newState.replaySteps,
         seed: newState.seed,
+        settleSteps: newState.settleSteps,
         step: newState.step,
         succeeded: true,
       },
@@ -186,6 +188,7 @@ export const redo = (
       replayNextStep: history.replayNextStep,
       replayStep: history.replayStep,
       seed: history.seed,
+      settleSteps: history.settleSteps,
       step: newStep,
     },
   };
@@ -223,6 +226,7 @@ export const retry = (conductor: SimuConductor): RetryAction => {
       replayStep: newState.replayStep,
       replaySteps: newState.replaySteps,
       seed: newState.seed,
+      settleSteps: newState.settleSteps,
       step: newState.step,
     },
   };
@@ -260,6 +264,7 @@ export const superRetry = (conductor: SimuConductor): SuperRetryAction => {
       replayStep: newState.replayStep,
       replaySteps: newState.replaySteps,
       seed: newState.seed,
+      settleSteps: newState.settleSteps,
       step: newState.step,
     },
   };
@@ -291,6 +296,7 @@ export const undo = (
       replayNextStep: history.replayNextStep,
       replayStep: history.replayStep,
       seed: history.seed,
+      settleSteps: history.settleSteps,
       step: newStep,
     },
   };

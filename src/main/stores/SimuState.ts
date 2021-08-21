@@ -14,7 +14,7 @@ import {
   TapControllerType,
   Tetromino
 } from "types/core";
-import { PlayMode, SimuConfig, SimuRetryState } from "types/simu";
+import { PlayMode, SettleStep, SimuConfig, SimuRetryState } from "types/simu";
 import { makeFullNextNote } from "utils/tetsimu/functions";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
@@ -37,6 +37,7 @@ export type SimuStateHistory = {
   replayNextStep: number;
   replayStep: number;
   seed: number;
+  settleSteps: SettleStep[];
 };
 
 export type GarbageInfo = {
@@ -73,6 +74,7 @@ export type SimuState = {
   replaySteps: ReplayStep[];
   retryState: SimuRetryState;
   seed: number;
+  settleSteps: SettleStep[];
   step: number;
   zoom: number;
 };
@@ -185,6 +187,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
         ren: -1,
         replayNextStep: replayNexts.length,
         replayStep: 0,
+        settleSteps: [],
         seed: rng.seed,
       },
     ],
@@ -199,6 +202,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
     replaySteps: [],
     retryState: retryState,
     seed: rng.seed,
+    settleSteps: [],
     step: 0,
     zoom: 1,
   };

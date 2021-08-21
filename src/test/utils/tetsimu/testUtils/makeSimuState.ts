@@ -12,7 +12,12 @@ import {
   TapControllerType,
   Tetromino
 } from "types/core";
-import { GarbageConfig, PlayMode, SimuRetryState } from "types/simu";
+import {
+  GarbageConfig,
+  PlayMode,
+  SettleStep,
+  SimuRetryState
+} from "types/simu";
 import { makeNextNote } from "./makeNextNote";
 
 export const makeSimuState = (state: {
@@ -48,6 +53,7 @@ export const makeSimuState = (state: {
   retryState?: SimuRetryState;
   seed?: number;
   step?: number;
+  settleSteps?: SettleStep[];
   zoom?: number;
 }): SimuState => {
   return merge(
@@ -117,6 +123,7 @@ export const makeSimuState = (state: {
         seed: 0,
       },
       seed: 0,
+      settleSteps: [],
       step: 0,
       zoom: 0,
     },

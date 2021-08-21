@@ -6,8 +6,9 @@ import {
   FieldState,
   HoldState,
   NextNote,
-  Tetromino,
+  Tetromino
 } from "types/core";
+import { SettleStep } from "types/simu";
 import { makeNextNote } from "./makeNextNote";
 
 export const makeSimuHistory = (simuHistory: {
@@ -28,6 +29,7 @@ export const makeSimuHistory = (simuHistory: {
   replayNextStep?: number;
   replayStep?: number;
   seed?: number;
+  settleSteps?: SettleStep[];
 }): SimuStateHistory => {
   return merge(
     {
@@ -51,6 +53,7 @@ export const makeSimuHistory = (simuHistory: {
       replayNextStep: 0,
       replayStep: 0,
       seed: 0,
+      settleSteps: [],
     },
     simuHistory
   );

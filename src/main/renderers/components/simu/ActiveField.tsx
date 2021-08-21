@@ -15,9 +15,12 @@ import React from "react";
 import {
   FieldCellValue,
   MAX_VISIBLE_FIELD_HEIGHT,
+  SpinType,
   Tetromino,
   Vector2
 } from "types/core";
+import { SettleStep } from "types/simu";
+import { FieldHelper } from "utils/tetsimu/fieldHelper";
 import { RootContext } from "../App";
 
 const blockBackground = {
@@ -78,6 +81,22 @@ const useStyles = makeStyles(() =>
       width: 24,
       zIndex: 12,
     },
+
+    settleStep: {
+      borderStyle: "solid",
+      borderWidth: 3,
+      boxSizing: "border-box",
+      height: (props: StyleProps) => 32 * props.zoom,
+      opacity: 0.75,
+      position: "absolute",
+      width: (props: StyleProps) => 32 * props.zoom,
+      zIndex: 2,
+
+      "&.first": {
+        borderWidth: 4,
+        opacity: 1,
+      },
+    },
   })
 );
 
@@ -99,7 +118,7 @@ const ActiveField: React.FC<ActiveFieldProps> = () => {
       return [...TetrominoShape[state.current.type][state.current.direction]];
     }
   })();
-  
+
   const currentBlocks = React.useMemo(() => {
     return blocks.map((block: Vector2) => {
       const row = block.y + state.current.pos.y;
@@ -195,8 +214,50 @@ const ActiveField: React.FC<ActiveFieldProps> = () => {
     return <div className={classes.attackNotice}>{attacks}</div>;
   })();
 
+  const settleBlocks = React.useMemo(() => {
+    const field = new FieldHelper(state.field);
+    field.startKeepingLines();
+
+    return state.settleSteps.map((step: SettleStep, index) => {
+      const activeTetromino = {
+        direction: step.dir,
+        type: step.type,
+        pos: { ...step.pos },
+        spinType: SpinType.None,
+      };
+
+      if (field.isOverlapping(activeTetromino)) {
+        return <div key={index} />;
+      } else {
+        const blocks = field.settleTetromino(activeTetromino);
+        field.eraseLine();
+
+        return blocks.map((block: Vector2) => {
+          const row = block.y;
+          const col = block.x;
+          const key = `${row}:${col}`;
+
+          const top = 32 * state.zoom * (maxRow - row);
+          const left = 32 * state.zoom * col;
+
+          const borderColor = blockBackground[step.type];
+          const first = index == 0 ? "first" : "";
+
+          return (
+            <div
+              key={key}
+              className={`${classes.settleStep} ${first}`}
+              style={{ borderColor, left, top }}
+            />
+          );
+        });
+      }
+    });
+  }, [state.field, state.settleSteps, state.zoom]);
+
   return (
     <div className={classes.root}>
+      <div>{settleBlocks}</div>
       <div>{attackNotice}</div>
       <div>{currentBlocks}</div>
       <div>{ghostBlocks}</div>

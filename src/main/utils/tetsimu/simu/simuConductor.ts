@@ -1,3 +1,4 @@
+import { TetrominoShape } from "constants/tetromino";
 import { GarbageInfo, SimuState } from "stores/SimuState";
 import {
   ActiveTetromino,
@@ -13,7 +14,8 @@ import {
   ReplayStepHardDrop,
   ReplayStepType,
   SpinType,
-  Tetromino
+  Tetromino,
+  Vector2,
 } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
 import { FieldHelper } from "../fieldHelper";
@@ -76,6 +78,7 @@ export class SimuConductor {
       replayNextStep: this.state.replayNexts.length,
       replayStep: this.state.replayStep,
       seed: this.state.seed,
+      settleSteps: this.state.settleSteps,
     });
 
     this.state.histories = newHistories;
@@ -126,7 +129,40 @@ export class SimuConductor {
     };
 
     let isDead = this.fieldHelper.isOverDeadline(tetrominoToBeSettled);
-    this.fieldHelper.settleTetromino(tetrominoToBeSettled);
+    const settleBlocks = this.fieldHelper.settleTetromino(tetrominoToBeSettled);
+    let newSettleSteps = (() => {
+      const settleStep = this.state.settleSteps[0];
+      if (!settleStep || tetrominoToBeSettled.type == Tetromino.None) {
+        return [];
+      }
+
+      if (tetrominoToBeSettled.type !== settleStep.type) {
+        return [];
+      }
+
+      const settleStepBlocks = [
+        ...TetrominoShape[tetrominoToBeSettled.type][settleStep.dir],
+      ].map((shape: Vector2) => {
+        return {
+          x: shape.x + settleStep.pos.x,
+          y: shape.y + settleStep.pos.y,
+        };
+      });
+
+      const matchAll = settleBlocks.every((settleBlock) => {
+        return settleStepBlocks.some((settleStepBlock) => {
+          return (
+            settleStepBlock.x == settleBlock.x &&
+            settleStepBlock.y == settleBlock.y
+          );
+        });
+      });
+      if (matchAll) {
+        return this.state.settleSteps.slice(1);
+      } else {
+        return [];
+      }
+    })();
 
     if (!this.state.hold.canHold) {
       this.state.hold = { ...this.state.hold, canHold: true };
@@ -214,6 +250,7 @@ export class SimuConductor {
     this.state.ren = newRen;
     this.state.seed = this.rng.seed;
     this.state.step++;
+    this.state.settleSteps = newSettleSteps;
 
     const hardDropStep = ((): ReplayStepHardDrop => {
       if (garbage && garbage.restStep === 0 && garbage.amount > 0) {
@@ -456,6 +493,7 @@ export class SimuConductor {
     this.state.replayStep = 0;
     this.state.replaySteps = [];
     this.state.seed = this.rng.seed;
+    this.state.settleSteps = [];
     this.state.step = 0;
 
     this.recordHistory();
@@ -594,6 +632,7 @@ export class SimuConductor {
     this.state.replayStep = 0;
     this.state.replaySteps = [];
     this.state.seed = this.rng.seed;
+    this.state.settleSteps = [];
     this.state.step = 0;
 
     this.recordHistory();

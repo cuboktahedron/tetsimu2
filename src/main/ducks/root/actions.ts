@@ -342,6 +342,7 @@ const initializeSimuState = (
         replayNextStep: nexts.length,
         replayStep: 0,
         seed: rng.seed,
+        settleSteps: [],
       },
     ],
     hold: fragments.hold,

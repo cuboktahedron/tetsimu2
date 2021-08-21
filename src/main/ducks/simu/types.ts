@@ -10,7 +10,7 @@ import {
   ReplayStep,
   Tetromino
 } from "types/core";
-import { SimuConfig, SimuRetryState } from "types/simu";
+import { SettleStep, SimuConfig, SimuRetryState } from "types/simu";
 
 export const SimuActionsType = {
   ChangeConfig: "simu/changeConfig",
@@ -92,6 +92,7 @@ export type ClearSimuAction = {
     replaySteps: ReplayStep[];
     retryState: SimuRetryState;
     seed: number;
+    settleSteps: SettleStep[];
     step: number;
   };
 } & Action;
@@ -120,6 +121,7 @@ export type DoSimuAction = {
         replayStep: number;
         replaySteps: ReplayStep[];
         seed: number;
+        settleSteps: SettleStep[];
         step: number;
         succeeded: true;
       }
@@ -148,6 +150,7 @@ export type RedoAction = {
     replayNextStep: number;
     replayStep: number;
     seed: number;
+    settleSteps: SettleStep[];
     step: number;
   };
 } & Action;
@@ -187,6 +190,7 @@ export type RetryAction = {
     replayStep: number;
     replaySteps: ReplayStep[];
     seed: number;
+    settleSteps: SettleStep[];
     step: number;
   };
 } & Action;
@@ -215,6 +219,7 @@ export type SuperRetryAction = {
     replaySteps: ReplayStep[];
     retryState: SimuRetryState;
     seed: number;
+    settleSteps: SettleStep[];
     step: number;
   };
 } & Action;
@@ -239,6 +244,7 @@ export type UndoAction = {
     replayNextStep: number;
     replayStep: number;
     seed: number;
+    settleSteps: SettleStep[];
     step: number;
   };
 } & Action;

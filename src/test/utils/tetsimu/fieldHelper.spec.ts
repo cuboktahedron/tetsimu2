@@ -1,5 +1,6 @@
 import { ActiveTetromino, Direction, SpinType, Tetromino } from "types/core";
 import { FieldHelper } from "utils/tetsimu/fieldHelper";
+import { makeCurrent } from "./testUtils/makeCurrent";
 import { makeField } from "./testUtils/makeField";
 
 describe("Field", () => {
@@ -90,6 +91,49 @@ describe("Field", () => {
 
       expect(actual).toBeFalsy();
     });
+  });
+
+  describe("settleWithKeepLines", () => {
+    // prettier-ignore
+    const field = new FieldHelper(makeField(
+      "GGNNNNGGGG",
+      "GGGNNNGGGG",
+      "GGGGNNGGGG",
+      "GGGNNNGGGG",
+    ));
+    field.startKeepingLines();
+
+    field.settleTetromino(makeCurrent(Direction.Up, 4, 1, Tetromino.Z));
+    field.eraseLine();
+    field.settleTetromino(makeCurrent(Direction.Up, 4, 0, Tetromino.L));
+    field.eraseLine();
+    field.settleTetromino(makeCurrent(Direction.Up, 3, 0, Tetromino.I));
+    field.eraseLine();
+    const settled = field.settleTetromino(
+      makeCurrent(Direction.Up, 1, 0, Tetromino.T)
+    );
+    expect(settled).toEqual([
+      { x: 1, y: 4 },
+      { x: 0, y: 4 },
+      { x: 2, y: 4 },
+      { x: 1, y: 5 },
+    ]);
+
+    // prettier-ignore
+    expect(field.state).toEqual(makeField(
+      "NTNNNNNNNN",
+      "TTTNNNNNNN",
+    ));
+
+    // prettier-ignore
+    expect(field.keepLinesState).toEqual(makeField(
+      "NTNNNNNNNN",
+      "TTTNNNNNNN",
+      "GGIIIIGGGG",
+      "GGGZZLGGGG",
+      "GGGGZZGGGG",
+      "GGGLLLGGGG",
+    ));
   });
 
   describe("rotateLeft", () => {
@@ -2218,6 +2262,5 @@ describe("Field", () => {
 
       expect(actual).toEqual(expected);
     });
-
   });
 });

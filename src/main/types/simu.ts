@@ -3,10 +3,13 @@ import {
   AttackType,
   BtbState,
   CycleBag,
+  Direction,
   FieldState,
   HoldState,
   NextNote,
   TapControllerType,
+  Tetromino,
+  Vector2,
 } from "./core";
 
 export const PlayMode = {
@@ -51,4 +54,10 @@ export type SimuRetryState = {
   ren: number;
   seed: number;
   unsettledNexts: NextNote[];
+};
+
+export type SettleStep = {
+  type: Tetromino;
+  dir: Direction;
+  pos: Vector2;
 };
