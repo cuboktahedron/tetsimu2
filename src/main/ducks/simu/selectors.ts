@@ -1,6 +1,6 @@
 import { GarbageInfo, SimuState } from "stores/SimuState";
 import { AttackType, PlayStats, ReplayStepType } from "types/core";
-import { Pytt2Strategy } from "utils/putt2Strategy";
+import { Pytt2Strategy } from "utils/pytt2Strategy";
 import { SimuConductor } from "utils/tetsimu/simu/simuConductor";
 
 export const getSimuConductor = (state: SimuState) => {

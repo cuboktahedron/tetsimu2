@@ -1,5 +1,5 @@
 import { AttackType, SpinType } from "types/core";
-import { Pytt2Strategy } from "utils/putt2Strategy";
+import { Pytt2Strategy } from "utils/pytt2Strategy";
 
 describe("Pytt2Strategy", () => {
   const pytt2 = new Pytt2Strategy();
