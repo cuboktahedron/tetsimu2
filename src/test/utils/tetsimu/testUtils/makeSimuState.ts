@@ -10,14 +10,15 @@ import {
   NextNote,
   ReplayStep,
   TapControllerType,
-  Tetromino
+  Tetromino,
 } from "types/core";
 import {
   GarbageConfig,
   PlayMode,
   SettleStep,
-  SimuRetryState
+  SimuRetryState,
 } from "types/simu";
+import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 import { makeNextNote } from "./makeNextNote";
 
 export const makeSimuState = (state: {
@@ -36,6 +37,7 @@ export const makeSimuState = (state: {
       first: number;
       second: number;
     };
+    strategy?: SimulatorStrategyType;
   };
   current?: ActiveTetromino;
   field?: FieldState;
@@ -89,6 +91,7 @@ export const makeSimuState = (state: {
         showsCycle: true,
         showsGhost: true,
         showsPivot: true,
+        strategy: SimulatorStrategyType.Pytt2V132,
         tapControllerType: TapControllerType.None,
       },
       current: {

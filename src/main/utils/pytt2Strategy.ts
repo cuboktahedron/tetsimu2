@@ -1,4 +1,5 @@
 import { AttackType, SpinType } from "types/core";
+import { SimulationStrategyBase } from "./SimulationStrategyBase";
 
 const attackTable = {
   [AttackType.Single]: 0,
@@ -21,7 +22,15 @@ const attackTable = {
 
 const renTable = [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 5];
 
-export class Pytt2Strategy {
+export class Pytt2Strategy extends SimulationStrategyBase {
+  get attackTable() {
+    return attackTable;
+  }
+
+  get renTable() {
+    return renTable;
+  }
+
   calculateAttack(
     erasedLine: number,
     spinType: SpinType,
@@ -47,21 +56,23 @@ export class Pytt2Strategy {
 
   calculateAttackBy(attackTypes: AttackType[], ren: number): number {
     if (attackTypes.includes(AttackType.PerfectClear)) {
-      return attackTable[AttackType.PerfectClear];
+      return this.attackTable[AttackType.PerfectClear];
     } else {
       const attackElements = attackTypes.map((type: AttackType) => {
-        return attackTable[type];
+        return this.attackTable[type];
       });
 
       if (ren >= 0) {
-        attackElements.push(renTable[Math.min(ren, renTable.length - 1)]);
+        attackElements.push(
+          this.renTable[Math.min(ren, this.renTable.length - 1)]
+        );
       }
 
       return attackElements.reduce((acc, cur) => acc + cur, 0);
     }
   }
 
-  private decideAttackTypes(
+  decideAttackTypes(
     erasedLine: number,
     spinType: SpinType,
     isBtb: boolean,

@@ -6,6 +6,7 @@ import {
   Tetromino,
   TetsimuMode,
 } from "types/core";
+import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 import {
   deserializeField as deserializeField097,
   deserializeHold as deserializeHold097,
@@ -34,11 +35,12 @@ export type ReplayStateFragments = {
   numberOfCycle: number;
   replayNexts: Tetromino[];
   replaySteps: ReplayStep[];
+  strategy: SimulatorStrategyType;
   syncUrl: string;
 };
 
 class ReplayUrl {
-  private static DefaultVersion = "2.04";
+  private static DefaultVersion = "2.06";
 
   fromState(state: ReplayState): string {
     const gen = new ReplayUrl201();
@@ -54,17 +56,20 @@ class ReplayUrl {
         `Url parameter version(${v}) is no longer supported.`
       );
     } else if (v >= "2.01") {
-      return new ReplayUrl201().toState(urlParams);
+      return new ReplayUrl201().toState(urlParams, v);
     } else {
-      return new ReplayUrl201().toState(urlParams);
+      return new ReplayUrl201().toState(urlParams, ReplayUrl.DefaultVersion);
     }
   }
 }
 
 class ReplayUrl201 {
-  public static Version = "2.04";
+  public static Version = "2.06";
 
-  toState(params: { [key: string]: string }): ReplayStateFragments {
+  toState(
+    params: { [key: string]: string },
+    version: string
+  ): ReplayStateFragments {
     const f = params.f ?? "";
     const ns = params.ns ?? "";
     const ss = params.ss ?? "";
@@ -93,6 +98,22 @@ class ReplayUrl201 {
     const replayNexts = deserializeNexts(ns);
     const replaySteps = deserializeSteps(ss);
 
+    const st = params.st ?? "";
+    let strategy: SimulatorStrategyType;
+    if (
+      Object.values(SimulatorStrategyType)
+        .map((x) => x.toUpperCase())
+        .includes(st.toUpperCase())
+    ) {
+      strategy = st as SimulatorStrategyType;
+    } else {
+      if (version >= "2.06") {
+        strategy = SimulatorStrategyType.Pytt2V132;
+      } else {
+        strategy = SimulatorStrategyType.Pytt2;
+      }
+    }
+
     return {
       field,
       hold,
@@ -101,6 +122,7 @@ class ReplayUrl201 {
       numberOfCycle,
       replayNexts,
       replaySteps,
+      strategy,
       syncUrl,
     };
   }
@@ -115,6 +137,7 @@ class ReplayUrl201 {
     const nc = ((firstState.noOfCycle + 5) % 7) + 1;
     const nn = state.replayInfo.nextNum;
     const or = state.replayInfo.offsetRange;
+    const st = state.config.strategy;
     const m = TetsimuMode.Replay;
     const v = ReplayUrl201.Version;
 
@@ -139,6 +162,9 @@ class ReplayUrl201 {
     }
     if (or !== 2) {
       params.push(`or=${or}`);
+    }
+    if (st !== SimulatorStrategyType.Pytt2V132) {
+      params.push(`st=${st}`);
     }
     params.push(`m=${m}`);
     params.push(`v=${v}`);
@@ -168,6 +194,7 @@ class ReplayUrl097 {
       numberOfCycle: 1,
       replayNexts,
       replaySteps,
+      strategy: SimulatorStrategyType.Pytt2,
       syncUrl: "",
     };
   }

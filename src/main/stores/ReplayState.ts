@@ -16,6 +16,7 @@ import {
   ReplayInfo,
   ReplayStateHistory
 } from "types/replay";
+import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 
 export type ReplayAuto = {
   playing: boolean;
@@ -81,6 +82,7 @@ export const initialReplayState: ReplayState = ((): ReplayState => {
     showsGhost: true,
     showsPivot: true,
     showsTrace: false,
+    strategy: SimulatorStrategyType.Pytt2V132,
   };
   return {
     attackTypes: [],

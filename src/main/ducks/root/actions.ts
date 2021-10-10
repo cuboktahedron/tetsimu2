@@ -2,14 +2,14 @@ import merge from "deepmerge";
 import {
   getNextAttacks,
   getReplayConductor,
-  getUrgentAttack
+  getUrgentAttack,
 } from "ducks/replay/selectors";
 import { EditState } from "stores/EditState";
 import {
   ExplorerItemType,
   ExplorerRootFolder,
   ExplorerState,
-  initialExplorerState
+  initialExplorerState,
 } from "stores/ExplorerState";
 import { initialReplayState, ReplayState } from "stores/ReplayState";
 import { RootState } from "stores/RootState";
@@ -27,7 +27,7 @@ import {
   ReplayStepType,
   SpinType,
   Tetromino,
-  TetsimuMode
+  TetsimuMode,
 } from "types/core";
 import { ExplorerIds } from "types/explorer";
 import { ReplayConfig } from "types/replay";
@@ -40,12 +40,12 @@ import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
 import { ReplayConductor } from "utils/tetsimu/replay/replayConductor";
 import ReplayUrl, {
-  ReplayStateFragments
+  ReplayStateFragments,
 } from "utils/tetsimu/replay/replayUrl";
 import GarbageGenerator from "utils/tetsimu/simu/garbageGenerator";
 import SimuUrl, {
   SimuStateFragments,
-  UNSPECIFIED_SEED
+  UNSPECIFIED_SEED,
 } from "utils/tetsimu/simu/simuUrl";
 import {
   ChangeTetsimuModeAction,
@@ -58,7 +58,7 @@ import {
   ReplayToSimuAction,
   RootActionsType,
   SimuToEditAction,
-  SimuToReplayAction
+  SimuToReplayAction,
 } from "./types";
 
 export const changeTetsimuMode = (
@@ -319,6 +319,7 @@ const initializeSimuState = (
       },
       nextNum: fragments.nextNum ?? state.config.nextNum,
       offsetRange: fragments.offsetRange ?? state.config.offsetRange,
+      strategy: fragments.strategy,
     },
     current,
     field: fragments.field,
@@ -433,6 +434,10 @@ const initializeReplayState = (
       playing: false,
     },
     btbState: BtbState.None,
+    config: {
+      ...state.config,
+      strategy: fragments.strategy,
+    },
     current,
     field: fragments.field,
     garbages: [] as GarbageInfo[],
@@ -820,6 +825,7 @@ export const replayToSimuMode = (
         seed: initialSeed,
       },
       seed: rng.seed,
+      strategy: state.config.strategy,
     },
   };
 };
@@ -935,6 +941,7 @@ export const simuToReplayMode = (state: SimuState): SimuToReplayAction => {
         offsetRange: state.config.offsetRange,
       },
       step: 0,
+      strategy: state.config.strategy,
     },
   };
 };

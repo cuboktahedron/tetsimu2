@@ -15,6 +15,7 @@ import {
   Tetromino
 } from "types/core";
 import { PlayMode, SettleStep, SimuConfig, SimuRetryState } from "types/simu";
+import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 import { makeFullNextNote } from "utils/tetsimu/functions";
 import NextGenerator from "utils/tetsimu/nextGenerator";
 import { RandomNumberGenerator } from "utils/tetsimu/randomNumberGenerator";
@@ -161,6 +162,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
     showsCycle: false,
     showsGhost: true,
     showsPivot: true,
+    strategy: SimulatorStrategyType.Pytt2V132,
     tapControllerType: isTouchDevice
       ? TapControllerType.TypeB
       : TapControllerType.None,

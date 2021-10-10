@@ -6,6 +6,7 @@ import {
   Tetromino,
   TetsimuMode,
 } from "types/core";
+import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 import {
   deserializeField as deserializeField097,
   deserializeHold as deserializeHold097,
@@ -35,11 +36,12 @@ export type SimuStateFragments = {
   numberOfCycle: number;
   nextNotes: NextNote[];
   seed: number;
+  strategy: SimulatorStrategyType;
   syncUrl: string;
 };
 
 class SimuUrl {
-  private static DefaultVersion = "2.04";
+  private static DefaultVersion = "2.06";
 
   fromState(state: SimuState): string {
     const gen = new SimuUrl201();
@@ -55,17 +57,20 @@ class SimuUrl {
         `Url parameter version(${v}) is no longer supported.`
       );
     } else if (v >= "2.01") {
-      return new SimuUrl201().toState(urlParams);
+      return new SimuUrl201().toState(urlParams, v);
     } else {
-      return new SimuUrl201().toState(urlParams);
+      return new SimuUrl201().toState(urlParams, SimuUrl.DefaultVersion);
     }
   }
 }
 
 class SimuUrl201 {
-  public static Version = "2.04";
+  public static Version = "2.06";
 
-  toState(params: { [key: string]: string }): SimuStateFragments {
+  toState(
+    params: { [key: string]: string },
+    version: string
+  ): SimuStateFragments {
     const f = params.f ?? "";
     const ns = params.ns ?? "";
     const np = params.np ?? "";
@@ -117,6 +122,22 @@ class SimuUrl201 {
       }
     })();
 
+    const st = params.st ?? "";
+    let strategy: SimulatorStrategyType;
+    if (
+      Object.values(SimulatorStrategyType)
+        .map((x) => x.toUpperCase())
+        .includes(st.toUpperCase())
+    ) {
+      strategy = st as SimulatorStrategyType;
+    } else {
+      if (version >= "2.06") {
+        strategy = SimulatorStrategyType.Pytt2V132;
+      } else {
+        strategy = SimulatorStrategyType.Pytt2;
+      }
+    }
+
     return {
       field,
       hold,
@@ -125,6 +146,7 @@ class SimuUrl201 {
       numberOfCycle,
       nextNotes,
       seed,
+      strategy,
       syncUrl,
     };
   }
@@ -142,6 +164,7 @@ class SimuUrl201 {
     const nc = ((7 - firstState.nexts.bag.take + 1) % 7) + 1;
     const nn = state.config.nextNum;
     const or = state.config.offsetRange;
+    const st = state.config.strategy;
     const m = TetsimuMode.Replay;
     const v = SimuUrl201.Version;
 
@@ -163,6 +186,9 @@ class SimuUrl201 {
     }
     params.push(`nn=${nn}`);
     params.push(`or=${or}`);
+    if (st !== SimulatorStrategyType.Pytt2V132) {
+      params.push(`st=${st}`);
+    }
     params.push(`m=${m}`);
     params.push(`v=${v}`);
 
@@ -217,6 +243,7 @@ class SimuUrl097 {
       numberOfCycle: 1,
       nextNotes,
       seed,
+      strategy: SimulatorStrategyType.Pytt2,
       syncUrl: "",
     };
   }

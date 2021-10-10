@@ -3,11 +3,12 @@ import {
   Direction,
   SpinType,
   Tetromino,
-  TetsimuMode
+  TetsimuMode,
 } from "types/core";
+import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 import SimuUrl, {
   SimuStateFragments,
-  UNSPECIFIED_SEED
+  UNSPECIFIED_SEED,
 } from "utils/tetsimu/simu/simuUrl";
 import { makeField } from "../testUtils/makeField";
 import { makeHold } from "../testUtils/makeHold";
@@ -15,7 +16,7 @@ import { makeNextNote, makeNextNotes } from "../testUtils/makeNextNote";
 import {
   makeReplayDropStep,
   makeReplayHardDropStep,
-  makeReplayHoldStep
+  makeReplayHoldStep,
 } from "../testUtils/makeReplayStep";
 import { makeSimuState } from "../testUtils/makeSimuState";
 import { makeTetrominos } from "../testUtils/makeTetrominos";
@@ -28,6 +29,7 @@ describe("simuUrl", () => {
         config: {
           nextNum: 12,
           offsetRange: 3,
+          strategy: SimulatorStrategyType.Pytt2,
         },
         histories: [
           {
@@ -76,9 +78,10 @@ describe("simuUrl", () => {
       const nc = "7";
       const nn = "12";
       const or = "3";
+      const st = SimulatorStrategyType.Pytt2;
       const m = TetsimuMode.Replay;
-      const v = "2.04";
-      const expected = `${loc}?f=${f}&ns=${ns}&ss=${ss}&h=${h}&nc=${nc}&nn=${nn}&or=${or}&m=${m}&v=${v}`;
+      const v = "2.06";
+      const expected = `${loc}?f=${f}&ns=${ns}&ss=${ss}&h=${h}&nc=${nc}&nn=${nn}&or=${or}&st=${st}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
 
@@ -120,7 +123,7 @@ describe("simuUrl", () => {
       const or = 2;
       const ns = "IA__";
       const m = TetsimuMode.Replay;
-      const v = "2.04";
+      const v = "2.06";
       const expected = `${loc}?ns=${ns}&nn=${nn}&or=${or}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
@@ -136,8 +139,9 @@ describe("simuUrl", () => {
       const or = "3";
       const s = "1";
       const m = `${TetsimuMode.Simu}`;
+      const st = SimulatorStrategyType.Pytt2;
       const surl = "http://localhost/test.json";
-      const v = "2.04";
+      const v = "2.06";
 
       const params = {
         f,
@@ -148,6 +152,7 @@ describe("simuUrl", () => {
         or,
         m,
         s,
+        st,
         surl,
         v,
       };
@@ -166,6 +171,7 @@ describe("simuUrl", () => {
         numberOfCycle: 6,
         nextNotes: makeNextNotes("IJLOSTZ"),
         seed: 1,
+        strategy: SimulatorStrategyType.Pytt2,
         syncUrl: "http://localhost/test.json",
       };
 
@@ -176,7 +182,7 @@ describe("simuUrl", () => {
       const ns = "Kcu4";
       const np = "q2_IJ.p2LOS-";
       const m = `${TetsimuMode.Simu}`;
-      const v = "2.03";
+      const v = "2.06";
 
       const params = {
         ns,
@@ -195,6 +201,7 @@ describe("simuUrl", () => {
         numberOfCycle: 1,
         nextNotes: makeNextNotes("q2 [IJ]p2 LOS $"),
         seed: UNSPECIFIED_SEED,
+        strategy: SimulatorStrategyType.Pytt2V132,
         syncUrl: "",
       };
 
@@ -213,6 +220,7 @@ describe("simuUrl", () => {
         numberOfCycle: 1,
         nextNotes: [],
         seed: UNSPECIFIED_SEED,
+        strategy: SimulatorStrategyType.Pytt2V132,
         syncUrl: "",
       };
 
@@ -251,6 +259,7 @@ describe("simuUrl", () => {
       numberOfCycle: 1,
       nextNotes: makeNextNotes("IJq1q1LOq1TS"),
       seed: 3,
+      strategy: SimulatorStrategyType.Pytt2,
       syncUrl: "",
     };
 

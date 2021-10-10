@@ -15,6 +15,7 @@ import {
   ReplayStateHistory,
   SearchRouteAction,
 } from "types/replay";
+import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 
 export const makeReplayState = (state: {
   attackTypes?: AttackType[];
@@ -30,6 +31,7 @@ export const makeReplayState = (state: {
     showsGhost?: boolean;
     showsPivot?: boolean;
     showsTrace?: boolean;
+    strategy?: SimulatorStrategyType;
   };
   current?: ActiveTetromino;
   field?: FieldState;
@@ -58,6 +60,7 @@ export const makeReplayState = (state: {
         showsGhost: false,
         showsPivot: true,
         showsTrace: false,
+        strategy: SimulatorStrategyType.Pytt2V132,
       },
       current: {
         direction: Direction.Up,

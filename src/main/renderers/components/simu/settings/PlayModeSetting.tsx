@@ -1,9 +1,13 @@
 import {
+  FormControl,
   FormControlLabel,
   FormGroup,
   FormLabel,
+  InputLabel,
+  MenuItem,
   Radio,
-  RadioGroup
+  RadioGroup,
+  Select
 } from "@material-ui/core";
 import { changeConfig, clearSimu } from "ducks/simu/actions";
 import { getSimuConductor } from "ducks/simu/selectors";
@@ -12,6 +16,7 @@ import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { SimuState } from "stores/SimuState";
 import { Action } from "types/core";
 import { PlayMode, SimuConfig } from "types/simu";
+import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 
 const useStyles = useSidePanelStyles({
   formControl: {
@@ -45,6 +50,17 @@ const PlayModeSettings = React.memo<PlayModeSettingsProps>((props) => {
     }
   }, [config.playMode]);
 
+  const handleSimulatorTypeChange = (
+    e: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    dispatch(
+      changeConfig({
+        ...config,
+        strategy: e.target.value as SimulatorStrategyType,
+      })
+    );
+  };
+
   const classes = useStyles();
 
   return (
@@ -66,6 +82,22 @@ const PlayModeSettings = React.memo<PlayModeSettingsProps>((props) => {
           />
         </RadioGroup>
       </FormGroup>
+      <FormControl className={classes.formControl}>
+        <InputLabel id="simulator-type-label">Simulator type</InputLabel>
+        <Select
+          labelId="simulator-type-label"
+          id="simulator-type"
+          onChange={handleSimulatorTypeChange}
+          value={config.strategy}
+        >
+          <MenuItem value={SimulatorStrategyType.Pytt2}>
+            {SimulatorStrategyType.Pytt2}
+          </MenuItem>
+          <MenuItem value={SimulatorStrategyType.Pytt2V132}>
+            {SimulatorStrategyType.Pytt2V132}
+          </MenuItem>
+        </Select>
+      </FormControl>
     </div>
   );
 });

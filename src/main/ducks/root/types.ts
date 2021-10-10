@@ -13,10 +13,11 @@ import {
   NextNote,
   ReplayStep,
   Tetromino,
-  TetsimuMode,
+  TetsimuMode
 } from "types/core";
 import { ReplayConfig, ReplayStateHistory } from "types/replay";
 import { SimuConfig, SimuRetryState } from "types/simu";
+import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 
 export const RootActionsType = {
   ChangeTetsimuMode: "root/changeTetsimuMode",
@@ -129,6 +130,7 @@ export type ReplayToSimuAction = {
     ren: number;
     retryState: SimuRetryState;
     seed: number;
+    strategy: SimulatorStrategyType;
   };
 } & Action;
 
@@ -170,5 +172,6 @@ export type SimuToReplayAction = {
     replaySteps: ReplayStep[];
     ren: number;
     step: number;
+    strategy: SimulatorStrategyType;
   };
 } & Action;

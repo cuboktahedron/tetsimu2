@@ -7,11 +7,11 @@ import {
   ReplayStepHardDrop,
   ReplayStepType,
   SpinType,
-  Tetromino
+  Tetromino,
 } from "types/core";
 import { SearchRouteAction } from "types/replay";
+import { createSimulationStrategy } from "utils/SimulationStrategyFactory";
 import { FieldHelper } from "../fieldHelper";
-import { Pytt2Strategy } from "../../pytt2Strategy";
 import { RouteSearcher } from "../routeSearcher";
 
 export class ReplayConductor {
@@ -272,7 +272,7 @@ export class ReplayConductor {
         newBtbState = BtbState.None;
       }
 
-      const storategy = new Pytt2Strategy();
+      const storategy = createSimulationStrategy(this.state.config.strategy);
       const attack = storategy.calculateAttack(
         erasedLine,
         this.state.current.spinType,
@@ -293,9 +293,8 @@ export class ReplayConductor {
       return false;
     }
 
-    const newCurrent: ActiveTetromino = this.fieldHelper.makeActiveTetromino(
-      nextCurrentType
-    );
+    const newCurrent: ActiveTetromino =
+      this.fieldHelper.makeActiveTetromino(nextCurrentType);
 
     if (!isDead) {
       isDead = this.fieldHelper.isOverlapping(newCurrent);

@@ -1,6 +1,6 @@
 import { GarbageInfo, ReplayState } from "stores/ReplayState";
 import { AttackType, PlayStats, ReplayStep, ReplayStepType } from "types/core";
-import { Pytt2Strategy } from "utils/pytt2Strategy";
+import { createSimulationStrategy } from "utils/SimulationStrategyFactory";
 import { ReplayConductor } from "utils/tetsimu/replay/replayConductor";
 
 export const getReplayConductor = (state: ReplayState) => {
@@ -74,7 +74,7 @@ export const getStats = (state: ReplayState): PlayStats => {
   };
   let lines = 0;
 
-  const storategy = new Pytt2Strategy();
+  const storategy = createSimulationStrategy(state.config.strategy);
   for (let step = 0; step <= state.step; step++) {
     const history = state.histories[step];
 

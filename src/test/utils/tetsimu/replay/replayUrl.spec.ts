@@ -5,6 +5,7 @@ import {
   Tetromino,
   TetsimuMode,
 } from "types/core";
+import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 import ReplayUrl, {
   ReplayStateFragments,
 } from "utils/tetsimu/replay/replayUrl";
@@ -24,6 +25,9 @@ describe("replayUrl", () => {
   describe("fromState", () => {
     it("should generate url of states", () => {
       const state = makeReplayState({
+        config: {
+          strategy: SimulatorStrategyType.Pytt2,
+        },
         histories: [
           {
             attackTypes: [],
@@ -73,9 +77,10 @@ describe("replayUrl", () => {
       const nc = "6";
       const nn = "12";
       const or = "3";
+      const st = SimulatorStrategyType.Pytt2;
       const m = TetsimuMode.Replay;
-      const v = "2.04";
-      const expected = `${loc}?f=${f}&ns=${ns}&ss=${ss}&h=${h}&nc=${nc}&nn=${nn}&or=${or}&m=${m}&v=${v}`;
+      const v = "2.06";
+      const expected = `${loc}?f=${f}&ns=${ns}&ss=${ss}&h=${h}&nc=${nc}&nn=${nn}&or=${or}&st=${st}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
 
@@ -115,7 +120,7 @@ describe("replayUrl", () => {
       const loc = location.href.replace(/\?.*$/, "");
       const ns = "IA__";
       const m = TetsimuMode.Replay;
-      const v = "2.04";
+      const v = "2.06";
       const expected = `${loc}?ns=${ns}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
@@ -130,9 +135,10 @@ describe("replayUrl", () => {
       const h = "3";
       const nn = "12";
       const or = "3";
+      const st = SimulatorStrategyType.Pytt2;
       const m = `${TetsimuMode.Replay}`;
       const surl = "http://localhost/test.json";
-      const v = "2.04";
+      const v = "2.06";
 
       const params = {
         f,
@@ -142,6 +148,7 @@ describe("replayUrl", () => {
         nc,
         nn,
         or,
+        st,
         m,
         surl,
         v,
@@ -167,6 +174,7 @@ describe("replayUrl", () => {
           makeReplayDropStep(Direction.Left, 8, 20, SpinType.Spin),
           makeReplayHardDropStep({ cols: [1, 2, 3], line: 5 }),
         ],
+        strategy: SimulatorStrategyType.Pytt2,
         syncUrl: "http://localhost/test.json",
       };
 
@@ -185,6 +193,7 @@ describe("replayUrl", () => {
         numberOfCycle: 1,
         replayNexts: makeTetrominos(""),
         replaySteps: [],
+        strategy: SimulatorStrategyType.Pytt2V132,
         syncUrl: "",
       };
 
@@ -228,6 +237,7 @@ describe("replayUrl", () => {
           makeReplayDropStep(Direction.Down, 2, 1, SpinType.Spin),
           makeReplayHardDropStep(),
         ],
+        strategy: SimulatorStrategyType.Pytt2,
         syncUrl: "",
       };
 

@@ -160,8 +160,6 @@ export type ReplayStep =
   | ReplayStepHardDrop
   | ReplayStepHardDrop097;
 
-export type Storategy = "pytt2";
-
 export const AttackType = {
   Single: 1,
   Double: 2,

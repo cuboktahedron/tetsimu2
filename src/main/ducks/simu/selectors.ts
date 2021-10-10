@@ -1,6 +1,6 @@
 import { GarbageInfo, SimuState } from "stores/SimuState";
 import { AttackType, PlayStats, ReplayStepType } from "types/core";
-import { Pytt2Strategy } from "utils/pytt2Strategy";
+import { createSimulationStrategy } from "utils/SimulationStrategyFactory";
 import { SimuConductor } from "utils/tetsimu/simu/simuConductor";
 
 export const getSimuConductor = (state: SimuState) => {
@@ -74,7 +74,7 @@ export const getStats = (state: SimuState): PlayStats => {
   };
   let lines = 0;
 
-  const storategy = new Pytt2Strategy();
+  const storategy = createSimulationStrategy(state.config.strategy);
   for (let step = 0; step <= state.step; step++) {
     const history = state.histories[step];
 

@@ -15,12 +15,12 @@ import {
   ReplayStepType,
   SpinType,
   Tetromino,
-  Vector2,
+  Vector2
 } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
+import { createSimulationStrategy } from "utils/SimulationStrategyFactory";
 import { FieldHelper } from "../fieldHelper";
 import NextGenerator from "../nextGenerator";
-import { Pytt2Strategy } from "../../pytt2Strategy";
 import { RandomNumberGenerator } from "../randomNumberGenerator";
 import GarbageGenerator from "./garbageGenerator";
 
@@ -190,7 +190,7 @@ export class SimuConductor {
         newBtbState = BtbState.None;
       }
 
-      const storategy = new Pytt2Strategy();
+      const storategy = createSimulationStrategy(this.state.config.strategy);
       const attack = storategy.calculateAttack(
         erasedLine,
         current.spinType,

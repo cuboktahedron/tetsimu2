@@ -27,6 +27,7 @@ import {
   Tetromino,
   TetsimuMode,
 } from "types/core";
+import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
 import { makeCurrent } from "../../utils/tetsimu/testUtils/makeCurrent";
 import { makeEditState } from "../../utils/tetsimu/testUtils/makeEditState";
@@ -195,6 +196,9 @@ describe("rootModule", () => {
       makeReplayState({
         attackTypes: [AttackType.BtbTsd],
         btbState: BtbState.Btb,
+        config: {
+          strategy: SimulatorStrategyType.Pytt2,
+        },
         current: makeCurrent(Direction.Down, 4, 19, Tetromino.Z),
         field: makeField(
           // prettier-ignore
@@ -309,6 +313,7 @@ describe("rootModule", () => {
         showsGhost: true,
         showsPivot: true,
         showsTrace: false,
+        strategy: SimulatorStrategyType.Pytt2,
       };
 
       const actual = replayToSimuMode(state, initialSimuState);
@@ -358,6 +363,7 @@ describe("rootModule", () => {
             ),
           },
           seed: actual.payload.seed,
+          strategy: SimulatorStrategyType.Pytt2,
         },
       };
 
@@ -421,6 +427,7 @@ describe("rootModule", () => {
             ),
           },
           seed: actual.payload.seed,
+          strategy: SimulatorStrategyType.Pytt2,
         },
       };
 
@@ -471,6 +478,7 @@ describe("rootModule", () => {
           config: {
             nextNum: 12,
             offsetRange: 5,
+            strategy: SimulatorStrategyType.Pytt2,
           },
           histories: [
             {
@@ -554,6 +562,7 @@ describe("rootModule", () => {
             makeReplayHardDropStep({ cols: [1], line: 3 }),
           ],
           step: 0,
+          strategy: SimulatorStrategyType.Pytt2,
         },
       };
 
@@ -565,7 +574,7 @@ describe("rootModule", () => {
     describe("replay mode", () => {
       it("should initialize replay state", () => {
         const actual = initializeApp(
-          "f=EjRWeAA_&ns=sOZa0vPY&ss=IBAiExLlZTEj8A__&h=b&nc=3&nn=7&or=3&m=1&v=2.02",
+          "f=EjRWeAA_&ns=sOZa0vPY&ss=IBAiExLlZTEj8A__&h=b&nc=3&nn=7&or=3&st=pytt2&m=1&v=2.06",
           initialRootState
         );
 
@@ -573,6 +582,10 @@ describe("rootModule", () => {
           ...initialReplayState,
           attackTypes: [],
           btbState: BtbState.None,
+          config: {
+            ...initialReplayState.config,
+            strategy: SimulatorStrategyType.Pytt2,
+          },
           current: makeCurrent(Direction.Up, 4, 19, Tetromino.S),
           field: makeField("IJLOSTZGNN"),
           garbages: [makeGarbage(0, 2), makeGarbage(1, 5)],
@@ -631,6 +644,10 @@ describe("rootModule", () => {
           ...initialReplayState,
           attackTypes: [],
           btbState: BtbState.None,
+          config: {
+            ...initialReplayState.config,
+            strategy: SimulatorStrategyType.Pytt2,
+          },
           current: makeCurrent(Direction.Up, 4, 19, Tetromino.S, SpinType.None),
           field: makeField(
             // prettier-ignore
@@ -700,7 +717,7 @@ describe("rootModule", () => {
     describe("simu mode", () => {
       it("should initialize simu state with np", () => {
         const actual = initializeApp(
-          "f=EjRWeAA_&np=I_J.p1LOSIJLOSTq1I-&h=9&nc=3&nn=12&or=3&m=0&v=2.01",
+          "f=EjRWeAA_&np=I_J.p1LOSIJLOSTq1I-&h=9&nc=3&nn=12&or=3&st=pytt2&m=0&v=2.06",
           initialRootState
         );
         const expectedSimu: SimuState = {
@@ -712,6 +729,7 @@ describe("rootModule", () => {
             garbage: initialSimuState.config.garbage,
             nextNum: 12,
             offsetRange: 3,
+            strategy: SimulatorStrategyType.Pytt2,
           },
           current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
           field: makeField("IJLOSTZGNN"),
@@ -787,6 +805,10 @@ describe("rootModule", () => {
           ...initialSimuState,
           attackTypes: [],
           btbState: BtbState.None,
+          config: {
+            ...initialSimuState.config,
+            strategy: SimulatorStrategyType.Pytt2,
+          },
           current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
           field: makeField("NNNNNNNNNN"),
           hold: makeHold(Tetromino.None, true),
@@ -880,6 +902,7 @@ describe("rootModule", () => {
             garbage: initialSimuState.config.garbage,
             nextNum: 5,
             offsetRange: 2,
+            strategy: SimulatorStrategyType.Pytt2,
           },
           current: makeCurrent(Direction.Up, 4, 19, Tetromino.I),
           field: makeField(

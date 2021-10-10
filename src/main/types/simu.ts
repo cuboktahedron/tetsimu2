@@ -1,4 +1,5 @@
 import { GarbageInfo } from "stores/ReplayState";
+import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 import {
   AttackType,
   BtbState,
@@ -44,6 +45,7 @@ export type SimuConfig = {
   showsCycle: boolean;
   showsGhost: boolean;
   showsPivot: boolean;
+  strategy: SimulatorStrategyType;
   tapControllerType: TapControllerType;
 };
 

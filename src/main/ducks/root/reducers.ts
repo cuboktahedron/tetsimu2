@@ -135,6 +135,7 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
               nextNum: action.payload.nexts.nextNum,
               offsetRange: action.payload.offsetRange,
               playMode: PlayMode.Normal,
+              strategy: action.payload.strategy,
             },
             current: action.payload.current,
             field: action.payload.field,
@@ -201,6 +202,10 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
               playing: action.payload.auto.playing,
             },
             btbState: action.payload.btbState,
+            config: {
+              ...state.replay.config,
+              strategy: action.payload.strategy,
+            },
             current: action.payload.current,
             field: action.payload.field,
             garbages: action.payload.garbages,

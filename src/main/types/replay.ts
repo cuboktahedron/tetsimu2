@@ -1,4 +1,5 @@
 import { GarbageInfo } from "stores/ReplayState";
+import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 import {
   ActiveTetromino,
   AttackType,
@@ -15,6 +16,7 @@ export type ReplayConfig = {
   showsGhost: boolean;
   showsPivot: boolean;
   showsTrace: boolean;
+  strategy: SimulatorStrategyType;
 };
 
 export type ReplayRetryState = {
@@ -49,4 +51,5 @@ export const SearchRouteAction = {
   SoftDrop: 5,
 } as const;
 
-export type SearchRouteAction = typeof SearchRouteAction[keyof typeof SearchRouteAction];
+export type SearchRouteAction =
+  typeof SearchRouteAction[keyof typeof SearchRouteAction];
