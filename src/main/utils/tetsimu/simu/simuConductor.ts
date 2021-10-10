@@ -20,7 +20,7 @@ import {
 import { PlayMode, SimuRetryState } from "types/simu";
 import { FieldHelper } from "../fieldHelper";
 import NextGenerator from "../nextGenerator";
-import { Pytt2Strategy } from "../putt2Strategy";
+import { Pytt2Strategy } from "../../putt2Strategy";
 import { RandomNumberGenerator } from "../randomNumberGenerator";
 import GarbageGenerator from "./garbageGenerator";
 

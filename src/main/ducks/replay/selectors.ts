@@ -1,6 +1,6 @@
 import { GarbageInfo, ReplayState } from "stores/ReplayState";
 import { AttackType, PlayStats, ReplayStep, ReplayStepType } from "types/core";
-import { Pytt2Strategy } from "utils/tetsimu/putt2Strategy";
+import { Pytt2Strategy } from "utils/putt2Strategy";
 import { ReplayConductor } from "utils/tetsimu/replay/replayConductor";
 
 export const getReplayConductor = (state: ReplayState) => {

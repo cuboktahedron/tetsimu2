@@ -11,7 +11,7 @@ import {
 } from "types/core";
 import { SearchRouteAction } from "types/replay";
 import { FieldHelper } from "../fieldHelper";
-import { Pytt2Strategy } from "../putt2Strategy";
+import { Pytt2Strategy } from "../../putt2Strategy";
 import { RouteSearcher } from "../routeSearcher";
 
 export class ReplayConductor {
