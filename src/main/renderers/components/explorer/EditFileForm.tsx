@@ -91,8 +91,9 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
     return true;
   };
 
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
+  const handleNameBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    let value = e.target.value.trim();
+
     setFormState({
       ...formState,
       name: value,
@@ -159,7 +160,8 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
           margin="dense"
           value={formState.name}
           variant="outlined"
-          onChange={handleNameChange}
+          onBlur={handleNameBlur}
+          onChange={(e) => handleOnChange("name", e)}
         />
         <TextField
           error={!!formErrorState.description}
