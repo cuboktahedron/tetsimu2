@@ -1,4 +1,4 @@
-import { Button, Divider, TextField } from "@material-ui/core";
+import { Button, Divider } from "@material-ui/core";
 import clsx from "clsx";
 import React from "react";
 import { RootContext } from "renderers/components/App";
@@ -16,6 +16,23 @@ const useStyles = useSidePanelStyles({
   closes: {
     display: "none",
   },
+
+  root2: {
+    display: "flex",
+    flexDirection: "column",
+    height: "calc(100% - 32px)",
+  },
+
+  details: {
+    border: "solid 1px grey",
+    boxSizing: "border-box",
+    flex: "1 0 auto",
+    minHeight: 300,
+    maxHeight: 600,
+    overflowY: "scroll",
+    padding: 4,
+    userSelect: "text",
+  },
 });
 
 type HubProps = {
@@ -28,6 +45,8 @@ const Hub: React.FC<HubProps> = (props) => {
 
   const [webSocket, setWebSocket] = React.useState<WebSocket | null>(null);
   const detailsRef = useValueRef(React.useState<string[]>([]));
+  const detailsElemRef = React.useRef<HTMLDivElement>(null);
+  const [connectionEstablised, setConnectionEstablised] = React.useState(false);
 
   React.useEffect(() => {
     return () => {
@@ -36,6 +55,15 @@ const Hub: React.FC<HubProps> = (props) => {
       }
     };
   }, [webSocket]);
+
+  React.useEffect(() => {
+    const elem = detailsElemRef.current;
+    if (elem === null) {
+      return;
+    }
+
+    elem.scrollTop = elem.scrollHeight;
+  }, [detailsRef.current]);
 
   const handleConnectHubClick = () => {
     if (webSocket !== null) {
@@ -53,6 +81,7 @@ const Hub: React.FC<HubProps> = (props) => {
     ws.onopen = () => {
       const [details, setDetails] = detailsRef.current;
       setDetails(details.concat("Connection established."));
+      setConnectionEstablised(true);
     };
 
     ws.onclose = (e: CloseEvent) => {
@@ -60,6 +89,7 @@ const Hub: React.FC<HubProps> = (props) => {
 
       const [details, setDetails] = detailsRef.current;
       setDetails(details.concat(`Connection closed.(${e.code}:${e.reason})`));
+      setConnectionEstablised(false);
     };
 
     ws.onerror = () => {
@@ -134,12 +164,21 @@ const Hub: React.FC<HubProps> = (props) => {
     setDetails([]);
   };
 
+  const details = React.useMemo(() => {
+    return detailsRef.current[0].flatMap((detail) => {
+      return detail.split("\n").map((line) => {
+        return <div>{line}</div>;
+      });
+    });
+  }, [detailsRef.current[0]]);
+
   const classes = useStyles();
 
   return (
     <div
       className={clsx(classes.root, {
         [classes.closes]: !props.opens,
+        [classes.root2]: props.opens,
       })}
     >
       <div className={classes.buttons}>
@@ -154,6 +193,21 @@ const Hub: React.FC<HubProps> = (props) => {
               Connect Hub
             </Button>
           </div>
+        </div>
+      </div>
+      <Divider />
+      <div className={classes.buttons}>
+        <div>
+          <div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAnalyzeClick}
+              disabled={!connectionEstablised}
+            >
+              Analyze
+            </Button>
+          </div>
           <div>
             <Button
               variant="contained"
@@ -165,27 +219,8 @@ const Hub: React.FC<HubProps> = (props) => {
           </div>
         </div>
       </div>
-      <TextField
-        fullWidth
-        label="details"
-        margin="dense"
-        multiline
-        InputProps={{
-          readOnly: true,
-        }}
-        rows={8}
-        value={detailsRef.current[0].join("\n")}
-        variant="outlined"
-      />
-      <Divider />
-      <div>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleAnalyzeClick}
-        >
-          Analyze
-        </Button>
+      <div ref={detailsElemRef} className={classes.details}>
+        {details}
       </div>
     </div>
   );
