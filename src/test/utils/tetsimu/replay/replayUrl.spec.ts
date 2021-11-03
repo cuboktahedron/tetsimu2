@@ -193,7 +193,7 @@ describe("replayUrl", () => {
         numberOfCycle: 1,
         replayNexts: makeTetrominos(""),
         replaySteps: [],
-        strategy: SimulatorStrategyType.Pytt2V132,
+        strategy: undefined,
         syncUrl: "",
       };
 

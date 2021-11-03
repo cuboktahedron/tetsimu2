@@ -22,7 +22,7 @@ export type EditStateFragments = {
 };
 
 class EditUrl {
-  private static DefaultVersion = "2.04";
+  private static DefaultVersion = "2.06";
 
   fromState(state: EditState): string {
     const gen = new EditUrl201();
@@ -46,7 +46,7 @@ class EditUrl {
 }
 
 class EditUrl201 {
-  public static Version = "2.04";
+  public static Version = "2.06";
 
   toState(params: { [key: string]: string }): EditStateFragments {
     const f = params.f ?? "";

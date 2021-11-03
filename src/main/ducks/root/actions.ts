@@ -319,7 +319,7 @@ const initializeSimuState = (
       },
       nextNum: fragments.nextNum ?? state.config.nextNum,
       offsetRange: fragments.offsetRange ?? state.config.offsetRange,
-      strategy: fragments.strategy,
+      strategy: fragments.strategy ?? state.config.strategy,
     },
     current,
     field: fragments.field,
@@ -436,7 +436,7 @@ const initializeReplayState = (
     btbState: BtbState.None,
     config: {
       ...state.config,
-      strategy: fragments.strategy,
+      strategy: fragments.strategy ?? state.config.strategy,
     },
     current,
     field: fragments.field,

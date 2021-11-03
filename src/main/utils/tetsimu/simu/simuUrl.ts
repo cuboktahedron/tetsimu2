@@ -4,25 +4,25 @@ import {
   HoldState,
   NextNote,
   Tetromino,
-  TetsimuMode,
+  TetsimuMode
 } from "types/core";
 import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 import {
   deserializeField as deserializeField097,
   deserializeHold as deserializeHold097,
-  deserializeNexts as deserializeNexts097,
+  deserializeNexts as deserializeNexts097
 } from "../097/deserializer";
 import {
   deserializeField,
   deserializeHold,
-  deserializeNexts,
+  deserializeNexts
 } from "../deserializer";
 import NextNotesInterpreter from "../nextNotesInterpreter";
 import {
   serializeField,
   serializeHold,
   serializeNexts,
-  serializeSteps,
+  serializeSteps
 } from "../serializer";
 import { UnsupportedUrlError } from "../unsupportedUrlError";
 
@@ -36,7 +36,7 @@ export type SimuStateFragments = {
   numberOfCycle: number;
   nextNotes: NextNote[];
   seed: number;
-  strategy: SimulatorStrategyType;
+  strategy?: SimulatorStrategyType;
   syncUrl: string;
 };
 
@@ -123,7 +123,7 @@ class SimuUrl201 {
     })();
 
     const st = params.st ?? "";
-    let strategy: SimulatorStrategyType;
+    let strategy: SimulatorStrategyType | undefined;
     if (
       Object.values(SimulatorStrategyType)
         .map((x) => x.toUpperCase())
@@ -132,7 +132,7 @@ class SimuUrl201 {
       strategy = st as SimulatorStrategyType;
     } else {
       if (version >= "2.06") {
-        strategy = SimulatorStrategyType.Pytt2V132;
+        strategy = undefined;
       } else {
         strategy = SimulatorStrategyType.Pytt2;
       }

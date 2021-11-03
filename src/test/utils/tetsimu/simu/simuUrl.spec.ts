@@ -201,7 +201,7 @@ describe("simuUrl", () => {
         numberOfCycle: 1,
         nextNotes: makeNextNotes("q2 [IJ]p2 LOS $"),
         seed: UNSPECIFIED_SEED,
-        strategy: SimulatorStrategyType.Pytt2V132,
+        strategy: undefined,
         syncUrl: "",
       };
 
@@ -220,7 +220,7 @@ describe("simuUrl", () => {
         numberOfCycle: 1,
         nextNotes: [],
         seed: UNSPECIFIED_SEED,
-        strategy: SimulatorStrategyType.Pytt2V132,
+        strategy: undefined,
         syncUrl: "",
       };
 

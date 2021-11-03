@@ -35,7 +35,7 @@ export type ReplayStateFragments = {
   numberOfCycle: number;
   replayNexts: Tetromino[];
   replaySteps: ReplayStep[];
-  strategy: SimulatorStrategyType;
+  strategy: SimulatorStrategyType | undefined;
   syncUrl: string;
 };
 
@@ -99,7 +99,7 @@ class ReplayUrl201 {
     const replaySteps = deserializeSteps(ss);
 
     const st = params.st ?? "";
-    let strategy: SimulatorStrategyType;
+    let strategy: SimulatorStrategyType | undefined;
     if (
       Object.values(SimulatorStrategyType)
         .map((x) => x.toUpperCase())
@@ -108,7 +108,7 @@ class ReplayUrl201 {
       strategy = st as SimulatorStrategyType;
     } else {
       if (version >= "2.06") {
-        strategy = SimulatorStrategyType.Pytt2V132;
+        strategy = undefined;
       } else {
         strategy = SimulatorStrategyType.Pytt2;
       }
