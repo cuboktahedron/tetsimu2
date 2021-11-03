@@ -42,7 +42,7 @@ describe("editUrl", () => {
       const nc = "3";
       const nn = "5";
       const m = TetsimuMode.Simu;
-      const v = "2.04";
+      const v = "2.06";
       const expected = `${loc}?f=${f}&np=${np}&h=${h}&nc=${nc}&nn=${nn}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
@@ -68,7 +68,7 @@ describe("editUrl", () => {
       const loc = location.href.replace(/\?.*$/, "");
       const nn = "5";
       const m = TetsimuMode.Simu;
-      const v = "2.04";
+      const v = "2.06";
       const expected = `${loc}?nn=${nn}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
