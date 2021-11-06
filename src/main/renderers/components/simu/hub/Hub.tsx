@@ -8,7 +8,7 @@ import { Tetromino } from "types/core";
 import {
   AnalyzePcMessageRes,
   LogMessage,
-  UnhandledMessage,
+  UnhandledMessage
 } from "types/simuMessages";
 import { v4 as uuidv4 } from "uuid";
 
@@ -164,6 +164,14 @@ const Hub: React.FC<HubProps> = (props) => {
     setDetails([]);
   };
 
+  const isReadyToConnect = () => {
+    return (
+      webSocket !== null ||
+      !rootState.simu.config.external.host ||
+      !rootState.simu.config.external.port
+    );
+  };
+
   const details = React.useMemo(() => {
     return detailsRef.current[0].flatMap((detail) => {
       return detail.split("\n").map((line) => {
@@ -188,7 +196,7 @@ const Hub: React.FC<HubProps> = (props) => {
               variant="contained"
               color="primary"
               onClick={handleConnectHubClick}
-              disabled={webSocket !== null}
+              disabled={isReadyToConnect()}
             >
               Connect Hub
             </Button>
