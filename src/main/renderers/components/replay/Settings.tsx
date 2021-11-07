@@ -144,7 +144,7 @@ const Settings: React.FC<SettingProps> = (props) => {
       <ul>
         <li>Nexts: {state.replayInfo.nextNum}</li>
         <li>Offset range: {state.replayInfo.offsetRange}</li>
-        <li>Simulation type: {state.config.strategy}</li>
+        <li>Simulator type: {state.config.strategy}</li>
       </ul>
       <Divider />
       <div>
