@@ -44,15 +44,17 @@ const InnerTools = React.memo<InnerToolsProps>((props) => {
     return null;
   }
 
-  const state = props.stateRef.current.simu;
+  const rootStateRef = props.stateRef;
   const dispatch = props.dispatch;
   const [stateUrl, setStateUrl] = React.useState("");
 
   const handleEditClick = () => {
+    const state = rootStateRef.current.simu;
     dispatch(simuToEditMode(state));
   };
 
   const handleReplayClick = () => {
+    const state = rootStateRef.current.simu;
     dispatch(simuToReplayMode(state));
   };
 
@@ -65,11 +67,13 @@ const InnerTools = React.memo<InnerToolsProps>((props) => {
   };
 
   const handleUrlClick = () => {
+    const state = rootStateRef.current.simu;
     const url = new SimuUrl().fromState(state);
     setStateUrl(url);
   };
 
   const handleClearClick = () => {
+    const state = rootStateRef.current.simu;
     dispatch(clearSimu(new SimuConductor(state)));
   };
 
