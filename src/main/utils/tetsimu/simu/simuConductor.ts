@@ -15,7 +15,7 @@ import {
   ReplayStepType,
   SpinType,
   Tetromino,
-  Vector2
+  Vector2,
 } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
 import { createSimulationStrategy } from "utils/SimulationStrategyFactory";
@@ -352,6 +352,7 @@ export class SimuConductor {
     } else {
       newCurrentType = this.state.hold.type;
       newNexts = this.state.nexts;
+      this.recordReplayNexts([]);
     }
 
     const newHold = {
