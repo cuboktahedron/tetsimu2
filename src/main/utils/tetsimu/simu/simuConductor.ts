@@ -15,7 +15,7 @@ import {
   ReplayStepType,
   SpinType,
   Tetromino,
-  Vector2,
+  Vector2
 } from "types/core";
 import { PlayMode, SimuRetryState } from "types/simu";
 import { createSimulationStrategy } from "utils/SimulationStrategyFactory";
@@ -420,8 +420,12 @@ export class SimuConductor {
       return false;
     }
 
-    current.pos = { x: current.pos.x + deltaX, y: current.pos.y + deltaY };
-    current.spinType = SpinType.None;
+    const newCurrent = {
+      ...this.state.current,
+      pos: { x: current.pos.x + deltaX, y: current.pos.y + deltaY },
+      spinType: SpinType.None,
+    };
+    this.state.current = newCurrent;
 
     return true;
   };

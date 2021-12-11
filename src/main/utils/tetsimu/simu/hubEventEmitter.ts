@@ -1,13 +1,19 @@
 import { EventEmitter as OriginalEventEmitter } from "events";
 import {
   AnalyzePcMessageRes,
+  InitTutorMessageRes,
   LogMessage,
+  StepsMessage,
+  TermTutorMessageRes,
   UnhandledMessage
 } from "types/simuMessages";
 
 export const HubMessageEventTypes = {
   AnalyzePc: "analycePc",
+  InitTuror: "initTutor",
   Log: "log",
+  Steps: "steps",
+  TermTuror: "termTutor",
   Unhandled: "unhandled",
 } as const;
 
@@ -17,7 +23,22 @@ export class HubEventEmitter extends OriginalEventEmitter {
     msg: AnalyzePcMessageRes
   ): boolean;
 
+  public emit(
+    event: typeof HubMessageEventTypes.InitTuror,
+    msg: InitTutorMessageRes
+  ): boolean;
+
   public emit(event: typeof HubMessageEventTypes.Log, msg: LogMessage): boolean;
+
+  public emit(
+    event: typeof HubMessageEventTypes.Steps,
+    msg: StepsMessage
+  ): boolean;
+
+  public emit(
+    event: typeof HubMessageEventTypes.TermTuror,
+    msg: TermTutorMessageRes
+  ): boolean;
 
   public emit(
     event: typeof HubMessageEventTypes.Unhandled,

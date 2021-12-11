@@ -1,3 +1,6 @@
+// Response messages
+
+import { Direction, Tetromino } from "./core";
 
 export type HubMessageHeader = {
   message_id: string;
@@ -14,6 +17,16 @@ export type AnalyzePcMessageRes = {
   body: AnalyzePcMessageResBody;
 };
 
+export type InitTutorMessageRes = {
+  header: HubMessageHeader;
+};
+
+export type TermTutorMessageRes = {
+  header: HubMessageHeader;
+};
+
+// Hub messages
+
 export type LogMessage = {
   header: MessageHeader;
   body: LogMessageBody;
@@ -25,6 +38,23 @@ export type MessageHeader = {
 
 export type LogMessageBody = {
   message: string;
+};
+
+export type StepsMessage = {
+  header: MessageHeader;
+  body: StepsMessageBody;
+};
+
+export type StepsMessageBody = {
+  request_message_id: string;
+  steps: Step[];
+};
+
+export type Step = {
+  type: Tetromino;
+  dir: Direction;
+  x: number;
+  y: number;
 };
 
 export type UnhandledMessage = {

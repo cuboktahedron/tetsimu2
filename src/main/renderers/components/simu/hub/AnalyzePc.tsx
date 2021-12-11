@@ -31,7 +31,7 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
   };
 
   const handleAnalyzeClick = () => {
-    if (state.webSocket === null) {
+    if (stateRef.current.webSocket === null) {
       return;
     }
 
@@ -73,7 +73,7 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
       },
     };
 
-    state.webSocket.send(JSON.stringify(analyzeRequest));
+    stateRef.current.webSocket.send(JSON.stringify(analyzeRequest));
   };
 
   const classes = useStyles();
@@ -87,7 +87,7 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
               variant="contained"
               color="primary"
               onClick={handleAnalyzeClick}
-              disabled={state.webSocket == null}
+              disabled={stateRef.current.webSocket == null}
             >
               Analyze
             </Button>

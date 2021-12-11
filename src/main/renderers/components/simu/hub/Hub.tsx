@@ -6,7 +6,10 @@ import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { useValueRef } from "renderers/hooks/useValueRef";
 import {
   AnalyzePcMessageRes,
+  InitTutorMessageRes,
   LogMessage,
+  StepsMessage,
+  TermTutorMessageRes,
   UnhandledMessage,
 } from "types/simuMessages";
 import {
@@ -20,6 +23,7 @@ import {
 } from "utils/tetsimu/simu/hubActions";
 import { HubMessageEventTypes } from "utils/tetsimu/simu/hubEventEmitter";
 import AnalyzePc from "./AnalyzePc";
+import Tutor from "./Tutor";
 
 const useStyles = useSidePanelStyles({
   closes: {
@@ -75,6 +79,14 @@ const Hub: React.FC<HubProps> = (props) => {
     elem.scrollTop = elem.scrollHeight;
   }, [state.details]);
 
+  React.useEffect(() => {
+    return () => {
+      if (stateRef.current.webSocket) {
+        stateRef.current.webSocket.close();
+      }
+    };
+  }, []);
+
   const handleConnectHubClick = () => {
     if (state.webSocket !== null) {
       state.webSocket.close();
@@ -103,12 +115,25 @@ const Hub: React.FC<HubProps> = (props) => {
     ws.onmessage = (event: MessageEvent) => {
       const message = JSON.parse(event.data);
 
-      if (message.Log) {
-        const logMessage = message.Log as LogMessage;
-        state.hubEventEmitter.emit(HubMessageEventTypes.Log, logMessage);
+      // Response messages
+      if (message.InitTutor) {
+        const initTutor = message.Log as InitTutorMessageRes;
+        state.hubEventEmitter.emit(HubMessageEventTypes.InitTuror, initTutor);
+      } else if (message.TermTutor) {
+        const logMessage = message.Log as TermTutorMessageRes;
+        state.hubEventEmitter.emit(HubMessageEventTypes.TermTuror, logMessage);
+      }
+
+      // Hub messages
+      else if (message.Log) {
+        const realMessage = message.Log as LogMessage;
+        state.hubEventEmitter.emit(HubMessageEventTypes.Log, realMessage);
       } else if (message.AnalyzePc) {
         const analyzePc = message.AnalyzePc as AnalyzePcMessageRes;
         state.hubEventEmitter.emit(HubMessageEventTypes.AnalyzePc, analyzePc);
+      } else if (message.Steps) {
+        const realMessage = message.Steps as StepsMessage;
+        state.hubEventEmitter.emit(HubMessageEventTypes.Steps, realMessage);
       } else if (message.Unhandled) {
         const unhandled = message.Unhandled as UnhandledMessage;
         state.hubEventEmitter.emit(HubMessageEventTypes.Unhandled, unhandled);
@@ -137,9 +162,9 @@ const Hub: React.FC<HubProps> = (props) => {
   };
 
   const details = React.useMemo(() => {
-    return state.details.flatMap((detail) => {
-      return detail.split("\n").map((line) => {
-        return <div>{line}</div>;
+    return state.details.flatMap((detail, i) => {
+      return detail.split("\n").map((line, j) => {
+        return <div key={`${i}-${j}`}>{line}</div>;
       });
     });
   }, [state.details]);
@@ -170,6 +195,7 @@ const Hub: React.FC<HubProps> = (props) => {
         </div>
         <Divider />
         <AnalyzePc rootStateRef={rootStateRef} />
+        <Tutor />
 
         <div className={classes.buttons}>
           <div>

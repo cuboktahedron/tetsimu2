@@ -84,7 +84,7 @@ const useStyles = makeStyles(() =>
 
     settleStep: {
       borderStyle: "solid",
-      borderWidth: 3,
+      borderWidth: 2,
       boxSizing: "border-box",
       height: (props: StyleProps) => 32 * props.zoom,
       opacity: 0.75,
