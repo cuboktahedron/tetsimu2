@@ -6,12 +6,24 @@ type HubContextState = {
   webSocket: WebSocket | null;
   details: string[];
   hubEventEmitter: HubEventEmitter;
+  analyzePc: AnalyzePcState,
+  tutor: TutorState,
 };
+
+type AnalyzePcState = {
+
+}
+
+type TutorState = {
+
+}
 
 export const initialHubState: HubContextState = {
   webSocket: null,
   details: [],
   hubEventEmitter: new HubEventEmitter(),
+  analyzePc: {},
+  tutor: {},
 };
 
 export const HubContext = React.createContext({

@@ -1,4 +1,5 @@
-import { Button, Divider } from "@material-ui/core";
+import { Box, Button, Divider, Tab } from "@material-ui/core";
+import { TabContext, TabList } from "@material-ui/lab";
 import clsx from "clsx";
 import React from "react";
 import { RootContext } from "renderers/components/App";
@@ -10,7 +11,7 @@ import {
   LogMessage,
   StepsMessage,
   TermTutorMessageRes,
-  UnhandledMessage,
+  UnhandledMessage
 } from "types/simuMessages";
 import {
   appendDetails,
@@ -19,7 +20,7 @@ import {
   connectionEstablished as connectionEstablished,
   HubContext,
   hubReducer,
-  initialHubState,
+  initialHubState
 } from "utils/tetsimu/simu/hubActions";
 import { HubMessageEventTypes } from "utils/tetsimu/simu/hubEventEmitter";
 import AnalyzePc from "./AnalyzePc";
@@ -34,6 +35,11 @@ const useStyles = useSidePanelStyles({
     display: "flex",
     flexDirection: "column",
     height: "calc(100% - 32px)",
+  },
+
+  tabPanel: {
+    border: "solid 1px grey",
+    display: "none",
   },
 
   details: {
@@ -58,6 +64,7 @@ const Hub: React.FC<HubProps> = (props) => {
   const [state, hubDispatch] = React.useReducer(hubReducer, initialHubState);
   const stateRef = useValueRef(state);
   const detailsElemRef = React.useRef<HTMLDivElement>(null);
+  const [selectedTabIndex, setSelectedTabIndex] = React.useState("0");
 
   React.useEffect(() => {
     stateRef.current.hubEventEmitter.addListener(
@@ -161,6 +168,10 @@ const Hub: React.FC<HubProps> = (props) => {
     );
   };
 
+  const handleTabChange = (_: React.ChangeEvent<{}>, value: string) => {
+    setSelectedTabIndex(value);
+  };
+
   const details = React.useMemo(() => {
     return state.details.flatMap((detail, i) => {
       return detail.split("\n").map((line, j) => {
@@ -194,8 +205,23 @@ const Hub: React.FC<HubProps> = (props) => {
           </div>
         </div>
         <Divider />
-        <AnalyzePc rootStateRef={rootStateRef} />
-        <Tutor />
+        <TabContext value={selectedTabIndex}>
+          <Box>
+            <TabList
+              onChange={(e, v: string) => handleTabChange(e, v)}
+              variant="scrollable"
+              scrollButtons="auto"
+            >
+              <Tab label="Analyze" value="0" />
+              <Tab label="Tutor" value="1" />
+            </TabList>
+          </Box>
+          <AnalyzePc
+            rootStateRef={rootStateRef}
+            opens={selectedTabIndex === "0"}
+          />
+          <Tutor opens={selectedTabIndex == "1"} />
+        </TabContext>
 
         <div className={classes.buttons}>
           <div>

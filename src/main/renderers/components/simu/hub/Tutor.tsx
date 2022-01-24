@@ -1,4 +1,5 @@
 import { Button } from "@material-ui/core";
+import clsx from "clsx";
 import { setSettleSteps } from "ducks/simu/actions";
 import { getNextAttacks, getUrgentAttack } from "ducks/simu/selectors";
 import React from "react";
@@ -6,15 +7,7 @@ import { RootContext } from "renderers/components/App";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { useValueRef } from "renderers/hooks/useValueRef";
 import { SimuState } from "stores/SimuState";
-import {
-  BtbState,
-  Direction,
-  FieldCellValue,
-  MAX_NEXTS_NUM,
-  ReplayStepType,
-  SpinType,
-  Tetromino
-} from "types/core";
+import { BtbState, FieldCellValue, MAX_NEXTS_NUM, Tetromino } from "types/core";
 import { SettleStep } from "types/simu";
 import {
   InitTutorMessageRes,
@@ -26,9 +19,23 @@ import { appendDetails, HubContext } from "utils/tetsimu/simu/hubActions";
 import { HubMessageEventTypes } from "utils/tetsimu/simu/hubEventEmitter";
 import { v4 as uuidv4 } from "uuid";
 
-const useStyles = useSidePanelStyles({});
+const useStyles = useSidePanelStyles({
+  root2: {
+    border: "solid 1px grey",
+    display: "none",
+    padding: 4,
+  },
 
-const Tutor: React.FC = () => {
+  opens: {
+    display: "block",
+  },
+});
+
+type AnalyzePcProps = {
+  opens: boolean;
+};
+
+const Tutor: React.FC<AnalyzePcProps> = (props) => {
   const { state: rootState, dispatch } = React.useContext(RootContext);
   const { state, dispatch: hubDispatch } = React.useContext(HubContext);
   const [isReady, setIsReady] = React.useState(false);
@@ -63,6 +70,23 @@ const Tutor: React.FC = () => {
       HubMessageEventTypes.TermTuror,
       handleTermTutorMessage
     );
+
+    return () => {
+      stateRef.current.state.hubEventEmitter.removeListener(
+        HubMessageEventTypes.InitTuror,
+        handleInitTutorMessage
+      );
+
+      stateRef.current.state.hubEventEmitter.removeListener(
+        HubMessageEventTypes.Steps,
+        handleStepMessage
+      );
+
+      stateRef.current.state.hubEventEmitter.removeListener(
+        HubMessageEventTypes.TermTuror,
+        handleTermTutorMessage
+      );
+    };
   }, [stateRef.current.state.hubEventEmitter]);
 
   React.useEffect(() => {
@@ -83,29 +107,12 @@ const Tutor: React.FC = () => {
       return;
     }
 
-    if (needsNotifyStatus()) {
-      notifyStatus();
-    } else {
-      moveNext();
-    }
+    notifyStatus();
   }, [
     stateRef.current.rootState.simu.seed,
     stateRef.current.rootState.simu.step,
     stateRef.current.isReady,
   ]);
-
-  const needsNotifyStatus = (): boolean => {
-    // TODO: 攻撃を受けた場合はtrueを返す。
-
-    // const simu = stateRef.current.rootState.simu;
-    // const prevSimu = stateRef.current.prevSimuState;
-    // if (!prevSimu) {
-    //   return true;
-    // }
-
-    // return simu.step !== prevSimu.step + 1;
-    return true;
-  };
 
   const notifyStatus = () => {
     if (
@@ -160,89 +167,6 @@ const Tutor: React.FC = () => {
     setPrevSimuState(stateRef.current.rootState.simu);
     setPrevRequestMessageId(notifyStatusMessage.NotifyStatus.header.message_id);
     stateRef.current.state.webSocket.send(JSON.stringify(notifyStatusMessage));
-  };
-
-  const moveNext = () => {
-    if (
-      stateRef.current.state.webSocket === null ||
-      !stateRef.current.isReady ||
-      stateRef.current.prevSimuState == null
-    ) {
-      return;
-    }
-
-    const tetrominoToPattern = Object.fromEntries(
-      Object.entries(Tetromino).map(([key, value]) => {
-        return [value, key];
-      })
-    );
-
-    const simu = stateRef.current.rootState.simu;
-    const currentNexts = simu.nexts.settled
-      .slice(0)
-      .filter((type) => type !== Tetromino.None)
-      .map((type) => tetrominoToPattern[type])
-      .join("");
-
-    const replayStep = simu.replaySteps[simu.replaySteps.length - 1];
-    const moveNextMessage = ((): MoveNextMessage | null => {
-      if (replayStep.type == ReplayStepType.Hold) {
-        let additionalNexts = "";
-        if (stateRef.current.prevSimuState.hold.type == Tetromino.None) {
-          additionalNexts = currentNexts
-            .slice(0, simu.config.nextNum)
-            .slice(-1);
-        }
-
-        return {
-          MoveNext: {
-            header: {
-              message_id: uuidv4(),
-            },
-            body: {
-              Hold: {
-                additional_nexts: additionalNexts,
-              },
-            },
-          },
-        };
-      } else {
-        const dropStep = simu.replaySteps[simu.replaySteps.length - 2];
-        if (dropStep.type != ReplayStepType.Drop) {
-          return null;
-        }
-
-        const additionalNexts = currentNexts
-          .slice(0, simu.config.nextNum)
-          .slice(-1);
-
-        return {
-          MoveNext: {
-            header: {
-              message_id: uuidv4(),
-            },
-            body: {
-              Drop: {
-                type: stateRef.current.prevSimuState.current.type,
-                x: dropStep.pos.x,
-                y: dropStep.pos.y,
-                dir: dropStep.dir,
-                spin_type: dropStep.spinType,
-                additional_nexts: additionalNexts,
-              },
-            },
-          },
-        };
-      }
-    })();
-
-    if (!moveNextMessage) {
-      return;
-    }
-
-    setPrevSimuState(stateRef.current.rootState.simu);
-    setPrevRequestMessageId(moveNextMessage.MoveNext.header.message_id);
-    stateRef.current.state.webSocket.send(JSON.stringify(moveNextMessage));
   };
 
   const handleInitTutorMessage = (_message: InitTutorMessageRes) => {
@@ -367,12 +291,16 @@ const Tutor: React.FC = () => {
   })();
 
   return (
-    <React.Fragment>
+    <div
+      className={clsx(classes.root2, {
+        [classes.opens]: props.opens,
+      })}
+    >
       <div className={classes.buttons}>
         {startButton}
         {stopButton}
       </div>
-    </React.Fragment>
+    </div>
   );
 };
 
@@ -390,30 +318,6 @@ type NotifyStatusMessage = {
       ren: number;
       is_btb: boolean;
     };
-  };
-};
-
-type MoveNextMessage = {
-  MoveNext: {
-    header: {
-      message_id: string;
-    };
-    body:
-      | {
-          Drop: {
-            type: Tetromino;
-            x: number;
-            y: number;
-            dir: Direction;
-            spin_type: SpinType;
-            additional_nexts: string;
-          };
-        }
-      | {
-          Hold: {
-            additional_nexts: string;
-          };
-        };
   };
 };
 

@@ -1,4 +1,5 @@
 import { Button } from "@material-ui/core";
+import clsx from "clsx";
 import React from "react";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { useValueRef } from "renderers/hooks/useValueRef";
@@ -9,9 +10,20 @@ import { appendDetails, HubContext } from "utils/tetsimu/simu/hubActions";
 import { HubMessageEventTypes } from "utils/tetsimu/simu/hubEventEmitter";
 import { v4 as uuidv4 } from "uuid";
 
-const useStyles = useSidePanelStyles({});
+const useStyles = useSidePanelStyles({
+  root2: {
+    border: "solid 1px grey",
+    display: "none",
+    padding: 4,
+  },
+
+  opens: {
+    display: "block",
+  },
+});
 
 type AnalyzePcProps = {
+  opens: boolean;
   rootStateRef: React.MutableRefObject<RootState>;
 };
 
@@ -24,6 +36,13 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
       HubMessageEventTypes.AnalyzePc,
       handleAnalyzePcMessage
     );
+
+    return () => {
+      stateRef.current.hubEventEmitter.removeListener(
+        HubMessageEventTypes.AnalyzePc,
+        handleAnalyzePcMessage
+      );
+    };
   }, [stateRef.current.hubEventEmitter]);
 
   const handleAnalyzePcMessage = (message: AnalyzePcMessageRes) => {
@@ -79,7 +98,11 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
   const classes = useStyles();
 
   return (
-    <React.Fragment>
+    <div
+      className={clsx(classes.root2, {
+        [classes.opens]: props.opens,
+      })}
+    >
       <div className={classes.buttons}>
         <div>
           <div>
@@ -94,7 +117,7 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
           </div>
         </div>
       </div>
-    </React.Fragment>
+    </div>
   );
 };
 
