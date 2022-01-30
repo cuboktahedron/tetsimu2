@@ -23,7 +23,7 @@ const useStyles = useSidePanelStyles({
   root2: {
     border: "solid 1px grey",
     display: "none",
-    padding: 4,
+    padding: 8,
   },
 
   opens: {

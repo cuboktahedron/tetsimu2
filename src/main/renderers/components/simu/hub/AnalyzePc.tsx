@@ -1,12 +1,26 @@
-import { Button } from "@material-ui/core";
+import {
+  Button,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Select
+} from "@material-ui/core";
 import clsx from "clsx";
 import React from "react";
+import NumberCheckTextField from "renderers/components/ext/NumberCheckTextField";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { useValueRef } from "renderers/hooks/useValueRef";
 import { RootState } from "stores/RootState";
-import { Tetromino } from "types/core";
+import { FieldCellValue, Tetromino } from "types/core";
+import { AnalyzePcDropType } from "types/simu";
 import { AnalyzePcMessageRes } from "types/simuMessages";
-import { appendDetails, HubContext } from "utils/tetsimu/simu/hubActions";
+import {
+  appendDetails,
+  changeAnalyzePcSettings,
+  HubContext
+} from "utils/tetsimu/simu/hubActions";
 import { HubMessageEventTypes } from "utils/tetsimu/simu/hubEventEmitter";
 import { v4 as uuidv4 } from "uuid";
 
@@ -14,11 +28,15 @@ const useStyles = useSidePanelStyles({
   root2: {
     border: "solid 1px grey",
     display: "none",
-    padding: 4,
+    padding: 8,
   },
 
   opens: {
     display: "block",
+  },
+
+  formControl: {
+    minWidth: 120,
   },
 });
 
@@ -49,6 +67,33 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
     hubDispatch(appendDetails(message.body.message));
   };
 
+  const handleClearLineChange = (value: number) => {
+    hubDispatch(
+      changeAnalyzePcSettings({
+        ...stateRef.current.analyzePc,
+        clearLine: value,
+      })
+    );
+  };
+
+  const handleUseHoldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    hubDispatch(
+      changeAnalyzePcSettings({
+        ...stateRef.current.analyzePc,
+        useHold: e.target.checked,
+      })
+    );
+  };
+
+  const handleDropTypeChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    hubDispatch(
+      changeAnalyzePcSettings({
+        ...stateRef.current.analyzePc,
+        dropType: e.target.value as AnalyzePcDropType,
+      })
+    );
+  };
+
   const handleAnalyzeClick = () => {
     if (stateRef.current.webSocket === null) {
       return;
@@ -62,7 +107,10 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
       ...simu.nexts.settled.slice(0, simu.config.nextNum),
     ];
 
-    if (simu.hold.type !== Tetromino.None) {
+    if (
+      simu.hold.type !== Tetromino.None &&
+      stateRef.current.analyzePc.useHold
+    ) {
       settled.unshift(simu.hold.type);
     }
 
@@ -80,7 +128,8 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
       .map((type) => tetrominoToPattern[type])
       .join("");
 
-    const analyzeRequest = {
+    const analyzePc = stateRef.current.analyzePc;
+    const analyzeRequest: AnalyzeMessage = {
       AnalyzePc: {
         header: {
           message_id: uuidv4(),
@@ -88,6 +137,9 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
         body: {
           field,
           nexts,
+          clear_line: analyzePc.clearLine,
+          use_hold: analyzePc.useHold,
+          drop_type: analyzePc.dropType,
         },
       },
     };
@@ -103,7 +155,7 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
         [classes.opens]: props.opens,
       })}
     >
-      <div className={classes.buttons}>
+      <div className={classes.buttons} style={{ marginBottom: 12 }}>
         <div>
           <div>
             <Button
@@ -117,8 +169,66 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
           </div>
         </div>
       </div>
+      <div className={classes.section}>
+        <NumberCheckTextField
+          label="clear line"
+          checkLabel="Auto"
+          checked={stateRef.current.analyzePc.clearLine == 0}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          numberProps={{
+            min: 0,
+            max: 10,
+            change: handleClearLineChange,
+          }}
+          value={"" + stateRef.current.analyzePc.clearLine}
+          variant="outlined"
+        />
+      </div>
+      <div>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={stateRef.current.analyzePc.useHold}
+              onChange={handleUseHoldChange}
+            />
+          }
+          label="Use hold"
+        />
+      </div>
+      <div>
+        <FormControl className={classes.formControl}>
+          <InputLabel>Drop type</InputLabel>
+          <Select
+            onChange={handleDropTypeChange}
+            value={stateRef.current.analyzePc.dropType}
+          >
+            <MenuItem value={AnalyzePcDropType.SoftDrop}>SoftDrop</MenuItem>
+            <MenuItem value={AnalyzePcDropType.HardDrop}>HardDrop</MenuItem>
+            <MenuItem value={AnalyzePcDropType.Tss}>Tss</MenuItem>
+            <MenuItem value={AnalyzePcDropType.Tsd}>Tsd</MenuItem>
+            <MenuItem value={AnalyzePcDropType.Tst}>Tst</MenuItem>
+          </Select>
+        </FormControl>
+      </div>
     </div>
   );
+};
+
+type AnalyzeMessage = {
+  AnalyzePc: {
+    header: {
+      message_id: string;
+    };
+    body: {
+      field: FieldCellValue[];
+      nexts: string;
+      clear_line: number;
+      use_hold: boolean;
+      drop_type: typeof AnalyzePcDropType[keyof typeof AnalyzePcDropType];
+    };
+  };
 };
 
 export default AnalyzePc;

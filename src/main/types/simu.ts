@@ -67,3 +67,17 @@ export type SettleStep = {
   dir: Direction;
   pos: Vector2;
 };
+
+export const AnalyzePcDropType = {
+  SoftDrop: 0,
+  HardDrop: 1,
+  180: 2,
+  TSoftDrop: 3,
+  AnyTSpin: 4,
+  Tss: 5,
+  Tsd: 6,
+  Tst: 7,
+} as const;
+
+export type AnalyzePcDropType =
+  typeof AnalyzePcDropType[keyof typeof AnalyzePcDropType];

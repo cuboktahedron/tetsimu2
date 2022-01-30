@@ -1,7 +1,7 @@
 import { TextField, TextFieldProps } from "@material-ui/core";
 import React from "react";
 
-type NumberTextFieldProps = {
+export type NumberTextFieldProps = {
   numberProps: {
     endAdornment?: React.ReactNode;
     min: number;
