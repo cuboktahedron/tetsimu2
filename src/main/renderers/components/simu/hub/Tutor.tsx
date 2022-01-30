@@ -11,9 +11,8 @@ import { BtbState, FieldCellValue, MAX_NEXTS_NUM, Tetromino } from "types/core";
 import { SettleStep } from "types/simu";
 import {
   InitTutorMessageRes,
-  Step,
   StepsMessage,
-  TermTutorMessageRes
+  TermTutorMessageRes,
 } from "types/simuMessages";
 import { appendDetails, HubContext } from "utils/tetsimu/simu/hubActions";
 import { HubMessageEventTypes } from "utils/tetsimu/simu/hubEventEmitter";
@@ -44,7 +43,6 @@ const Tutor: React.FC<AnalyzePcProps> = (props) => {
     React.useState<SimuState | null>(null);
   const [prevRequestMessageId, setPrevRequestMessageId] =
     React.useState<string>(uuidv4());
-  const [prevSteps, setPrevSteps] = React.useState<Step[]>([]);
   const stateRef = useValueRef({
     rootState,
     state,
@@ -52,7 +50,6 @@ const Tutor: React.FC<AnalyzePcProps> = (props) => {
     lastMoveTime,
     prevSimuState,
     prevRequestMessageId,
-    prevSteps,
   });
 
   React.useEffect(() => {
@@ -182,16 +179,20 @@ const Tutor: React.FC<AnalyzePcProps> = (props) => {
     }
 
     const firstStep = message.body.steps[0];
-    const prevFirstStep = stateRef.current.prevSteps[0];
-
-    if (new Date().getTime() < stateRef.current.lastMoveTime + 500) {
-      if (!prevFirstStep && firstStep !== prevFirstStep) {
+    const settleFirstStep = stateRef.current.rootState.simu.settleSteps[0];
+    if (
+      !!settleFirstStep &&
+      (firstStep.dir !== settleFirstStep.dir ||
+        firstStep.type !== settleFirstStep.type ||
+        firstStep.x !== settleFirstStep.pos.x ||
+        firstStep.y !== settleFirstStep.pos.y)
+    ) {
+      if (new Date().getTime() < stateRef.current.lastMoveTime + 250) {
         return;
       }
     }
 
     setLastMoveTime(new Date().getTime());
-    setPrevSteps(message.body.steps);
 
     const steps: SettleStep[] = message.body.steps.map((step) => {
       return {
