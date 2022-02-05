@@ -46,8 +46,8 @@ const useStyles = useSidePanelStyles({
     border: "solid 1px grey",
     boxSizing: "border-box",
     flex: "1 0 auto",
-    minHeight: 300,
-    maxHeight: 600,
+    minHeight: 200,
+    height: 0,
     overflowY: "scroll",
     padding: 4,
     userSelect: "text",
@@ -223,6 +223,9 @@ const Hub: React.FC<HubProps> = (props) => {
           <Tutor opens={selectedTabIndex == "1"} />
         </TabContext>
 
+        <div ref={detailsElemRef} className={classes.details}>
+          {details}
+        </div>
         <div className={classes.buttons}>
           <div>
             <div>
@@ -236,9 +239,7 @@ const Hub: React.FC<HubProps> = (props) => {
             </div>
           </div>
         </div>
-        <div ref={detailsElemRef} className={classes.details}>
-          {details}
-        </div>
+        <div>&nbsp;</div>
       </div>
     </HubContext.Provider>
   );

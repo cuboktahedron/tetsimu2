@@ -192,8 +192,6 @@ const Tutor: React.FC<AnalyzePcProps> = (props) => {
       }
     }
 
-    setLastMoveTime(new Date().getTime());
-
     const steps: SettleStep[] = message.body.steps.map((step) => {
       return {
         type: step.type,
