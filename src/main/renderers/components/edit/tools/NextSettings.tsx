@@ -51,7 +51,13 @@ const NextSettings = React.memo<NextSettingsProps>((props) => {
 
       dispatch(changeNextsPattern(nextsPattern));
     } catch (error) {
-      const errorText = error.message ?? "ParseError";
+      let errorText;
+      let errorObj = error as Error;
+      if (errorObj && errorObj.message) {
+        errorText = errorObj.message;
+      } else {
+        errorText = "ParseError";
+      }
       setNextsPattern({
         errorText,
         value: nextsPattern,
