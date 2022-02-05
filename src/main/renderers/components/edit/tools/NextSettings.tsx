@@ -5,6 +5,7 @@ import {
   changeNoOfCycle
 } from "ducks/edit/actions";
 import React, { useEffect } from "react";
+import NumberCheckTextField from "renderers/components/ext/NumberCheckTextField";
 import { EditStateTools } from "stores/EditState";
 import { Action } from "types/core";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";
@@ -132,8 +133,10 @@ const NextSettings = React.memo<NextSettingsProps>((props) => {
       </div>
       <div>
         <FormControl>
-          <NumberTextField
+          <NumberCheckTextField
             label="no of cycle"
+            checkLabel="Random"
+            checked={props.tools.noOfCycle == 0}
             numberProps={{
               min: 0,
               max: 7,
