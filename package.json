@@ -65,6 +65,7 @@
     "cacache": "^15.0.6",
     "glob-parent": "^5.1.2",
     "postcss": "^8.2.10",
+    "nanoid": "^3.1.31",
     "set-value": "^4.0.1"
   }
 }
