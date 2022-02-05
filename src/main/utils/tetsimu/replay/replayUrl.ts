@@ -1,29 +1,30 @@
+import { System } from "constants/System";
 import { ReplayState } from "stores/ReplayState";
 import {
   FieldState,
   HoldState,
   ReplayStep,
   Tetromino,
-  TetsimuMode,
+  TetsimuMode
 } from "types/core";
 import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 import {
   deserializeField as deserializeField097,
   deserializeHold as deserializeHold097,
   deserializeNexts as deserializeNexts097,
-  deserializeSteps as deserializeSteps097,
+  deserializeSteps as deserializeSteps097
 } from "../097/deserializer";
 import {
   deserializeField,
   deserializeHold,
   deserializeNexts,
-  deserializeSteps,
+  deserializeSteps
 } from "../deserializer";
 import {
   serializeField,
   serializeHold,
   serializeNexts,
-  serializeSteps,
+  serializeSteps
 } from "../serializer";
 import { UnsupportedUrlError } from "../unsupportedUrlError";
 
@@ -40,7 +41,7 @@ export type ReplayStateFragments = {
 };
 
 class ReplayUrl {
-  private static DefaultVersion = "2.06";
+  private static DefaultVersion = System.Version;
 
   fromState(state: ReplayState): string {
     const gen = new ReplayUrl201();
@@ -64,7 +65,7 @@ class ReplayUrl {
 }
 
 class ReplayUrl201 {
-  public static Version = "2.06";
+  public static Version = System.Version;
 
   toState(
     params: { [key: string]: string },

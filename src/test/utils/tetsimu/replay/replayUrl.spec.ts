@@ -1,13 +1,14 @@
+import { System } from "constants/System";
 import {
   BtbState,
   Direction,
   SpinType,
   Tetromino,
-  TetsimuMode,
+  TetsimuMode
 } from "types/core";
 import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 import ReplayUrl, {
-  ReplayStateFragments,
+  ReplayStateFragments
 } from "utils/tetsimu/replay/replayUrl";
 import { makeField } from "../testUtils/makeField";
 import { makeGarbage } from "../testUtils/makeGarbage";
@@ -17,7 +18,7 @@ import {
   makeReplayDropStep,
   makeReplayHardDrop097Step,
   makeReplayHardDropStep,
-  makeReplayHoldStep,
+  makeReplayHoldStep
 } from "../testUtils/makeReplayStep";
 import { makeTetrominos } from "../testUtils/makeTetrominos";
 
@@ -79,7 +80,7 @@ describe("replayUrl", () => {
       const or = "3";
       const st = SimulatorStrategyType.Pytt2;
       const m = TetsimuMode.Replay;
-      const v = "2.06";
+      const v = System.Version;
       const expected = `${loc}?f=${f}&ns=${ns}&ss=${ss}&h=${h}&nc=${nc}&nn=${nn}&or=${or}&st=${st}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
@@ -120,7 +121,7 @@ describe("replayUrl", () => {
       const loc = location.href.replace(/\?.*$/, "");
       const ns = "IA__";
       const m = TetsimuMode.Replay;
-      const v = "2.06";
+      const v = System.Version;
       const expected = `${loc}?ns=${ns}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });

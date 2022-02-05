@@ -1,3 +1,4 @@
+import { System } from "constants/System";
 import { FieldCellValue, Tetromino, TetsimuMode } from "types/core";
 import EditUrl, { EditStateFragments } from "utils/tetsimu/edit/editUrl";
 import { makeEditState } from "../testUtils/makeEditState";
@@ -42,7 +43,7 @@ describe("editUrl", () => {
       const nc = "3";
       const nn = "5";
       const m = TetsimuMode.Simu;
-      const v = "2.06";
+      const v = System.Version;
       const expected = `${loc}?f=${f}&np=${np}&h=${h}&nc=${nc}&nn=${nn}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });
@@ -68,7 +69,7 @@ describe("editUrl", () => {
       const loc = location.href.replace(/\?.*$/, "");
       const nn = "5";
       const m = TetsimuMode.Simu;
-      const v = "2.06";
+      const v = System.Version;
       const expected = `${loc}?nn=${nn}&m=${m}&v=${v}`;
       expect(actual).toBe(expected);
     });

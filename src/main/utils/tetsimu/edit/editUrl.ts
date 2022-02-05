@@ -1,14 +1,15 @@
+import { System } from "constants/System";
 import { EditState } from "stores/EditState";
 import { FieldState, HoldState, Tetromino, TetsimuMode } from "types/core";
 import {
   deserializeField as deserializeField097,
   deserializeHold as deserializeHold097,
-  deserializeNexts as deserializeNexts097,
+  deserializeNexts as deserializeNexts097
 } from "../097/deserializer";
 import {
   deserializeField,
   deserializeHold,
-  deserializeNexts,
+  deserializeNexts
 } from "../deserializer";
 import { serializeField, serializeHold } from "../serializer";
 import { UnsupportedUrlError } from "../unsupportedUrlError";
@@ -22,7 +23,7 @@ export type EditStateFragments = {
 };
 
 class EditUrl {
-  private static DefaultVersion = "2.06";
+  private static DefaultVersion = System.Version;
 
   fromState(state: EditState): string {
     const gen = new EditUrl201();
@@ -46,7 +47,7 @@ class EditUrl {
 }
 
 class EditUrl201 {
-  public static Version = "2.06";
+  public static Version = System.Version;
 
   toState(params: { [key: string]: string }): EditStateFragments {
     const f = params.f ?? "";

@@ -1,4 +1,5 @@
 import { makeStyles, Theme } from "@material-ui/core";
+import { System } from "constants/System";
 import React from "react";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -23,7 +24,7 @@ const Help: React.FC<HelpProps> = (props) => {
   return (
     <div className={classes.root}>
       <h2>Tetsimu2</h2>
-      <p>version: 2.06</p>
+      <p>version: {System.Version}</p>
       <div>
         <h3>author</h3>
         <p>cuboktahedron</p>

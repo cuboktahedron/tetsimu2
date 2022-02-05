@@ -1,28 +1,29 @@
+import { System } from "constants/System";
 import { SimuState } from "stores/SimuState";
 import {
   FieldState,
   HoldState,
   NextNote,
   Tetromino,
-  TetsimuMode
+  TetsimuMode,
 } from "types/core";
 import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 import {
   deserializeField as deserializeField097,
   deserializeHold as deserializeHold097,
-  deserializeNexts as deserializeNexts097
+  deserializeNexts as deserializeNexts097,
 } from "../097/deserializer";
 import {
   deserializeField,
   deserializeHold,
-  deserializeNexts
+  deserializeNexts,
 } from "../deserializer";
 import NextNotesInterpreter from "../nextNotesInterpreter";
 import {
   serializeField,
   serializeHold,
   serializeNexts,
-  serializeSteps
+  serializeSteps,
 } from "../serializer";
 import { UnsupportedUrlError } from "../unsupportedUrlError";
 
@@ -41,7 +42,7 @@ export type SimuStateFragments = {
 };
 
 class SimuUrl {
-  private static DefaultVersion = "2.06";
+  private static DefaultVersion = System.Version;
 
   fromState(state: SimuState): string {
     const gen = new SimuUrl201();
@@ -65,7 +66,7 @@ class SimuUrl {
 }
 
 class SimuUrl201 {
-  public static Version = "2.06";
+  public static Version = System.Version;
 
   toState(
     params: { [key: string]: string },
