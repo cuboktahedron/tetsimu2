@@ -83,7 +83,7 @@ const PlayModeSettings = React.memo<PlayModeSettingsProps>((props) => {
         </RadioGroup>
       </FormGroup>
       <FormControl className={classes.formControl}>
-        <InputLabel id="simulator-type-label">Simulator type</InputLabel>
+        <InputLabel id="simulator-type-label">simulator type</InputLabel>
         <Select
           labelId="simulator-type-label"
           id="simulator-type"

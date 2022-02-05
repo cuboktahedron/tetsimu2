@@ -199,7 +199,7 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
       </div>
       <div>
         <FormControl className={classes.formControl}>
-          <InputLabel>Drop type</InputLabel>
+          <InputLabel>drop type</InputLabel>
           <Select
             onChange={handleDropTypeChange}
             value={stateRef.current.analyzePc.dropType}
