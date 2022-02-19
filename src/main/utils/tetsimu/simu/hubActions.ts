@@ -1,11 +1,11 @@
 import React from "react";
-import { Action } from "types/core";
+import { Action, FieldState } from "types/core";
 import { AnalyzePcDropType } from "types/simu";
 import { HubEventEmitter } from "./hubEventEmitter";
 
 type HubContextState = {
   webSocket: WebSocket | null;
-  details: string[];
+  details: DetailsContent[];
   hubEventEmitter: HubEventEmitter;
   analyzePc: AnalyzePcState;
   tutor: TutorState;
@@ -36,6 +36,8 @@ export const HubContext = React.createContext({
   dispatch: (_: Action) => {},
 });
 
+const MAX_DETAILS_HISTORY = 256;
+
 export const hubReducer = (
   state: HubContextState,
   anyAction: Action
@@ -46,7 +48,9 @@ export const hubReducer = (
     case HubActionsType.AppendDetails:
       return {
         ...state,
-        details: state.details.concat(action.payload.detailsToAppend),
+        details: state.details
+          .concat(action.payload.detailsToAppend)
+          .slice(-MAX_DETAILS_HISTORY),
       };
     case HubActionsType.ChangeAnalyzePcSettings:
       return {
@@ -64,20 +68,56 @@ export const hubReducer = (
       return {
         ...state,
         webSocket: null,
-        details: state.details.concat(action.payload.detailToAppend),
+        details: state.details
+          .concat(action.payload.detailToAppend)
+          .slice(-MAX_DETAILS_HISTORY),
       };
     case HubActionsType.ConnectionEstablished:
       return {
         ...state,
         webSocket: action.payload.webSocket,
-        details: state.details.concat(action.payload.detailToAppend),
+        details: state.details
+          .concat(action.payload.detailToAppend)
+          .slice(-MAX_DETAILS_HISTORY),
       };
   }
 
   return state;
 };
 
+export const DetailsContentType = {
+  Log: 1,
+  AnalyzedPcItem: 2,
+} as const;
+
+export type DetailsContentType =
+  typeof DetailsContentType[keyof typeof DetailsContentType];
+
+export type DetailsContent =
+  | {
+      type: typeof DetailsContentType.Log;
+      content: string;
+    }
+  | {
+      type: typeof DetailsContentType.AnalyzedPcItem;
+      content: {
+        settles: string;
+        field: FieldState;
+      };
+    };
+
+export type AnalyzedPcItem = {
+  title: string;
+  details: AnalyzedPcItemDetail[];
+};
+
+export type AnalyzedPcItemDetail = {
+  settles: string;
+  field: FieldState;
+};
+
 export const HubActionsType = {
+  AppendAnalyzedItems: "hub/appendAnalyzedItems",
   AppendDetails: "hub/appendDetails",
   ChangeAnalyzePcSettings: "hub/changeAnalyzePcSettings",
   ClearDetails: "hub/clearDetails",
@@ -86,16 +126,24 @@ export const HubActionsType = {
 } as const;
 
 export type HubActions =
+  | AppendAnalyzedItemsAction
   | AppendDetailsAction
   | ChangeAnalyzePcSettingsAction
   | ClearDetailsAction
   | ConnectionClosedAction
   | ConnectionEstablishedAction;
 
+export type AppendAnalyzedItemsAction = {
+  type: typeof HubActionsType.AppendAnalyzedItems;
+  payload: {
+    detailsToAppend: string[];
+  };
+} & Action;
+
 export type AppendDetailsAction = {
   type: typeof HubActionsType.AppendDetails;
   payload: {
-    detailsToAppend: string[];
+    detailsToAppend: DetailsContent[];
   };
 } & Action;
 
@@ -113,7 +161,7 @@ export type ClearDetailsAction = {
 export type ConnectionClosedAction = {
   type: typeof HubActionsType.ConnectionClosed;
   payload: {
-    detailToAppend: string;
+    detailToAppend: DetailsContent;
   };
 } & Action;
 
@@ -121,17 +169,71 @@ export type ConnectionEstablishedAction = {
   type: typeof HubActionsType.ConnectionEstablished;
   payload: {
     webSocket: WebSocket;
-    detailToAppend: string;
+    detailToAppend: DetailsContent;
   };
 } & Action;
 
-export const appendDetails = (
-  ...detailsToAppend: string[]
+export const appendAnalyzedItems = (
+  uniqueItems: AnalyzedPcItem[],
+  minimalItems: AnalyzedPcItem[]
 ): AppendDetailsAction => {
+  const detailsToAppend: DetailsContent[] = [];
+  const itemsToDetails = (
+    items: AnalyzedPcItem[],
+    kind: string
+  ): DetailsContent[] => {
+    detailsToAppend.push({
+      type: DetailsContentType.Log,
+      content: `# Found path [${kind}] = ${uniqueItems.length}`,
+    });
+
+    return items.flatMap((item) => {
+      const details: DetailsContent[] = [];
+      details.push({
+        type: DetailsContentType.Log,
+        content: `## ${item.title}`,
+      });
+
+      return details.concat(
+        item.details.map((detail) => {
+          return {
+            type: DetailsContentType.AnalyzedPcItem,
+            content: detail,
+          };
+        })
+      );
+    });
+  };
+
+  detailsToAppend.push(...itemsToDetails(uniqueItems, "unique"));
+  detailsToAppend.push(...itemsToDetails(minimalItems, "minimal"));
+  detailsToAppend.push({
+    type: DetailsContentType.Log,
+    content: "------------------------",
+  });
+
   return {
     type: HubActionsType.AppendDetails,
     payload: {
       detailsToAppend,
+    },
+  };
+};
+
+export const appendDetails = (
+  ...detailsToAppend: string[]
+): AppendDetailsAction => {
+  const contents = detailsToAppend.map((detail) => {
+    return {
+      type: DetailsContentType.Log,
+      content: detail,
+    };
+  });
+
+  return {
+    type: HubActionsType.AppendDetails,
+    payload: {
+      detailsToAppend: contents,
     },
   };
 };
@@ -159,7 +261,10 @@ export const connectionClosed = (
   return {
     type: HubActionsType.ConnectionClosed,
     payload: {
-      detailToAppend,
+      detailToAppend: {
+        type: DetailsContentType.Log,
+        content: detailToAppend,
+      },
     },
   };
 };
@@ -172,7 +277,10 @@ export const connectionEstablished = (
     type: HubActionsType.ConnectionEstablished,
     payload: {
       webSocket,
-      detailToAppend,
+      detailToAppend: {
+        type: DetailsContentType.Log,
+        content: detailToAppend,
+      },
     },
   };
 };

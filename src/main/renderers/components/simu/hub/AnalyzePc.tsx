@@ -13,11 +13,21 @@ import NumberCheckTextField from "renderers/components/ext/NumberCheckTextField"
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { useValueRef } from "renderers/hooks/useValueRef";
 import { RootState } from "stores/RootState";
-import { FieldCellValue, Tetromino } from "types/core";
-import { AnalyzePcDropType } from "types/simu";
-import { AnalyzePcMessageRes } from "types/simuMessages";
 import {
-  appendDetails,
+  FieldCellValue,
+  FieldState,
+  MAX_FIELD_HEIGHT,
+  MAX_FIELD_WIDTH,
+  Tetromino
+} from "types/core";
+import { AnalyzePcDropType } from "types/simu";
+import {
+  AnalyzePcMessageRes,
+  AnalyzePcMessageResBodyItem
+} from "types/simuMessages";
+import {
+  AnalyzedPcItem,
+  appendAnalyzedItems,
   changeAnalyzePcSettings,
   HubContext
 } from "utils/tetsimu/simu/hubActions";
@@ -64,7 +74,36 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
   }, [stateRef.current.hubEventEmitter]);
 
   const handleAnalyzePcMessage = (message: AnalyzePcMessageRes) => {
-    hubDispatch(appendDetails(message.body.message));
+    const uniqueItems = convertAnalyzedItems(message.body.unique_items);
+    const minimalItems = convertAnalyzedItems(message.body.minimal_items);
+
+    hubDispatch(appendAnalyzedItems(uniqueItems, minimalItems));
+  };
+
+  const convertAnalyzedItems = (
+    items: AnalyzePcMessageResBodyItem[]
+  ): AnalyzedPcItem[] => {
+    const fieldForFill = new Array(MAX_FIELD_HEIGHT * MAX_FIELD_WIDTH).fill(
+      FieldCellValue.None
+    );
+
+    return items.map((item) => {
+      return {
+        title: item.title,
+        details: item.detail.map((detail) => {
+          const mergedField = detail.field.concat(fieldForFill);
+          const field: FieldState = [];
+          for (let i = 0; i < MAX_FIELD_HEIGHT; i++) {
+            field.push(mergedField.slice(i * 10, (i + 1) * 10));
+          }
+
+          return {
+            settles: detail.settles,
+            field,
+          };
+        }),
+      };
+    });
   };
 
   const handleClearLineChange = (value: number) => {

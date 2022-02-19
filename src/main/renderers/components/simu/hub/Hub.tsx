@@ -5,6 +5,7 @@ import React from "react";
 import { RootContext } from "renderers/components/App";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { useValueRef } from "renderers/hooks/useValueRef";
+import { FieldState } from "types/core";
 import {
   AnalyzePcMessageRes,
   InitTutorMessageRes,
@@ -18,11 +19,13 @@ import {
   clearDetails,
   connectionClosed,
   connectionEstablished as connectionEstablished,
+  DetailsContentType,
   HubContext,
   hubReducer,
   initialHubState
 } from "utils/tetsimu/simu/hubActions";
 import { HubMessageEventTypes } from "utils/tetsimu/simu/hubEventEmitter";
+import PopupField from "../PopupField";
 import AnalyzePc from "./AnalyzePc";
 import Tutor from "./Tutor";
 
@@ -52,6 +55,24 @@ const useStyles = useSidePanelStyles({
     padding: 4,
     userSelect: "text",
   },
+
+  linkWrapper: {
+    "&::before": {
+      content: '"-"',
+      display: "inline-block",
+      margin: "0 4px",
+    },
+  },
+
+  link: {
+    color: "blue",
+    cursor: "pointer",
+    textDecoration: "underline",
+  },
+
+  selectedLink: {
+    color: "red",
+  },
 });
 
 type HubProps = {
@@ -65,6 +86,7 @@ const Hub: React.FC<HubProps> = (props) => {
   const stateRef = useValueRef(state);
   const detailsElemRef = React.useRef<HTMLDivElement>(null);
   const [selectedTabIndex, setSelectedTabIndex] = React.useState("0");
+  const [popupField, setPopupField] = React.useState<FieldState | null>(null);
 
   React.useEffect(() => {
     stateRef.current.hubEventEmitter.addListener(
@@ -172,15 +194,44 @@ const Hub: React.FC<HubProps> = (props) => {
     setSelectedTabIndex(value);
   };
 
-  const details = React.useMemo(() => {
-    return state.details.flatMap((detail, i) => {
-      return detail.split("\n").map((line, j) => {
-        return <div key={`${i}-${j}`}>{line}</div>;
-      });
-    });
-  }, [state.details]);
+  const handleSettlesClick = (field: FieldState) => {
+    if (field === popupField) {
+      setPopupField(null);
+    } else {
+      setPopupField(field);
+    }
+  };
+
+  const handlePopupClose = () => {
+    setPopupField(null);
+  };
 
   const classes = useStyles();
+
+  const details = React.useMemo(() => {
+    return state.details.flatMap((detail, i) => {
+      if (detail.type === DetailsContentType.Log) {
+        return detail.content.split("\n").map((line, j) => {
+          return <div key={`${i}-${j}`}>{line}</div>;
+        });
+      } else if (detail.type === DetailsContentType.AnalyzedPcItem) {
+        return (
+          <div className={classes.linkWrapper} key={`${i}`}>
+            <span
+              className={clsx(classes.link, {
+                [classes.selectedLink]: popupField === detail.content.field,
+              })}
+              onClick={() => handleSettlesClick(detail.content.field)}
+            >
+              {detail.content.settles}
+            </span>
+          </div>
+        );
+      } else {
+        return <div />
+      }
+    });
+  }, [state.details, popupField]);
 
   return (
     <HubContext.Provider value={{ state, dispatch: hubDispatch }}>
@@ -241,6 +292,15 @@ const Hub: React.FC<HubProps> = (props) => {
         </div>
         <div>&nbsp;</div>
       </div>
+      {!!popupField ? (
+        <PopupField
+          field={popupField}
+          zoom={rootStateRef.current.simu.zoom}
+          onClose={handlePopupClose}
+        />
+      ) : (
+        ""
+      )}
     </HubContext.Provider>
   );
 };

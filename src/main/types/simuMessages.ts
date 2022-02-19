@@ -1,6 +1,6 @@
 // Response messages
 
-import { Direction, Tetromino } from "./core";
+import { Direction, FieldCellValue, Tetromino } from "./core";
 
 export type HubMessageHeader = {
   message_id: string;
@@ -10,6 +10,18 @@ export type HubMessageHeader = {
 
 export type AnalyzePcMessageResBody = {
   message: string;
+  minimal_items: AnalyzePcMessageResBodyItem[];
+  unique_items: AnalyzePcMessageResBodyItem[];
+};
+
+export type AnalyzePcMessageResBodyItem = {
+  title: string;
+  detail: AnalyzePcMessageResBodyItemDetail[];
+};
+
+export type AnalyzePcMessageResBodyItemDetail = {
+  settles: string;
+  field: FieldCellValue[];
 };
 
 export type AnalyzePcMessageRes = {
