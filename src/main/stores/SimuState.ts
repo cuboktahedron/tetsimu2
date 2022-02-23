@@ -68,6 +68,7 @@ export type SimuState = {
   isDead: boolean;
   lastRoseUpColumn: number;
   nexts: NextsInfo;
+  popupField: FieldState | null;
   ren: number;
   replayNextStep: number;
   replayNexts: Tetromino[];
@@ -201,6 +202,7 @@ export const initialSimuState: SimuState = ((): SimuState => {
     isDead: false,
     lastRoseUpColumn: -1,
     nexts: nextsInfo,
+    popupField: null,
     ren: -1,
     replayNextStep: replayNexts.length,
     replayNexts: replayNexts,

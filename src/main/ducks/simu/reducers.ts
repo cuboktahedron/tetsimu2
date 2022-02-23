@@ -63,6 +63,11 @@ const reducer = (state: SimuState, anyAction: Action): SimuState => {
         ...state,
         ...action.payload,
       };
+    case SimuActionsType.SetPopupField:
+      return {
+        ...state,
+        popupField: action.payload.popupField,
+      };
     case SimuActionsType.SetSettleSteps: {
       const histories = [...state.histories];
       histories.slice(-1)[0].settleSteps = action.payload.settleSteps;

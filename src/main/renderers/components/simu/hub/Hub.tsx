@@ -1,6 +1,7 @@
 import { Box, Button, Divider, Tab } from "@material-ui/core";
 import { TabContext, TabList } from "@material-ui/lab";
 import clsx from "clsx";
+import { setPopupField } from "ducks/simu/actions";
 import React from "react";
 import { RootContext } from "renderers/components/App";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
@@ -25,7 +26,6 @@ import {
   initialHubState
 } from "utils/tetsimu/simu/hubActions";
 import { HubMessageEventTypes } from "utils/tetsimu/simu/hubEventEmitter";
-import PopupField from "../PopupField";
 import AnalyzePc from "./AnalyzePc";
 import Tutor from "./Tutor";
 
@@ -80,13 +80,12 @@ type HubProps = {
 };
 
 const Hub: React.FC<HubProps> = (props) => {
-  const { state: rootState } = React.useContext(RootContext);
+  const { state: rootState, dispatch } = React.useContext(RootContext);
   const rootStateRef = useValueRef(rootState);
   const [state, hubDispatch] = React.useReducer(hubReducer, initialHubState);
   const stateRef = useValueRef(state);
   const detailsElemRef = React.useRef<HTMLDivElement>(null);
   const [selectedTabIndex, setSelectedTabIndex] = React.useState("0");
-  const [popupField, setPopupField] = React.useState<FieldState | null>(null);
 
   React.useEffect(() => {
     stateRef.current.hubEventEmitter.addListener(
@@ -195,15 +194,11 @@ const Hub: React.FC<HubProps> = (props) => {
   };
 
   const handleSettlesClick = (field: FieldState) => {
-    if (field === popupField) {
-      setPopupField(null);
+    if (field === rootStateRef.current.simu.popupField) {
+      dispatch(setPopupField(null));
     } else {
-      setPopupField(field);
+      dispatch(setPopupField(field));
     }
-  };
-
-  const handlePopupClose = () => {
-    setPopupField(null);
   };
 
   const classes = useStyles();
@@ -219,7 +214,8 @@ const Hub: React.FC<HubProps> = (props) => {
           <div className={classes.linkWrapper} key={`${i}`}>
             <span
               className={clsx(classes.link, {
-                [classes.selectedLink]: popupField === detail.content.field,
+                [classes.selectedLink]:
+                  rootStateRef.current.simu.popupField === detail.content.field,
               })}
               onClick={() => handleSettlesClick(detail.content.field)}
             >
@@ -228,10 +224,10 @@ const Hub: React.FC<HubProps> = (props) => {
           </div>
         );
       } else {
-        return <div />
+        return <div />;
       }
     });
-  }, [state.details, popupField]);
+  }, [state.details, rootStateRef.current.simu.popupField]);
 
   return (
     <HubContext.Provider value={{ state, dispatch: hubDispatch }}>
@@ -292,15 +288,6 @@ const Hub: React.FC<HubProps> = (props) => {
         </div>
         <div>&nbsp;</div>
       </div>
-      {!!popupField ? (
-        <PopupField
-          field={popupField}
-          zoom={rootStateRef.current.simu.zoom}
-          onClose={handlePopupClose}
-        />
-      ) : (
-        ""
-      )}
     </HubContext.Provider>
   );
 };

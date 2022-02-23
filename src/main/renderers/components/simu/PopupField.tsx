@@ -14,7 +14,8 @@ import React from "react";
 import {
   FieldCellValue,
   FieldState,
-  MAX_VISIBLE_FIELD_HEIGHT
+  MAX_VISIBLE_FIELD_HEIGHT,
+  Vector2
 } from "types/core";
 
 type StyleProps = {
@@ -25,14 +26,15 @@ const useStyles = makeStyles(() =>
   createStyles({
     root: {
       background: "white",
+      cursor: "all-scroll",
       height: (props: StyleProps) => 504 * props.zoom,
-      left: (props: StyleProps) => `calc(50% - (240px * ${props.zoom} / 2))`,
       outline: "none",
       padding: 10,
-      position: "fixed",
-      top: (props: StyleProps) => `calc(50% - (504px * ${props.zoom} / 2))`,
+      position: "absolute",
+      touchAction: "none",
       userSelect: "none",
       width: (props: StyleProps) => 240 * props.zoom,
+      zIndex: 1250,
     },
 
     close: {
@@ -77,20 +79,27 @@ const cellBackground = {
 
 type PopupFieldProps = {
   onClose: () => void;
-  field: FieldState;
+  field: FieldState | null;
   zoom: number;
 };
 
-const PopupField: React.FC<PopupFieldProps> = (props) => {
+const PopupField = React.memo<PopupFieldProps>((props) => {
   const { field } = props;
+  const rootRef = React.createRef<HTMLDivElement>();
+  const fieldRef = React.createRef<HTMLDivElement>();
+  const [position, setPosition] = React.useState<Vector2>({
+    x: (window.innerWidth - 240 * props.zoom) / 2,
+    y: (window.innerHeight - 504 * props.zoom) / 2,
+  });
+  const [prevDrag, setPrevDrag] = React.useState<Vector2 | null>(null);
+
   const classes = useStyles(props);
 
-  const fieldRef = React.createRef<HTMLDivElement>();
-  React.useEffect(() => {
-    fieldRef.current?.focus();
-  }, [field]);
-
   const rows = React.useMemo(() => {
+    if (field === null) {
+      return [];
+    }
+
     const rows = field
       .slice(0, MAX_VISIBLE_FIELD_HEIGHT)
       .map((row, rowIndex) => {
@@ -119,32 +128,78 @@ const PopupField: React.FC<PopupFieldProps> = (props) => {
     return rows;
   }, [field]);
 
-  const handleCloseClick = () => {
+  const closePopup = () => {
     props.onClose();
+  };
+
+  const handleCloseClick = () => {
+    closePopup();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Escape") {
-      props.onClose();
-      e.preventDefault();
+      closePopup();
     }
   };
 
-  return (
-    <div
-      ref={fieldRef}
-      className={classes.root}
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
-    >
-      <div className={classes.close} onClick={handleCloseClick}>
-        <CloseIcon />
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if (fieldRef.current === null) {
+      return;
+    }
+
+    fieldRef.current.setPointerCapture(e.pointerId);
+    setPrevDrag({ x: e.pageX, y: e.pageY });
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (fieldRef === null || prevDrag === null) {
+      return;
+    }
+
+    let x = position.x - (prevDrag.x - e.pageX);
+    let y = position.y - (prevDrag.y - e.pageY);
+    setPosition({ x, y });
+    setPrevDrag({ x: e.pageX, y: e.pageY });
+  };
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    fieldRef.current?.releasePointerCapture(e.pointerId);
+    setPrevDrag(null);
+  };
+
+  React.useEffect(() => {
+    if (props.field !== null) {
+      rootRef.current?.focus();
+    }
+  }, [props.field]);
+
+  if (props.field) {
+    return (
+      <div
+        ref={rootRef}
+        className={classes.root}
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+        style={{ left: position.x, top: position.y }}
+      >
+        <div className={classes.close} onClick={handleCloseClick}>
+          <CloseIcon />
+        </div>
+        <div
+          ref={fieldRef}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+        >
+          <div className={classes.field}>
+            <div>{rows}</div>
+          </div>
+        </div>
       </div>
-      <div className={classes.field}>
-        <div>{rows}</div>
-      </div>
-    </div>
-  );
-};
+    );
+  } else {
+    return <div />;
+  }
+});
 
 export default PopupField;

@@ -116,6 +116,7 @@ export const makeSimuState = (state: {
         unsettled: [],
         bag: makeNextNote("", 0),
       },
+      popupField: null,
       ren: -1,
       replayNexts: [],
       replayNextStep: 0,

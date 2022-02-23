@@ -1,7 +1,7 @@
 import { createStyles, makeStyles, Theme, useTheme } from "@material-ui/core";
 import { blueGrey } from "@material-ui/core/colors";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { changeZoom } from "ducks/simu/actions";
+import { changeZoom, setPopupField } from "ducks/simu/actions";
 import React from "react";
 import useSimutatorZoom from "renderers/hooks/useSimutatorZoom";
 import { TapControllerType } from "types/core";
@@ -12,6 +12,7 @@ import HoldNexts from "./HoldNexts";
 import HotKey from "./Hotkey";
 import NextsOnly from "./NextsOnly";
 import Operation from "./Operation";
+import PopupField from "./PopupField";
 import VirtualControllerTypeA from "./VirtualControllerTypeA";
 import VirtualControllerTypeB from "./VirtualControllerTypeB";
 
@@ -79,6 +80,10 @@ const Simu: React.FC = () => {
   const stateRef = React.useRef(state);
   stateRef.current = state;
 
+  const handlePopupFieldClose = React.useCallback(() => {
+    dispatch(setPopupField(null));
+  }, []);
+
   if (small) {
     return (
       <div className={classes.root}>
@@ -93,6 +98,11 @@ const Simu: React.FC = () => {
             zoom={state.zoom}
           />
         </div>
+        <PopupField
+          onClose={handlePopupFieldClose}
+          field={state.popupField}
+          zoom={state.zoom}
+        />
         <HotKey />
         {virtualController}
       </div>
@@ -120,6 +130,11 @@ const Simu: React.FC = () => {
             />
           </div>
         </div>
+        <PopupField
+          onClose={handlePopupFieldClose}
+          field={state.popupField}
+          zoom={state.zoom}
+        />
         <HotKey />
         {virtualController}
       </div>

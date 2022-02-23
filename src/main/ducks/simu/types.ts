@@ -26,6 +26,7 @@ export const SimuActionsType = {
   Retry: "simu/retry",
   RotateTetromino: "simu/rotateTetromino",
   SaveConfig: "simu/saveConfig",
+  SetPopupField: "simu/setPopupField",
   SetSettleSteps: "simu/setSettleSteps",
   SuperRetry: "simu/superRetry",
   Undo: "simu/undo",
@@ -41,6 +42,7 @@ export type SimuActions =
   | ResetConfigToDefaultAction
   | RetryAction
   | SaveConfigAction
+  | SetPopupFieldAction
   | SetSettleStepsAction
   | SuperRetryAction
   | UndoAction;
@@ -195,6 +197,13 @@ export type RetryAction = {
 export type SaveConfigAction = {
   type: typeof SimuActionsType.SaveConfig;
   payload: {};
+} & Action;
+
+export type SetPopupFieldAction = {
+  type: typeof SimuActionsType.SetPopupField;
+  payload: {
+    popupField: FieldState | null;
+  };
 } & Action;
 
 export type SetSettleStepsAction = {
