@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 const main = {
   entry: path.join(__dirname, "src", "main", "index"),
@@ -27,10 +28,34 @@ const main = {
           path.resolve(__dirname, "node_modules"),
           path.resolve(__dirname, "src", "test"),
         ],
-        use: ["ts-loader"],
+        use: [
+          {
+            loader: "thread-loader",
+            options: {
+              workers: require("os").cpus().length - 1,
+            },
+          },
+          {
+            loader: "ts-loader",
+            options: {
+              transpileOnly: true,
+              happyPackMode: true,
+            },
+          },
+        ],
       },
     ],
   },
+  plugins: [
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        diagnosticOptions: {
+          semantic: true,
+          syntactic: true,
+        },
+      },
+    }),
+  ],
   node: {
     __dirname: false,
     __filename: false,
