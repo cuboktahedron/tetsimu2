@@ -3,13 +3,14 @@ import {
   FormLabel,
   InputLabel,
   MenuItem,
-  Select
+  Select,
+  TextField
 } from "@material-ui/core";
 import { changeConfig } from "ducks/simu/actions";
 import React from "react";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { Action, TapControllerType } from "types/core";
-import { SimuConfig } from "types/simu";
+import { KeyConfig, SimuConfig } from "types/simu";
 
 const useStyles = useSidePanelStyles({
   formControl: {
@@ -33,6 +34,29 @@ const InputSettings = React.memo<InputSettingsProps>((props) => {
       changeConfig({
         ...config,
         tapControllerType: e.target.value as TapControllerType,
+      })
+    );
+  };
+
+  const handleKeyChange = (
+    key: keyof KeyConfig,
+    e: React.KeyboardEvent<HTMLDivElement>
+  ) => {
+    if (e.altKey || e.shiftKey || e.ctrlKey || e.metaKey || e.key === "Tab") {
+      return;
+    }
+
+    if (config.keys[key] === e.nativeEvent.code) {
+      return;
+    }
+
+    dispatch(
+      changeConfig({
+        ...config,
+        keys: {
+          ...config.keys,
+          [key]: e.nativeEvent.code,
+        },
       })
     );
   };
@@ -72,6 +96,71 @@ const InputSettings = React.memo<InputSettingsProps>((props) => {
     }
   })();
 
+  const keyConfig = React.useMemo(() => {
+    const keys: KeyConfigType[] = [
+      {
+        key: config.keys.hardDrop,
+        label: "hard drop",
+        name: "hardDrop",
+      },
+      {
+        key: config.keys.moveLeft,
+        label: "move left",
+        name: "moveLeft",
+      },
+      {
+        key: config.keys.moveRight,
+        label: "move right",
+        name: "moveRight",
+      },
+      {
+        key: config.keys.softDrop,
+        label: "soft drop",
+        name: "softDrop",
+      },
+      {
+        key: config.keys.rotateLeft,
+        label: "rotate left",
+        name: "rotateLeft",
+      },
+      {
+        key: config.keys.rotateRight,
+        label: "rotate right",
+        name: "rotateRight",
+      },
+      {
+        key: config.keys.hold,
+        label: "hold",
+        name: "hold",
+      },
+      {
+        key: config.keys.back,
+        label: "back",
+        name: "back",
+      },
+    ];
+
+    if (isTouchDevice) {
+      return <div />;
+    } else {
+      return keys.map((key: KeyConfigType, i: number) => {
+        return (
+          <TextField
+            key={i}
+            fullWidth
+            label={key.label}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            value={key.key}
+            variant="outlined"
+            onKeyDown={(e) => handleKeyChange(key.name, e)}
+          />
+        );
+      });
+    }
+  }, [config.keys, isTouchDevice]);
+
   return (
     <div className={classes.root}>
       <div>
@@ -80,8 +169,15 @@ const InputSettings = React.memo<InputSettingsProps>((props) => {
         </FormLabel>
         <div>{tapController}</div>
       </div>
+      <div className={classes.section}>{keyConfig}</div>
     </div>
   );
 });
+
+type KeyConfigType = {
+  key: string;
+  label: string;
+  name: keyof KeyConfig;
+};
 
 export default InputSettings;

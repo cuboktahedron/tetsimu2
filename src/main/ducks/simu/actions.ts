@@ -100,30 +100,30 @@ export const doSimu = (
 ): DoSimuAction => {
   let changed = false;
 
-  if (keys.ArrowUp.active) {
+  if (keys.HardDrop.active) {
     const ret = conductor.hardDropTetromino();
     changed = ret || changed;
-  } else if (keys.c.active) {
+  } else if (keys.Hold.active) {
     const ret = conductor.holdTetromino();
     changed = ret || changed;
   } else {
-    if (keys.ArrowDown.active) {
+    if (keys.SoftDrop.active) {
       changed = conductor.moveTetromino(Direction.Down) || changed;
     } else {
-      if (keys.ArrowLeft.active) {
+      if (keys.MoveLeft.active) {
         changed = conductor.moveTetromino(Direction.Left) || changed;
       }
 
-      if (keys.ArrowRight.active) {
+      if (keys.MoveRight.active) {
         changed = conductor.moveTetromino(Direction.Right) || changed;
       }
     }
 
-    if (keys.z.active) {
+    if (keys.RotateLeft.active) {
       changed = conductor.rotateTetrominoLeft() || changed;
     }
 
-    if (keys.x.active) {
+    if (keys.RotateRight.active) {
       changed = conductor.rotateTetrominoRight() || changed;
     }
   }

@@ -1,19 +1,20 @@
 import React from "react";
 import { ControllerKeys } from "types/core";
+import { KeyConfig } from "types/simu";
 import { OperationKey } from "utils/tetsimu/operationKey";
 
-export const useKey = (): ControllerKeys => {
-  const initialKeys: ControllerKeys = {
-    ArrowUp: new OperationKey({}),
-    ArrowLeft: new OperationKey({ interval1: 200, interval2: 40 }),
-    ArrowRight: new OperationKey({ interval1: 200, interval2: 40 }),
-    ArrowDown: new OperationKey({ interval1: 40, interval2: 40 }),
-    z: new OperationKey({}),
-    x: new OperationKey({}),
-    c: new OperationKey({}),
-    b: new OperationKey({ interval1: 200, interval2: 100 }),
-  };
+const initialKeys: ControllerKeys = {
+  HardDrop: new OperationKey({}),
+  MoveLeft: new OperationKey({ interval1: 200, interval2: 40 }),
+  MoveRight: new OperationKey({ interval1: 200, interval2: 40 }),
+  SoftDrop: new OperationKey({ interval1: 40, interval2: 40 }),
+  RotateLeft: new OperationKey({}),
+  RotateRight: new OperationKey({}),
+  Hold: new OperationKey({}),
+  Back: new OperationKey({ interval1: 200, interval2: 100 }),
+};
 
+export const useKey = (keyConfig: KeyConfig): ControllerKeys => {
   const [keys, setKeys] = React.useState(initialKeys);
 
   React.useEffect(() => {
@@ -33,34 +34,34 @@ export const useKey = (): ControllerKeys => {
         return;
       }
 
-      if (e.shiftKey || e.altKey || e.ctrlKey) {
-        return;
+      if (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) {
+        e.preventDefault();
       }
 
-      switch (e.key.toLowerCase()) {
-        case "arrowup":
-          keys["ArrowUp"].down();
+      switch (e.code) {
+        case keyConfig.hardDrop:
+          keys["HardDrop"].down();
           break;
-        case "arrowleft":
-          keys["ArrowLeft"].down();
+        case keyConfig.moveLeft:
+          keys["MoveLeft"].down();
           break;
-        case "arrowright":
-          keys["ArrowRight"].down();
+        case keyConfig.moveRight:
+          keys["MoveRight"].down();
           break;
-        case "arrowdown":
-          keys["ArrowDown"].down();
+        case keyConfig.softDrop:
+          keys["SoftDrop"].down();
           break;
-        case "z":
-          keys["z"].down();
+        case keyConfig.rotateLeft:
+          keys["RotateLeft"].down();
           break;
-        case "x":
-          keys["x"].down();
+        case keyConfig.rotateRight:
+          keys["RotateRight"].down();
           break;
-        case "c":
-          keys["c"].down();
+        case keyConfig.hold:
+          keys["Hold"].down();
           break;
-        case "b":
-          keys["b"].down();
+        case keyConfig.back:
+          keys["Back"].down();
           break;
       }
     };
@@ -70,7 +71,7 @@ export const useKey = (): ControllerKeys => {
     return () => {
       document.removeEventListener("keydown", callback);
     };
-  }, []);
+  }, [keyConfig]);
 
   React.useEffect(() => {
     const callback = (e: KeyboardEvent) => {
@@ -89,30 +90,30 @@ export const useKey = (): ControllerKeys => {
         return;
       }
 
-      switch (e.key.toLowerCase()) {
-        case "arrowup":
-          keys["ArrowUp"].up();
+      switch (e.code) {
+        case keyConfig.hardDrop:
+          keys["HardDrop"].up();
           break;
-        case "arrowleft":
-          keys["ArrowLeft"].up();
+        case keyConfig.moveLeft:
+          keys["MoveLeft"].up();
           break;
-        case "arrowright":
-          keys["ArrowRight"].up();
+        case keyConfig.moveRight:
+          keys["MoveRight"].up();
           break;
-        case "arrowdown":
-          keys["ArrowDown"].up();
+        case keyConfig.softDrop:
+          keys["SoftDrop"].up();
           break;
-        case "z":
-          keys["z"].up();
+        case keyConfig.rotateLeft:
+          keys["RotateLeft"].up();
           break;
-        case "x":
-          keys["x"].up();
+        case keyConfig.rotateRight:
+          keys["RotateRight"].up();
           break;
-        case "c":
-          keys["c"].up();
+        case keyConfig.hold:
+          keys["Hold"].up();
           break;
-        case "b":
-          keys["b"].up();
+        case keyConfig.back:
+          keys["Back"].up();
           break;
       }
     };
@@ -122,7 +123,7 @@ export const useKey = (): ControllerKeys => {
     return () => {
       document.removeEventListener("keyup", callback);
     };
-  }, []);
+  }, [keyConfig]);
 
   React.useEffect(() => {
     const timerId = setInterval(() => {
@@ -136,7 +137,7 @@ export const useKey = (): ControllerKeys => {
     return () => {
       clearInterval(timerId);
     };
-  }, []);
+  }, [keyConfig]);
 
   return keys;
 };

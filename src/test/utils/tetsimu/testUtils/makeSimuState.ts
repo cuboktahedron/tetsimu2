@@ -1,5 +1,10 @@
 import merge from "deepmerge";
-import { GarbageInfo, SimuState, SimuStateHistory } from "stores/SimuState";
+import {
+  GarbageInfo,
+  initialSimuState,
+  SimuState,
+  SimuStateHistory
+} from "stores/SimuState";
 import {
   ActiveTetromino,
   AttackType,
@@ -10,13 +15,13 @@ import {
   NextNote,
   ReplayStep,
   TapControllerType,
-  Tetromino,
+  Tetromino
 } from "types/core";
 import {
   GarbageConfig,
   PlayMode,
   SettleStep,
-  SimuRetryState,
+  SimuRetryState
 } from "types/simu";
 import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 import { makeNextNote } from "./makeNextNote";
@@ -78,6 +83,9 @@ export const makeSimuState = (state: {
           b2: 1,
           level: 1,
           generates: false,
+        },
+        keys: {
+          ...initialSimuState.config.keys,
         },
         generateGarbagesLevel: 1,
         generatesGarbages: false,

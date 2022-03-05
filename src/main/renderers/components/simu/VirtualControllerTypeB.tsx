@@ -68,14 +68,14 @@ const useStyles = makeStyles(() =>
 
 const VirtualControllerTypeB: React.FC = () => {
   const initialKeys: ControllerKeys = {
-    ArrowUp: new OperationKey({}),
-    ArrowLeft: new OperationKey({ interval1: 200, interval2: 40 }),
-    ArrowRight: new OperationKey({ interval1: 200, interval2: 40 }),
-    ArrowDown: new OperationKey({ interval1: 40, interval2: 40 }),
-    z: new OperationKey({}),
-    x: new OperationKey({}),
-    c: new OperationKey({}),
-    b: new OperationKey({ interval1: 200, interval2: 100 }),
+    HardDrop: new OperationKey({}),
+    MoveLeft: new OperationKey({ interval1: 200, interval2: 40 }),
+    MoveRight: new OperationKey({ interval1: 200, interval2: 40 }),
+    SoftDrop: new OperationKey({ interval1: 40, interval2: 40 }),
+    RotateLeft: new OperationKey({}),
+    RotateRight: new OperationKey({}),
+    Hold: new OperationKey({}),
+    Back: new OperationKey({ interval1: 200, interval2: 100 }),
   };
 
   const [keys, setKeys] = React.useState(initialKeys);
@@ -184,48 +184,48 @@ const VirtualControllerTypeB: React.FC = () => {
         <div
           className={`${classes.key} ${classes.keyDir}`}
           style={{
-            border: activeKeyBorder("ArrowUp"),
+            border: activeKeyBorder("HardDrop"),
             right: 44,
             top: 0,
           }}
-          onTouchStart={(e) => handleTouchStart(e, "ArrowUp")}
-          onTouchEnd={(e) => handleTouchEnd(e, "ArrowUp")}
+          onTouchStart={(e) => handleTouchStart(e, "HardDrop")}
+          onTouchEnd={(e) => handleTouchEnd(e, "HardDrop")}
         >
           U
         </div>
         <div
           className={`${classes.key} ${classes.keyDir}`}
           style={{
-            border: activeKeyBorder("ArrowLeft"),
+            border: activeKeyBorder("MoveLeft"),
             right: 88,
             top: 44,
           }}
-          onTouchStart={(e) => handleTouchStart(e, "ArrowLeft")}
-          onTouchEnd={(e) => handleTouchEnd(e, "ArrowLeft")}
+          onTouchStart={(e) => handleTouchStart(e, "MoveLeft")}
+          onTouchEnd={(e) => handleTouchEnd(e, "MoveLeft")}
         >
           L
         </div>
         <div
           className={`${classes.key} ${classes.keyDir}`}
           style={{
-            border: activeKeyBorder("ArrowRight"),
+            border: activeKeyBorder("MoveRight"),
             right: 0,
             top: 44,
           }}
-          onTouchStart={(e) => handleTouchStart(e, "ArrowRight")}
-          onTouchEnd={(e) => handleTouchEnd(e, "ArrowRight")}
+          onTouchStart={(e) => handleTouchStart(e, "MoveRight")}
+          onTouchEnd={(e) => handleTouchEnd(e, "MoveRight")}
         >
           R
         </div>
         <div
           className={`${classes.key} ${classes.keyDir}`}
           style={{
-            border: activeKeyBorder("ArrowDown"),
+            border: activeKeyBorder("SoftDrop"),
             right: 44,
             bottom: 0,
           }}
-          onTouchStart={(e) => handleTouchStart(e, "ArrowDown")}
-          onTouchEnd={(e) => handleTouchEnd(e, "ArrowDown")}
+          onTouchStart={(e) => handleTouchStart(e, "SoftDrop")}
+          onTouchEnd={(e) => handleTouchEnd(e, "SoftDrop")}
         >
           D
         </div>
@@ -249,48 +249,48 @@ const VirtualControllerTypeB: React.FC = () => {
         <div
           className={`${classes.key} ${classes.keyButton}`}
           style={{
-            border: activeKeyBorder("b"),
+            border: activeKeyBorder("Back"),
             left: 0,
             top: 44,
           }}
-          onTouchStart={(e) => handleTouchStart(e, "b")}
-          onTouchEnd={(e) => handleTouchEnd(e, "b")}
+          onTouchStart={(e) => handleTouchStart(e, "Back")}
+          onTouchEnd={(e) => handleTouchEnd(e, "Back")}
         >
           Y
         </div>
         <div
           className={`${classes.key} ${classes.keyButton}`}
           style={{
-            border: activeKeyBorder("c"),
+            border: activeKeyBorder("Hold"),
             left: 44,
             top: 0,
           }}
-          onTouchStart={(e) => handleTouchStart(e, "c")}
-          onTouchEnd={(e) => handleTouchEnd(e, "c")}
+          onTouchStart={(e) => handleTouchStart(e, "Hold")}
+          onTouchEnd={(e) => handleTouchEnd(e, "Hold")}
         >
           X
         </div>
         <div
           className={`${classes.key} ${classes.keyButton}`}
           style={{
-            border: activeKeyBorder("z"),
+            border: activeKeyBorder("RotateLeft"),
             bottom: 0,
             left: 44,
           }}
-          onTouchStart={(e) => handleTouchStart(e, "z")}
-          onTouchEnd={(e) => handleTouchEnd(e, "z")}
+          onTouchStart={(e) => handleTouchStart(e, "RotateLeft")}
+          onTouchEnd={(e) => handleTouchEnd(e, "RotateLeft")}
         >
           B
         </div>
         <div
           className={`${classes.key} ${classes.keyButton}`}
           style={{
-            border: activeKeyBorder("x"),
+            border: activeKeyBorder("RotateRight"),
             left: 88,
             top: 44,
           }}
-          onTouchStart={(e) => handleTouchStart(e, "x")}
-          onTouchEnd={(e) => handleTouchEnd(e, "x")}
+          onTouchStart={(e) => handleTouchStart(e, "RotateRight")}
+          onTouchEnd={(e) => handleTouchEnd(e, "RotateRight")}
         >
           A
         </div>

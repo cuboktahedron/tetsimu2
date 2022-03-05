@@ -9,7 +9,7 @@ export const useControl = (keys: ControllerKeys) => {
   const state = rootState.simu;
 
   useEffect(() => {
-    if (keys.b.active) {
+    if (keys.Back.active) {
       dispatch(undo(state.step, state.histories));
     } else {
       dispatch(doSimu(getSimuConductor(state), keys));

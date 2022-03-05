@@ -29,12 +29,24 @@ export type GarbageConfig = {
   level: number | null;
 };
 
+export type KeyConfig = {
+  hardDrop: string;
+  moveLeft: string;
+  moveRight: string;
+  softDrop: string;
+  rotateLeft: string;
+  rotateRight: string;
+  hold: string;
+  back: string;
+};
+
 export type SimuConfig = {
   external: {
     host: string;
     port: string;
   };
   garbage: GarbageConfig;
+  keys: KeyConfig;
   offsetRange: number;
   nextNum: number;
   playMode: PlayMode;

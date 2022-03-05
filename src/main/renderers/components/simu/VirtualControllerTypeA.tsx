@@ -43,14 +43,14 @@ const useStyles = makeStyles(() =>
 
 const VirtualControllerTypeA: React.FC = () => {
   const initialKeys: ControllerKeys = {
-    ArrowUp: new OperationKey({}),
-    ArrowLeft: new OperationKey({ interval1: 200, interval2: 40 }),
-    ArrowRight: new OperationKey({ interval1: 200, interval2: 40 }),
-    ArrowDown: new OperationKey({ interval1: 40, interval2: 40 }),
-    z: new OperationKey({}),
-    x: new OperationKey({}),
-    c: new OperationKey({}),
-    b: new OperationKey({ interval1: 200, interval2: 100 }),
+    HardDrop: new OperationKey({}),
+    MoveLeft: new OperationKey({ interval1: 200, interval2: 40 }),
+    MoveRight: new OperationKey({ interval1: 200, interval2: 40 }),
+    SoftDrop: new OperationKey({ interval1: 40, interval2: 40 }),
+    RotateLeft: new OperationKey({}),
+    RotateRight: new OperationKey({}),
+    Hold: new OperationKey({}),
+    Back: new OperationKey({ interval1: 200, interval2: 100 }),
   };
 
   const [keys, setKeys] = React.useState(initialKeys);
@@ -129,10 +129,10 @@ const VirtualControllerTypeA: React.FC = () => {
   };
 
   const virtualKeys = {
-    ArrowUp: { label: "U", pos: { x: 2, y: 2 } },
-    ArrowLeft: { label: "L", pos: { x: 1, y: 2 } },
-    ArrowRight: { label: "R", pos: { x: 3, y: 2 } },
-    ArrowDown: { label: "D", pos: { x: 2, y: 3 } },
+    HardDrop: { label: "U", pos: { x: 2, y: 2 } },
+    MoveLeft: { label: "L", pos: { x: 1, y: 2 } },
+    MoveRight: { label: "R", pos: { x: 3, y: 2 } },
+    SoftDrop: { label: "D", pos: { x: 2, y: 3 } },
     z: { label: "RotX", pos: { x: 1, y: 3 } },
     x: { label: "RotR", pos: { x: 3, y: 3 } },
     c: { label: "Hold", pos: { x: 1, y: 1 } },

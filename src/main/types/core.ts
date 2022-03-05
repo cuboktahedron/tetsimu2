@@ -94,14 +94,14 @@ export type CycleBag = {
 };
 
 export type ControllerKeys = {
-  ArrowUp: OperationKey;
-  ArrowLeft: OperationKey;
-  ArrowRight: OperationKey;
-  ArrowDown: OperationKey;
-  z: OperationKey;
-  x: OperationKey;
-  c: OperationKey;
-  b: OperationKey;
+  HardDrop: OperationKey;
+  MoveLeft: OperationKey;
+  MoveRight: OperationKey;
+  SoftDrop: OperationKey;
+  RotateLeft: OperationKey;
+  RotateRight: OperationKey;
+  Hold: OperationKey;
+  Back: OperationKey;
 };
 
 export type InputKey = keyof ControllerKeys;
