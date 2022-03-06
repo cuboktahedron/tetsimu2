@@ -66,7 +66,7 @@ const Simu: React.FC = () => {
       return <div />;
     }
 
-    switch (state.config.tapControllerType) {
+    switch (state.config.input.tapControllerType) {
       case TapControllerType.TypeA:
         return <VirtualControllerTypeA />;
       case TapControllerType.TypeB:
