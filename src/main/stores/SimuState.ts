@@ -153,15 +153,20 @@ export const initialSimuState: SimuState = ((): SimuState => {
       generates: false,
       level: 0,
     },
-    keys: {
-      hardDrop: "ArrowUp",
-      moveLeft: "ArrowLeft",
-      moveRight: "ArrowRight",
-      softDrop: "ArrowDown",
-      rotateLeft: "KeyZ",
-      rotateRight: "KeyX",
-      hold: "KeyC",
-      back: "KeyB",
+    input: {
+      tapControllerType: isTouchDevice
+        ? TapControllerType.TypeB
+        : TapControllerType.None,
+      keys: {
+        hardDrop: "ArrowUp",
+        moveLeft: "ArrowLeft",
+        moveRight: "ArrowRight",
+        softDrop: "ArrowDown",
+        rotateLeft: "KeyZ",
+        rotateRight: "KeyX",
+        hold: "KeyC",
+        back: "KeyB",
+      },
     },
     nextNum: 5,
     offsetRange: 2,
@@ -174,9 +179,6 @@ export const initialSimuState: SimuState = ((): SimuState => {
     showsGhost: true,
     showsPivot: true,
     strategy: SimulatorStrategyType.Pytt2V132,
-    tapControllerType: isTouchDevice
-      ? TapControllerType.TypeB
-      : TapControllerType.None,
   };
 
   const replayNexts = nexts;

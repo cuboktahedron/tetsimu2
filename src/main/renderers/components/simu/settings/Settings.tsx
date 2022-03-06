@@ -1,13 +1,12 @@
-import { Button, Divider } from "@material-ui/core";
-import { resetSimuConfigToDefault, saveSimuConfig } from "ducks/simu/actions";
+import { Box, Button, Divider, Tab } from "@material-ui/core";
+import { TabContext, TabList } from "@material-ui/lab";
+import { saveSimuConfig } from "ducks/simu/actions";
 import React from "react";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { RootContext } from "../../App";
-import DisplaySettings from "./DisplaySettings";
 import ExternalSettings from "./ExternalSettings";
-import GarbageSettings from "./GarbageSettings";
 import InputSettings from "./InputSettings";
-import PlayModeSettings from "./PlayModeSetting";
+import PlaySettings from "./PlaySettings";
 
 const useStyles = useSidePanelStyles({
   formControl: {
@@ -25,12 +24,13 @@ const Settings: React.FC<SettingsProps> = (props) => {
   }
 
   const { state: rootState, dispatch } = React.useContext(RootContext);
+  const [selectedTabIndex, setSelectedTabIndex] = React.useState("0");
   const state = rootState.simu;
   const stateRef = React.useRef(state);
   stateRef.current = state;
 
-  const handleDefaultClick = () => {
-    dispatch(resetSimuConfigToDefault());
+  const handleTabChange = (_: React.ChangeEvent<{}>, value: string) => {
+    setSelectedTabIndex(value);
   };
 
   const handleSaveClick = () => {
@@ -41,38 +41,40 @@ const Settings: React.FC<SettingsProps> = (props) => {
 
   return (
     <div className={classes.root}>
-      <DisplaySettings config={state.config} dispatch={dispatch} />
-      <Divider />
-      <PlayModeSettings
-        config={state.config}
-        dispatch={dispatch}
-        stateRef={stateRef}
-      />
-      <Divider />
-      <GarbageSettings config={state.config} dispatch={dispatch} />
-      <Divider />
-      <InputSettings
-        config={state.config}
-        dispatch={dispatch}
-        isTouchDevice={state.env.isTouchDevice}
-      />
-      <Divider />
-      <ExternalSettings
-        config={state.config}
-        dispatch={dispatch}
-        stateRef={stateRef}
-      />
+      <TabContext value={selectedTabIndex}>
+        <Box>
+          <TabList
+            onChange={(e, v: string) => handleTabChange(e, v)}
+            variant="scrollable"
+            scrollButtons="auto"
+          >
+            <Tab label="Play" value="0" />
+            <Tab label="Input" value="1" />
+            <Tab label="External" value="2" />
+          </TabList>
+        </Box>
+        <PlaySettings
+          stateRef={stateRef}
+          dispatch={dispatch}
+          opens={selectedTabIndex === "0"}
+        />
+        <InputSettings
+          dispatch={dispatch}
+          stateRef={stateRef}
+          input={state.config.input}
+          opens={selectedTabIndex === "1"}
+        />
+        <Divider />
+        <ExternalSettings
+          dispatch={dispatch}
+          stateRef={stateRef}
+          external={state.config.external}
+          opens={selectedTabIndex === "2"}
+        />
+      </TabContext>
+
       <div className={classes.buttons}>
         <div>
-          <div>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleDefaultClick}
-            >
-              Default
-            </Button>
-          </div>
           <div>
             <Button
               variant="contained"

@@ -3,7 +3,7 @@ import {
   GarbageInfo,
   initialSimuState,
   SimuState,
-  SimuStateHistory
+  SimuStateHistory,
 } from "stores/SimuState";
 import {
   ActiveTetromino,
@@ -15,13 +15,13 @@ import {
   NextNote,
   ReplayStep,
   TapControllerType,
-  Tetromino
+  Tetromino,
 } from "types/core";
 import {
   GarbageConfig,
   PlayMode,
   SettleStep,
-  SimuRetryState
+  SimuRetryState,
 } from "types/simu";
 import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 import { makeNextNote } from "./makeNextNote";
@@ -84,8 +84,8 @@ export const makeSimuState = (state: {
           level: 1,
           generates: false,
         },
-        keys: {
-          ...initialSimuState.config.keys,
+        input: {
+          ...initialSimuState.config.input,
         },
         generateGarbagesLevel: 1,
         generatesGarbages: false,

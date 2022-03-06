@@ -9,7 +9,7 @@ import { RootContext } from "../App";
 const HotKey: React.FC = () => {
   const { state: rootState, dispatch } = React.useContext(RootContext);
   const state = rootState.simu;
-  const keys = useKey(state.config.keys);
+  const keys = useKey(state.config.input.keys);
 
   useControl(keys);
 

@@ -29,6 +29,11 @@ export type GarbageConfig = {
   level: number | null;
 };
 
+export type InputConfig = {
+  tapControllerType: TapControllerType;
+  keys: KeyConfig;
+};
+
 export type KeyConfig = {
   hardDrop: string;
   moveLeft: string;
@@ -40,13 +45,15 @@ export type KeyConfig = {
   back: string;
 };
 
+export type ExternalConfig = {
+  host: string;
+  port: string;
+};
+
 export type SimuConfig = {
-  external: {
-    host: string;
-    port: string;
-  };
+  external: ExternalConfig;
   garbage: GarbageConfig;
-  keys: KeyConfig;
+  input: InputConfig;
   offsetRange: number;
   nextNum: number;
   playMode: PlayMode;
@@ -58,7 +65,6 @@ export type SimuConfig = {
   showsGhost: boolean;
   showsPivot: boolean;
   strategy: SimulatorStrategyType;
-  tapControllerType: TapControllerType;
 };
 
 export type SimuRetryState = {

@@ -1,37 +1,46 @@
-import { FormGroup, FormLabel } from "@material-ui/core";
+import { Button, FormGroup, FormLabel } from "@material-ui/core";
+import clsx from "clsx";
 import { changeConfig } from "ducks/simu/actions";
 import React from "react";
 import TextFieldEx from "renderers/components/ext/TextFieldEx";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
-import { SimuState } from "stores/SimuState";
+import { initialSimuState, SimuState } from "stores/SimuState";
 import { Action } from "types/core";
-import { SimuConfig } from "types/simu";
+import { ExternalConfig } from "types/simu";
 
 const useStyles = useSidePanelStyles({
-  formControl: {
-    minWidth: 120,
+  root2: {
+    border: "solid 1px grey",
+    display: "none",
+    padding: 8,
+  },
+
+  opens: {
+    display: "block",
   },
 });
 
 type ExternalSettingsProps = {
-  config: SimuConfig;
   dispatch: React.Dispatch<Action>;
   stateRef: React.MutableRefObject<SimuState>;
+  external: ExternalConfig;
+  opens: boolean;
 };
 
 const ExternalSettings = React.memo<ExternalSettingsProps>((props) => {
-  const { config, dispatch } = props;
+  const dispatch = props.dispatch;
+  const state = props.stateRef.current;
   const classes = useStyles();
 
   const handleHostChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.trim();
 
-    if (value !== config.external.host) {
+    if (value !== props.external.host) {
       dispatch(
         changeConfig({
-          ...config,
+          ...state.config,
           external: {
-            ...config.external,
+            ...props.external,
             host: value,
           },
         })
@@ -42,12 +51,12 @@ const ExternalSettings = React.memo<ExternalSettingsProps>((props) => {
   const handlePortChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.trim();
 
-    if (value !== config.external.port) {
+    if (value !== props.external.port) {
       dispatch(
         changeConfig({
-          ...config,
+          ...state.config,
           external: {
-            ...config.external,
+            ...props.external,
             port: value,
           },
         })
@@ -55,8 +64,21 @@ const ExternalSettings = React.memo<ExternalSettingsProps>((props) => {
     }
   };
 
+  const handleDefaultClick = () => {
+    dispatch(
+      changeConfig({
+        ...state.config,
+        external: { ...initialSimuState.config.external },
+      })
+    );
+  };
+
   return (
-    <div>
+    <div
+      className={clsx(classes.root2, {
+        [classes.opens]: props.opens,
+      })}
+    >
       <FormGroup>
         <FormLabel component="legend" className={classes.settingGroupTitle}>
           External(tetsimu2 hub)
@@ -68,7 +90,7 @@ const ExternalSettings = React.memo<ExternalSettingsProps>((props) => {
             InputLabelProps={{
               shrink: true,
             }}
-            value={config.external.host}
+            value={props.external.host}
             variant="outlined"
             onChange={handleHostChange}
           />
@@ -78,12 +100,21 @@ const ExternalSettings = React.memo<ExternalSettingsProps>((props) => {
             InputLabelProps={{
               shrink: true,
             }}
-            value={config.external.port}
+            value={props.external.port}
             variant="outlined"
             onChange={handlePortChange}
           />
         </div>
       </FormGroup>
+      <div>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleDefaultClick}
+        >
+          Default
+        </Button>
+      </div>
     </div>
   );
 });
