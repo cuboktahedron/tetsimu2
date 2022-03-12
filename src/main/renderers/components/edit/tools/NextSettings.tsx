@@ -5,7 +5,7 @@ import {
   changeNoOfCycle
 } from "ducks/edit/actions";
 import React, { useEffect } from "react";
-import NumberCheckTextField from "renderers/components/ext/NumberCheckTextField";
+import NumberCheckTextField from "renderers/components/ext/NumberWithLabelTextField";
 import { EditStateTools } from "stores/EditState";
 import { Action } from "types/core";
 import NextNotesInterpreter from "utils/tetsimu/nextNotesInterpreter";

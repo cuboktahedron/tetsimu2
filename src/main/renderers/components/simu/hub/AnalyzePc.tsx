@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 import clsx from "clsx";
 import React from "react";
-import NumberCheckTextField from "renderers/components/ext/NumberCheckTextField";
+import NumberCheckTextField from "renderers/components/ext/NumberWithLabelTextField";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { useValueRef } from "renderers/hooks/useValueRef";
 import { RootState } from "stores/RootState";
