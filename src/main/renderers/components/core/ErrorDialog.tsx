@@ -25,7 +25,7 @@ const ErrorDialog: React.FC<ErrorDialogProps> = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Close
+            CLOSE
           </Button>
         </DialogActions>
       </Dialog>

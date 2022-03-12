@@ -97,14 +97,14 @@ const AddSyncForm: React.FC<AddSyncProps> = (props) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={props.onClose} color="primary">
-          Close
+          CLOSE
         </Button>
         <Button
           onClick={handleSyncClick}
           color="secondary"
           disabled={hasValidationError()}
         >
-          Sync
+          SYNC
         </Button>
       </DialogActions>
     </Dialog>

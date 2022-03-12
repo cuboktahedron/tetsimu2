@@ -169,14 +169,14 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={props.onClose} color="primary">
-          Close
+          CLOSE
         </Button>
         <Button
           onClick={handleSaveClick}
           color="secondary"
           disabled={hasValidationError()}
         >
-          Save
+          SAVE
         </Button>
       </DialogActions>
     </Dialog>

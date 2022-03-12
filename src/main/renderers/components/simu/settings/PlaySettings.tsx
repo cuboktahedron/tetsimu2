@@ -63,7 +63,7 @@ const PlaySettings: React.FC<SettingsProps> = (props) => {
           color="secondary"
           onClick={handleDefaultClick}
         >
-          Default
+          DEFAULT
         </Button>
       </div>
     </div>

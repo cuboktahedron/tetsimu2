@@ -246,7 +246,7 @@ const Hub: React.FC<HubProps> = (props) => {
                 onClick={handleConnectHubClick}
                 disabled={isReadyToConnect()}
               >
-                Connect Hub
+                CONNECT TO HUB
               </Button>
             </div>
           </div>
@@ -281,7 +281,7 @@ const Hub: React.FC<HubProps> = (props) => {
                 color="primary"
                 onClick={handleClearClick}
               >
-                Clear
+                CLEAR
               </Button>
             </div>
           </div>

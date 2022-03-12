@@ -81,7 +81,7 @@ const Settings: React.FC<SettingsProps> = (props) => {
               color="secondary"
               onClick={handleSaveClick}
             >
-              Save
+              SAVE
             </Button>
           </div>
         </div>

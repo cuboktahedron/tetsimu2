@@ -28,6 +28,9 @@ import Simu from "./simu/Simu";
 
 const theme = createMuiTheme({
   typography: {
+    button: {
+      textTransform: "none",
+    },
     fontFamily: '"游ゴシック", YuGothic, sans-serif',
   },
   props: {

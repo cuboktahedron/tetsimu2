@@ -210,7 +210,7 @@ const InputSettings = React.memo<InputSettingsProps>((props) => {
           color="secondary"
           onClick={handleDefaultClick}
         >
-          Default
+          DEFAULT
         </Button>
       </div>
     </div>

@@ -174,7 +174,7 @@ const Settings: React.FC<SettingProps> = (props) => {
               color="secondary"
               onClick={handleDefaultClick}
             >
-              Default
+              DEFAULT
             </Button>
           </div>
           <div>
@@ -183,7 +183,7 @@ const Settings: React.FC<SettingProps> = (props) => {
               color="secondary"
               onClick={handleSaveClick}
             >
-              Save
+              SAVE
             </Button>
           </div>
         </div>

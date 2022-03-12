@@ -1,4 +1,8 @@
 import { Button } from "@material-ui/core";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
+import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import { buildUpField, flipField, slideField } from "ducks/edit/actions";
 import React from "react";
 import { useLongTap } from "renderers/hooks/useLongTap";
@@ -53,7 +57,7 @@ const FieldOperator = React.memo<FieldOperatorProps>((props) => {
                 interval2: 100,
               })}
             >
-              &lt;
+              <ArrowLeftIcon />
             </Button>
           </div>
           <div>
@@ -68,7 +72,7 @@ const FieldOperator = React.memo<FieldOperatorProps>((props) => {
                 interval2: 100,
               })}
             >
-              ∧
+              <ArrowDropUpIcon />
             </Button>
           </div>
           <div>
@@ -83,7 +87,7 @@ const FieldOperator = React.memo<FieldOperatorProps>((props) => {
                 interval2: 100,
               })}
             >
-              ∨
+              <ArrowDropDownIcon />
             </Button>
           </div>
           <div>
@@ -98,7 +102,7 @@ const FieldOperator = React.memo<FieldOperatorProps>((props) => {
                 interval2: 100,
               })}
             >
-              &gt;
+              <ArrowRightIcon />
             </Button>
           </div>
         </div>
