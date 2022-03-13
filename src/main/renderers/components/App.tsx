@@ -16,6 +16,7 @@ import { changeOpened } from "ducks/sidePanel/actions";
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { useTranslation } from "react-i18next";
 import { initialRootState } from "stores/RootState";
 import { Action, TetsimuMode } from "types/core";
 import { reducerLogger } from "utils/reducerLogger";
@@ -52,6 +53,11 @@ const App: React.FC = () => {
   const [loadedConfigs, setLoadedConfigs] = React.useState(false);
   const [loadedExplorer, setLoadedExplorer] = React.useState(false);
   const mathces = useMediaQuery("(min-width:1168px)", { noSsr: true });
+  const { i18n } = useTranslation();
+
+  React.useEffect(() => {
+    i18n.changeLanguage(state.config.environment.language);
+  }, [state.config.environment.language]);
 
   React.useEffect(() => {
     dispatch(loadConfigs());

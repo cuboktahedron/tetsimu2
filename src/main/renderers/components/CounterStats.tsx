@@ -1,6 +1,7 @@
 import { Grid, makeStyles } from "@material-ui/core";
 import { blue } from "@material-ui/core/colors";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { AttackType, PlayStats } from "types/core";
 
 const useStyles = makeStyles({
@@ -27,6 +28,7 @@ export type CounterStatsProps = {
 const CounterStats: React.FC<CounterStatsProps> = (props) => {
   const stats = props.stats;
   const classes = useStyles();
+  const { t } = useTranslation();
 
   const attacks = stats.attacks.reduce((acc, cur) => acc + cur, 0);
 
@@ -34,37 +36,37 @@ const CounterStats: React.FC<CounterStatsProps> = (props) => {
     <div>
       <Grid container spacing={1} className={classes.container}>
         <Grid item xs={6}>
-          Drops
+          {t("Simu.Stats.Drops")}
         </Grid>
         <Grid item xs={6}>
           {stats.drops.toLocaleString()}
         </Grid>
         <Grid item xs={6}>
-          Lines
+          {t("Simu.Stats.Lines")}
         </Grid>
         <Grid item xs={6}>
           {stats.lines.toLocaleString()}
         </Grid>
         <Grid item xs={6}>
-          Single
+          {t("Simu.Stats.Single")}
         </Grid>
         <Grid item xs={6}>
           {stats[AttackType.Single].toLocaleString()}
         </Grid>
         <Grid item xs={6}>
-          Double
+          {t("Simu.Stats.Double")}
         </Grid>
         <Grid item xs={6}>
           {stats[AttackType.Double].toLocaleString()}
         </Grid>
         <Grid item xs={6}>
-          Triple
+          {t("Simu.Stats.Triple")}
         </Grid>
         <Grid item xs={6}>
           {stats[AttackType.Triple].toLocaleString()}
         </Grid>
         <Grid item xs={6}>
-          Tetris
+          {t("Simu.Stats.Tetris")}
         </Grid>
         <Grid item xs={6}>
           {(
@@ -72,13 +74,13 @@ const CounterStats: React.FC<CounterStatsProps> = (props) => {
           ).toLocaleString()}
         </Grid>
         <Grid item xs={6}>
-          T-Spin Mini
+          {t("Simu.Stats.TSpinMini")}
         </Grid>
         <Grid item xs={6}>
           {(stats[AttackType.Tsm] + stats[AttackType.BtbTsm]).toLocaleString()}
         </Grid>
         <Grid item xs={6}>
-          T-Spin Mini Double
+          {t("Simu.Stats.TSpinMiniDouble")}
         </Grid>
         <Grid item xs={6}>
           {(
@@ -86,61 +88,61 @@ const CounterStats: React.FC<CounterStatsProps> = (props) => {
           ).toLocaleString()}
         </Grid>
         <Grid item xs={6}>
-          T-Spin Single
+          {t("Simu.Stats.TSpinSingle")}
         </Grid>
         <Grid item xs={6}>
           {(stats[AttackType.Tss] + stats[AttackType.BtbTss]).toLocaleString()}
         </Grid>
         <Grid item xs={6}>
-          T-Spin Double
+          {t("Simu.Stats.TSpinDouble")}
         </Grid>
         <Grid item xs={6}>
           {(stats[AttackType.Tsd] + stats[AttackType.BtbTsd]).toLocaleString()}
         </Grid>
         <Grid item xs={6}>
-          T-Spin Triple
+          {t("Simu.Stats.TSpinTriple")}
         </Grid>
         <Grid item xs={6}>
           {(stats[AttackType.Tst] + stats[AttackType.BtbTst]).toLocaleString()}
         </Grid>
         <Grid item xs={6}>
-          Perfect Clear
+          {t("Simu.Stats.PerfectClear")}
         </Grid>
         <Grid item xs={6}>
           {stats[AttackType.PerfectClear].toLocaleString()}
         </Grid>
         <Grid item xs={6}>
-          Max Ren
+          {t("Simu.Stats.MaxRen")}
         </Grid>
         <Grid item xs={6}>
           {stats.maxRen.toLocaleString()}
         </Grid>
         <Grid item xs={6}>
-          Back to Back
+          {t("Simu.Stats.BackToBack")}
         </Grid>
         <Grid item xs={6}>
           {stats.totalBtb.toLocaleString()}
         </Grid>
         <Grid item xs={6}>
-          Total Attack
+          {t("Simu.Stats.TotalAttack")}
         </Grid>
         <Grid item xs={6}>
           {attacks.toLocaleString()}
         </Grid>
         <Grid item xs={6}>
-          Attack per Drop
+          {t("Simu.Stats.AttackPerDrop")}
         </Grid>
         <Grid item xs={6}>
           {stats.drops === 0 ? "-" : (attacks / stats.drops).toLocaleString()}
         </Grid>
         <Grid item xs={6}>
-          Total Hold
+          {t("Simu.Stats.TotalHold")}
         </Grid>
         <Grid item xs={6}>
           {stats.totalHold.toLocaleString()}
         </Grid>
         <Grid item xs={6}>
-          Hold per Drop
+          {t("Simu.Stats.HoldPerDrop")}
         </Grid>
         <Grid item xs={6}>
           {stats.drops === 0

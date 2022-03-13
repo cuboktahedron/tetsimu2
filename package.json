@@ -55,10 +55,12 @@
     "@material-ui/lab": "^4.0.0-alpha.57",
     "deep-object-diff": "^1.1.0",
     "deepmerge": "^4.2.2",
+    "i18next": "^21.6.14",
     "mersenne-twister": "^1.1.0",
     "react-dnd": "^14.0.2",
     "react-dnd-html5-backend": "^14.0.0",
     "react-dropzone": "^11.3.2",
+    "react-i18next": "^11.15.6",
     "tslib": "^2.0.0",
     "uuid": "^8.3.2"
   },

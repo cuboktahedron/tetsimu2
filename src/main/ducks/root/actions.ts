@@ -12,7 +12,7 @@ import {
   initialExplorerState,
 } from "stores/ExplorerState";
 import { initialReplayState, ReplayState } from "stores/ReplayState";
-import { RootState } from "stores/RootState";
+import { initialRootState, RootState } from "stores/RootState";
 import { SidePanelState } from "stores/SidePanelState";
 import { GarbageInfo, initialSimuState, SimuState } from "stores/SimuState";
 import {
@@ -31,6 +31,7 @@ import {
 } from "types/core";
 import { ExplorerIds } from "types/explorer";
 import { ReplayConfig } from "types/replay";
+import { RootConfig } from "types/root";
 import { SimuConfig } from "types/simu";
 import { getItemOrDefault } from "utils/localStorage";
 import EditUrl, { EditStateFragments } from "utils/tetsimu/edit/editUrl";
@@ -48,6 +49,7 @@ import SimuUrl, {
   UNSPECIFIED_SEED,
 } from "utils/tetsimu/simu/simuUrl";
 import {
+  ChangeConfigAction,
   ChangeTetsimuModeAction,
   ClearErrorAction,
   EditToSimuAction,
@@ -57,9 +59,19 @@ import {
   LoadExplorerAction,
   ReplayToSimuAction,
   RootActionsType,
+  SaveConfigAction,
   SimuToEditAction,
   SimuToReplayAction,
 } from "./types";
+
+export const changeConfig = (config: RootConfig): ChangeConfigAction => {
+  return {
+    type: RootActionsType.ChangeConfig,
+    payload: {
+      config,
+    },
+  };
+};
 
 export const changeTetsimuMode = (
   mode: TetsimuMode
@@ -614,6 +626,15 @@ export const loadConfigs = (): LoadConfigsAction => {
     return merge(initialReplayState.config, config) as ReplayConfig;
   })();
 
+  const root = (() => {
+    const config = getItemOrDefault<RootConfig>(
+      "root.config",
+      initialRootState.config
+    );
+
+    return merge(initialRootState.config, config) as RootConfig;
+  })();
+
   const simu = (() => {
     const config = getItemOrDefault<SimuConfig>(
       "simu.config",
@@ -627,6 +648,7 @@ export const loadConfigs = (): LoadConfigsAction => {
     type: RootActionsType.LoadConfigs,
     payload: {
       replay,
+      root,
       simu,
     },
   };
@@ -827,6 +849,14 @@ export const replayToSimuMode = (
       seed: rng.seed,
       strategy: state.config.strategy,
     },
+  };
+};
+
+export const saveRootConfig = (config: RootConfig): SaveConfigAction => {
+  localStorage.setItem("root.config", JSON.stringify(config));
+  return {
+    type: RootActionsType.SaveConfig,
+    payload: {},
   };
 };
 

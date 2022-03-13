@@ -6,6 +6,7 @@ import {
 } from "@material-ui/core";
 import { changeConfig, changeGarbageLevel } from "ducks/simu/actions";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { Action } from "types/core";
 import { SimuConfig } from "types/simu";
@@ -24,6 +25,7 @@ type GarbageSettingsProps = {
 
 const GarbageSettings = React.memo<GarbageSettingsProps>((props) => {
   const { config, dispatch } = props;
+  const { t } = useTranslation();
 
   const handleRiseUpRateFirstChange = (value: number): void => {
     if (value !== config.riseUpRate.first) {
@@ -103,15 +105,15 @@ const GarbageSettings = React.memo<GarbageSettingsProps>((props) => {
   const classes = useStyles();
 
   return (
-    <div>
+    <div className={classes.root}>
       <div>
         <FormLabel component="legend" className={classes.settingGroupTitle}>
-          Garbage
+          {t("Simu.Settings.Garbage.Title")}
         </FormLabel>
 
         <div className={classes.section}>
           <NumberTextField
-            label="first rate"
+            label={t("Simu.Settings.Garbage.Rate.First")}
             InputLabelProps={{
               shrink: true,
             }}
@@ -126,7 +128,7 @@ const GarbageSettings = React.memo<GarbageSettingsProps>((props) => {
             style={{ marginRight: 4 }}
           />
           <NumberTextField
-            label="second rate"
+            label={t("Simu.Settings.Garbage.Rate.Second")}
             InputLabelProps={{
               shrink: true,
             }}
@@ -144,7 +146,7 @@ const GarbageSettings = React.memo<GarbageSettingsProps>((props) => {
       <div className={classes.section}>
         <NumberTextField
           className={classes.formControl}
-          label="offset range"
+          label={t("Simu.Settings.Garbage.OffsetRange")}
           InputLabelProps={{
             shrink: true,
           }}
@@ -166,12 +168,12 @@ const GarbageSettings = React.memo<GarbageSettingsProps>((props) => {
               onChange={handleGeneratesGarbagesChange}
             />
           }
-          label="Generate garbages"
+          label={t("Simu.Settings.Garbage.GenerateGarbages")}
         />
       </div>
       <div className={classes.section}>
         <NumberTextField
-          label="level"
+          label={t("Simu.Settings.Garbage.Level")}
           InputLabelProps={{
             shrink: true,
           }}
@@ -185,7 +187,7 @@ const GarbageSettings = React.memo<GarbageSettingsProps>((props) => {
           disabled={!config.garbage.generates}
         />
       </div>
-      <div>factors</div>
+      <div>{t("Simu.Settings.Garbage.Factors")}</div>
       <div className={classes.section}>
         <NumberTextField
           label="a1"

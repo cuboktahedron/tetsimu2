@@ -22,6 +22,17 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
     const action = anyAction as RootActions;
 
     switch (action.type) {
+      case RootActionsType.ChangeConfig:
+        return {
+          ...state,
+          config: {
+            ...state.config,
+            environment: {
+              ...state.config.environment,
+              language: action.payload.config.environment.language,
+            },
+          },
+        };
       case RootActionsType.ChangeTetsimuMode:
         return {
           ...state,
@@ -107,6 +118,7 @@ const reducer = (state: RootState, anyAction: Action): RootState => {
             ...state.replay,
             config: action.payload.replay,
           },
+          config: action.payload.root,
           simu: {
             ...state.simu,
             config: action.payload.simu,

@@ -8,6 +8,7 @@ import {
 } from "ducks/root/actions";
 import { clearSimu } from "ducks/simu/actions";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { useValueRef } from "renderers/hooks/useValueRef";
 import { RootState } from "stores/RootState";
@@ -47,6 +48,7 @@ const InnerTools = React.memo<InnerToolsProps>((props) => {
   const rootStateRef = props.stateRef;
   const dispatch = props.dispatch;
   const [stateUrl, setStateUrl] = React.useState("");
+  const { t } = useTranslation();
 
   const handleEditClick = () => {
     const state = rootStateRef.current.simu;
@@ -88,7 +90,7 @@ const InnerTools = React.memo<InnerToolsProps>((props) => {
               color="secondary"
               onClick={handleEditClick}
             >
-              EDIT
+              {t("Common.Button.Edit")}
             </Button>
           </div>
           <div style={{ marginLeft: "auto" }}>
@@ -108,7 +110,7 @@ const InnerTools = React.memo<InnerToolsProps>((props) => {
               color="secondary"
               onClick={handleReplayClick}
             >
-              REPLAY
+              {t("Common.Button.Replay")}
             </Button>
           </div>
           <div style={{ marginLeft: "auto" }}>
@@ -125,7 +127,7 @@ const InnerTools = React.memo<InnerToolsProps>((props) => {
       <Divider />
       <div>
         <Button variant="contained" color="primary" onClick={handleUrlClick}>
-          URL
+          {t("Common.Button.Url")}
         </Button>
       </div>
       <div>
@@ -143,7 +145,7 @@ const InnerTools = React.memo<InnerToolsProps>((props) => {
         />
       </div>
       <Button variant="contained" color="secondary" onClick={handleClearClick}>
-        CLEAR
+        {t("Common.Button.Clear")}
       </Button>
     </div>
   );

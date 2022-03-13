@@ -3,6 +3,7 @@ import { TabContext, TabList } from "@material-ui/lab";
 import clsx from "clsx";
 import { setPopupField } from "ducks/simu/actions";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { RootContext } from "renderers/components/App";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { useValueRef } from "renderers/hooks/useValueRef";
@@ -19,7 +20,7 @@ import {
   appendDetails,
   clearDetails,
   connectionClosed,
-  connectionEstablished as connectionEstablished,
+  connectionEstablished,
   DetailsContentType,
   HubContext,
   hubReducer,
@@ -86,6 +87,7 @@ const Hub: React.FC<HubProps> = (props) => {
   const stateRef = useValueRef(state);
   const detailsElemRef = React.useRef<HTMLDivElement>(null);
   const [selectedTabIndex, setSelectedTabIndex] = React.useState("0");
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     stateRef.current.hubEventEmitter.addListener(
@@ -124,20 +126,30 @@ const Hub: React.FC<HubProps> = (props) => {
     const url = `ws://${external.host}:${external.port}`;
 
     let ws = new WebSocket(url);
-    hubDispatch(appendDetails(`Connect to ${url} ...`));
+    hubDispatch(
+      appendDetails(
+        `${t("Simu.Hub.Message.ConnectTo")}`.replace("{{url}}", url)
+      )
+    );
 
     ws.onopen = () => {
-      hubDispatch(connectionEstablished(ws, "Connection established."));
+      hubDispatch(
+        connectionEstablished(ws, t("Simu.Hub.Message.ConnectionEstablished"))
+      );
     };
 
     ws.onclose = (e: CloseEvent) => {
       hubDispatch(
-        connectionClosed(`Connection closed.(${e.code}:${e.reason})`)
+        connectionClosed(
+          `${t("Simu.Hub.Message.ConnectionClosed")}`
+            .replace("{{code}}", "" + e.code)
+            .replace("{{reason}}", e.reason)
+        )
       );
     };
 
     ws.onerror = () => {
-      hubDispatch(appendDetails(`Error occured.`));
+      hubDispatch(appendDetails(t("Simu.Hub.Message.ErrorOccured")));
     };
 
     ws.onmessage = (event: MessageEvent) => {
@@ -246,7 +258,7 @@ const Hub: React.FC<HubProps> = (props) => {
                 onClick={handleConnectHubClick}
                 disabled={isReadyToConnect()}
               >
-                CONNECT TO HUB
+                {t("Simu.Hub.Button.ConnectToHub")}
               </Button>
             </div>
           </div>
@@ -259,8 +271,8 @@ const Hub: React.FC<HubProps> = (props) => {
               variant="scrollable"
               scrollButtons="auto"
             >
-              <Tab label="Analyze" value="0" />
-              <Tab label="Tutor" value="1" />
+              <Tab label={t("Simu.Hub.TabAnalyze")} value="0" />
+              <Tab label={t("Simu.Hub.TabTutor")} value="1" />
             </TabList>
           </Box>
           <AnalyzePc
@@ -281,7 +293,7 @@ const Hub: React.FC<HubProps> = (props) => {
                 color="primary"
                 onClick={handleClearClick}
               >
-                CLEAR
+                {t("Common.Button.Clear")}
               </Button>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import { FormLabel } from "@material-ui/core";
 import { getStats } from "ducks/simu/selectors";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { RootContext } from "../App";
 import CounterStats from "../CounterStats";
@@ -16,6 +17,7 @@ const Stats: React.FC<StatsProps> = (props) => {
     return null;
   }
 
+  const { t } = useTranslation();
   const { state: rootState } = React.useContext(RootContext);
   const state = rootState.simu;
 
@@ -24,7 +26,7 @@ const Stats: React.FC<StatsProps> = (props) => {
   return (
     <div className={classes.root}>
       <FormLabel component="legend" className={classes.settingGroupTitle}>
-        Stats
+        {t("Simu.Stats.Title")}
       </FormLabel>
       <CounterStats stats={stats} />
     </div>

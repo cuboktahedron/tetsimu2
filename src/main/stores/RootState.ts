@@ -1,4 +1,5 @@
 import { TetsimuMode } from "types/core";
+import { RootConfig } from "types/root";
 import { EditState, initialEditState } from "./EditState";
 import { ExplorerState, initialExplorerState } from "./ExplorerState";
 import { initialReplayState, ReplayState } from "./ReplayState";
@@ -6,6 +7,7 @@ import { initialSidePanelState, SidePanelState } from "./SidePanelState";
 import { initialSimuState, SimuState } from "./SimuState";
 
 export type RootState = {
+  config: RootConfig;
   dialog: {
     error?: {
       title: string;
@@ -21,6 +23,11 @@ export type RootState = {
 };
 
 export const initialRootState: RootState = {
+  config: {
+    environment: {
+      language: "en",
+    },
+  },
   dialog: {},
   edit: initialEditState,
   explorer: initialExplorerState,

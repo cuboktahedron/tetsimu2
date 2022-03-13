@@ -12,6 +12,7 @@ import {
 import { changeConfig, clearSimu } from "ducks/simu/actions";
 import { getSimuConductor } from "ducks/simu/selectors";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { SimuState } from "stores/SimuState";
 import { Action } from "types/core";
@@ -33,6 +34,7 @@ type PlayModeSettingsProps = {
 const PlayModeSettings = React.memo<PlayModeSettingsProps>((props) => {
   const { config, dispatch } = props;
   const [playMode, setPlayMode] = React.useState(config.playMode);
+  const { t } = useTranslation();
 
   const handlePlayModeChange = (e: React.ChangeEvent<{ value: unknown }>) => {
     dispatch(
@@ -64,26 +66,28 @@ const PlayModeSettings = React.memo<PlayModeSettingsProps>((props) => {
   const classes = useStyles();
 
   return (
-    <div>
+    <div className={classes.root}>
       <FormGroup>
         <FormLabel component="legend" className={classes.settingGroupTitle}>
-          Play Mode
+          {t("Simu.Settings.PlayMode.Title")}
         </FormLabel>
         <RadioGroup value={config.playMode} onChange={handlePlayModeChange}>
           <FormControlLabel
             value={PlayMode.Normal}
             control={<Radio />}
-            label="Normal"
+            label={t("Simu.Settings.PlayMode.Mode.Normal")}
           />
           <FormControlLabel
             value={PlayMode.Dig}
             control={<Radio />}
-            label="Dig"
+            label={t("Simu.Settings.PlayMode.Mode.Dig")}
           />
         </RadioGroup>
       </FormGroup>
       <FormControl className={classes.formControl}>
-        <InputLabel id="simulator-type-label">simulator type</InputLabel>
+        <InputLabel id="simulator-type-label">
+          {t("Simu.Settings.PlayMode.SimulatorType")}
+        </InputLabel>
         <Select
           labelId="simulator-type-label"
           id="simulator-type"
