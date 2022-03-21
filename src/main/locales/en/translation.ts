@@ -6,6 +6,20 @@ export default {
     Version: "Version",
     Author: "Author",
   },
+  Edit: {
+    Tool: {
+      Button: {
+        Flip: "FLIP",
+      },
+    },
+    Settings: {
+      NextPattern: "nexts pattern",
+      GenerateNextsEndlessly: "Generate nexts endlessly",
+      Nexts: "nexts",
+      NoOfCycle: "no of cycle",
+      NoOfCycleRandom: "Random",
+    },
+  },
   Simu: {
     Hub: {
       Button: {

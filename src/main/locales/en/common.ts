@@ -6,6 +6,7 @@ export default {
     Edit: "EDIT",
     Replay: "REPLAY",
     Save: "SAVE",
+    Simu: "SIMU",
     Sync: "SYNC",
     Url: "URL",
   },

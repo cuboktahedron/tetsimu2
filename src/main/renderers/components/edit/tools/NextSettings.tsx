@@ -5,6 +5,7 @@ import {
   changeNoOfCycle
 } from "ducks/edit/actions";
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import NumberCheckTextField from "renderers/components/ext/NumberWithLabelTextField";
 import { EditStateTools } from "stores/EditState";
 import { Action } from "types/core";
@@ -25,6 +26,7 @@ const NextSettings = React.memo<NextSettingsProps>((props) => {
     errorText: "",
     value: props.tools.nextsPattern,
   });
+  const { t } = useTranslation();
 
   useEffect(() => {
     setNextsPattern({
@@ -98,7 +100,7 @@ const NextSettings = React.memo<NextSettingsProps>((props) => {
         <TextFieldEx
           error={!!nextsPattern.errorText}
           fullWidth
-          label="nexts pattern"
+          label={t("Edit.Settings.NextPattern")}
           InputLabelProps={{
             shrink: true,
           }}
@@ -116,13 +118,13 @@ const NextSettings = React.memo<NextSettingsProps>((props) => {
               onChange={handleEndlessChange}
             />
           }
-          label="Generate nexts endlessly"
+          label={t("Edit.Settings.GenerateNextsEndlessly")}
         />
       </div>
       <div>
         <FormControl>
           <NumberTextField
-            label="nexts"
+            label={t("Edit.Settings.Nexts")}
             numberProps={{
               min: 1,
               max: MAX_NEXT_BASE_NO,
@@ -140,7 +142,7 @@ const NextSettings = React.memo<NextSettingsProps>((props) => {
       <div>
         <FormControl>
           <NumberCheckTextField
-            label="no of cycle"
+            label={t("Edit.Settings.NoOfCycle")}
             checkLabel="Random"
             checked={props.tools.noOfCycle == 0}
             numberProps={{

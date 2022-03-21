@@ -5,6 +5,7 @@ import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import { buildUpField, flipField, slideField } from "ducks/edit/actions";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useLongTap } from "renderers/hooks/useLongTap";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { Action, FieldState } from "types/core";
@@ -18,6 +19,7 @@ type FieldOperatorProps = {
 
 const FieldOperator = React.memo<FieldOperatorProps>((props) => {
   const dispatch = props.dispatch;
+  const { t } = useTranslation();
 
   const handleFlipClick = () => {
     dispatch(flipField(props.field));
@@ -109,7 +111,7 @@ const FieldOperator = React.memo<FieldOperatorProps>((props) => {
       </div>
       <div>
         <Button variant="contained" color="primary" onClick={handleFlipClick}>
-          FLIP
+          {t("Edit.Tool.Button.Flip")}
         </Button>
       </div>
     </React.Fragment>

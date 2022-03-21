@@ -6,6 +6,20 @@ export default {
     Version: "バージョン",
     Author: "製作者",
   },
+  Edit: {
+    Tool: {
+      Button: {
+        Flip: "左右反転",
+      },
+    },
+    Settings: {
+      NextPattern: "ネクストパターン",
+      GenerateNextsEndlessly: "無限にネクストを生成する",
+      Nexts: "ネクスト",
+      NoOfCycle: "サイクル番号",
+      NoOfCycleRandom: "ランダム",
+    },
+  },
   Simu: {
     Hub: {
       Button: {
