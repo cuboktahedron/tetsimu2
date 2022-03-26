@@ -9,6 +9,7 @@ import {
   useTheme
 } from "@material-ui/core";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 export type AddSyncProps = {
   open: boolean;
@@ -23,6 +24,7 @@ const AddSyncForm: React.FC<AddSyncProps> = (props) => {
   const [formErrorState, setFormErrorState] = React.useState({
     syncUrl: "",
   });
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     setFormState({
@@ -46,7 +48,7 @@ const AddSyncForm: React.FC<AddSyncProps> = (props) => {
     if (value.trim() === "") {
       setFormErrorState({
         ...formErrorState,
-        syncUrl: "Must not be empty",
+        syncUrl: t("Explorer.AddSync.Message.MustNotBeEmpty"),
       });
       return false;
     }
@@ -82,13 +84,13 @@ const AddSyncForm: React.FC<AddSyncProps> = (props) => {
       onTouchMove={(e) => e.stopPropagation()}
       onTouchStart={(e) => e.stopPropagation()}
     >
-      <DialogTitle>Add sync</DialogTitle>
+      <DialogTitle>{t("Explorer.AddSync.Title")}</DialogTitle>
       <DialogContent>
         <TextField
           error={!!formErrorState.syncUrl}
           helperText={formErrorState.syncUrl}
           fullWidth
-          label="syncUrl"
+          label={t("Explorer.AddSync.SyncUrl")}
           margin="dense"
           value={formState.syncUrl}
           variant="outlined"
@@ -97,14 +99,14 @@ const AddSyncForm: React.FC<AddSyncProps> = (props) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={props.onClose} color="primary">
-          CLOSE
+          {t("Common.Button.Close")}
         </Button>
         <Button
           onClick={handleSyncClick}
           color="secondary"
           disabled={hasValidationError()}
         >
-          SYNC
+          {t("Common.Button.Sync")}
         </Button>
       </DialogActions>
     </Dialog>

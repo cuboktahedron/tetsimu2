@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { setSettleSteps } from "ducks/simu/actions";
 import { getNextAttacks, getUrgentAttack } from "ducks/simu/selectors";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { RootContext } from "renderers/components/App";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { useValueRef } from "renderers/hooks/useValueRef";
@@ -12,7 +13,7 @@ import { SettleStep } from "types/simu";
 import {
   InitTutorMessageRes,
   StepsMessage,
-  TermTutorMessageRes,
+  TermTutorMessageRes
 } from "types/simuMessages";
 import { appendDetails, HubContext } from "utils/tetsimu/simu/hubActions";
 import { HubMessageEventTypes } from "utils/tetsimu/simu/hubEventEmitter";
@@ -51,6 +52,7 @@ const Tutor: React.FC<AnalyzePcProps> = (props) => {
     prevSimuState,
     prevRequestMessageId,
   });
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     stateRef.current.state.hubEventEmitter.addListener(
@@ -168,7 +170,7 @@ const Tutor: React.FC<AnalyzePcProps> = (props) => {
 
   const handleInitTutorMessage = (_message: InitTutorMessageRes) => {
     setIsReady(true);
-    hubDispatch(appendDetails("Tutor is ready."));
+    hubDispatch(appendDetails(t("Simu.Hub.Tutor.Message.Ready")));
   };
 
   const handleStepMessage = (message: StepsMessage) => {
@@ -208,7 +210,9 @@ const Tutor: React.FC<AnalyzePcProps> = (props) => {
 
   const handleTermTutorMessage = (_message: TermTutorMessageRes) => {
     setIsReady(false);
-    hubDispatch(appendDetails("Tutor terminated gracefully."));
+    hubDispatch(
+      appendDetails(t("Simu.Hub.Tutor.Message.TerminatedGracefully"))
+    );
   };
 
   const handleStartClick = () => {
@@ -260,7 +264,7 @@ const Tutor: React.FC<AnalyzePcProps> = (props) => {
               onClick={handleStartClick}
               disabled={stateRef.current.state.webSocket == null}
             >
-              Start
+              {t("Simu.Hub.Tutor.Button.Start")}
             </Button>
           </div>
         </div>
@@ -279,7 +283,7 @@ const Tutor: React.FC<AnalyzePcProps> = (props) => {
               onClick={handleStopClick}
               disabled={stateRef.current.state.webSocket == null}
             >
-              Stop
+              {t("Simu.Hub.Tutor.Button.Stop")}
             </Button>
           </div>
         </div>

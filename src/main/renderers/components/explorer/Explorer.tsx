@@ -15,6 +15,7 @@ import { getOrderedItems } from "ducks/explorer/selectors";
 import React from "react";
 import { DropTargetMonitor, useDrop } from "react-dnd";
 import { useDropzone } from "react-dropzone";
+import { useTranslation } from "react-i18next";
 import { useExplorerEventHandler } from "renderers/hooks/explorer/useExplorerEventHandler";
 import { useSync } from "renderers/hooks/explorer/useSync";
 import { useValueRef } from "renderers/hooks/useValueRef";
@@ -91,6 +92,7 @@ export type ExplorerProps = {
 const Explorer: React.FC<ExplorerProps> = (props) => {
   const { state: rootState, dispatch } = React.useContext(RootContext);
   const [opensAddSyncForm, setOpensAddSyncForm] = React.useState(false);
+  const { t } = useTranslation();
 
   const state = rootState.explorer;
   const classes = useStyles();
@@ -156,17 +158,12 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
     return true;
   };
 
-  const {
-    acceptedFiles,
-    isDragActive,
-    getRootProps,
-    getInputProps,
-    inputRef,
-  } = useDropzone({
-    maxFiles: 1,
-    noClick: true,
-    noKeyboard: true,
-  });
+  const { acceptedFiles, isDragActive, getRootProps, getInputProps, inputRef } =
+    useDropzone({
+      maxFiles: 1,
+      noClick: true,
+      noKeyboard: true,
+    });
 
   const [loadFile, setLoadFile] = React.useState<File | null>(null);
   React.useEffect(() => {
@@ -235,7 +232,7 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
               type: ExplorerEventType.ErrorOccured,
               payload: {
                 reason: validateResult.errorMessage,
-                title: "Load error",
+                title: t("Explorer.LoadError"),
               },
             });
           }
@@ -243,8 +240,8 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
           eventHandler.current({
             type: ExplorerEventType.ErrorOccured,
             payload: {
-              reason: "This file is not valid format.",
-              title: "Load error",
+              reason: t("Explorer.Message.InvalidFileFormat"),
+              title: t("Explorer.LoadError"),
             },
           });
         }
@@ -252,8 +249,8 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
         eventHandler.current({
           type: ExplorerEventType.ErrorOccured,
           payload: {
-            reason: error.message,
-            title: "Load error",
+            reason: (error as Error)?.message,
+            title: t("Explorer.LoadError"),
           },
         });
       }
@@ -265,7 +262,7 @@ const Explorer: React.FC<ExplorerProps> = (props) => {
     eventHandler.current({
       type: ExplorerEventType.FolderAdd,
       payload: {
-        newFolderName: "NewFolder",
+        newFolderName: t("Explorer.NewFolder"),
         dest: "/",
       },
     });

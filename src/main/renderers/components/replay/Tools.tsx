@@ -19,6 +19,7 @@ import {
 import { getReplayConductor } from "ducks/replay/selectors";
 import { changeTetsimuMode, replayToSimuMode } from "ducks/root/actions";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { useValueRef } from "renderers/hooks/useValueRef";
 import { ReplayAuto } from "stores/ReplayState";
@@ -101,6 +102,7 @@ const InnerTools = React.memo<InnerToolsProps>((props) => {
   const rootStateRef = props.rootStateRef;
   const dispatch = props.dispatch;
   const [stateUrl, setStateUrl] = React.useState("");
+  const { t } = useTranslation();
 
   const handleSimuClick = () => {
     const rootState = rootStateRef.current;
@@ -160,7 +162,7 @@ const InnerTools = React.memo<InnerToolsProps>((props) => {
               color="secondary"
               onClick={handleSimuClick}
             >
-              SIMU
+              {t("Common.Button.Simu")}
             </Button>
           </div>
           <div style={{ marginLeft: "auto" }}>
@@ -188,7 +190,7 @@ const InnerTools = React.memo<InnerToolsProps>((props) => {
         </div>
         <FormControl>
           <NumberTextField
-            label="step"
+            label={t("Replay.Tool.Step")}
             numberProps={{
               min: 0,
               max: props.replaySteps.length,
@@ -255,7 +257,7 @@ const InnerTools = React.memo<InnerToolsProps>((props) => {
       </div>
       <div>
         <Button variant="contained" color="primary" onClick={handleUrlClick}>
-          URL
+          {t("Common.Button.Url")}
         </Button>
       </div>
       <div>

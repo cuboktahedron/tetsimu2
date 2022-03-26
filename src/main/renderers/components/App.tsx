@@ -1,7 +1,7 @@
 import {
   createMuiTheme,
   MuiThemeProvider,
-  useMediaQuery
+  useMediaQuery,
 } from "@material-ui/core";
 import reducer from "ducks/root";
 import {
@@ -10,12 +10,13 @@ import {
   error,
   initializeApp,
   loadConfigs,
-  loadExplorer
+  loadExplorer,
 } from "ducks/root/actions";
 import { changeOpened } from "ducks/sidePanel/actions";
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { useTranslation } from "react-i18next";
 import { initialRootState } from "stores/RootState";
 import { Action, TetsimuMode } from "types/core";
 import { reducerLogger } from "utils/reducerLogger";
@@ -52,6 +53,11 @@ const App: React.FC = () => {
   const [loadedConfigs, setLoadedConfigs] = React.useState(false);
   const [loadedExplorer, setLoadedExplorer] = React.useState(false);
   const mathces = useMediaQuery("(min-width:1168px)", { noSsr: true });
+  const { t, i18n } = useTranslation();
+
+  React.useEffect(() => {
+    i18n.changeLanguage(state.config.environment.language);
+  }, [state.config.environment.language]);
 
   React.useEffect(() => {
     dispatch(loadConfigs());
@@ -78,12 +84,12 @@ const App: React.FC = () => {
       dispatch(initializeApp(location.search.replace(/^\?/, ""), state));
     } catch (e) {
       if (e instanceof UnsupportedUrlError) {
-        dispatch(error("Initialization failed", e.message));
+        dispatch(error(t("App.InitializationFailed"), e.message));
       } else {
         dispatch(
           error(
-            "Initialization failed",
-            "This is maybe invalid url parameters passed."
+            t("App.InitializationFailed"),
+            t("App.Message.InvalidParameterPassed")
           )
         );
       }

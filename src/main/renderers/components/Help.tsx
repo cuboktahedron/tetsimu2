@@ -1,6 +1,7 @@
 import { makeStyles, Theme } from "@material-ui/core";
 import { System } from "constants/System";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -20,13 +21,14 @@ const Help: React.FC<HelpProps> = (props) => {
   }
 
   const classes = useStyles();
+  const { t } = useTranslation();
 
   return (
     <div className={classes.root}>
       <h2>Tetsimu2</h2>
-      <p>version: {System.Version}</p>
+      <p>{t("Help.Version")}: {System.Version}</p>
       <div>
-        <h3>author</h3>
+        <h3>{t("Help.Author")}</h3>
         <p>cuboktahedron</p>
         <ul>
           <li>
@@ -36,7 +38,7 @@ const Help: React.FC<HelpProps> = (props) => {
           </li>
           <li>
             <a href="https://github.com/cuboktahedron/tetsimu2" target="_blank">
-              source
+              repository
             </a>
           </li>
           <li>

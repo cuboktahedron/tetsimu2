@@ -12,6 +12,7 @@ import {
   syncFolder
 } from "ducks/explorer/actions";
 import { error, initializeApp } from "ducks/root/actions";
+import { useTranslation } from "react-i18next";
 import { RootState } from "stores/RootState";
 import {
   ExplorerEvent,
@@ -24,6 +25,7 @@ export const useExplorerEventHandler = (
   dispatch: any
 ) => {
   const state = rootState.explorer;
+  const { t } = useTranslation();
 
   return (event: ExplorerEvent) => {
     switch (event.type) {
@@ -46,12 +48,12 @@ export const useExplorerEventHandler = (
           dispatch(initializeApp(event.payload.parameters, rootState));
         } catch (e) {
           if (e instanceof UnsupportedUrlError) {
-            dispatch(error("Load file failed", e.message));
+            dispatch(error(t("Explorer.LoadFileFailed"), e.message));
           } else {
             dispatch(
               error(
-                "Load file failed",
-                "This is maybe invalid url parameters passed."
+                t("Explorer.LoadFileFailed"),
+                t("Explorer.Message.InvalidParameterPassed")
               )
             );
           }

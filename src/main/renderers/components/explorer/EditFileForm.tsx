@@ -9,6 +9,7 @@ import {
   useTheme
 } from "@material-ui/core";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   ExplorerItemFile,
   ExplorerItemFolder,
@@ -34,6 +35,7 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
     description: "",
     parameters: "",
   });
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     setFormState({
@@ -71,7 +73,7 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
     if (value.trim() === "") {
       setFormErrorState({
         ...formErrorState,
-        name: "Must not be empty",
+        name: t("Explorer.EditFile.Message.MustNotBeEmpty"),
       });
       return false;
     }
@@ -79,7 +81,7 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
     if (itemNamesForValidation.includes(value)) {
       setFormErrorState({
         ...formErrorState,
-        name: "This name is already used",
+        name: t("Explorer.EditFile.Message.NameIsAlreadyUsed"),
       });
       return false;
     }
@@ -139,7 +141,7 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
       onTouchMove={(e) => e.stopPropagation()}
       onTouchStart={(e) => e.stopPropagation()}
     >
-      <DialogTitle>Edit file</DialogTitle>
+      <DialogTitle>{t("Explorer.EditFile.Title")}</DialogTitle>
       <DialogContent>
         <TextField
           defaultValue={props.file.id}
@@ -156,7 +158,7 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
           error={!!formErrorState.name}
           fullWidth
           helperText={formErrorState.name}
-          label="name"
+          label={t("Explorer.EditFile.Name")}
           margin="dense"
           value={formState.name}
           variant="outlined"
@@ -167,7 +169,7 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
           error={!!formErrorState.description}
           fullWidth
           helperText={formErrorState.description}
-          label="description"
+          label={t("Explorer.EditFile.Description")}
           margin="dense"
           multiline
           rows={8}
@@ -179,8 +181,8 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
           error={!!formErrorState.parameters}
           helperText={formErrorState.parameters}
           fullWidth
-          label="parameters"
-          placeholder="Paste generated url parameters here"
+          label={t("Explorer.EditFile.Parameters")}
+          placeholder={t("Explorer.EditFile.ParametersPlaceHolder")}
           margin="dense"
           multiline
           rows={6}
@@ -192,14 +194,14 @@ const EditFileForm: React.FC<EditFileFormProps> = (props) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={props.onClose} color="primary">
-          CLOSE
+          {t("Common.Button.Close")}
         </Button>
         <Button
           onClick={handleSaveClick}
           color="secondary"
           disabled={hasValidationError()}
         >
-          SAVE
+          {t("Common.Button.Save")}
         </Button>
       </DialogActions>
     </Dialog>

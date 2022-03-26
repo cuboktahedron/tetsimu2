@@ -9,7 +9,9 @@ import {
   useTheme
 } from "@material-ui/core";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { ExplorerItemFolder, ExplorerItemType } from "stores/ExplorerState";
+import { ExplorerIds } from "types/explorer";
 
 export type EditFolderFormProps = {
   folder: ExplorerItemFolder;
@@ -28,6 +30,7 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
     description: "",
     name: "",
   });
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     setFormState({
@@ -65,7 +68,7 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
     if (value.trim() === "") {
       setFormErrorState({
         ...formErrorState,
-        name: "Must not be empty",
+        name: t("Explorer.EditFolder.Message.MustNotBeEmpty"),
       });
       return false;
     }
@@ -73,7 +76,7 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
     if (itemNamesForValidation.includes(value)) {
       setFormErrorState({
         ...formErrorState,
-        name: "This name is already used",
+        name: t("Explorer.EditFolder.Message.NameIsAlreadyUsed"),
       });
       return false;
     }
@@ -108,6 +111,7 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
 
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("xs"));
+  const isTempFolder = props.folder.id === ExplorerIds.TempFolder;
 
   return (
     <Dialog
@@ -120,7 +124,7 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
       onTouchMove={(e) => e.stopPropagation()}
       onTouchStart={(e) => e.stopPropagation()}
     >
-      <DialogTitle>Edit folder</DialogTitle>
+      <DialogTitle>{t("Explorer.EditFolder.Title")}</DialogTitle>
       <DialogContent>
         <TextField
           defaultValue={props.folder.id}
@@ -137,10 +141,13 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
           error={!!formErrorState.name}
           fullWidth
           helperText={formErrorState.name}
-          label="name"
+          InputProps={{
+            readOnly: isTempFolder,
+          }}
+          label={t("Explorer.EditFolder.Name")}
           margin="dense"
           value={formState.name}
-          variant="outlined"
+          variant={isTempFolder ? "filled" : "outlined"}
           onBlur={handleNameBlur}
           onChange={(e) => handleOnChange("name", e)}
         />
@@ -148,12 +155,19 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
           error={!!formErrorState.description}
           fullWidth
           helperText={formErrorState.description}
-          label="description"
+          InputProps={{
+            readOnly: isTempFolder,
+          }}
+          label={t("Explorer.EditFolder.Description")}
           margin="dense"
           multiline
           rows={8}
-          value={formState.description}
-          variant="outlined"
+          value={
+            isTempFolder
+              ? t("Explorer.TempFolderDescription")
+              : formState.description
+          }
+          variant={isTempFolder ? "filled" : "outlined"}
           onChange={(e) => handleOnChange("description", e)}
         />
         <TextField
@@ -162,21 +176,21 @@ const EditFolderForm: React.FC<EditFolderFormProps> = (props) => {
           InputProps={{
             readOnly: true,
           }}
-          label="syncUrl"
+          label={t("Explorer.EditFolder.SyncUrl")}
           margin="dense"
           variant="filled"
         />
       </DialogContent>
       <DialogActions>
         <Button onClick={props.onClose} color="primary">
-          CLOSE
+          {t("Common.Button.Close")}
         </Button>
         <Button
           onClick={handleSaveClick}
           color="secondary"
-          disabled={hasValidationError()}
+          disabled={hasValidationError() || isTempFolder}
         >
-          SAVE
+          {t("Common.Button.Save")}
         </Button>
       </DialogActions>
     </Dialog>

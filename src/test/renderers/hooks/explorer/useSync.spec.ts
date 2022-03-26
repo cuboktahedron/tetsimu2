@@ -9,6 +9,7 @@ import {
   ExplorerEvent,
   ExplorerEventType
 } from "utils/tetsimu/explorer/explorerEvent";
+import "/i18n";
 
 describe("useSync", () => {
   it("should fire SyncFolderAdd", async () => {

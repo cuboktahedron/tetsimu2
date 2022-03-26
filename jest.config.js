@@ -6,6 +6,7 @@ module.exports = {
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json"],
   modulePathIgnorePatterns: ["build", "dist"],
   moduleNameMapper: {
+    "^/(.*)": "<rootDir>/src/main/$1",
     "^constants/(.*)": "<rootDir>/src/main/constants/$1",
     "^ducks/(.*)": "<rootDir>/src/main/ducks/$1",
     "^renderers/(.*)": "<rootDir>/src/main/renderers/$1",

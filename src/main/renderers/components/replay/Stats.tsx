@@ -1,6 +1,7 @@
 import { FormLabel } from "@material-ui/core";
 import { getStats } from "ducks/replay/selectors";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { RootContext } from "../App";
 import CounterStats from "../CounterStats";
@@ -18,13 +19,14 @@ const Stats: React.FC<StatsProps> = (props) => {
 
   const { state: rootState } = React.useContext(RootContext);
   const state = rootState.replay;
+  const { t } = useTranslation();
 
   const stats = React.useMemo(() => getStats(state), [state.step]);
   const classes = useStyles();
   return (
     <div className={classes.root}>
       <FormLabel component="legend" className={classes.settingGroupTitle}>
-        Stats
+        {t("Stats.Title")}
       </FormLabel>
       <CounterStats stats={stats} />
     </div>

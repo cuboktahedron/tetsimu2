@@ -1,7 +1,7 @@
-import { FormGroup, FormLabel } from "@material-ui/core";
 import clsx from "clsx";
 import { changeConfig } from "ducks/simu/actions";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import TextFieldEx from "renderers/components/ext/TextFieldEx";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { SimuState } from "stores/SimuState";
@@ -31,6 +31,7 @@ const ExternalSettings = React.memo<ExternalSettingsProps>((props) => {
   const dispatch = props.dispatch;
   const state = props.stateRef.current;
   const classes = useStyles();
+  const { t } = useTranslation();
 
   const handleHostChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.trim();
@@ -70,14 +71,11 @@ const ExternalSettings = React.memo<ExternalSettingsProps>((props) => {
         [classes.opens]: props.opens,
       })}
     >
-      <FormGroup>
-        <FormLabel component="legend" className={classes.settingGroupTitle}>
-          External(tetsimu2 hub)
-        </FormLabel>
-        <div className={classes.section}>
+      <div className={classes.root}>
+        <div className={classes.section} style={{ marginBottom: 0 }}>
           <TextFieldEx
             fullWidth
-            label="host"
+            label={t("Simu.Settings.External.Host")}
             InputLabelProps={{
               shrink: true,
             }}
@@ -87,7 +85,7 @@ const ExternalSettings = React.memo<ExternalSettingsProps>((props) => {
           />
           <TextFieldEx
             fullWidth
-            label="port"
+            label={t("Simu.Settings.External.Port")}
             InputLabelProps={{
               shrink: true,
             }}
@@ -96,7 +94,7 @@ const ExternalSettings = React.memo<ExternalSettingsProps>((props) => {
             onChange={handlePortChange}
           />
         </div>
-      </FormGroup>
+      </div>
     </div>
   );
 });

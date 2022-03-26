@@ -1,7 +1,6 @@
 import {
   Button,
   FormControl,
-  FormLabel,
   InputLabel,
   MenuItem,
   Select,
@@ -10,6 +9,7 @@ import {
 import clsx from "clsx";
 import { changeConfig } from "ducks/simu/actions";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { initialSimuState, SimuState } from "stores/SimuState";
 import { Action, TapControllerType } from "types/core";
@@ -19,7 +19,6 @@ const useStyles = useSidePanelStyles({
   root2: {
     border: "solid 1px grey",
     display: "none",
-    padding: 8,
   },
 
   opens: {
@@ -41,6 +40,7 @@ type InputSettingsProps = {
 const InputSettings = React.memo<InputSettingsProps>((props) => {
   const dispatch = props.dispatch;
   const state = props.stateRef.current;
+  const { t } = useTranslation();
 
   const handleTapControllerTypeChange = (
     e: React.ChangeEvent<{ value: unknown }>
@@ -96,14 +96,16 @@ const InputSettings = React.memo<InputSettingsProps>((props) => {
     if (state.env.isTouchDevice) {
       return (
         <FormControl className={classes.formControl}>
-          <InputLabel id="tap-controller-type-label">tap controller</InputLabel>
+          <InputLabel id="tap-controller-type-label">
+            {t("Simu.Settings.Input.TapType")}
+          </InputLabel>
           <Select
             labelId="tap-controller-type-label"
             id="tap-controller-type"
             onChange={handleTapControllerTypeChange}
             value={props.input.tapControllerType}
           >
-            <MenuItem value={TapControllerType.None}>None</MenuItem>
+            <MenuItem value={TapControllerType.None}>-</MenuItem>
             <MenuItem value={TapControllerType.TypeA}>TypeA</MenuItem>
             <MenuItem value={TapControllerType.TypeB}>TypeB</MenuItem>
           </Select>
@@ -112,14 +114,16 @@ const InputSettings = React.memo<InputSettingsProps>((props) => {
     } else {
       return (
         <FormControl className={classes.formControl}>
-          <InputLabel id="tap-controller-type-label">tap controller</InputLabel>
+          <InputLabel id="tap-controller-type-label">
+            {t("Simu.Settings.Input.TapType")}
+          </InputLabel>
           <Select
             labelId="tap-controller-type-label"
             id="tap-controller-type"
             value={props.input.tapControllerType}
             disabled
           >
-            <MenuItem value={TapControllerType.None}>None</MenuItem>
+            <MenuItem value={TapControllerType.None}>-</MenuItem>
           </Select>
         </FormControl>
       );
@@ -130,42 +134,42 @@ const InputSettings = React.memo<InputSettingsProps>((props) => {
     const keys: KeyConfigType[] = [
       {
         key: props.input.keys.hardDrop,
-        label: "hard drop",
+        label: t("Simu.Settings.Input.HardDrop"),
         name: "hardDrop",
       },
       {
         key: props.input.keys.moveLeft,
-        label: "move left",
+        label: t("Simu.Settings.Input.MoveLeft"),
         name: "moveLeft",
       },
       {
         key: props.input.keys.moveRight,
-        label: "move right",
+        label: t("Simu.Settings.Input.MoveRight"),
         name: "moveRight",
       },
       {
         key: props.input.keys.softDrop,
-        label: "soft drop",
+        label: t("Simu.Settings.Input.SoftDrop"),
         name: "softDrop",
       },
       {
         key: props.input.keys.rotateLeft,
-        label: "rotate left",
+        label: t("Simu.Settings.Input.RotateLeft"),
         name: "rotateLeft",
       },
       {
         key: props.input.keys.rotateRight,
-        label: "rotate right",
+        label: t("Simu.Settings.Input.RotateRight"),
         name: "rotateRight",
       },
       {
         key: props.input.keys.hold,
-        label: "hold",
+        label: t("Simu.Settings.Input.Hold"),
         name: "hold",
       },
       {
         key: props.input.keys.back,
-        label: "back",
+        label: t("Simu.Settings.Input.Back"),
         name: "back",
       },
     ];
@@ -197,21 +201,20 @@ const InputSettings = React.memo<InputSettingsProps>((props) => {
         [classes.opens]: props.opens,
       })}
     >
-      <div style={{ marginBottom: 16 }}>
-        <FormLabel component="legend" className={classes.settingGroupTitle}>
-          Input
-        </FormLabel>
-        <div>{tapController}</div>
-      </div>
-      <div className={classes.section}>{keyConfig}</div>
-      <div>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleDefaultClick}
-        >
-          DEFAULT
-        </Button>
+      <div className={classes.root}>
+        <div style={{ marginBottom: 16 }}>
+          <div>{tapController}</div>
+        </div>
+        <div className={classes.section}>{keyConfig}</div>
+        <div>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleDefaultClick}
+          >
+            {t("Common.Button.Default")}
+          </Button>
+        </div>
       </div>
     </div>
   );

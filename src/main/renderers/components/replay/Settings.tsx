@@ -11,6 +11,7 @@ import {
   saveReplayConfig
 } from "ducks/replay/actions";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { RootContext } from "../App";
 
@@ -28,6 +29,7 @@ const Settings: React.FC<SettingProps> = (props) => {
   const { state: rootState, dispatch } = React.useContext(RootContext);
   const state = rootState.replay;
   const config = state.config;
+  const { t } = useTranslation();
 
   const handleShowPivotChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(
@@ -88,7 +90,7 @@ const Settings: React.FC<SettingProps> = (props) => {
     <div className={classes.root}>
       <div>
         <FormLabel component="legend" className={classes.settingGroupTitle}>
-          Display
+          {t("Replay.Settings.Display.Title")}
         </FormLabel>
       </div>
       <div>
@@ -99,7 +101,7 @@ const Settings: React.FC<SettingProps> = (props) => {
               onChange={handleShowPivotChange}
             />
           }
-          label="Show pivot"
+          label={t("Replay.Settings.Display.ShowPivot")}
         />
       </div>
       <div>
@@ -110,7 +112,7 @@ const Settings: React.FC<SettingProps> = (props) => {
               onChange={handleShowGhostChange}
             />
           }
-          label="Show ghost"
+          label={t("Replay.Settings.Display.ShowGhost")}
         />
       </div>
       <div>
@@ -121,7 +123,7 @@ const Settings: React.FC<SettingProps> = (props) => {
               onChange={handleShowCycleChange}
             />
           }
-          label="Show cycle"
+          label={t("Replay.Settings.Display.ShowCycle")}
         />
       </div>
       <div>
@@ -132,24 +134,32 @@ const Settings: React.FC<SettingProps> = (props) => {
               onChange={handleShowTraceChange}
             />
           }
-          label="Show trace"
+          label={t("Replay.Settings.Display.ShowTrace")}
         />
       </div>
       <Divider />
       <div>
         <FormLabel component="legend" className={classes.settingGroupTitle}>
-          Replay Info
+          {t("Replay.Settings.ReplayInfo.Title")}
         </FormLabel>
       </div>
       <ul>
-        <li>Nexts: {state.replayInfo.nextNum}</li>
-        <li>Offset range: {state.replayInfo.offsetRange}</li>
-        <li>Simulator type: {state.config.strategy}</li>
+        <li>
+          {t("Replay.Settings.ReplayInfo.Nexts")}: {state.replayInfo.nextNum}
+        </li>
+        <li>
+          {t("Replay.Settings.ReplayInfo.OffsetRange")}:{" "}
+          {state.replayInfo.offsetRange}
+        </li>
+        <li>
+          {t("Replay.Settings.ReplayInfo.SimulatorType")}:{" "}
+          {state.config.strategy}
+        </li>
       </ul>
       <Divider />
       <div>
         <FormLabel component="legend" className={classes.settingGroupTitle}>
-          Other
+          {t("Replay.Settings.Other.Title")}
         </FormLabel>
       </div>
       <div>
@@ -160,7 +170,7 @@ const Settings: React.FC<SettingProps> = (props) => {
               onChange={handlePassesAllToSimu}
             />
           }
-          label="Pass all to simu"
+          label={t("Replay.Settings.Other.PassAllToSimu")}
         />
       </div>
 
@@ -174,7 +184,7 @@ const Settings: React.FC<SettingProps> = (props) => {
               color="secondary"
               onClick={handleDefaultClick}
             >
-              DEFAULT
+              {t("Common.Button.Default")}
             </Button>
           </div>
           <div>
@@ -183,7 +193,7 @@ const Settings: React.FC<SettingProps> = (props) => {
               color="secondary"
               onClick={handleSaveClick}
             >
-              SAVE
+              {t("Common.Button.Save")}
             </Button>
           </div>
         </div>

@@ -1,3 +1,4 @@
+import { t } from "i18next";
 import React from "react";
 import { FolderUniqueProps } from "renderers/components/explorer/Folder";
 import { SyncState, SyncStateWith } from "types/explorer";
@@ -101,7 +102,7 @@ export const useSync = (
         type: ExplorerEventType.ErrorOccured,
         payload: {
           reason: syncState.reason,
-          title: "Sync failed",
+          title: t("Explorer.SyncFailed"),
         },
       });
     }

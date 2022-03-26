@@ -16,10 +16,12 @@ import {
   TetsimuMode
 } from "types/core";
 import { ReplayConfig, ReplayStateHistory } from "types/replay";
+import { RootConfig } from "types/root";
 import { SimuConfig, SimuRetryState } from "types/simu";
 import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 
 export const RootActionsType = {
+  ChangeConfig: "root/changeConfig",
   ChangeTetsimuMode: "root/changeTetsimuMode",
   ClearError: "root/clearError",
   EditToSimuMode: "root/editToSimuMode",
@@ -28,11 +30,13 @@ export const RootActionsType = {
   LoadConfigs: "root/loadConfigs",
   LoadExplorer: "root/loadExplorer",
   ReplayToSimuMode: "root/replayToSimuMode",
+  SaveConfig: "root/saveConfig",
   SimuToEditMode: "root/simuToEditMode",
   SimuToReplayMode: "root/simuToReplayMode",
 } as const;
 
 export type RootActions =
+  | ChangeConfigAction
   | ChangeTetsimuModeAction
   | ClearErrorAction
   | EditToSimuAction
@@ -41,8 +45,16 @@ export type RootActions =
   | LoadConfigsAction
   | LoadExplorerAction
   | ReplayToSimuAction
+  | SaveConfigAction
   | SimuToEditAction
   | SimuToReplayAction;
+
+export type ChangeConfigAction = {
+  type: typeof RootActionsType.ChangeConfig;
+  payload: {
+    config: RootConfig;
+  };
+} & Action;
 
 export type ChangeTetsimuModeAction = {
   type: typeof RootActionsType.ChangeTetsimuMode;
@@ -98,6 +110,7 @@ export type LoadConfigsAction = {
   type: typeof RootActionsType.LoadConfigs;
   payload: {
     replay: ReplayConfig;
+    root: RootConfig;
     simu: SimuConfig;
   };
 } & Action;
@@ -132,6 +145,11 @@ export type ReplayToSimuAction = {
     seed: number;
     strategy: SimulatorStrategyType;
   };
+} & Action;
+
+export type SaveConfigAction = {
+  type: typeof RootActionsType.SaveConfig;
+  payload: {};
 } & Action;
 
 export type SimuToEditAction = {

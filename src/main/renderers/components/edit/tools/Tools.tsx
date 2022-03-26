@@ -3,6 +3,7 @@ import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import { clearEdit } from "ducks/edit/actions";
 import { changeTetsimuMode, editToSimuMode } from "ducks/root/actions";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { useValueRef } from "renderers/hooks/useValueRef";
 import { EditState, EditStateTools } from "stores/EditState";
@@ -54,6 +55,7 @@ const InnerTools = React.memo<InnerToolsProps>((props) => {
   const stateRef = props.stateRef;
   const dispatch = props.dispatch;
   const [stateUrl, setStateUrl] = React.useState("");
+  const { t } = useTranslation();
 
   const handleUrlClick = () => {
     const url = new EditUrl().fromState(stateRef.current);
@@ -84,7 +86,7 @@ const InnerTools = React.memo<InnerToolsProps>((props) => {
               color="secondary"
               onClick={handleSimuClick}
             >
-              SIMU
+              {t("Common.Button.Simu")}
             </Button>
           </div>
           <div style={{ marginLeft: "auto" }}>
@@ -112,7 +114,7 @@ const InnerTools = React.memo<InnerToolsProps>((props) => {
               color="primary"
               onClick={handleUrlClick}
             >
-              URL
+              {t("Common.Button.Url")}
             </Button>
           </div>
         ),
@@ -145,7 +147,7 @@ const InnerTools = React.memo<InnerToolsProps>((props) => {
               color="secondary"
               onClick={handleClearClick}
             >
-              CLEAR
+              {t("Common.Button.Clear")}
             </Button>
           </div>
         ),

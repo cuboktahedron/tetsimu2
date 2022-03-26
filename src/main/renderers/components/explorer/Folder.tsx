@@ -16,6 +16,7 @@ import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import SyncIcon from "@material-ui/icons/Sync";
 import { TreeItem, TreeItemProps } from "@material-ui/lab";
 import { getOrderedItems } from "ducks/explorer/selectors";
+import { t } from "i18next";
 import React, { useRef } from "react";
 import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import { useSync } from "renderers/hooks/explorer/useSync";
@@ -90,9 +91,8 @@ const useStyles = makeStyles((theme: Theme) =>
 const Folder: React.FC<FolderProps> = (props) => {
   const [opensEditForm, setOpensEditForm] = React.useState(false);
   const [opensAddSyncForm, setOpensAddSyncForm] = React.useState(false);
-  const [menuAnchorEl, setMenuAnchorEl] = React.useState<null | HTMLElement>(
-    null
-  );
+  const [menuAnchorEl, setMenuAnchorEl] =
+    React.useState<null | HTMLElement>(null);
   const downloadAnchorRef = React.useRef<HTMLAnchorElement | null>(null);
   const dragDropRef = useRef<HTMLDivElement>(null);
   const isTempFolder = props.id === ExplorerIds.TempFolder;
@@ -247,7 +247,7 @@ const Folder: React.FC<FolderProps> = (props) => {
     props.eventHandler.current({
       type: ExplorerEventType.FolderAdd,
       payload: {
-        newFolderName: "NewFolder",
+        newFolderName: t("Explorer.NewFolder"),
         dest: props.path,
       },
     });
@@ -275,7 +275,7 @@ const Folder: React.FC<FolderProps> = (props) => {
       type: ExplorerEventType.FileAdd,
       payload: {
         dest: props.path,
-        newFileName: "NewFile",
+        newFileName: t("Explorer.NewFile"),
       },
     });
   };

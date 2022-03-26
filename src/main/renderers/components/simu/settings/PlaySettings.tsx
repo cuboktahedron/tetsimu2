@@ -2,6 +2,7 @@ import { Button, Divider } from "@material-ui/core";
 import clsx from "clsx";
 import { changeConfig } from "ducks/simu/actions";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { initialSimuState, SimuState } from "stores/SimuState";
 import { Action } from "types/core";
@@ -32,6 +33,7 @@ const PlaySettings: React.FC<SettingsProps> = (props) => {
   const state = props.stateRef.current;
   const dispatch = props.dispatch;
   const { external, input: keys, ...restOfConfig } = initialSimuState.config;
+  const { t } = useTranslation();
 
   const handleDefaultClick = () => {
     dispatch(
@@ -63,7 +65,7 @@ const PlaySettings: React.FC<SettingsProps> = (props) => {
           color="secondary"
           onClick={handleDefaultClick}
         >
-          DEFAULT
+          {t("Common.Button.Default")}
         </Button>
       </div>
     </div>

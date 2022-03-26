@@ -5,10 +5,11 @@ import {
   FormControlLabel,
   InputLabel,
   MenuItem,
-  Select
+  Select,
 } from "@material-ui/core";
 import clsx from "clsx";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import NumberCheckTextField from "renderers/components/ext/NumberWithLabelTextField";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { useValueRef } from "renderers/hooks/useValueRef";
@@ -18,18 +19,18 @@ import {
   FieldState,
   MAX_FIELD_HEIGHT,
   MAX_FIELD_WIDTH,
-  Tetromino
+  Tetromino,
 } from "types/core";
 import { AnalyzePcDropType } from "types/simu";
 import {
   AnalyzePcMessageRes,
-  AnalyzePcMessageResBodyItem
+  AnalyzePcMessageResBodyItem,
 } from "types/simuMessages";
 import {
   AnalyzedPcItem,
   appendAnalyzedItems,
   changeAnalyzePcSettings,
-  HubContext
+  HubContext,
 } from "utils/tetsimu/simu/hubActions";
 import { HubMessageEventTypes } from "utils/tetsimu/simu/hubEventEmitter";
 import { v4 as uuidv4 } from "uuid";
@@ -58,6 +59,7 @@ type AnalyzePcProps = {
 const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
   const { state, dispatch: hubDispatch } = React.useContext(HubContext);
   const stateRef = useValueRef(state);
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     stateRef.current.hubEventEmitter.addListener(
@@ -203,15 +205,15 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
               onClick={handleAnalyzeClick}
               disabled={stateRef.current.webSocket == null}
             >
-              Analyze
+              {t("Simu.Hub.Analyze.Button.Analyze")}
             </Button>
           </div>
         </div>
       </div>
       <div className={classes.section}>
         <NumberCheckTextField
-          label="clear line"
-          checkLabel="Auto"
+          label={t("Simu.Hub.Analyze.ClearLine")}
+          checkLabel={t("Simu.Hub.Analyze.ClearLineAuto")}
           checked={stateRef.current.analyzePc.clearLine == 0}
           InputLabelProps={{
             shrink: true,
@@ -233,21 +235,31 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
               onChange={handleUseHoldChange}
             />
           }
-          label="Use hold"
+          label={t("Simu.Hub.Analyze.UseHold")}
         />
       </div>
       <div>
         <FormControl className={classes.formControl}>
-          <InputLabel>drop type</InputLabel>
+          <InputLabel>{t("Simu.Hub.Analyze.DropType.Label")}</InputLabel>
           <Select
             onChange={handleDropTypeChange}
             value={stateRef.current.analyzePc.dropType}
           >
-            <MenuItem value={AnalyzePcDropType.SoftDrop}>SoftDrop</MenuItem>
-            <MenuItem value={AnalyzePcDropType.HardDrop}>HardDrop</MenuItem>
-            <MenuItem value={AnalyzePcDropType.Tss}>Tss</MenuItem>
-            <MenuItem value={AnalyzePcDropType.Tsd}>Tsd</MenuItem>
-            <MenuItem value={AnalyzePcDropType.Tst}>Tst</MenuItem>
+            <MenuItem value={AnalyzePcDropType.SoftDrop}>
+              {t("Simu.Hub.Analyze.DropType.SoftDrop")}
+            </MenuItem>
+            <MenuItem value={AnalyzePcDropType.HardDrop}>
+              {t("Simu.Hub.Analyze.DropType.HardDrop")}
+            </MenuItem>
+            <MenuItem value={AnalyzePcDropType.Tss}>
+              {t("Simu.Hub.Analyze.DropType.Tss")}
+            </MenuItem>
+            <MenuItem value={AnalyzePcDropType.Tsd}>
+              {t("Simu.Hub.Analyze.DropType.Tsd")}
+            </MenuItem>
+            <MenuItem value={AnalyzePcDropType.Tst}>
+              {t("Simu.Hub.Analyze.DropType.Tst")}
+            </MenuItem>
           </Select>
         </FormControl>
       </div>

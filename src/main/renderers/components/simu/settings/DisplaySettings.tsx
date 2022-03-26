@@ -1,6 +1,7 @@
 import { Checkbox, FormControlLabel, FormLabel } from "@material-ui/core";
 import { changeConfig } from "ducks/simu/actions";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useSidePanelStyles } from "renderers/hooks/useSidePanelStyles";
 import { Action, MAX_NEXTS_NUM } from "types/core";
 import { SimuConfig } from "types/simu";
@@ -18,6 +19,7 @@ type DisplaySettingsProps = {
 };
 
 const DisplaySettings = React.memo<DisplaySettingsProps>((props) => {
+  const [t] = useTranslation();
   const { config, dispatch } = props;
 
   const handleNextsNumChange = (value: number): void => {
@@ -64,10 +66,10 @@ const DisplaySettings = React.memo<DisplaySettingsProps>((props) => {
     <div className={classes.root}>
       <div>
         <FormLabel component="legend" className={classes.settingGroupTitle}>
-          Display
+          {t("Simu.Settings.Display.Title")}
         </FormLabel>
         <NumberTextField
-          label="nexts"
+          label={t("Simu.Settings.Display.Nexts")}
           numberProps={{
             min: 1,
             max: MAX_NEXTS_NUM,
@@ -88,7 +90,7 @@ const DisplaySettings = React.memo<DisplaySettingsProps>((props) => {
               onChange={handleShowPivotChange}
             />
           }
-          label="Show pivot"
+          label={t("Simu.Settings.Display.ShowPivot")}
         />
       </div>
       <div>
@@ -99,7 +101,7 @@ const DisplaySettings = React.memo<DisplaySettingsProps>((props) => {
               onChange={handleShowGhostChange}
             />
           }
-          label="Show ghost"
+          label={t("Simu.Settings.Display.ShowGhost")}
         />
       </div>
       <div>
@@ -110,7 +112,7 @@ const DisplaySettings = React.memo<DisplaySettingsProps>((props) => {
               onChange={handleShowCycleChange}
             />
           }
-          label="Show cycle"
+          label={t("Simu.Settings.Display.ShowCycle")}
         />
       </div>
     </div>
