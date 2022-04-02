@@ -60,7 +60,14 @@ const InputSettings = React.memo<InputSettingsProps>((props) => {
     key: keyof KeyConfig,
     e: React.KeyboardEvent<HTMLDivElement>
   ) => {
-    if (e.altKey || e.shiftKey || e.ctrlKey || e.metaKey || e.key === "Tab") {
+    if (e.key === "Tab")
+    {
+      return;
+    }
+
+    e.preventDefault();
+
+    if (e.altKey || e.shiftKey || e.ctrlKey || e.metaKey) {
       return;
     }
 
