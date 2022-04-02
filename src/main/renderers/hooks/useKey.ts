@@ -36,6 +36,7 @@ export const useKey = (keyConfig: KeyConfig): ControllerKeys => {
 
       if (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) {
         e.preventDefault();
+        return;
       }
 
       switch (e.code) {
