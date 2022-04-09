@@ -191,20 +191,12 @@ export const appendAnalyzedItems = (
     });
 
     return items.flatMap((item) => {
-      const details: DetailsContent[] = [];
-      details.push({
-        type: DetailsContentType.Log,
-        content: `## ${item.title} [${item.details.length}]`,
+      return item.details.map((detail) => {
+        return {
+          type: DetailsContentType.AnalyzedPcItem,
+          content: detail,
+        };
       });
-
-      return details.concat(
-        item.details.map((detail) => {
-          return {
-            type: DetailsContentType.AnalyzedPcItem,
-            content: detail,
-          };
-        })
-      );
     });
   };
 
