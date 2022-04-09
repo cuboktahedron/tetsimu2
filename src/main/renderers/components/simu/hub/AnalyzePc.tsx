@@ -5,7 +5,7 @@ import {
   FormControlLabel,
   InputLabel,
   MenuItem,
-  Select,
+  Select
 } from "@material-ui/core";
 import clsx from "clsx";
 import React from "react";
@@ -19,18 +19,19 @@ import {
   FieldState,
   MAX_FIELD_HEIGHT,
   MAX_FIELD_WIDTH,
-  Tetromino,
+  Tetromino
 } from "types/core";
 import { AnalyzePcDropType } from "types/simu";
 import {
   AnalyzePcMessageRes,
-  AnalyzePcMessageResBodyItem,
+  AnalyzePcMessageResBodyItem
 } from "types/simuMessages";
 import {
   AnalyzedPcItem,
   appendAnalyzedItems,
+  appendDetails,
   changeAnalyzePcSettings,
-  HubContext,
+  HubContext
 } from "utils/tetsimu/simu/hubActions";
 import { HubMessageEventTypes } from "utils/tetsimu/simu/hubEventEmitter";
 import { v4 as uuidv4 } from "uuid";
@@ -76,10 +77,15 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
   }, [stateRef.current.hubEventEmitter]);
 
   const handleAnalyzePcMessage = (message: AnalyzePcMessageRes) => {
-    const uniqueItems = convertAnalyzedItems(message.body.unique_items);
-    const minimalItems = convertAnalyzedItems(message.body.minimal_items);
-
-    hubDispatch(appendAnalyzedItems(uniqueItems, minimalItems));
+    if (message.body.succeeded) {
+      const uniqueItems = convertAnalyzedItems(message.body.unique_items);
+      const minimalItems = convertAnalyzedItems(message.body.minimal_items);
+      hubDispatch(appendAnalyzedItems(uniqueItems, minimalItems));
+    } else {
+      hubDispatch(
+        appendDetails(message.body.message, "------------------------")
+      );
+    }
   };
 
   const convertAnalyzedItems = (

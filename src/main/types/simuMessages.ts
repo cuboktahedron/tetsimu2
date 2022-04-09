@@ -9,6 +9,7 @@ export type HubMessageHeader = {
 };
 
 export type AnalyzePcMessageResBody = {
+  succeeded: boolean,
   message: string;
   minimal_items: AnalyzePcMessageResBodyItem[];
   unique_items: AnalyzePcMessageResBodyItem[];
