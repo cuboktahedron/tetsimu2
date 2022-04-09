@@ -182,16 +182,19 @@ export const appendAnalyzedItems = (
     items: AnalyzedPcItem[],
     kind: string
   ): DetailsContent[] => {
+    const foundNum = items
+      .map((item) => item.details.length)
+      .reduce((acc, num) => acc + num, 0);
     detailsToAppend.push({
       type: DetailsContentType.Log,
-      content: `# Found path [${kind}] = ${uniqueItems.length}`,
+      content: `# Found ${kind} path [${foundNum}]`,
     });
 
     return items.flatMap((item) => {
       const details: DetailsContent[] = [];
       details.push({
         type: DetailsContentType.Log,
-        content: `## ${item.title}`,
+        content: `## ${item.title} [${item.details.length}]`,
       });
 
       return details.concat(
