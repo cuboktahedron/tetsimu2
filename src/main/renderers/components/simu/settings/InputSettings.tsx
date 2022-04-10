@@ -60,8 +60,7 @@ const InputSettings = React.memo<InputSettingsProps>((props) => {
     key: keyof KeyConfig,
     e: React.KeyboardEvent<HTMLDivElement>
   ) => {
-    if (e.key === "Tab")
-    {
+    if (e.key === "Tab") {
       return;
     }
 
@@ -137,7 +136,7 @@ const InputSettings = React.memo<InputSettingsProps>((props) => {
     }
   })();
 
-  const keyConfig = React.useMemo(() => {
+  const keyConfig = (() => {
     const keys: KeyConfigType[] = [
       {
         key: props.input.keys.hardDrop,
@@ -200,7 +199,7 @@ const InputSettings = React.memo<InputSettingsProps>((props) => {
         );
       });
     }
-  }, [props.input, state.env.isTouchDevice]);
+  })();
 
   return (
     <div
