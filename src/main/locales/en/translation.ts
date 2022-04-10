@@ -48,6 +48,7 @@ export default {
       },
       Name: "name",
       Parameters: "parameters",
+      Description: "description",
       ParametersPlaceHolder: "Paste generated url parameters here",
     },
     EditFolder: {
