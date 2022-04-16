@@ -82,11 +82,11 @@ export default {
         Title: "リプレイ情報",
         Nexts: "ネクスト数",
         OffsetRange: "相殺範囲",
-        SimulatorType: "プレイタイプ",
+        SimulatorType: "シミュレートタイプ",
       },
       Other: {
         Title: "その他",
-        PassAllToSimu: "シミュレータに全て引き継ぐ",
+        PassAllToSimu: "プレイモードに全て引き継ぐ",
       },
     },
   },
@@ -145,7 +145,7 @@ export default {
           Normal: "通常",
           Dig: "堀",
         },
-        SimulatorType: "プレイタイプ",
+        SimulatorType: "シミュレートタイプ",
       },
       Garbage: {
         Title: "お邪魔",

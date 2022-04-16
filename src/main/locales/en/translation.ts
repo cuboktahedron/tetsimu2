@@ -86,7 +86,7 @@ export default {
       },
       Other: {
         Title: "Other",
-        PassAllToSimu: "Pass all to simu",
+        PassAllToSimu: "Pass all to play mode",
       },
     },
   },

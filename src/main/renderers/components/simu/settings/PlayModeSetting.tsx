@@ -21,7 +21,7 @@ import { SimulatorStrategyType } from "utils/SimulationStrategyBase";
 
 const useStyles = useSidePanelStyles({
   formControl: {
-    minWidth: 120,
+    minWidth: 160,
   },
 });
 

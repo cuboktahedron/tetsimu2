@@ -6,7 +6,7 @@ export default {
     Edit: "編集",
     Replay: "リプレイ",
     Save: "保存",
-    Simu: "シミュレート",
+    Simu: "プレイ",
     Sync: "同期",
     Url: "URL",
   },
