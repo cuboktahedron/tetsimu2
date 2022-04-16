@@ -14,10 +14,12 @@ import {
   LogMessage,
   StepsMessage,
   TermTutorMessageRes,
-  UnhandledMessage
+  UnhandledMessage,
+  VersionMessage
 } from "types/simuMessages";
 import {
   appendDetails,
+  changeVersion,
   clearDetails,
   connectionClosed,
   connectionEstablished,
@@ -98,6 +100,10 @@ const Hub: React.FC<HubProps> = (props) => {
       HubMessageEventTypes.Unhandled,
       handleUnhandledMessage
     );
+    stateRef.current.hubEventEmitter.addListener(
+      HubMessageEventTypes.Version,
+      handleVersionMessage
+    );
   }, [stateRef.current.hubEventEmitter]);
 
   React.useEffect(() => {
@@ -177,6 +183,9 @@ const Hub: React.FC<HubProps> = (props) => {
       } else if (message.Unhandled) {
         const unhandled = message.Unhandled as UnhandledMessage;
         state.hubEventEmitter.emit(HubMessageEventTypes.Unhandled, unhandled);
+      } else if (message.Version) {
+        const version = message.Version as VersionMessage;
+        state.hubEventEmitter.emit(HubMessageEventTypes.Version, version);
       }
     };
   };
@@ -187,6 +196,18 @@ const Hub: React.FC<HubProps> = (props) => {
 
   const handleUnhandledMessage = (message: UnhandledMessage) => {
     hubDispatch(appendDetails(message.body.message));
+  };
+
+  const handleVersionMessage = (message: VersionMessage) => {
+    hubDispatch(
+      changeVersion(
+        message.body.version,
+        t("Simu.Hub.Message.HubVersion").replace(
+          "{{version}}",
+          message.body.version
+        )
+      )
+    );
   };
 
   const handleClearClick = () => {

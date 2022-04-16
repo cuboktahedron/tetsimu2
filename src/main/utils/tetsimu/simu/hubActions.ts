@@ -9,6 +9,7 @@ type HubContextState = {
   hubEventEmitter: HubEventEmitter;
   analyzePc: AnalyzePcState;
   tutor: TutorState;
+  version: string;
 };
 
 type AnalyzePcState = {
@@ -29,6 +30,7 @@ export const initialHubState: HubContextState = {
     dropType: AnalyzePcDropType.SoftDrop,
   },
   tutor: {},
+  version: "0.9.0",
 };
 
 export const HubContext = React.createContext({
@@ -80,6 +82,14 @@ export const hubReducer = (
           .concat(action.payload.detailToAppend)
           .slice(-MAX_DETAILS_HISTORY),
       };
+    case HubActionsType.ChangeVersion:
+      return {
+        ...state,
+        version: action.payload.version,
+        details: state.details
+          .concat(action.payload.detailToAppend)
+          .slice(-MAX_DETAILS_HISTORY),
+      };
   }
 
   return state;
@@ -120,6 +130,7 @@ export const HubActionsType = {
   AppendAnalyzedItems: "hub/appendAnalyzedItems",
   AppendDetails: "hub/appendDetails",
   ChangeAnalyzePcSettings: "hub/changeAnalyzePcSettings",
+  ChangeVersion: "hub/changeVersion",
   ClearDetails: "hub/clearDetails",
   ConnectionClosed: "hub/connectionClosed",
   ConnectionEstablished: "hub/connectionEstablished",
@@ -129,6 +140,7 @@ export type HubActions =
   | AppendAnalyzedItemsAction
   | AppendDetailsAction
   | ChangeAnalyzePcSettingsAction
+  | ChangeVersionAction
   | ClearDetailsAction
   | ConnectionClosedAction
   | ConnectionEstablishedAction;
@@ -151,6 +163,14 @@ export type ChangeAnalyzePcSettingsAction = {
   type: typeof HubActionsType.ChangeAnalyzePcSettings;
   payload: {
     analyzePc: AnalyzePcState;
+  };
+} & Action;
+
+export type ChangeVersionAction = {
+  type: typeof HubActionsType.ChangeVersion;
+  payload: {
+    version: string;
+    detailToAppend: DetailsContent;
   };
 } & Action;
 
@@ -240,6 +260,22 @@ export const changeAnalyzePcSettings = (
     type: HubActionsType.ChangeAnalyzePcSettings,
     payload: {
       analyzePc,
+    },
+  };
+};
+
+export const changeVersion = (
+  version: string,
+  detail: string
+): ChangeVersionAction => {
+  return {
+    type: HubActionsType.ChangeVersion,
+    payload: {
+      version,
+      detailToAppend: {
+        type: DetailsContentType.Log,
+        content: detail,
+      },
     },
   };
 };

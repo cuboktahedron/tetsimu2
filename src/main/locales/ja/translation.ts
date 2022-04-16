@@ -117,6 +117,7 @@ export default {
         ConnectionEstablished: "接続に成功しました。",
         ConnectionClosed: "接続が閉じられました。({{code}}:{{reason}})",
         ErrorOccured: "エラーが発生しました。",
+        HubVersion: "Hub バージョン: {{version}}",
       },
       TabTutor: "チューター",
       Tutor: {

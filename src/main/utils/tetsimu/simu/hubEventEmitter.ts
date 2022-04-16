@@ -5,7 +5,8 @@ import {
   LogMessage,
   StepsMessage,
   TermTutorMessageRes,
-  UnhandledMessage
+  UnhandledMessage,
+  VersionMessage
 } from "types/simuMessages";
 
 export const HubMessageEventTypes = {
@@ -15,6 +16,7 @@ export const HubMessageEventTypes = {
   Steps: "steps",
   TermTuror: "termTutor",
   Unhandled: "unhandled",
+  Version: "version",
 } as const;
 
 export class HubEventEmitter extends OriginalEventEmitter {
@@ -43,6 +45,11 @@ export class HubEventEmitter extends OriginalEventEmitter {
   public emit(
     event: typeof HubMessageEventTypes.Unhandled,
     msg: UnhandledMessage
+  ): boolean;
+
+  public emit(
+    event: typeof HubMessageEventTypes.Version,
+    msg: VersionMessage
   ): boolean;
 
   public emit(event: string, ...args: any[]) {

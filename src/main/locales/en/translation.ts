@@ -117,6 +117,7 @@ export default {
         ConnectionEstablished: "Connection established.",
         ConnectionClosed: "Connection closed({{code}}:{{reason}})",
         ErrorOccured: "Error occured.",
+        HubVersion: "Hub version: {{version}}",
       },
       TabTutor: "Tutor",
       Tutor: {

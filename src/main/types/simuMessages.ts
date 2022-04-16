@@ -9,7 +9,7 @@ export type HubMessageHeader = {
 };
 
 export type AnalyzePcMessageResBody = {
-  succeeded: boolean,
+  succeeded: boolean;
   message: string;
   minimal_items: AnalyzePcMessageResBodyItem[];
   unique_items: AnalyzePcMessageResBodyItem[];
@@ -77,4 +77,13 @@ export type UnhandledMessage = {
 
 export type UnhandledMessageBody = {
   message: string;
+};
+
+export type VersionMessage = {
+  header: MessageHeader;
+  body: VersionMessageBody;
+};
+
+export type VersionMessageBody = {
+  version: string;
 };
