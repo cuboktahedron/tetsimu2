@@ -15,7 +15,7 @@ import {
   StepsMessage,
   TermTutorMessageRes,
   UnhandledMessage,
-  VersionMessage
+  VersionMessage,
 } from "types/simuMessages";
 import {
   appendDetails,
@@ -26,7 +26,7 @@ import {
   DetailsContentType,
   HubContext,
   hubReducer,
-  initialHubState
+  initialHubState,
 } from "utils/tetsimu/simu/hubActions";
 import { HubMessageEventTypes } from "utils/tetsimu/simu/hubEventEmitter";
 import AnalyzePc from "./AnalyzePc";
@@ -86,6 +86,7 @@ const Hub: React.FC<HubProps> = (props) => {
   const { state: rootState, dispatch } = React.useContext(RootContext);
   const rootStateRef = useValueRef(rootState);
   const [state, hubDispatch] = React.useReducer(hubReducer, initialHubState);
+  const [connecting, setConnecting] = React.useState(false);
   const stateRef = useValueRef(state);
   const detailsElemRef = React.useRef<HTMLDivElement>(null);
   const [selectedTabIndex, setSelectedTabIndex] = React.useState("0");
@@ -128,6 +129,8 @@ const Hub: React.FC<HubProps> = (props) => {
       state.webSocket.close();
     }
 
+    setConnecting(true);
+
     const external = rootState.simu.config.external;
     const url = `ws://${external.host}:${external.port}`;
 
@@ -139,12 +142,16 @@ const Hub: React.FC<HubProps> = (props) => {
     );
 
     ws.onopen = () => {
+      setConnecting(false);
+
       hubDispatch(
         connectionEstablished(ws, t("Simu.Hub.Message.ConnectionEstablished"))
       );
     };
 
     ws.onclose = (e: CloseEvent) => {
+      setConnecting(false);
+
       hubDispatch(
         connectionClosed(
           `${t("Simu.Hub.Message.ConnectionClosed")}`
@@ -216,9 +223,10 @@ const Hub: React.FC<HubProps> = (props) => {
 
   const isReadyToConnect = () => {
     return (
-      state.webSocket !== null ||
-      !rootState.simu.config.external.host ||
-      !rootState.simu.config.external.port
+      state.webSocket === null &&
+      !connecting &&
+      !!rootState.simu.config.external.host &&
+      !!rootState.simu.config.external.port
     );
   };
 
@@ -277,7 +285,7 @@ const Hub: React.FC<HubProps> = (props) => {
                 variant="contained"
                 color="primary"
                 onClick={handleConnectHubClick}
-                disabled={isReadyToConnect()}
+                disabled={!isReadyToConnect()}
               >
                 {t("Simu.Hub.Button.ConnectToHub")}
               </Button>
