@@ -13,7 +13,8 @@ import { SettleStep } from "types/simu";
 import {
   InitTutorMessageRes,
   StepsMessage,
-  TermTutorMessageRes
+  TermTutorMessageRes,
+  Tetsimu2MessageVersion,
 } from "types/simuMessages";
 import { appendDetails, HubContext } from "utils/tetsimu/simu/hubActions";
 import { HubMessageEventTypes } from "utils/tetsimu/simu/hubEventEmitter";
@@ -149,6 +150,7 @@ const Tutor: React.FC<AnalyzePcProps> = (props) => {
     const notifyStatusMessage: NotifyStatusMessage = {
       NotifyStatus: {
         header: {
+          version: Tetsimu2MessageVersion,
           message_id: uuidv4(),
         },
         body: {
@@ -220,9 +222,10 @@ const Tutor: React.FC<AnalyzePcProps> = (props) => {
       return;
     }
 
-    const initTutorRequest = {
+    const initTutorRequest: InitTutorMessage = {
       InitTutor: {
         header: {
+          version: Tetsimu2MessageVersion,
           message_id: uuidv4(),
         },
         body: {},
@@ -237,9 +240,10 @@ const Tutor: React.FC<AnalyzePcProps> = (props) => {
       return;
     }
 
-    const termTutorRequest = {
+    const termTutorRequest: TermTutorMessage = {
       TermTutor: {
         header: {
+          version: Tetsimu2MessageVersion,
           message_id: uuidv4(),
         },
         body: {},
@@ -307,9 +311,30 @@ const Tutor: React.FC<AnalyzePcProps> = (props) => {
   );
 };
 
+type InitTutorMessage = {
+  InitTutor: {
+    header: {
+      version: string;
+      message_id: string;
+    };
+    body: {};
+  };
+};
+
+type TermTutorMessage = {
+  TermTutor: {
+    header: {
+      version: string;
+      message_id: string;
+    };
+    body: {};
+  };
+};
+
 type NotifyStatusMessage = {
   NotifyStatus: {
     header: {
+      version: string;
       message_id: string;
     };
     body: {

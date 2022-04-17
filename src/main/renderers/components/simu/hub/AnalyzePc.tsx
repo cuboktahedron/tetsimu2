@@ -24,7 +24,8 @@ import {
 import { AnalyzePcDropType } from "types/simu";
 import {
   AnalyzePcMessageRes,
-  AnalyzePcMessageResBodyItem
+  AnalyzePcMessageResBodyItem,
+  Tetsimu2MessageVersion
 } from "types/simuMessages";
 import {
   AnalyzedPcItem,
@@ -179,6 +180,7 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
     const analyzeRequest: AnalyzeMessage = {
       AnalyzePc: {
         header: {
+          version: Tetsimu2MessageVersion,
           message_id: uuidv4(),
         },
         body: {
@@ -276,6 +278,7 @@ const AnalyzePc: React.FC<AnalyzePcProps> = (props) => {
 type AnalyzeMessage = {
   AnalyzePc: {
     header: {
+      version: string;
       message_id: string;
     };
     body: {

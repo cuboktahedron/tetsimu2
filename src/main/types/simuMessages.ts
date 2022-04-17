@@ -2,7 +2,10 @@
 
 import { Direction, FieldCellValue, Tetromino } from "./core";
 
+export const Tetsimu2MessageVersion = "1.0.0";
+
 export type HubMessageHeader = {
+  version: String;
   message_id: string;
   request_message_id: string;
   result: number;
@@ -46,6 +49,7 @@ export type LogMessage = {
 };
 
 export type MessageHeader = {
+  version: string;
   message_id: string;
 };
 
