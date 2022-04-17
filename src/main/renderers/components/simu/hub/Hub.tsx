@@ -15,7 +15,7 @@ import {
   StepsMessage,
   TermTutorMessageRes,
   UnhandledMessage,
-  VersionMessage,
+  VersionMessage
 } from "types/simuMessages";
 import {
   appendDetails,
@@ -26,7 +26,7 @@ import {
   DetailsContentType,
   HubContext,
   hubReducer,
-  initialHubState,
+  initialHubState
 } from "utils/tetsimu/simu/hubActions";
 import { HubMessageEventTypes } from "utils/tetsimu/simu/hubEventEmitter";
 import AnalyzePc from "./AnalyzePc";
@@ -197,6 +197,14 @@ const Hub: React.FC<HubProps> = (props) => {
     };
   };
 
+  const handleCloseHubClick = () => {
+    if (state.webSocket === null) {
+      return;
+    } else {
+      state.webSocket.close();
+    }
+  };
+
   const handleLogMessage = (message: AnalyzePcMessageRes) => {
     hubDispatch(appendDetails(message.body.message));
   };
@@ -270,6 +278,31 @@ const Hub: React.FC<HubProps> = (props) => {
     });
   }, [state.details, rootStateRef.current.simu.popupField]);
 
+  const connectClose = (() => {
+    if (state.webSocket === null) {
+      return (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleConnectHubClick}
+          disabled={!isReadyToConnect()}
+        >
+          {t("Simu.Hub.Button.ConnectToHub")}
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleCloseHubClick}
+        >
+          {t("Simu.Hub.Button.DisconnectFromHub")}
+        </Button>
+      );
+    }
+  })();
+
   return (
     <HubContext.Provider value={{ state, dispatch: hubDispatch }}>
       <div
@@ -280,16 +313,7 @@ const Hub: React.FC<HubProps> = (props) => {
       >
         <div className={classes.buttons}>
           <div>
-            <div>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleConnectHubClick}
-                disabled={!isReadyToConnect()}
-              >
-                {t("Simu.Hub.Button.ConnectToHub")}
-              </Button>
-            </div>
+            <div>{connectClose}</div>
           </div>
         </div>
         <Divider />

@@ -93,7 +93,8 @@ export default {
   Simu: {
     Hub: {
       Button: {
-        ConnectToHub: "Hubに接続",
+        ConnectToHub: "Hubに接続する",
+        DisconnectFromHub: "Hubとの接続を閉じる",
       },
       TabAnalyze: "解析",
       Analyze: {

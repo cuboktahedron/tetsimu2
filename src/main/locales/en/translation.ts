@@ -94,6 +94,7 @@ export default {
     Hub: {
       Button: {
         ConnectToHub: "CONNECT TO HUB",
+        DisconnectFromHub: "DISCONNECT FROM HUB",
       },
       TabAnalyze: "Analyze",
       Analyze: {
