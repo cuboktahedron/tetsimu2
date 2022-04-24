@@ -1,8 +1,4 @@
-import {
-  FormControl, InputLabel,
-  MenuItem,
-  Select
-} from "@material-ui/core";
+import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import clsx from "clsx";
 import { changeConfig } from "ducks/root/actions";
 import React from "react";
@@ -39,6 +35,9 @@ const EnvironmentSettings = React.memo<EnvironmentSettingsProps>((props) => {
   const { t } = useTranslation();
 
   const handleLanguageChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    // TODO: Fix "React state update on an unmounted component."
+    //   This issue doesn't always occur.
+    //   I can reproduce but I don't know the resolution.
     dispatch(
       changeConfig({
         ...props.environment,
